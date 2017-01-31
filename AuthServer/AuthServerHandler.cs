@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Net;
-using Common.Globals;
-using Common.Network;
-using Framework.Helpers;
-using Common.Database.Tables;
-using Common.Crypt;
-using Common.Helpers;
 using System.Collections.Generic;
+using System.Net;
+using Common.Crypt;
+using Common.Database.Tables;
+using Common.Globals;
+using Common.Helpers;
+using Common.Network;
 
 namespace AuthServer
 {
@@ -27,7 +26,7 @@ namespace AuthServer
             Language = (data[24] + data[23] +data[22] + data[21]).ToString();
             for (int i = 0; i <= data[33] - 1; i++)
             {
-                Username = Username + (char) (data[34 + i]);
+                Username = Username + (char) data[34 + i];
             }
         }
     }
@@ -93,14 +92,14 @@ namespace AuthServer
 
             foreach (var realm in realms)
             {
-                Write((uint) realm.type);            // Type
-                Write((byte) realm.flag);            // Flag
-                this.WriteCString(realm.name); // Name World
+                Write((uint) realm.type);         // Type
+                Write((byte) realm.flag);         // Flag
+                this.WriteCString(realm.name);    // Name World
                 this.WriteCString(realm.address); // IP World
-                Write(0.5f); // Pop
-                Write((byte) 0x00); // Chars
-                Write((byte) realm.timezone); // time
-                Write((byte) 0x01); // time  
+                Write(0.5f);                      // Pop
+                Write((byte) 0x00);               // Chars
+                Write((byte) realm.timezone);     // time
+                Write((byte) 0x01);               // ?????  
             }
 
             Write((UInt16)0x0002);
@@ -116,7 +115,6 @@ namespace AuthServer
             Log.Print(LogType.AuthServer,
                 $"[{session.ConnectionSocket.RemoteEndPoint}] CMD_AUTH_LOGON_CHALLENGE [{packet.Username}], WoW Version [{packet.Version}.{packet.Build}]");
 
-            AccountState accState = default(AccountState);
             byte[] dataResponse;
 
             if (packet.Version == null)
@@ -130,18 +128,15 @@ namespace AuthServer
             }
             else if (packet.Version == "1.12.1")
             {
+                AccountState accState;
                 try
                 {
                     // Get Account info
                     _user = MainProgram.Database.GetAccount(packet.Username);
 
                     if(_user != null)
-                    {
-                        if (_user.bannet_at != null)
-                            accState = AccountState.LOGIN_BANNED;
-                        else                        
-                            accState = AccountState.LOGIN_OK;
-                    } else
+                        accState = _user.bannet_at != null ? AccountState.LOGIN_BANNED : AccountState.LOGIN_OK;
+                    else
                         accState = AccountState.LOGIN_UNKNOWN_ACCOUNT;
                 }
                 catch (Exception)
@@ -149,12 +144,11 @@ namespace AuthServer
                     accState = AccountState.LOGIN_DBBUSY;
                 }
 
-
                 switch (accState)
                 {
                     case AccountState.LOGIN_OK:
                         Log.Print(LogType.AuthServer, $"[{session.ConnectionSocket.RemoteEndPoint}] Account found [{packet.Username}]");
-                        session.AccountName = _user.username;
+                        session.AccountName = _user?.username;
                         session.Srp = new Srp6(_user.username.ToUpper(), _user.password.ToUpper());
                         session.SendData(new PsAuthLogonChallange(session.Srp, AccountState.LOGIN_OK));
                         break;
@@ -206,8 +200,6 @@ namespace AuthServer
             Log.Print(LogType.AuthServer,
                 $"[{session.ConnectionSocket.RemoteEndPoint}] CMD_AUTH_LOGON_PROOF");
 
-            byte[] dataResponse;
-
             session.Srp.ClientEphemeral = handler.A.ToPositiveBigInteger();
             session.Srp.ClientProof     = handler.M1.ToPositiveBigInteger();
 
@@ -217,7 +209,7 @@ namespace AuthServer
                 session.SendData(new PsAuthLogonProof(session.Srp, AccountState.LOGIN_OK));
             } else
             {
-                dataResponse = new byte[2];
+                var dataResponse = new byte[2];
                 dataResponse[0] = (byte)AuthCMD.CMD_AUTH_LOGON_PROOF;
                 dataResponse[1] = (byte)AccountState.LOGIN_UNKNOWN_ACCOUNT;
                 session.SendData(dataResponse, "RS_LOGON_PROOF-WRONGPASS");

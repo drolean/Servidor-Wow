@@ -1,7 +1,7 @@
-﻿using Common.Globals;
-using Framework.Helpers;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using Common.Globals;
+using Common.Helpers;
 
 namespace RealmServer
 {

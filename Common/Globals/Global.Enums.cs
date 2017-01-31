@@ -13,7 +13,7 @@
         CMD_XFER_ACCEPT              = 0x32,
         CMD_XFER_RESUME              = 0x33,
         CMD_XFER_CANCEL              = 0x34,
-        UNKNOW                       = byte.MaxValue,
+        UNKNOW                       = byte.MaxValue
     }
 
     public enum AccountState : byte
@@ -29,7 +29,7 @@
         LOGIN_BADVERSION = 0x9,      // Unable to validate game version.  This may be caused by file corruption or the interference of another program.  Please visit www.blizzard.com/support/wow/ for more information and possible solutions to this issue.
         LOGIN_DOWNLOADFILE = 0xa,
         LOGIN_SUSPENDED = 0xc,       // This World Of Warcraft account has been temporarily suspended. Please go to http://www.wow-europe.com/en/misc/banned.html for further information.
-        LOGIN_PARENTALCONTROL = 0xf, // Access to this account has been blocked by parental controls.  Your settings may be changed in your account preferences at http://www.worldofwarcraft.com.
+        LOGIN_PARENTALCONTROL = 0xf // Access to this account has been blocked by parental controls.  Your settings may be changed in your account preferences at http://www.worldofwarcraft.com.
     }
 
     public enum RealmType : byte
@@ -37,7 +37,7 @@
         Normal = 0x00,
         PVP    = 0x01,
         RP     = 0x06,
-        RPPVP  = 0x08,
+        RPPVP  = 0x08
     }
 
     public enum RealmFlag : byte
@@ -48,7 +48,7 @@
         SpecifyBuild = 0x04,
         NewPlayers   = 0x20,
         Recommended  = 0x40,
-        Full         = 0x80,
+        Full         = 0x80
     }
 
     public enum RealmTimezone : byte
@@ -59,8 +59,8 @@
         Tournament   = 0x05,
         LatinAmerica = 0x04,
         TestServer   = 0x1A,
-        QAServer     = 0x1C,
-    };
+        QAServer     = 0x1C
+    }
 
     public enum AuthResult : byte
     {

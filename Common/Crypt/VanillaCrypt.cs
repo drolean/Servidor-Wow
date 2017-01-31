@@ -2,7 +2,7 @@
 {
     public class VanillaCrypt
     {
-        protected bool Initialized = false;
+        protected bool Initialized;
         public byte SendI, SendJ, RecvI, RecvJ;
         protected byte[] Key;
 

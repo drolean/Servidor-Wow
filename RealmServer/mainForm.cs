@@ -1,25 +1,24 @@
-﻿using Common.Database;
-using Common.Globals;
-using Framework.Helpers;
-using System;
+﻿using System;
 using System.Net;
 using System.Reflection;
 using System.Windows.Forms;
+using Common.Globals;
+using Common.Helpers;
 
 namespace RealmServer
 {
-    public partial class mainForm : Form
+    public partial class MainForm : Form
     {
         public static RealmServerDatabase Database { get; set; }
 
-        public mainForm()
+        public MainForm()
         {
             var time = Time.getMSTime();
             var realmPoint = new IPEndPoint(IPAddress.Any, 1001);
 
             InitializeComponent();
             Win32.AllocConsole();
-            this.Text = $"{Assembly.GetExecutingAssembly().GetName().Name} v{Assembly.GetExecutingAssembly().GetName().Version}";
+            Text = $"{Assembly.GetExecutingAssembly().GetName().Name} v{Assembly.GetExecutingAssembly().GetName().Version}";
 
             // Add columns
             listView1.Columns.Add("Id", -2, HorizontalAlignment.Left);
@@ -32,7 +31,7 @@ namespace RealmServer
             Log.Print(LogType.RealmServer, $"Version {Assembly.GetExecutingAssembly().GetName().Version}");
             Log.Print(LogType.RealmServer, $"Running on .NET Framework Version {Environment.Version}");
 
-            new RealmServerClass(realmPoint);
+            var realmServerClass = new RealmServerClass(realmPoint);
 
             Database = new RealmServerDatabase();
 

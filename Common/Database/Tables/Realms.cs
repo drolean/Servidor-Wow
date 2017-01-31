@@ -1,6 +1,6 @@
-﻿using Common.Globals;
+﻿using System;
+using Common.Globals;
 using Shaolinq;
-using System;
 
 namespace Common.Database.Tables
 {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Common.Globals;
-using Framework.Helpers;
+using Common.Helpers;
 
 namespace AuthServer
 {

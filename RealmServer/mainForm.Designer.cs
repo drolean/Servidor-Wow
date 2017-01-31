@@ -1,11 +1,14 @@
-﻿namespace RealmServer
+﻿using System.ComponentModel;
+using System.Windows.Forms;
+
+namespace RealmServer
 {
-    partial class mainForm
+    partial class MainForm
     {
         /// <summary>
         /// Required designer variable.
         /// </summary>
-        private System.ComponentModel.IContainer components = null;
+        private IContainer components = null;
 
         /// <summary>
         /// Clean up any resources being used.
@@ -67,7 +70,7 @@
             this.Controls.Add(this.ConsoleInput);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
-            this.Name = "mainForm";
+            this.Name = "MainForm";
             this.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Form1";
@@ -78,8 +81,8 @@
 
         #endregion
 
-        private System.Windows.Forms.RichTextBox ConsoleInput;
-        private System.Windows.Forms.ListView listView1;
+        private RichTextBox ConsoleInput;
+        private ListView listView1;
     }
 }
 

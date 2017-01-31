@@ -2,8 +2,7 @@
 using System.Net;
 using System.Reflection;
 using Common.Globals;
-using Framework.Helpers;
-using Common.Database;
+using Common.Helpers;
 
 namespace AuthServer
 {
@@ -22,7 +21,7 @@ namespace AuthServer
             Log.Print(LogType.AuthServer, $"Version {Assembly.GetExecutingAssembly().GetName().Version}");
             Log.Print(LogType.AuthServer, $"Running on .NET Framework Version {Environment.Version}");
 
-            new AuthServerClass(authPoint);
+            var authServerClass = new AuthServerClass(authPoint);
 
             Database = new AuthServerDatabase();
 

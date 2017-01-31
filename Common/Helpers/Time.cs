@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Framework.Helpers
+namespace Common.Helpers
 {
     public static class Time
     {
@@ -13,7 +13,7 @@ namespace Framework.Helpers
         {
             get
             {
-                var ts = (DateTime.UtcNow - UnixEpochStart);
+                var ts = DateTime.UtcNow - UnixEpochStart;
                 return (long)ts.TotalSeconds;
             }
         }
@@ -25,7 +25,7 @@ namespace Framework.Helpers
         {
             get
             {
-                var ts = (DateTime.UtcNow - UnixEpochStart);
+                var ts = DateTime.UtcNow - UnixEpochStart;
                 return ts.ToMilliseconds();
             }
         }
@@ -56,18 +56,16 @@ namespace Framework.Helpers
         public static uint getMSTimeDiff(uint oldMSTime, uint newMSTime)
         {
             if (oldMSTime > newMSTime)
-                return (0xFFFFFFFF - oldMSTime) + newMSTime;
-            else
-                return newMSTime - oldMSTime;
+                return 0xFFFFFFFF - oldMSTime + newMSTime;
+            return newMSTime - oldMSTime;
         }
 
         public static uint getMSTimeDiffNow(uint oldMSTime)
         {
             var newMSTime = getMSTime();
             if (oldMSTime > newMSTime)
-                return (0xFFFFFFFF - oldMSTime) + newMSTime;
-            else
-                return newMSTime - oldMSTime;
+                return 0xFFFFFFFF - oldMSTime + newMSTime;
+            return newMSTime - oldMSTime;
         }
     }
 
@@ -193,7 +191,7 @@ namespace Framework.Helpers
             if ((i_expireTime -= diff) > 0)
                 return false;
 
-            i_expireTime += i_period > (int)diff ? i_period : diff;
+            i_expireTime += i_period > diff ? i_period : diff;
             return true;
         }
 

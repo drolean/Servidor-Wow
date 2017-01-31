@@ -1,5 +1,5 @@
-﻿using Shaolinq;
-using System;
+﻿using System;
+using Shaolinq;
 
 namespace Common.Database.Tables
 {

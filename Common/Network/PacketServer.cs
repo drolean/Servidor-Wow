@@ -1,5 +1,5 @@
-﻿using Common.Globals;
-using System.IO;
+﻿using System.IO;
+using Common.Globals;
 
 namespace Common.Network
 {
@@ -12,13 +12,10 @@ namespace Common.Network
             Opcode = opcode;
         }
 
-        public PacketServer(AuthCMD AuthOpcode) : this((byte)AuthOpcode) { }
+        public PacketServer(AuthCMD authOpcode) : this((byte)authOpcode) { }
 
-        public PacketServer(RealmCMD RealmOpcode) : this((int)RealmOpcode) { }
+        public PacketServer(RealmCMD realmOpcode) : this((int)realmOpcode) { }
 
-        public byte[] Packet
-        {
-            get { return (BaseStream as MemoryStream).ToArray(); }
-        }
+        public byte[] Packet => (BaseStream as MemoryStream)?.ToArray();
     }
 }

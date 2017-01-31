@@ -19,7 +19,7 @@ namespace RealmServer
         public static extern Boolean FreeConsole();
     }
 
-    static class mainProgram
+    static class MainProgram
     {
         /// <summary>
         /// The main entry point for the application.
@@ -29,7 +29,7 @@ namespace RealmServer
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new mainForm());
+            Application.Run(new MainForm());
         }
     }
 }

@@ -1,8 +1,8 @@
-﻿using Common.Database;
-using Common.Database.Tables;
+﻿using System.Collections.Generic;
 using System.Linq;
+using Common.Database;
+using Common.Database.Tables;
 using Shaolinq;
-using System.Collections.Generic;
 
 namespace AuthServer
 {

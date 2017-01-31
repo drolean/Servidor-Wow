@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Net;
 using System.Net.Sockets;
-using Framework.Helpers;
+using Common.Helpers;
 
 namespace AuthServer
 {
@@ -30,7 +31,7 @@ namespace AuthServer
             }
             catch (Exception e)
             {
-                System.Diagnostics.StackTrace trace = new System.Diagnostics.StackTrace(e, true);
+                var trace = new StackTrace(e, true);
                 Log.Print(LogType.Error, $"{e.Message}: {e.Source}\n{trace.GetFrame(trace.FrameCount - 1).GetFileName()}:{trace.GetFrame(trace.FrameCount - 1).GetFileLineNumber()}");
             }
         }

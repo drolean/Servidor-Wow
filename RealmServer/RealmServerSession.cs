@@ -1,13 +1,15 @@
-﻿using Common.Crypt;
-using Common.Database.Tables;
-using Common.Globals;
-using Common.Network;
-using Framework.Helpers;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading;
+using Common.Crypt;
+using Common.Database.Tables;
+using Common.Globals;
+using Common.Helpers;
+using Common.Network;
 
 namespace RealmServer
 {
@@ -52,12 +54,12 @@ namespace RealmServer
             }
             catch (SocketException e)
             {
-                System.Diagnostics.StackTrace trace = new System.Diagnostics.StackTrace(e, true);
+                var trace = new StackTrace(e, true);
                 Log.Print(LogType.Error, $"{e.Message}: {e.Source}\n{trace.GetFrame(trace.FrameCount - 1).GetFileName()}:{trace.GetFrame(trace.FrameCount - 1).GetFileLineNumber()}");
                 Disconnect();
             }
 
-            System.Threading.Thread.Sleep(500);
+            Thread.Sleep(500);
 
             SendPacket(new SmsgAuthChallenge());
         }
@@ -75,7 +77,7 @@ namespace RealmServer
             writer.Write(header);
             writer.Write(data);
 
-            Log.Print(LogType.RealmServer, $"[{ConnectionSocket.RemoteEndPoint}] Server -> Client [{(RealmCMD)opcode}] [0x{opcode.ToString("X")}] = {data.Length}");
+            Log.Print(LogType.RealmServer, $"[{ConnectionSocket.RemoteEndPoint}] Server -> Client [{(RealmCMD)opcode}] [0x{opcode:X}] = {data.Length}");
 
             SendData(((MemoryStream)writer.BaseStream).ToArray(), opcode.ToString());
         }
@@ -87,23 +89,23 @@ namespace RealmServer
 
             try
             {
-                ConnectionSocket.BeginSend(buffer, 0, buffer.Length, SocketFlags.None, delegate (IAsyncResult result) { }, null);
+                ConnectionSocket.BeginSend(buffer, 0, buffer.Length, SocketFlags.None, delegate { }, null);
             }
             catch (SocketException e)
             {
-                System.Diagnostics.StackTrace trace = new System.Diagnostics.StackTrace(e, true);
+                var trace = new StackTrace(e, true);
                 Log.Print(LogType.Error, $"{e.Message}: {e.Source}\n{trace.GetFrame(trace.FrameCount - 1).GetFileName()}:{trace.GetFrame(trace.FrameCount - 1).GetFileLineNumber()}");
                 Disconnect();
             }
             catch (NullReferenceException e)
             {
-                System.Diagnostics.StackTrace trace = new System.Diagnostics.StackTrace(e, true);
+                var trace = new StackTrace(e, true);
                 Log.Print(LogType.Error, $"{e.Message}: {e.Source}\n{trace.GetFrame(trace.FrameCount - 1).GetFileName()}:{trace.GetFrame(trace.FrameCount - 1).GetFileLineNumber()}");
                 Disconnect();
             }
             catch (ObjectDisposedException e)
             {
-                System.Diagnostics.StackTrace trace = new System.Diagnostics.StackTrace(e, true);
+                var trace = new StackTrace(e, true);
                 Log.Print(LogType.Error, $"{e.Message}: {e.Source}\n{trace.GetFrame(trace.FrameCount - 1).GetFileName()}:{trace.GetFrame(trace.FrameCount - 1).GetFileLineNumber()}");
                 Disconnect();
             }
@@ -119,7 +121,7 @@ namespace RealmServer
             }
             catch (Exception e)
             {
-                System.Diagnostics.StackTrace trace = new System.Diagnostics.StackTrace(e, true);
+                var trace = new StackTrace(e, true);
                 Log.Print(LogType.Error, $"{e.Message}: {e.Source}\n{trace.GetFrame(trace.FrameCount - 1).GetFileName()}:{trace.GetFrame(trace.FrameCount - 1).GetFileLineNumber()}");
             }
         }
@@ -134,7 +136,7 @@ namespace RealmServer
             }
             catch (Exception e)
             {
-                System.Diagnostics.StackTrace trace = new System.Diagnostics.StackTrace(e, true);
+                var trace = new StackTrace(e, true);
                 Log.Print(LogType.Error, $"{e.Message}: {e.Source}\n{trace.GetFrame(trace.FrameCount - 1).GetFileName()}:{trace.GetFrame(trace.FrameCount - 1).GetFileLineNumber()}");
             }
 
@@ -151,13 +153,13 @@ namespace RealmServer
                 }
                 catch (SocketException e)
                 {
-                    System.Diagnostics.StackTrace trace = new System.Diagnostics.StackTrace(e, true);
+                    var trace = new StackTrace(e, true);
                     Log.Print(LogType.Error, $"{e.Message}: {e.Source}\n{trace.GetFrame(trace.FrameCount - 1).GetFileName()}:{trace.GetFrame(trace.FrameCount - 1).GetFileLineNumber()}");
                     ConnectionSocket.Close();
                 }
                 catch (Exception e)
                 {
-                    System.Diagnostics.StackTrace trace = new System.Diagnostics.StackTrace(e, true);
+                    var trace = new StackTrace(e, true);
                     Log.Print(LogType.Error, $"{e.Message}: {e.Source}\n{trace.GetFrame(trace.FrameCount - 1).GetFileName()}:{trace.GetFrame(trace.FrameCount - 1).GetFileLineNumber()}");
                 }
             }
@@ -192,7 +194,7 @@ namespace RealmServer
             }
             catch (Exception e)
             {
-                System.Diagnostics.StackTrace trace = new System.Diagnostics.StackTrace(e, true);
+                var trace = new StackTrace(e, true);
                 Log.Print(LogType.Error, $"{e.Message}: {e.Source}\n{trace.GetFrame(trace.FrameCount - 1).GetFileName()}:{trace.GetFrame(trace.FrameCount - 1).GetFileLineNumber()}");
                 DumpPacket(data, this);
             }
@@ -242,7 +244,7 @@ namespace RealmServer
                               .Replace("\r", "?")
                               .Replace("\f", "?")
                               .Replace("\n", "?") +
-                          $"{buffer.PadLeft((16 - data.Length % 16), ' ')}|");
+                          $"{buffer.PadLeft(16 - data.Length % 16, ' ')}|");
             }
         }
 
@@ -259,7 +261,7 @@ namespace RealmServer
             header[index++] = (byte)(0xFF & opcode);
             header[index] = (byte)(0xFF & (opcode >> 8));
 
-            if (this.PacketCrypto != null) header = this.PacketCrypto.Encrypt(header);
+            if (PacketCrypto != null) header = PacketCrypto.Encrypt(header);
 
             return header;
         }

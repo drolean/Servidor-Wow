@@ -1,11 +1,12 @@
 ﻿using System;
+using System.Diagnostics;
+using System.IO;
 using System.Net.Sockets;
 using System.Text;
-using Common.Globals;
-using Framework.Helpers;
 using Common.Crypt;
+using Common.Globals;
+using Common.Helpers;
 using Common.Network;
-using System.IO;
 
 namespace AuthServer
 {
@@ -32,7 +33,7 @@ namespace AuthServer
             }
             catch (SocketException e)
             {
-                System.Diagnostics.StackTrace trace = new System.Diagnostics.StackTrace(e, true);
+                var trace = new StackTrace(e, true);
                 Log.Print(LogType.Error, $"{e.Message}: {e.Source}\n{trace.GetFrame(trace.FrameCount - 1).GetFileName()}:{trace.GetFrame(trace.FrameCount - 1).GetFileLineNumber()}");
                 Disconnect();
             }
@@ -48,7 +49,7 @@ namespace AuthServer
             }
             catch (Exception e)
             {
-                System.Diagnostics.StackTrace trace = new System.Diagnostics.StackTrace(e, true);
+                var trace = new StackTrace(e, true);
                 Log.Print(LogType.Error, $"{e.Message}: {e.Source}\n{trace.GetFrame(trace.FrameCount - 1).GetFileName()}:{trace.GetFrame(trace.FrameCount - 1).GetFileLineNumber()}");
             }
         }
@@ -63,7 +64,7 @@ namespace AuthServer
             }
             catch (Exception e)
             {
-                System.Diagnostics.StackTrace trace = new System.Diagnostics.StackTrace(e, true);
+                var trace = new StackTrace(e, true);
                 Log.Print(LogType.Error, $"{e.Message}: {e.Source}\n{trace.GetFrame(trace.FrameCount - 1).GetFileName()}:{trace.GetFrame(trace.FrameCount - 1).GetFileLineNumber()}");
             }
 
@@ -80,13 +81,13 @@ namespace AuthServer
                 }
                 catch (SocketException e)
                 {
-                    System.Diagnostics.StackTrace trace = new System.Diagnostics.StackTrace(e, true);
+                    var trace = new StackTrace(e, true);
                     Log.Print(LogType.Error, $"{e.Message}: {e.Source}\n{trace.GetFrame(trace.FrameCount - 1).GetFileName()}:{trace.GetFrame(trace.FrameCount - 1).GetFileLineNumber()}");
                     ConnectionSocket.Close();
                 }
                 catch (Exception e)
                 {
-                    System.Diagnostics.StackTrace trace = new System.Diagnostics.StackTrace(e, true);
+                    var trace = new StackTrace(e, true);
                     Log.Print(LogType.Error, $"{e.Message}: {e.Source}\n{trace.GetFrame(trace.FrameCount - 1).GetFileName()}:{trace.GetFrame(trace.FrameCount - 1).GetFileLineNumber()}");
                 }
             }
@@ -107,7 +108,7 @@ namespace AuthServer
             }
             catch (Exception e)
             {
-                System.Diagnostics.StackTrace trace = new System.Diagnostics.StackTrace(e, true);
+                var trace = new StackTrace(e, true);
                 Log.Print(LogType.Error, $"{e.Message}: {e.Source}\n{trace.GetFrame(trace.FrameCount - 1).GetFileName()}:{trace.GetFrame(trace.FrameCount - 1).GetFileLineNumber()}");
                 DumpPacket(data, this);
             }
@@ -124,13 +125,13 @@ namespace AuthServer
             }
             catch (SocketException e)
             {
-                System.Diagnostics.StackTrace trace = new System.Diagnostics.StackTrace(e, true);
+                var trace = new StackTrace(e, true);
                 Log.Print(LogType.Error, $"{e.Message}: {e.Source}\n{trace.GetFrame(trace.FrameCount - 1).GetFileName()}:{trace.GetFrame(trace.FrameCount - 1).GetFileLineNumber()}");
                 Disconnect();
             }
             catch (NullReferenceException e)
             {
-                System.Diagnostics.StackTrace trace = new System.Diagnostics.StackTrace(e, true);
+                var trace = new StackTrace(e, true);
                 Log.Print(LogType.Error, $"{e.Message}: {e.Source}\n{trace.GetFrame(trace.FrameCount - 1).GetFileName()}:{trace.GetFrame(trace.FrameCount - 1).GetFileLineNumber()}");
                 Disconnect();
             }
@@ -190,7 +191,7 @@ namespace AuthServer
                               .Replace("\r", "?")
                               .Replace("\f", "?")
                               .Replace("\n", "?") +
-                          $"{buffer.PadLeft((16 - data.Length % 16), ' ')}|");
+                          $"{buffer.PadLeft(16 - data.Length % 16, ' ')}|");
             }
         }
 

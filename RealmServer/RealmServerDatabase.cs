@@ -1,6 +1,6 @@
-﻿using Common.Database;
+﻿using System.Linq;
+using Common.Database;
 using Common.Database.Tables;
-using System.Linq;
 
 namespace RealmServer
 {

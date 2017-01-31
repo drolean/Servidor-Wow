@@ -1,10 +1,8 @@
-﻿using Common.Database.Tables;
+﻿using System;
+using Common.Database.Tables;
 using Common.Globals;
 using Shaolinq;
 using Shaolinq.MySql;
-using Shaolinq.Sqlite;
-using System;
-using System.IO;
 
 namespace Common.Database
 {

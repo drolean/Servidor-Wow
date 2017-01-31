@@ -1,8 +1,9 @@
-﻿using Framework.Helpers;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Net;
 using System.Net.Sockets;
+using Common.Helpers;
 
 namespace RealmServer
 {
@@ -30,7 +31,7 @@ namespace RealmServer
             }
             catch (Exception e)
             {
-                System.Diagnostics.StackTrace trace = new System.Diagnostics.StackTrace(e, true);
+                var trace = new StackTrace(e, true);
                 Log.Print(LogType.Error, $"{e.Message}: {e.Source}\n{trace.GetFrame(trace.FrameCount - 1).GetFileName()}:{trace.GetFrame(trace.FrameCount - 1).GetFileLineNumber()}");
             }
         }

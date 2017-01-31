@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Framework.Helpers
+namespace Common.Helpers
 {
     public enum LogType
     {
@@ -9,18 +9,18 @@ namespace Framework.Helpers
         AuthServer,
         RealmServer,
         Console,
-        Error,
+        Error
     }
 
     public class Log
     {
-        public static readonly Dictionary<LogType, ConsoleColor> TypeColour = new Dictionary<LogType, ConsoleColor>()
+        public static readonly Dictionary<LogType, ConsoleColor> TypeColour = new Dictionary<LogType, ConsoleColor>
         {
             { LogType.Debug,       ConsoleColor.DarkMagenta },
             { LogType.AuthServer,  ConsoleColor.Green },
             { LogType.RealmServer, ConsoleColor.Green },
             { LogType.Console,     ConsoleColor.Magenta },
-            { LogType.Error,       ConsoleColor.DarkRed },
+            { LogType.Error,       ConsoleColor.DarkRed }
         };
 
         public static void Print(LogType type, object obj)
