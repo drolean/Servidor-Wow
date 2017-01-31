@@ -1,18 +1,17 @@
-﻿using System;
+﻿using Common.Crypt;
+using Common.Globals;
+using Common.Network;
+using Framework.Helpers;
+using System;
+using System.IO;
 using System.Net.Sockets;
 using System.Text;
-using Common.Globals;
-using Framework.Helpers;
-using Common.Crypt;
-using Common.Network;
-using System.IO;
 
-namespace AuthServer
+namespace RealmServer
 {
-    internal class AuthServerSession
+    internal class RealmServerSession
     {
-        public Srp6 Srp;
-        public string AccountName { get; set; }
+        public VanillaCrypt Crypt;
 
         public const int BufferSize = 2048 * 2;
 
@@ -20,7 +19,7 @@ namespace AuthServer
         public Socket ConnectionSocket { get; }
         public byte[] DataBuffer { get; }
 
-        public AuthServerSession(int connectionId, Socket connectionSocket)
+        internal RealmServerSession(int connectionId, Socket connectionSocket)
         {
             ConnectionId = connectionId;
             ConnectionSocket = connectionSocket;
@@ -28,7 +27,9 @@ namespace AuthServer
 
             try
             {
+                Log.Print(LogType.RealmServer, $"Incoming connection from [{ConnectionSocket.RemoteEndPoint}]");
                 ConnectionSocket.BeginReceive(DataBuffer, 0, DataBuffer.Length, SocketFlags.None, DataArrival, null);
+                SendPacket(new RealmServerHandler.SmsgAuthChallenge());
             }
             catch (SocketException e)
             {
@@ -41,7 +42,7 @@ namespace AuthServer
         {
             try
             {
-                Log.Print(LogType.AuthServer, "User Disconnected");
+                Log.Print(LogType.RealmServer, "User Disconnected");
                 ConnectionSocket.Shutdown(SocketShutdown.Both);
                 ConnectionSocket.Close();
             }
@@ -91,22 +92,6 @@ namespace AuthServer
             }
         }
 
-        private void OnPacket(byte[] data)
-        {
-            short opcode = BitConverter.ToInt16(data, 0);
-
-            try
-            {
-                AuthCMD code = (AuthCMD)opcode;
-                AuthServerRouter.CallHandler(this, code, data);
-            }
-            catch (Exception e)
-            {
-                Log.Print(LogType.Error, $"{e.Message}: {e.Source}");
-                DumpPacket(data, this);
-            }
-        }
-
         internal void SendData(byte[] send, string v)
         {
             byte[] buffer = new byte[send.Length];
@@ -133,12 +118,12 @@ namespace AuthServer
             }
         }
 
-        public void SendData(PacketServer packet)
+        internal void SendData(PacketServer packet)
         {
             SendData(packet.Packet, packet.Opcode.ToString());
         }
 
-        public static void DumpPacket(byte[] data, AuthServerSession client)
+        internal static void DumpPacket(byte[] data, RealmServerSession client)
         {
             int j;
             string buffer = "";
@@ -198,6 +183,50 @@ namespace AuthServer
             writer.Write((ushort)data.Length);
             writer.Write(data);
             SendData(((MemoryStream)writer.BaseStream).ToArray(), opcode.ToString());
+        }
+
+        private void OnPacket(byte[] data)
+        {
+            for (int index = 0; index < data.Length; index++)
+            {
+                byte[] headerData = new byte[6];
+                Array.Copy(data, index, headerData, 0, 6);
+
+                ushort length;
+                short opcode;
+
+                Decode(headerData, out length, out opcode);
+
+                RealmCMD code = (RealmCMD)opcode;
+                byte[] packetDate = new byte[length];
+                Array.Copy(data, index + 6, packetDate, 0, length - 4);
+                try
+                {
+                    RealmServerRouter.CallHandler(this, code, packetDate);
+                } catch (Exception e)
+                {
+                    Log.Print(LogType.Error, $"{e.Message}: {e.Source}");
+                    DumpPacket(data, this);
+                }
+
+                index += 2 + (length - 1);
+            }
+        }
+
+        private void Decode(byte[] header, out ushort length, out short opcode)
+        {
+            Crypt?.Decrypt(header, 6);
+
+            if (Crypt == null)
+            {
+                length = BitConverter.ToUInt16(new[] { header[1], header[0] }, 0);
+                opcode = BitConverter.ToInt16(header, 2);
+            }
+            else
+            {
+                length = BitConverter.ToUInt16(new[] { header[1], header[0] }, 0);
+                opcode = BitConverter.ToInt16(new[] { header[2], header[3] }, 0);
+            }
         }
     }
 }

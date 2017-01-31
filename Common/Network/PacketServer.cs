@@ -17,6 +17,11 @@ namespace Common.Network
 
         }
 
+        public PacketServer(RealmCMD worldOpcode) : this((int)worldOpcode)
+        {
+
+        }
+
         public byte[] Packet
         {
             get { return (BaseStream as MemoryStream).ToArray(); }

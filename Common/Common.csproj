@@ -74,6 +74,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Crypt\Srp6.cs" />
+    <Compile Include="Crypt\VanillaCrypt.cs" />
     <Compile Include="Database\DatabaseModel.cs" />
     <Compile Include="Database\Tables\Realms.cs" />
     <Compile Include="Database\Tables\Users.cs" />

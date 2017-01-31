@@ -4,18 +4,18 @@ using System.Net;
 using System.Net.Sockets;
 using Framework.Helpers;
 
-namespace AuthServer
+namespace RealmServer
 {
-    internal class AuthServerClass : IDisposable
+    internal class RealmServerClass : IDisposable
     {
         private readonly Socket _socketHandler;
-        public Dictionary<int, AuthServerSession> ActiveConnections { get; protected set; }
+        public Dictionary<int, RealmServerSession> ActiveConnections { get; protected set; }
 
         private int ConnectionsCount => ActiveConnections.Count;
 
-        public AuthServerClass(IPEndPoint authPoint)
+        public RealmServerClass(IPEndPoint realmPoint)
         {
-            ActiveConnections = new Dictionary<int, AuthServerSession>();
+            ActiveConnections = new Dictionary<int, RealmServerSession>();
             _socketHandler = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             _socketHandler.SetSocketOption(SocketOptionLevel.Tcp, SocketOptionName.NoDelay, true);
             _socketHandler.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.DontLinger, true);
@@ -23,10 +23,10 @@ namespace AuthServer
             _socketHandler.ReceiveTimeout = 3500;
             try
             {
-                _socketHandler.Bind(new IPEndPoint(authPoint.Address, authPoint.Port));
+                _socketHandler.Bind(new IPEndPoint(realmPoint.Address, realmPoint.Port));
                 _socketHandler.Listen(100);
                 _socketHandler.BeginAccept(ConnectionRequest, _socketHandler);
-                Log.Print(LogType.AuthServer, $"Server is now listening at {authPoint.Address}:{authPoint.Port}");
+                Log.Print(LogType.RealmServer, $"Server is now listening at {realmPoint.Address}:{realmPoint.Port}");
             }
             catch (Exception e)
             {
@@ -38,7 +38,7 @@ namespace AuthServer
         {
             Socket connectionSocket = ((Socket)asyncResult.AsyncState).EndAccept(asyncResult);
             int connectionId = GetFreeId();
-            ActiveConnections.Add(connectionId, new AuthServerSession(connectionId, connectionSocket));
+            ActiveConnections.Add(connectionId, new RealmServerSession(connectionId, connectionSocket));
             _socketHandler.BeginAccept(ConnectionRequest, _socketHandler);
         }
 

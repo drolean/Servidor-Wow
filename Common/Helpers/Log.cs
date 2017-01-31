@@ -7,6 +7,7 @@ namespace Framework.Helpers
     {
         Debug,
         AuthServer,
+        RealmServer,
         Console,
         Error,
     }
@@ -15,10 +16,11 @@ namespace Framework.Helpers
     {
         public static readonly Dictionary<LogType, ConsoleColor> TypeColour = new Dictionary<LogType, ConsoleColor>()
         {
-            { LogType.Debug,      ConsoleColor.DarkMagenta },
-            { LogType.AuthServer, ConsoleColor.Green },
-            { LogType.Console,    ConsoleColor.Magenta },
-            { LogType.Error,      ConsoleColor.DarkRed },
+            { LogType.Debug,       ConsoleColor.DarkMagenta },
+            { LogType.AuthServer,  ConsoleColor.Green },
+            { LogType.RealmServer, ConsoleColor.Yellow },
+            { LogType.Console,     ConsoleColor.Magenta },
+            { LogType.Error,       ConsoleColor.DarkRed },
         };
 
         public static void Print(LogType type, object obj)
