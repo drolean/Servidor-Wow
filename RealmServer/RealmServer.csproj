@@ -34,6 +34,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Shaolinq, Version=1.1.1.996, Culture=neutral, PublicKeyToken=null" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -56,6 +57,7 @@
     <Compile Include="mainProgram.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RealmServerClass.cs" />
+    <Compile Include="RealmServerDatabase.cs" />
     <Compile Include="RealmServerHandler.cs" />
     <Compile Include="RealmServerRouter.cs" />
     <Compile Include="RealmServerSession.cs" />

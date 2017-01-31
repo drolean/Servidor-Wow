@@ -32,7 +32,8 @@ namespace AuthServer
             }
             catch (SocketException e)
             {
-                Log.Print(LogType.Error, $"{e.Message}: {e.Source}");
+                System.Diagnostics.StackTrace trace = new System.Diagnostics.StackTrace(e, true);
+                Log.Print(LogType.Error, $"{e.Message}: {e.Source}\n{trace.GetFrame(trace.FrameCount - 1).GetFileName()}:{trace.GetFrame(trace.FrameCount - 1).GetFileLineNumber()}");
                 Disconnect();
             }
         }
@@ -47,7 +48,8 @@ namespace AuthServer
             }
             catch (Exception e)
             {
-                Log.Print(LogType.Error, $"{e.Message}: {e.Source}");
+                System.Diagnostics.StackTrace trace = new System.Diagnostics.StackTrace(e, true);
+                Log.Print(LogType.Error, $"{e.Message}: {e.Source}\n{trace.GetFrame(trace.FrameCount - 1).GetFileName()}:{trace.GetFrame(trace.FrameCount - 1).GetFileLineNumber()}");
             }
         }
 
@@ -61,7 +63,8 @@ namespace AuthServer
             }
             catch (Exception e)
             {
-                Log.Print(LogType.Error, $"{e.Message}: {e.Source}");
+                System.Diagnostics.StackTrace trace = new System.Diagnostics.StackTrace(e, true);
+                Log.Print(LogType.Error, $"{e.Message}: {e.Source}\n{trace.GetFrame(trace.FrameCount - 1).GetFileName()}:{trace.GetFrame(trace.FrameCount - 1).GetFileLineNumber()}");
             }
 
             if (bytesRecived != 0)
@@ -77,12 +80,14 @@ namespace AuthServer
                 }
                 catch (SocketException e)
                 {
-                    Log.Print(LogType.Error, $"{e.Message}: {e.Source}");
+                    System.Diagnostics.StackTrace trace = new System.Diagnostics.StackTrace(e, true);
+                    Log.Print(LogType.Error, $"{e.Message}: {e.Source}\n{trace.GetFrame(trace.FrameCount - 1).GetFileName()}:{trace.GetFrame(trace.FrameCount - 1).GetFileLineNumber()}");
                     ConnectionSocket.Close();
                 }
                 catch (Exception e)
                 {
-                    Log.Print(LogType.Error, $"{e.Message}: {e.Source}");
+                    System.Diagnostics.StackTrace trace = new System.Diagnostics.StackTrace(e, true);
+                    Log.Print(LogType.Error, $"{e.Message}: {e.Source}\n{trace.GetFrame(trace.FrameCount - 1).GetFileName()}:{trace.GetFrame(trace.FrameCount - 1).GetFileLineNumber()}");
                 }
             }
             else
@@ -102,7 +107,8 @@ namespace AuthServer
             }
             catch (Exception e)
             {
-                Log.Print(LogType.Error, $"{e.Message}: {e.Source}");
+                System.Diagnostics.StackTrace trace = new System.Diagnostics.StackTrace(e, true);
+                Log.Print(LogType.Error, $"{e.Message}: {e.Source}\n{trace.GetFrame(trace.FrameCount - 1).GetFileName()}:{trace.GetFrame(trace.FrameCount - 1).GetFileLineNumber()}");
                 DumpPacket(data, this);
             }
         }
@@ -118,12 +124,14 @@ namespace AuthServer
             }
             catch (SocketException e)
             {
-                Log.Print(LogType.Error, $"{e.Message}: {e.Source}");
+                System.Diagnostics.StackTrace trace = new System.Diagnostics.StackTrace(e, true);
+                Log.Print(LogType.Error, $"{e.Message}: {e.Source}\n{trace.GetFrame(trace.FrameCount - 1).GetFileName()}:{trace.GetFrame(trace.FrameCount - 1).GetFileLineNumber()}");
                 Disconnect();
             }
             catch (NullReferenceException e)
             {
-                Log.Print(LogType.Error, $"{e.Message}: {e.Source}");
+                System.Diagnostics.StackTrace trace = new System.Diagnostics.StackTrace(e, true);
+                Log.Print(LogType.Error, $"{e.Message}: {e.Source}\n{trace.GetFrame(trace.FrameCount - 1).GetFileName()}:{trace.GetFrame(trace.FrameCount - 1).GetFileLineNumber()}");
                 Disconnect();
             }
             catch (ObjectDisposedException e)

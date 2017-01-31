@@ -18,7 +18,7 @@ namespace Framework.Helpers
         {
             { LogType.Debug,       ConsoleColor.DarkMagenta },
             { LogType.AuthServer,  ConsoleColor.Green },
-            { LogType.RealmServer, ConsoleColor.Yellow },
+            { LogType.RealmServer, ConsoleColor.Green },
             { LogType.Console,     ConsoleColor.Magenta },
             { LogType.Error,       ConsoleColor.DarkRed },
         };

@@ -33,9 +33,10 @@ namespace RealmServer
             }
             else
             {
-                Log.Print(LogType.AuthServer, $"Missing handler: {opcode}");
+                Log.Print(LogType.RealmServer, $"Missing handler: {opcode}");
                 RealmServerSession.DumpPacket(data, authServerSession);
             }
         }
     }
+
 }

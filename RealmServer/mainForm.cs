@@ -1,4 +1,6 @@
-﻿using Framework.Helpers;
+﻿using Common.Database;
+using Common.Globals;
+using Framework.Helpers;
 using System;
 using System.Net;
 using System.Reflection;
@@ -6,9 +8,10 @@ using System.Windows.Forms;
 
 namespace RealmServer
 {
-
     public partial class mainForm : Form
     {
+        public static RealmServerDatabase Database { get; set; }
+
         public mainForm()
         {
             var time = Time.getMSTime();
@@ -30,6 +33,10 @@ namespace RealmServer
             Log.Print(LogType.RealmServer, $"Running on .NET Framework Version {Environment.Version}");
 
             new RealmServerClass(realmPoint);
+
+            Database = new RealmServerDatabase();
+
+            RealmServerRouter.AddHandler<CmsgAuthSession>(RealmCMD.CMSG_AUTH_SESSION, RealmServerHandler.OnAuthSession);
 
             Log.Print(LogType.RealmServer, $"Successfully started in {Time.getMSTimeDiff(time, Time.getMSTime()) / 1000}s");
         }

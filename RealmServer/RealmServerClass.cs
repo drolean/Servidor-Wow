@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Framework.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
-using Framework.Helpers;
 
 namespace RealmServer
 {
@@ -13,7 +13,7 @@ namespace RealmServer
 
         private int ConnectionsCount => ActiveConnections.Count;
 
-        public RealmServerClass(IPEndPoint realmPoint)
+        public RealmServerClass(IPEndPoint authPoint)
         {
             ActiveConnections = new Dictionary<int, RealmServerSession>();
             _socketHandler = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
@@ -23,14 +23,15 @@ namespace RealmServer
             _socketHandler.ReceiveTimeout = 3500;
             try
             {
-                _socketHandler.Bind(new IPEndPoint(realmPoint.Address, realmPoint.Port));
+                _socketHandler.Bind(new IPEndPoint(authPoint.Address, authPoint.Port));
                 _socketHandler.Listen(100);
                 _socketHandler.BeginAccept(ConnectionRequest, _socketHandler);
-                Log.Print(LogType.RealmServer, $"Server is now listening at {realmPoint.Address}:{realmPoint.Port}");
+                Log.Print(LogType.RealmServer, $"Server is now listening at {authPoint.Address}:{authPoint.Port}");
             }
             catch (Exception e)
             {
-                Log.Print(LogType.Error, $"{e.Message}: {e.Source}");
+                System.Diagnostics.StackTrace trace = new System.Diagnostics.StackTrace(e, true);
+                Log.Print(LogType.Error, $"{e.Message}: {e.Source}\n{trace.GetFrame(trace.FrameCount - 1).GetFileName()}:{trace.GetFrame(trace.FrameCount - 1).GetFileLineNumber()}");
             }
         }
 
@@ -38,7 +39,9 @@ namespace RealmServer
         {
             Socket connectionSocket = ((Socket)asyncResult.AsyncState).EndAccept(asyncResult);
             int connectionId = GetFreeId();
-            ActiveConnections.Add(connectionId, new RealmServerSession(connectionId, connectionSocket));
+            RealmServerSession session = new RealmServerSession(connectionId, connectionSocket);
+            RealmServerSession.Sessions.Add(session);
+            ActiveConnections.Add(connectionId, session);
             _socketHandler.BeginAccept(ConnectionRequest, _socketHandler);
         }
 

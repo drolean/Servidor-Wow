@@ -30,7 +30,8 @@ namespace AuthServer
             }
             catch (Exception e)
             {
-                Log.Print(LogType.Error, $"{e.Message}: {e.Source}");
+                System.Diagnostics.StackTrace trace = new System.Diagnostics.StackTrace(e, true);
+                Log.Print(LogType.Error, $"{e.Message}: {e.Source}\n{trace.GetFrame(trace.FrameCount - 1).GetFileName()}:{trace.GetFrame(trace.FrameCount - 1).GetFileLineNumber()}");
             }
         }
 

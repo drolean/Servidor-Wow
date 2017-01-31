@@ -12,15 +12,9 @@ namespace Common.Network
             Opcode = opcode;
         }
 
-        public PacketServer(AuthCMD opcode) : this((byte)opcode)
-        {
+        public PacketServer(AuthCMD AuthOpcode) : this((byte)AuthOpcode) { }
 
-        }
-
-        public PacketServer(RealmCMD worldOpcode) : this((int)worldOpcode)
-        {
-
-        }
+        public PacketServer(RealmCMD RealmOpcode) : this((int)RealmOpcode) { }
 
         public byte[] Packet
         {
