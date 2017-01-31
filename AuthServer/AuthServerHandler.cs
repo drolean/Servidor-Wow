@@ -3,6 +3,10 @@ using System.Net;
 using Common.Globals;
 using Common.Network;
 using Framework.Helpers;
+using Common.Database.Tables;
+using Common.Crypt;
+using Common.Helpers;
+using System.Collections.Generic;
 
 namespace AuthServer
 {
@@ -29,9 +33,85 @@ namespace AuthServer
     }
     #endregion
 
+    #region CMD_AUTH_LOGON_PROOF
+    public sealed class AuthLogonProof : PacketReader
+    {
+        public byte OptCode { get; private set; }
+        public byte[] A { get; private set; }
+        public byte[] M1 { get; private set; }
+        public byte[] CrcHash { get; private set; }
+        public byte NKeys { get; private set; }
+        public byte Unk { get; private set; }
+
+        public AuthLogonProof(byte[] data) : base(data)
+        {
+            OptCode = ReadByte();
+            A       = ReadBytes(32);
+            M1      = ReadBytes(20);
+
+            CrcHash = ReadBytes(20);
+            NKeys   = ReadByte();
+            Unk     = ReadByte();
+        }
+    }
+    #endregion
+
+    sealed class PsAuthLogonChallange : PacketServer
+    {
+        public PsAuthLogonChallange(Srp6 srp, AccountState result) : base(AuthCMD.CMD_AUTH_LOGON_CHALLENGE)
+        {
+            Write((byte) AuthCMD.CMD_AUTH_LOGON_CHALLENGE);
+            Write((byte) result);
+            Write((byte)0); // unkown1 is set to 0 by all private servers.
+            Write(srp.ServerEphemeral.ToProperByteArray()); // SRP6 server public ephemeral
+            Write((byte)1); // generator_len is the length of the generator field following it. All servers (including ours) set this to 1.
+            Write(srp.Generator.ToByteArray()); // All servers (including ours) hardcode this to 7
+            Write((byte)32); // All servers (including ours) set this to 32.
+            Write(srp.Modulus.ToProperByteArray().Pad(32)); // All servers (including ours) set this to 0x894B645E89E1535BBDAD5B8B290650530801B18EBFBF5E8FAB3C82872A3E9BB7
+            Write(srp.Salt.ToProperByteArray().Pad(32)); // A salt is a randomly generated value used to strengthen a user's password against attacks where pre-computations are performed
+            this.WriteNullByte(17); // unknown2 is set to 16 random bytes by all servers.
+        }
+    }
+
+    sealed class PsAuthLogonProof : PacketServer
+    {
+        public PsAuthLogonProof(Srp6 srp, AccountState result) : base(AuthCMD.CMD_AUTH_LOGON_PROOF)
+        {
+            Write((byte) AuthCMD.CMD_AUTH_LOGON_PROOF);
+            Write((byte) result);
+            Write(srp.ServerProof.ToByteArray().Pad(20));
+            this.WriteNullByte(4);
+        }
+    }
+
+    sealed class PsAuthRealmList : PacketServer
+    {
+        public PsAuthRealmList(List<Realms> realms) : base(AuthCMD.CMD_AUTH_REALMLIST)
+        {
+            Write((uint) 0x0000);
+            Write((byte) realms.Count);
+
+            foreach (var realm in realms)
+            {
+                Write((uint) realm.type);            // Type
+                Write((byte) realm.flag);            // Flag
+                this.WriteCString(realm.name); // Name World
+                this.WriteCString(realm.address); // IP World
+                Write(0.5f); // Pop
+                Write((byte) 0x00); // Chars
+                Write((byte) realm.timezone); // time
+                Write((byte) 0x01); // time  
+            }
+
+            Write((UInt16)0x0002);
+        }
+    }
+
     internal class AuthServerHandler
     {
-        public static void OnAuthLogonChallenge(AuthServerSession session, AuthLogonChallenge packet)
+        private static Users _user;
+
+        internal static void OnAuthLogonChallenge(AuthServerSession session, AuthLogonChallenge packet)
         {
             Log.Print(LogType.AuthServer,
                 $"[{session.ConnectionSocket.RemoteEndPoint}] CMD_AUTH_LOGON_CHALLENGE [{packet.Username}], WoW Version [{packet.Version}.{packet.Build}]");
@@ -41,7 +121,7 @@ namespace AuthServer
 
             if (packet.Version == null)
             {
-                Log.Print(LogType.Error, $"{session.ConnectionSocket.RemoteEndPoint} Invalid Client");
+                Log.Print(LogType.Error, $"[{session.ConnectionSocket.RemoteEndPoint}] Invalid Client");
 
                 dataResponse = new byte[2];
                 dataResponse[0] = (byte)AuthCMD.CMD_AUTH_LOGON_PROOF;
@@ -53,16 +133,16 @@ namespace AuthServer
                 try
                 {
                     // Get Account info
-                    //_accountDatabase.Query(String.Format("SELECT id, sha_pass_hash, gmlevel, expansion FROM account WHERE username = ""{0}"";", packetAccount), result)
+                    _user = MainProgram.Database.GetAccount(packet.Username);
 
-                    // Check Account state
-                    //If _accountDatabase.QuerySQL("SELECT id FROM account_banned WHERE id = '" & result.Rows(0).Item("id") & "';") Then
-                    //accState = AccountState.LOGIN_BANNED
-                    //Else
-                    //accState = AccountState.LOGIN_OK
-                    //End If
-                    //Else
-                    //accState = AccountState.LOGIN_UNKNOWN_ACCOUNT
+                    if(_user != null)
+                    {
+                        if (_user.bannet_at != null)
+                            accState = AccountState.LOGIN_BANNED;
+                        else                        
+                            accState = AccountState.LOGIN_OK;
+                    } else
+                        accState = AccountState.LOGIN_UNKNOWN_ACCOUNT;
                 }
                 catch (Exception)
                 {
@@ -73,6 +153,10 @@ namespace AuthServer
                 switch (accState)
                 {
                     case AccountState.LOGIN_OK:
+                        Log.Print(LogType.AuthServer, $"[{session.ConnectionSocket.RemoteEndPoint}] Account found [{packet.Username}]");
+                        session.AccountName = _user.username;
+                        session.Srp = new Srp6(_user.username.ToUpper(), _user.password.ToUpper());
+                        session.SendData(new PsAuthLogonChallange(session.Srp, AccountState.LOGIN_OK));
                         break;
                     case AccountState.LOGIN_UNKNOWN_ACCOUNT:
                         dataResponse = new byte[2];
@@ -108,14 +192,45 @@ namespace AuthServer
             }
             else
             {
-                Log.Print(LogType.Error, $"{session.ConnectionSocket.RemoteEndPoint} Wrong Version [{packet.Version}.{packet.Build}]");
+                Log.Print(LogType.Error, $"[{session.ConnectionSocket.RemoteEndPoint}] Wrong Version [{packet.Version}.{packet.Build}]");
 
                 dataResponse = new byte[2];
                 dataResponse[0] = (byte)AuthCMD.CMD_AUTH_LOGON_PROOF;
                 dataResponse[1] = (byte)AccountState.LOGIN_BADVERSION;
-                session.SendData(dataResponse, "CMD_AUTH_LOGON_CHALLENGE-LOGIN_BADVERSION");
+                session.SendData(dataResponse, "CMD_AUTH_LOGON_CHALLENGE [LOGIN_BADVERSION]");
             }
         }
-    }
 
+        internal static void OnAuthLogonProof(AuthServerSession session, AuthLogonProof handler)
+        {
+            Log.Print(LogType.AuthServer,
+                $"[{session.ConnectionSocket.RemoteEndPoint}] CMD_AUTH_LOGON_PROOF");
+
+            byte[] dataResponse;
+
+            session.Srp.ClientEphemeral = handler.A.ToPositiveBigInteger();
+            session.Srp.ClientProof     = handler.M1.ToPositiveBigInteger();
+
+            if(session.Srp.ClientProof == session.Srp.GenerateClientProof())
+            {
+                MainProgram.Database.SetSessionKey(session.AccountName, session.Srp.SessionKey.ToProperByteArray());
+                session.SendData(new PsAuthLogonProof(session.Srp, AccountState.LOGIN_OK));
+            } else
+            {
+                dataResponse = new byte[2];
+                dataResponse[0] = (byte)AuthCMD.CMD_AUTH_LOGON_PROOF;
+                dataResponse[1] = (byte)AccountState.LOGIN_UNKNOWN_ACCOUNT;
+                session.SendData(dataResponse, "RS_LOGON_PROOF-WRONGPASS");
+            }
+        }
+
+        internal static void OnAuthRealmList(AuthServerSession session, byte[] data)
+        {
+            Log.Print(LogType.AuthServer, $"[{session.ConnectionSocket.RemoteEndPoint}] CMD_AUTH_REALMLIST");
+
+            // Get Realms
+            var realms = MainProgram.Database.GetRealms();
+            session.SendPacket(new PsAuthRealmList(realms));
+        }
+    }
 }

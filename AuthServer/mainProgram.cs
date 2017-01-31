@@ -3,12 +3,13 @@ using System.Net;
 using System.Reflection;
 using Common.Globals;
 using Framework.Helpers;
+using Common.Database;
 
 namespace AuthServer
 {
     class MainProgram
     {
-        public static AuthServerClass Auth { get; set; }
+        public static AuthServerDatabase Database { get; set; }
 
         static void Main()
         {
@@ -23,12 +24,16 @@ namespace AuthServer
 
             new AuthServerClass(authPoint);
 
+            Database = new AuthServerDatabase();
+
+            // recreate database***
+            //new DatabaseManager();
+
             //
             AuthServerRouter.AddHandler<AuthLogonChallenge>(AuthCMD.CMD_AUTH_LOGON_CHALLENGE, AuthServerHandler.OnAuthLogonChallenge);
-            //AuthServerRouter.AddHandler<PcAuthLogonProof>(AuthCMD.CMD_AUTH_LOGON_PROOF, OnLogonProof);
-            //AuthServerRouter.AddHandler<PcAuthLogonChallenge>(AuthCMD.CMD_AUTH_RECONNECT_CHALLENGE, OnAuthLogonChallenge);
-            //AuthServerRouter.AddHandler<PcAuthLogonProof>(AuthCMD.CMD_AUTH_RECONNECT_PROOF, OnLogonProof);
-            //AuthServerRouter.AddHandler(AuthCMD.CMD_AUTH_REALMLIST, OnRealmList);
+            AuthServerRouter.AddHandler<AuthLogonProof>(AuthCMD.CMD_AUTH_LOGON_PROOF, AuthServerHandler.OnAuthLogonProof);
+            AuthServerRouter.AddHandler(AuthCMD.CMD_AUTH_REALMLIST, AuthServerHandler.OnAuthRealmList);
+
 
             Log.Print(LogType.AuthServer,
                 $"Successfully started in {Time.getMSTimeDiff(time, Time.getMSTime()) / 1000}s");

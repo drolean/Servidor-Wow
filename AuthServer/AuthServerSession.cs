@@ -3,11 +3,18 @@ using System.Net.Sockets;
 using System.Text;
 using Common.Globals;
 using Framework.Helpers;
+using Common.Crypt;
+using Common.Network;
+using System.IO;
 
 namespace AuthServer
 {
     internal class AuthServerSession
     {
+        public Srp6 Srp;
+        public string AccountName { get; set; }
+        public byte[] SessionKey;
+
         public const int BufferSize = 2048 * 2;
 
         public int ConnectionId { get; private set; }
@@ -89,10 +96,6 @@ namespace AuthServer
         {
             short opcode = BitConverter.ToInt16(data, 0);
 
-            #if DEBUG
-            Log.Print(LogType.AuthServer, $"Data Received: {opcode:X2} ({opcode})");
-            #endif
-
             try
             {
                 AuthCMD code = (AuthCMD)opcode;
@@ -113,7 +116,6 @@ namespace AuthServer
             try
             {
                 ConnectionSocket.BeginSend(buffer, 0, buffer.Length, SocketFlags.None, delegate { }, null);
-                Log.Print(LogType.AuthServer, $"[{ConnectionSocket.RemoteEndPoint}] ({v}) Server -> Client");
             }
             catch (SocketException e)
             {
@@ -132,6 +134,11 @@ namespace AuthServer
             }
         }
 
+        public void SendData(PacketServer packet)
+        {
+            SendData(packet.Packet, packet.Opcode.ToString());
+        }
+
         public static void DumpPacket(byte[] data, AuthServerSession client)
         {
             int j;
@@ -146,7 +153,7 @@ namespace AuthServer
             {
                 for (j = 0; j <= data.Length - 1; j += 16)
                 {
-                    Log.Print($"| {BitConverter.ToString(data, j, 16).Replace("-", " ")} |" +
+                    Log.Print($"| {BitConverter.ToString(data, j, 16).Replace("-", " ")} | " +
                               Encoding.ASCII.GetString(data, j, 16)
                                   .Replace("\t", "?")
                                   .Replace("\b", "?")
@@ -159,7 +166,7 @@ namespace AuthServer
             {
                 for (j = 0; j <= data.Length - 1 - 16; j += 16)
                 {
-                    Log.Print($"| {BitConverter.ToString(data, j, 16).Replace("-", " ")} |" +
+                    Log.Print($"| {BitConverter.ToString(data, j, 16).Replace("-", " ")} | " +
                               Encoding.ASCII.GetString(data, j, 16)
                                   .Replace("\t", "?")
                                   .Replace("\b", "?")
@@ -179,6 +186,19 @@ namespace AuthServer
                           $"{buffer.PadLeft((16 - data.Length % 16), ' ')}|");
             }
         }
-    }
 
+        internal void SendPacket(PacketServer packet)
+        {
+            SendPacket((byte)packet.Opcode, packet.Packet);
+        }
+
+        internal void SendPacket(byte opcode, byte[] data)
+        {
+            BinaryWriter writer = new BinaryWriter(new MemoryStream());
+            writer.Write(opcode);
+            writer.Write((ushort)data.Length);
+            writer.Write(data);
+            SendData(((MemoryStream)writer.BaseStream).ToArray(), opcode.ToString());
+        }
+    }
 }

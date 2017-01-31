@@ -66,9 +66,11 @@
       <HintPath>..\packages\System.Data.SQLite.Core.1.0.104.0\lib\net46\System.Data.SQLite.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="System.Numerics" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AuthServerClass.cs" />
+    <Compile Include="AuthServerDatabase.cs" />
     <Compile Include="AuthServerHandler.cs" />
     <Compile Include="AuthServerRouter.cs" />
     <Compile Include="AuthServerSession.cs" />

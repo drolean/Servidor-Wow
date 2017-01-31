@@ -69,13 +69,19 @@
       <HintPath>..\packages\System.Data.SQLite.Core.1.0.104.0\lib\net46\System.Data.SQLite.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="System.Numerics" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Database\Tables\Character.cs" />
+    <Compile Include="Crypt\Srp6.cs" />
+    <Compile Include="Database\DatabaseModel.cs" />
+    <Compile Include="Database\Tables\Realms.cs" />
+    <Compile Include="Database\Tables\Users.cs" />
+    <Compile Include="Helpers\BinaryWriterExtension.cs" />
     <Compile Include="Helpers\Log.cs" />
     <Compile Include="Helpers\Time.cs" />
     <Compile Include="Network\PacketReader.cs" />
+    <Compile Include="Network\PacketServer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -83,6 +89,7 @@
     <Compile Include="Globals\Global.Enums.cs" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\System.Data.SQLite.Core.1.0.104.0\build\net46\System.Data.SQLite.Core.targets" Condition="Exists('..\packages\System.Data.SQLite.Core.1.0.104.0\build\net46\System.Data.SQLite.Core.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
