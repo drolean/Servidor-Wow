@@ -28,12 +28,10 @@ namespace RealmServer
 
         sealed class SmsgAuthChallenge : PacketServer
         {
-            private readonly uint _serverSeed = (uint)new Random().Next(0, int.MaxValue);
-
             public SmsgAuthChallenge() : base(RealmCMD.SMSG_AUTH_CHALLENGE)
             {
                 Write(1);
-                Write(_serverSeed);
+                Write((uint)new Random().Next(0, int.MaxValue));
                 Write(0);
                 Write(0);
                 Write(0);
@@ -71,19 +69,18 @@ namespace RealmServer
 
         public void SendPacket(int opcode, byte[] data)
         {
+            Log.Print(LogType.RealmServer, $"[{ConnectionSocket.RemoteEndPoint}] Server -> Client [{(RealmCMD)opcode}] [0x{opcode:X}] = {data.Length}");
             BinaryWriter writer = new BinaryWriter(new MemoryStream());
             byte[] header = Encode(data.Length, opcode);
-
             writer.Write(header);
             writer.Write(data);
-
-            Log.Print(LogType.RealmServer, $"[{ConnectionSocket.RemoteEndPoint}] Server -> Client [{(RealmCMD)opcode}] [0x{opcode:X}] = {data.Length}");
-
-            SendData(((MemoryStream)writer.BaseStream).ToArray(), opcode.ToString());
+            SendData(((MemoryStream)writer.BaseStream).ToArray(), Convert.ToString((RealmCMD)opcode));
         }
 
         internal void SendData(byte[] send, string v)
         {
+            Log.Print(LogType.RealmServer, $"[{ConnectionSocket.RemoteEndPoint}] Server -=> Client [{v}] = {send.Length}");
+
             byte[] buffer = new byte[send.Length];
             Buffer.BlockCopy(send, 0, buffer, 0, send.Length);
 
@@ -182,7 +179,7 @@ namespace RealmServer
                     short opcode;
 
                     Decode(headerData, out length, out opcode);
-                    Log.Print(LogType.RealmServer, $"[{ConnectionSocket.RemoteEndPoint}] Server <- Client [{(RealmCMD)opcode}] [0x{opcode.ToString("X")}] = {length}");
+                    Log.Print(LogType.RealmServer, $"[{ConnectionSocket.RemoteEndPoint}] Server <- Client [{(RealmCMD)opcode}] [0x{opcode:X}] = {length}");
                     RealmCMD code = (RealmCMD)opcode;                  
 
                     byte[] packetDate = new byte[length];

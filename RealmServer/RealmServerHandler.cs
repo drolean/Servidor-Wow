@@ -1,9 +1,11 @@
-﻿using Common.Globals;
-using Common.Helpers;
+﻿using System;
+using Common.Crypt;
+using Common.Globals;
 using Common.Network;
 
 namespace RealmServer
 {
+
     #region CMSG_AUTH_SESSION
     public sealed class CmsgAuthSession : PacketReader
     {
@@ -25,7 +27,12 @@ namespace RealmServer
     {
         public SmsgAuthResponse() : base(RealmCMD.SMSG_AUTH_RESPONSE)
         {
-            Write((byte) 0x0C);
+            /*
+                AUTH_OK = 0x0C,
+                AUTH_FAILED = 0x0D,
+                AUTH_WAIT_QUEUE = 0x1B,
+            */
+            Write((ulong)0x0D);
         }
     }
     #endregion
@@ -34,32 +41,25 @@ namespace RealmServer
     {
         public static void OnAuthSession(RealmServerSession session, CmsgAuthSession handler)
         {
-            Log.Print(LogType.RealmServer, $"[{session.ConnectionSocket.RemoteEndPoint}] CMSG_AUTH_SESSION");
-
-            //session.Users = mainForm.Database.GetAccount(handler.User);
-
-            // Check Account
-            //if(session.Users == null)
-            session.SendPacket(new SmsgAuthResponse());//.WOW_FAIL_UNKNOWN_ACCOUNT));
-            /*
-            // Kick if existing
-            Console.WriteLine(session.ConnectionId);
-
-            // Set client.SS_Hash
+            session.Users = MainForm.Database.GetAccount(handler.User);
             session.PacketCrypto = new VanillaCrypt();
             session.PacketCrypto.Init(session.Users.sessionkey);
+            session.SendPacket(new SmsgAuthResponse());
 
-            //DONE: Disconnect clients trying to enter with an invalid build
+            // Check Account
+
+            // Kick if existing
+
+            // Set client.SS_Hash
+
+            // Disconnect clients trying to enter with an invalid build
             //if (handler.Build < 5875 || handler.Build > 6141)
-                //session.SendPacket(new SmsgAuthResponse(AuthResult.WOW_FAIL_VERSION_INVALID));
 
             // Disconnect clients trying to enter with an invalid build
 
             // If server full then queue, If GM/Admin let in
 
             // Send packet
-            //session.SendPacket(new SmsgAuthResponse());
-            */
         }
     }
 }
