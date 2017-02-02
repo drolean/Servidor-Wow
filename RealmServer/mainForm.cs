@@ -4,6 +4,7 @@ using System.Reflection;
 using System.Windows.Forms;
 using Common.Globals;
 using Common.Helpers;
+using RealmServer.Handlers;
 
 namespace RealmServer
 {
@@ -18,7 +19,7 @@ namespace RealmServer
 
             InitializeComponent();
             Win32.AllocConsole();
-            Text = $"{Assembly.GetExecutingAssembly().GetName().Name} v{Assembly.GetExecutingAssembly().GetName().Version}";
+            Text = $@"{Assembly.GetExecutingAssembly().GetName().Name} v{Assembly.GetExecutingAssembly().GetName().Version}";
 
             // Add columns
             listView1.Columns.Add("Id", -2, HorizontalAlignment.Left);
@@ -36,6 +37,8 @@ namespace RealmServer
             Database = new RealmServerDatabase();
 
             RealmServerRouter.AddHandler<CmsgAuthSession>(RealmCMD.CMSG_AUTH_SESSION, RealmServerHandler.OnAuthSession);
+            RealmServerRouter.AddHandler<CmsgPing>       (RealmCMD.CMSG_PING,         RealmServerHandler.OnPingPacket);
+            RealmServerRouter.AddHandler                 (RealmCMD.CMSG_CHAR_ENUM,    AuthHandler.OnCharEnum);
 
             Log.Print(LogType.RealmServer, $"Successfully started in {Time.getMSTimeDiff(time, Time.getMSTime()) / 1000}s");
         }

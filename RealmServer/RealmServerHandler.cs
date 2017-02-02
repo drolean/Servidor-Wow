@@ -1,5 +1,4 @@
-﻿using System;
-using Common.Crypt;
+﻿using Common.Crypt;
 using Common.Globals;
 using Common.Network;
 
@@ -11,7 +10,7 @@ namespace RealmServer
     {
         public int Build { get; private set; }
         public int Unk2 { get; private set; }
-        public string User { get; private set; }
+        public string User { get; }
 
         public CmsgAuthSession(byte[] data) : base(data)
         {
@@ -32,7 +31,31 @@ namespace RealmServer
                 AUTH_FAILED = 0x0D,
                 AUTH_WAIT_QUEUE = 0x1B,
             */
-            Write((ulong)0x0D);
+            Write((ulong) 0x0C);
+        }
+    }
+    #endregion
+
+    #region CMSG_PING
+    public sealed class CmsgPing : PacketReader
+    {
+        public uint Ping { get; private set; }
+        public uint Latency { get; private set; }
+
+        public CmsgPing(byte[] data) : base(data)
+        {
+            Ping    = ReadUInt32();
+            Latency = ReadUInt32();
+        }
+    }
+    #endregion
+
+    #region SMSG_PONG
+    public sealed class SmsgPong : PacketServer
+    {
+        public SmsgPong(uint ping) : base(RealmCMD.SMSG_PONG)
+        {
+            Write((ulong)ping);
         }
     }
     #endregion
@@ -60,6 +83,11 @@ namespace RealmServer
             // If server full then queue, If GM/Admin let in
 
             // Send packet
+        }
+
+        public static void OnPingPacket(RealmServerSession session, CmsgPing handler)
+        {
+            session.SendPacket(new SmsgPong(handler.Ping));
         }
     }
 }
