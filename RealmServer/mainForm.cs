@@ -38,7 +38,9 @@ namespace RealmServer
 
             RealmServerRouter.AddHandler<CmsgAuthSession>(RealmCMD.CMSG_AUTH_SESSION, RealmServerHandler.OnAuthSession);
             RealmServerRouter.AddHandler<CmsgPing>       (RealmCMD.CMSG_PING,         RealmServerHandler.OnPingPacket);
+
             RealmServerRouter.AddHandler                 (RealmCMD.CMSG_CHAR_ENUM,    AuthHandler.OnCharEnum);
+            RealmServerRouter.AddHandler<CmsgCharCreate> (RealmCMD.CMSG_CHAR_CREATE,  AuthHandler.OnCharCreate);
 
             Log.Print(LogType.RealmServer, $"Successfully started in {Time.getMSTimeDiff(time, Time.getMSTime()) / 1000}s");
         }

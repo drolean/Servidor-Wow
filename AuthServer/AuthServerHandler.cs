@@ -123,7 +123,7 @@ namespace AuthServer
 
                 dataResponse = new byte[2];
                 dataResponse[0] = (byte)AuthCMD.CMD_AUTH_LOGON_PROOF;
-                dataResponse[1] = (byte)AccountState.LOGIN_BADVERSION;
+                dataResponse[1] = (byte)AccountState.BADVERSION;
                 session.SendData(dataResponse, "CMD_AUTH_LOGON_CHALLENGE [LOGIN_BADVERSION]");
             }
             else if (packet.Version == "1.12.1")
@@ -135,51 +135,51 @@ namespace AuthServer
                     _user = MainProgram.Database.GetAccount(packet.Username);
 
                     if(_user != null)
-                        accState = _user.bannet_at != null ? AccountState.LOGIN_BANNED : AccountState.LOGIN_OK;
+                        accState = _user.bannet_at != null ? AccountState.BANNED : AccountState.OK;
                     else
-                        accState = AccountState.LOGIN_UNKNOWN_ACCOUNT;
+                        accState = AccountState.UNKNOWN_ACCOUNT;
                 }
                 catch (Exception)
                 {
-                    accState = AccountState.LOGIN_DBBUSY;
+                    accState = AccountState.DBBUSY;
                 }
 
                 switch (accState)
                 {
-                    case AccountState.LOGIN_OK:
+                    case AccountState.OK:
                         Log.Print(LogType.AuthServer, $"[{session.ConnectionSocket.RemoteEndPoint}] Account found [{packet.Username}]");
                         session.AccountName = _user?.username;
                         session.Srp = new Srp6(_user.username.ToUpper(), _user.password.ToUpper());
-                        session.SendData(new PsAuthLogonChallange(session.Srp, AccountState.LOGIN_OK));
+                        session.SendData(new PsAuthLogonChallange(session.Srp, AccountState.OK));
                         break;
-                    case AccountState.LOGIN_UNKNOWN_ACCOUNT:
+                    case AccountState.UNKNOWN_ACCOUNT:
                         dataResponse = new byte[2];
                         dataResponse[0] = (byte)AuthCMD.CMD_AUTH_LOGON_PROOF;
-                        dataResponse[1] = (byte)AccountState.LOGIN_UNKNOWN_ACCOUNT;
+                        dataResponse[1] = (byte)AccountState.UNKNOWN_ACCOUNT;
                         session.SendData(dataResponse, "CMD_AUTH_LOGON_CHALLENGE [LOGIN_UNKNOWN_ACCOUNT]");
                         break;
-                    case AccountState.LOGIN_BANNED:
+                    case AccountState.BANNED:
                         dataResponse = new byte[2];
                         dataResponse[0] = (byte)AuthCMD.CMD_AUTH_LOGON_PROOF;
-                        dataResponse[1] = (byte)AccountState.LOGIN_BANNED;
+                        dataResponse[1] = (byte)AccountState.BANNED;
                         session.SendData(dataResponse, "CMD_AUTH_LOGON_CHALLENGE [LOGIN_BANNED]");
                         break;
-                    case AccountState.LOGIN_NOTIME:
+                    case AccountState.NOTIME:
                         dataResponse = new byte[2];
                         dataResponse[0] = (byte)AuthCMD.CMD_AUTH_LOGON_PROOF;
-                        dataResponse[1] = (byte)AccountState.LOGIN_NOTIME;
+                        dataResponse[1] = (byte)AccountState.NOTIME;
                         session.SendData(dataResponse, "CMD_AUTH_LOGON_CHALLENGE [LOGIN_NOTIME]");
                         break;
-                    case AccountState.LOGIN_ALREADYONLINE:
+                    case AccountState.ALREADYONLINE:
                         dataResponse = new byte[2];
                         dataResponse[0] = (byte)AuthCMD.CMD_AUTH_LOGON_PROOF;
-                        dataResponse[1] = (byte)AccountState.LOGIN_ALREADYONLINE;
+                        dataResponse[1] = (byte)AccountState.ALREADYONLINE;
                         session.SendData(dataResponse, "CMD_AUTH_LOGON_CHALLENGE [LOGIN_ALREADYONLINE]");
                         break;
                     default:
                         dataResponse = new byte[2];
                         dataResponse[0] = (byte)AuthCMD.CMD_AUTH_LOGON_PROOF;
-                        dataResponse[1] = (byte)AccountState.LOGIN_FAILED;
+                        dataResponse[1] = (byte)AccountState.FAILED;
                         session.SendData(dataResponse, "CMD_AUTH_LOGON_CHALLENGE [LOGIN_FAILED]");
                         break;
                 }
@@ -190,7 +190,7 @@ namespace AuthServer
 
                 dataResponse = new byte[2];
                 dataResponse[0] = (byte)AuthCMD.CMD_AUTH_LOGON_PROOF;
-                dataResponse[1] = (byte)AccountState.LOGIN_BADVERSION;
+                dataResponse[1] = (byte)AccountState.BADVERSION;
                 session.SendData(dataResponse, "CMD_AUTH_LOGON_CHALLENGE [LOGIN_BADVERSION]");
             }
         }
@@ -206,12 +206,12 @@ namespace AuthServer
             if(session.Srp.ClientProof == session.Srp.GenerateClientProof())
             {
                 MainProgram.Database.SetSessionKey(session.AccountName, session.Srp.SessionKey.ToProperByteArray());
-                session.SendData(new PsAuthLogonProof(session.Srp, AccountState.LOGIN_OK));
+                session.SendData(new PsAuthLogonProof(session.Srp, AccountState.OK));
             } else
             {
                 var dataResponse = new byte[2];
                 dataResponse[0] = (byte)AuthCMD.CMD_AUTH_LOGON_PROOF;
-                dataResponse[1] = (byte)AccountState.LOGIN_UNKNOWN_ACCOUNT;
+                dataResponse[1] = (byte)AccountState.UNKNOWN_ACCOUNT;
                 session.SendData(dataResponse, "RS_LOGON_PROOF-WRONGPASS");
             }
         }

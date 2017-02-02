@@ -35,6 +35,9 @@ namespace Common.Database
 
         [DataAccessObjects]
         public abstract DataAccessObjects<Realms> Realms { get; }
+
+        [DataAccessObjects]
+        public abstract DataAccessObjects<Characters> Characters { get; }
     }
 
     public class DatabaseManager : DatabaseModel<Models>

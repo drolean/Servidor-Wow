@@ -2,34 +2,137 @@
 {
     public enum AuthCMD : byte
     {
-        CMD_AUTH_LOGON_CHALLENGE     = 0x0,
-        CMD_AUTH_LOGON_PROOF         = 0x1,
-        CMD_AUTH_RECONNECT_CHALLENGE = 0x2,
-        CMD_AUTH_RECONNECT_PROOF     = 0x3,
-        CMD_AUTH_AUTHENTIFICATOR     = 0x04, // ???CMD_AUTH_UPDATESRV 
-        CMD_AUTH_REALMLIST           = 0x10,
-        CMD_XFER_INITIATE            = 0x30,
-        CMD_XFER_DATA                = 0x31,
-        CMD_XFER_ACCEPT              = 0x32,
-        CMD_XFER_RESUME              = 0x33,
-        CMD_XFER_CANCEL              = 0x34,
-        UNKNOW                       = byte.MaxValue
+        CMD_AUTH_LOGON_CHALLENGE        = 0x00,
+        CMD_AUTH_LOGON_PROOF            = 0x01,
+        CMD_AUTH_RECONNECT_CHALLENGE    = 0x02,
+        CMD_AUTH_RECONNECT_PROOF        = 0x03,
+        CMD_AUTH_AUTHENTIFICATOR        = 0x04, // ???CMD_AUTH_UPDATESRV 
+        CMD_AUTH_REALMLIST              = 0x10,
+        CMD_XFER_INITIATE               = 0x30,
+        CMD_XFER_DATA                   = 0x31,
+        CMD_XFER_ACCEPT                 = 0x32,
+        CMD_XFER_RESUME                 = 0x33,
+        CMD_XFER_CANCEL                 = 0x34,
+        UNKNOW                          = byte.MaxValue
     }
 
     public enum AccountState : byte
     {
-        LOGIN_OK = 0x0,
-        LOGIN_FAILED = 0x1,          // Unable to connect
-        LOGIN_BANNED = 0x3,          // This World of Warcraft account has been closed and is no longer in service -- Please check the registered email address of this account for further information.
-        LOGIN_UNKNOWN_ACCOUNT = 0x4, // The information you have entered is not valid.  Please check the spelling of the account name and password.  If you need help in retrieving a lost or stolen password and account, see www.worldofwarcraft.com for more information.
-        LOGIN_BAD_PASS = 0x5,        // The information you have entered is not valid.  Please check the spelling of the account name and password.  If you need help in retrieving a lost or stolen password and account, see www.worldofwarcraft.com for more information.
-        LOGIN_ALREADYONLINE = 0x6,   // This account is already logged into World of Warcraft.  Please check the spelling and try again.
-        LOGIN_NOTIME = 0x7,          // You have used up your prepaid time for this account. Please purchase more to continue playing.
-        LOGIN_DBBUSY = 0x8,          // Could not log in to World of Warcraft at this time.  Please try again later.
-        LOGIN_BADVERSION = 0x9,      // Unable to validate game version.  This may be caused by file corruption or the interference of another program.  Please visit www.blizzard.com/support/wow/ for more information and possible solutions to this issue.
-        LOGIN_DOWNLOADFILE = 0xa,
-        LOGIN_SUSPENDED = 0xc,       // This World Of Warcraft account has been temporarily suspended. Please go to http://www.wow-europe.com/en/misc/banned.html for further information.
-        LOGIN_PARENTALCONTROL = 0xf // Access to this account has been blocked by parental controls.  Your settings may be changed in your account preferences at http://www.worldofwarcraft.com.
+        OK                              = 0x00,
+        /// <summary>Unable to connect</summary>
+        FAILED                          = 0x01,
+        /// <summary>This World of Warcraft account has been closed and is no longer in service -- Please check the registered email address of this account for further information.</summary>
+        BANNED                          = 0x03,
+        /// <summary>The information you have entered is not valid.  Please check the spelling of the account name and password.  If you need help in retrieving a lost or stolen password and account, see www.worldofwarcraft.com for more information.</summary>
+        UNKNOWN_ACCOUNT                 = 0x04,
+        /// <summary>The information you have entered is not valid.  Please check the spelling of the account name and password.  If you need help in retrieving a lost or stolen password and account, see www.worldofwarcraft.com for more information.</summary>
+        BAD_PASS                        = 0x05,
+        /// <summary>This account is already logged into World of Warcraft.  Please check the spelling and try again.</summary>
+        ALREADYONLINE                   = 0x06,
+        /// <summary>You have used up your prepaid time for this account. Please purchase more to continue playing.</summary>
+        NOTIME                          = 0x07,
+        /// <summary>Could not log in to World of Warcraft at this time.  Please try again later.</summary>
+        DBBUSY                          = 0x08,
+        /// <summary>Unable to validate game version.  This may be caused by file corruption or the interference of another program.  Please visit www.blizzard.com/support/wow/ for more information and possible solutions to this issue.</summary>
+        BADVERSION                      = 0x09,
+        DOWNLOADFILE                    = 0x0A,
+        /// <summary>This World Of Warcraft account has been temporarily suspended. Please go to http://www.wow-europe.com/en/misc/banned.html for further information.</summary>
+        SUSPENDED                       = 0x0C,
+        /// <summary>Access to this account has been blocked by parental controls.  Your settings may be changed in your account preferences at http://www.worldofwarcraft.com.</summary>
+        PARENTALCONTROL                 = 0x0F,
+    }
+
+    public enum LoginErrorCode : byte
+    {
+        RESPONSE_SUCCESS                = 0x00, // Success
+        RESPONSE_FAILURE                = 0x01, // Failure
+        RESPONSE_CANCELLED              = 0x02, // Canceled
+        RESPONSE_DISCONNECTED           = 0x03, // Disconnect from server
+        RESPONSE_FAILED_TO_CONNECT      = 0x04, // Failed to connect
+        RESPONSE_CONNECTED              = 0x05, // Connected
+        RESPONSE_VERSION_MISMATCH       = 0x06, // Wrong client version
+
+        CSTATUS_CONNECTING              = 0x07, // Connecting to server
+        CSTATUS_NEGOTIATING_SECURITY    = 0x08, // Negotiating security
+        CSTATUS_NEGOTIATION_COMPLETE    = 0x09, // Negotiating security complete
+        CSTATUS_NEGOTIATION_FAILED      = 0x0A, // Negotiating security failed	
+
+        AUTH_FAILED                     = 0x0B, // Authentication failed
+        AUTH_OK                         = 0x0C, // Authentication successful
+        AUTH_REJECT                     = 0x0E, // Login unavailable - Please contact Tech Support
+        AUTH_BAD_SERVER_PROOF           = 0x0F, // Server is not valid
+        AUTH_UNAVAILABLE                = 0x10, // System unavailable 
+        AUTH_SYSTEM_ERROR               = 0x11, // System error
+        AUTH_BILLING_ERROR              = 0x12, // Billing system error = 18
+        AUTH_BILLING_EXPIRED            = 0x13, // Account billing has expired
+        AUTH_VERSION_MISMATCH           = 0x14, // Wrong client version
+        AUTH_UNKNOWN_ACCOUNT            = 0x15, // Unknown account
+        AUTH_INCORRECT_PASSWORD         = 0x16, // Incorrect password
+        AUTH_SESSION_EXPIRED            = 0x17, // Session expired
+        AUTH_SERVER_SHUTTING_DOWN       = 0x18, // Server Shutting Down
+        AUTH_ALREADY_LOGGING_IN         = 0x19, // Already logged in
+        AUTH_LOGIN_SERVER_NOT_FOUND     = 0x1A, // Invalid login server
+        AUTH_WAIT_QUEUE                 = 0x1B, // Position in Queue: 0
+        AUTH_BANNED                     = 0x1C, // This account has been banned
+        AUTH_ALREADY_ONLINE             = 0x1D, // This character is still logged on
+        AUTH_NO_TIME                    = 0x1E, // Your WoW subscription has expired
+        AUTH_DB_BUSY                    = 0x1F, // This session has timed out
+        AUTH_SUSPENDED                  = 0x20, // This account has been temporarily suspended
+        AUTH_PARENTAL_CONTROL           = 0x21, // Access to this account blocked by parental controls 
+
+        REALM_LIST_IN_PROGRESS          = 0x22, // Retrieving realmlist
+        REALM_LIST_SUCCESS              = 0x23, // Realmlist retrieved
+        REALM_LIST_FAILED               = 0x24, // Unable to connect to realmlist server
+        REALM_LIST_INVALID              = 0x25, // Invalid realmlist
+        REALM_LIST_REALM_NOT_FOUND      = 0x26, // The game server is currently down
+
+        ACCOUNT_CREATE_IN_PROGRESS      = 0x27, // Creating account
+        ACCOUNT_CREATE_SUCCESS          = 0x28, // Account created
+        ACCOUNT_CREATE_FAILED           = 0x29, // Account creation failed
+
+        CHAR_LIST_RETRIEVING            = 0x2A, // Retrieving character list
+        CHAR_LIST_RETRIEVED             = 0x2B, // Character list retrieved
+        CHAR_LIST_FAILED                = 0x2C, // Error retrieving character list
+
+        CHAR_CREATE_IN_PROGRESS         = 0x2D, // Creating character
+        CHAR_CREATE_SUCCESS             = 0x2E, // Character created [OK Pass]
+        CHAR_CREATE_ERROR               = 0x2F, // Error creating character
+        CHAR_CREATE_FAILED              = 0x30, // Character creation failed
+        CHAR_CREATE_NAME_IN_USE         = 0x31, // That name is unavailable
+        CHAR_CREATE_DISABLED            = 0x32, // Creation of that race/class is disabled
+        CHAR_CREATE_PVP_TEAMS_VIOLATION = 0x33, // You cannot have both horde and alliance character at pvp realm
+        CHAR_CREATE_SERVER_LIMIT        = 0x34, // You already have the maximum number of characters allowed on this realm
+        CHAR_CREATE_ACCOUNT_LIMIT       = 0x35, // You already have the maximum number of characters allowed on this account.
+        CHAR_CREATE_SERVER_QUEUE        = 0x36, // The server is currently queued
+        CHAR_CREATE_ONLY_EXISTING       = 0x37, // Only players who have characters on this realm..
+
+        CHAR_DELETE_IN_PROGRESS         = 0x38, // Deleting character
+        CHAR_DELETE_SUCCESS             = 0x39, // Character deleted
+        CHAR_DELETE_FAILED              = 0x3A, // Char deletion failed
+        CHAR_DELETE_FAILED_LOCKED_FOR_TRANSFER = 0x3B, // your char is current lock as part of the paid chart transfer process
+
+        CHAR_LOGIN_IN_PROGRESS          = 0x3C, // entering the world of warcraft
+        CHAR_LOGIN_SUCCESS              = 0x3D, // login succesful
+        CHAR_LOGIN_NO_WORLD             = 0x3E, // world server is down
+        CHAR_LOGIN_NAME_ALREADY_EXISTS  = 0x3F, // char with that name already exists
+        CHAR_LOGIN_INSTANCE_INAVAILABLE = 0x40, // no instance server are available
+        CHAR_LOGIN_FAILED               = 0x41, // login failed
+        CHAR_LOGIN_DISABLED             = 0x42, // login for that race, class or char is currently disabled.
+        CHAR_LOGIN_NOCHAR               = 0x43, // char not found
+        CHAR_LOGIN_CHAR_LOCKED          = 0x44, // your char is current lock as part of the paid chart transfer process      
+
+        CHAR_NAME_ENTER                 = 0x45, // Enter a name for your character
+        CHAR_NAME_TOO_SHORT             = 0x46, // Names must be atleast 2 characters long
+        CHAR_NAME_TOO_LONG              = 0x47, // Names must be no more then 12 characters
+        CHAR_NAME_ONLY_LETTERS          = 0x48, // Names can only contain letters
+        CHAR_NAME_MIXED_LANGUAGES       = 0x49, // Names must contain only one language
+        CHAR_NAME_PROFANE               = 0x4A, // That name contains profanity
+        CHAR_NAME_RESERVED              = 0x4B, // That name is unavailable
+        CHAR_NAME_MULTIPLE_APOSTROPHES  = 0x4C, // You cannot use an apostrophe as the first or last char of your name
+        CHAR_NAME_APOSTROPHES           = 0x4D, // You can only have one apostrophe
+        CHAR_NAME_THREE_CONSECUTIVE     = 0x4E, // You cannot use the same letter three times consecutively
+        CHAR_NAME_INVALID_SPACE         = 0x4F, // You cannot use space as the first or last character of your name
+        CHAR_NAME_FAILURE               = 0x51, // Invalid character name
     }
 
     public enum RealmType : byte
@@ -62,32 +165,35 @@
         QAServer     = 0x1C
     }
 
-    public enum AuthResult : byte
+    public enum Genders : byte
     {
-        WOW_SUCCESS = 0x0,
-        WOW_FAIL_BANNED = 0x3,
-        WOW_FAIL_UNKNOWN_ACCOUNT = 0x4,
-        WOW_FAIL_INCORRECT_PASSWORD = 0x5,
-        WOW_FAIL_ALREADY_ONLINE = 0x6,
-        WOW_FAIL_NO_TIME = 0x7,
-        WOW_FAIL_DB_BUSY = 0x8,
-        WOW_FAIL_VERSION_INVALID = 0x9,
-        WOW_FAIL_VERSION_UPDATE = 0xa,
-        WOW_FAIL_INVALID_SERVER = 0xb,
-        WOW_FAIL_SUSPENDED = 0xc,
-        WOW_FAIL_FAIL_NOACCESS = 0xd,
-        WOW_SUCCESS_SURVEY = 0xe,
-        WOW_FAIL_PARENTCONTROL = 0xf,
-        WOW_FAIL_LOCKED_ENFORCED = 0x10,
-        WOW_FAIL_TRIAL_ENDED = 0x11,
-        WOW_FAIL_ANTI_INDULGENCE = 0x13,
-        WOW_FAIL_EXPIRED = 0x14,
-        WOW_FAIL_NO_GAME_ACCOUNT = 0x15,
-        WOW_FAIL_CHARGEBACK = 0x16,
-        WOW_FAIL_GAME_ACCOUNT_LOCKED = 0x18,
-        WOW_FAIL_UNLOCKABLE_LOCK = 0x19,
-        WOW_FAIL_CONVERSION_REQUIRED = 0x20,
-        WOW_FAIL_DISCONNECTED = 0xff
+        GENDER_MALE = 0,
+        GENDER_FEMALE = 1
+    }
+
+    public enum Classes : byte
+    {
+        CLASS_WARRIOR = 1,
+        CLASS_PALADIN = 2,
+        CLASS_HUNTER = 3,
+        CLASS_ROGUE = 4,
+        CLASS_PRIEST = 5,
+        CLASS_SHAMAN = 7,
+        CLASS_MAGE = 8,
+        CLASS_WARLOCK = 9,
+        CLASS_DRUID = 11
+    }
+
+    public enum Races : byte
+    {
+        RACE_HUMAN = 1,
+        RACE_ORC = 2,
+        RACE_DWARF = 3,
+        RACE_NIGHT_ELF = 4,
+        RACE_UNDEAD = 5,
+        RACE_TAUREN = 6,
+        RACE_GNOME = 7,
+        RACE_TROLL = 8
     }
 
     public enum RealmCMD

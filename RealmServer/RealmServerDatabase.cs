@@ -11,10 +11,10 @@ namespace RealmServer
         public Users GetAccount(string username) => !model.Users.Any() ? null : model.Users.FirstOrDefault(a => a.username.ToLower() == username.ToLower());
 
         // Retorna lista de chars do usuario
-        public List<Character> GetCharacters(string username)
+        public List<Characters> GetCharacters(string username)
         {
             Users account = GetAccount(username);
-            return model.Characters.Where(a => a.Users == account).ToList();
+            return model.Characters.Where(a => a.user == account).ToList();
         }
     }
 }

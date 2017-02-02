@@ -15,17 +15,18 @@ namespace RealmServer
 {
     public class RealmServerSession
     {
+        public Socket ConnectionSocket { get; }
         public VanillaCrypt PacketCrypto { get; set; }
         public const int BufferSize = 2048 * 2;
         public int ConnectionId { get; private set; }
-        public Socket ConnectionSocket { get; }
         public byte[] DataBuffer { get; }
         public string ConnectionRemoteIp => ConnectionSocket.RemoteEndPoint.ToString();
         public static List<RealmServerSession> Sessions = new List<RealmServerSession>();
 
         //
-        public Users Users;      
+        public Users Users { get; set; }
 
+        //
         sealed class SmsgAuthChallenge : PacketServer
         {
             public SmsgAuthChallenge() : base(RealmCMD.SMSG_AUTH_CHALLENGE)
@@ -69,7 +70,7 @@ namespace RealmServer
 
         public void SendPacket(int opcode, byte[] data)
         {
-            Log.Print(LogType.RealmServer, $"[{ConnectionSocket.RemoteEndPoint}] Server -> Client [{(RealmCMD)opcode}] [0x{opcode:X}] = {data.Length}");
+            Log.Print(LogType.RealmServer, $"[{ConnectionSocket.RemoteEndPoint}] [PRE]   Server -> Client [{(RealmCMD)opcode}] [0x{opcode:X}] = {data.Length}");
             BinaryWriter writer = new BinaryWriter(new MemoryStream());
             byte[] header = Encode(data.Length, opcode);
             writer.Write(header);
@@ -79,7 +80,7 @@ namespace RealmServer
 
         internal void SendData(byte[] send, string v)
         {
-            Log.Print(LogType.RealmServer, $"[{ConnectionSocket.RemoteEndPoint}] Server -=> Client [{v}] = {send.Length}");
+            Log.Print(LogType.RealmServer, $"[{ConnectionSocket.RemoteEndPoint}] [FINAL] Server -> Client [{v}] = {send.Length}");
 
             byte[] buffer = new byte[send.Length];
             Buffer.BlockCopy(send, 0, buffer, 0, send.Length);
@@ -180,7 +181,7 @@ namespace RealmServer
 
                     Decode(headerData, out length, out opcode);
                     Log.Print(LogType.RealmServer, $"[{ConnectionSocket.RemoteEndPoint}] Server <- Client [{(RealmCMD)opcode}] [0x{opcode:X}] = {length}");
-                    RealmCMD code = (RealmCMD)opcode;                  
+                    RealmCMD code = (RealmCMD)opcode;
 
                     byte[] packetDate = new byte[length];
                     Array.Copy(data, index + 6, packetDate, 0, length - 4);
@@ -254,7 +255,7 @@ namespace RealmServer
                 header[index++] = (byte)(0x80 | (0xFF & (newSize >> 16)));
 
             header[index++] = (byte)(0xFF & (newSize >> 8));
-            header[index++] = (byte)(0xFF & newSize);
+            header[index++] = (byte)(0xFF & (newSize >> 0));
             header[index++] = (byte)(0xFF & opcode);
             header[index] = (byte)(0xFF & (opcode >> 8));
 

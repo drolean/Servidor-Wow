@@ -3,6 +3,7 @@ using System.Net;
 using System.Reflection;
 using Common.Globals;
 using Common.Helpers;
+using Common.Database;
 
 namespace AuthServer
 {
