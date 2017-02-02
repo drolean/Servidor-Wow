@@ -52,7 +52,6 @@ namespace RealmServer.Handlers
 
         public SmsgCharEnum(List<Characters> characters) : base(RealmCMD.SMSG_CHAR_ENUM)
         {
-            AccountState.o
             // try catch to show error on retrieve list ?????
             Write((byte)characters.Count);
             foreach (Characters character in characters)
