@@ -5,104 +5,104 @@ namespace Common.Database.Dbc
 {
 
     #region AreaTable.dbc
-    public class AreaTableStore : DBCStore<AreaTable> { }
+    public class AreaTableReader : DbcReader<AreaTable> { }
 
-    public class AreaTable : DBCRecordBase
+    public class AreaTable : DbcRecordBase
     {
-        public Int32 areaID;
-        public Int32 areaMapID;
-        public Int32 areaZone;
-        public Int32 areaExploreFlag;
-        public Int32 areaZoneType;
-        public Int32 areaLevel;
-        public String areaName;
+        public int AreaId;
+        public int AreaMapId;
+        public int AreaZone;
+        public int AreaExploreFlag;
+        public int AreaZoneType;
+        public int AreaLevel;
+        public string AreaName;
 
         public override int Read()
         {
-            areaID = GetInt32(0);
-            areaMapID = GetInt32(1); // May be needed in the future
-            areaZone = GetInt32(2);
-            areaExploreFlag = GetInt32(3);
-            areaZoneType = GetInt32(4);
-            areaLevel = GetInt32(10);
-            areaName = GetString(11);
+            AreaId = GetInt32(0);
+            AreaMapId = GetInt32(1); // May be needed in the future
+            AreaZone = GetInt32(2);
+            AreaExploreFlag = GetInt32(3);
+            AreaZoneType = GetInt32(4);
+            AreaLevel = GetInt32(10);
+            AreaName = GetString(11);
 
-            if (areaLevel > 255)
-                areaLevel = 255;
+            if (AreaLevel > 255)
+                AreaLevel = 255;
 
-            if (areaLevel < 0)
-                areaLevel = 0;
+            if (AreaLevel < 0)
+                AreaLevel = 0;
 
-            return (int)areaID;
+            return AreaId;
         }
     }
     #endregion
 
     #region Faction.dbc
-    public class FactionStore : DBCStore<Faction>
+    public class FactionReader : DbcReader<Faction>
     {
-        public Faction GetFaction(int Id)
+        public Faction GetFaction(int id)
         {
-            return RecordDataIndexed.Values.ToArray().Where(a => a.factionFlag == Id).FirstOrDefault();
+            return RecordDataIndexed.Values.ToArray().FirstOrDefault(a => a.FactionFlag == id);
         }
     }
 
-    public class Faction : DBCRecordBase
+    public class Faction : DbcRecordBase
     {
-        public Int32 factionID;
-        public Int32 factionFlag;
-        public Int32[] flags = new int[4];
-        public Int32[] reputationStats = new int[4];
-        public Int32[] reputationFlags = new int[4];
-        public String factionName;
+        public int FactionId;
+        public int FactionFlag;
+        public int[] Flags = new int[4];
+        public int[] ReputationStats = new int[4];
+        public int[] ReputationFlags = new int[4];
+        public string FactionName;
 
         public override int Read()
         {
-            factionID = GetInt32(0);
-            factionFlag = GetInt32(1);
+            FactionId = GetInt32(0);
+            FactionFlag = GetInt32(1);
 
-            flags[0] = GetInt32(2);
-            flags[1] = GetInt32(3);
-            flags[2] = GetInt32(4);
-            flags[3] = GetInt32(5);
+            Flags[0] = GetInt32(2);
+            Flags[1] = GetInt32(3);
+            Flags[2] = GetInt32(4);
+            Flags[3] = GetInt32(5);
 
-            reputationStats[0] = GetInt32(10);
-            reputationStats[1] = GetInt32(11);
-            reputationStats[2] = GetInt32(12);
-            reputationStats[3] = GetInt32(13);
+            ReputationStats[0] = GetInt32(10);
+            ReputationStats[1] = GetInt32(11);
+            ReputationStats[2] = GetInt32(12);
+            ReputationStats[3] = GetInt32(13);
 
-            reputationFlags[0] = GetInt32(14);
-            reputationFlags[1] = GetInt32(15);
-            reputationFlags[2] = GetInt32(16);
-            reputationFlags[3] = GetInt32(17);
+            ReputationFlags[0] = GetInt32(14);
+            ReputationFlags[1] = GetInt32(15);
+            ReputationFlags[2] = GetInt32(16);
+            ReputationFlags[3] = GetInt32(17);
 
-            factionName = GetString(15);
+            FactionName = GetString(19);
 
-            return (int)factionID;
+            return FactionId;
         }
     }
     #endregion
 
     #region CharStartOutfit.dbc
-    public class CharStartOutfitStore : DBCStore<CharStartOutfit>
+    public class CharStartOutfitReader : DbcReader<CharStartOutfit>
     {
-        public CharStartOutfit Get(UInt32 Class, UInt32 Race, UInt32 Gender)
+        public CharStartOutfit Get(uint Class, uint race, uint gender)
         {
-            return RecordDataIndexed.Values.ToArray().Where(c => c.Class == Class && c.Race == Race && c.Gender == Gender).FirstOrDefault();
+            return RecordDataIndexed.Values.ToArray().FirstOrDefault(c => c.Class == Class && c.Race == race && c.Gender == gender);
         }
     }
 
-    public class CharStartOutfit : DBCRecordBase
+    public class CharStartOutfit : DbcRecordBase
     {
-        public UInt32 ID = 0;
-        public UInt32 Race = 0;
-        public UInt32 Class = 0;
-        public UInt32 Gender = 0;
-        public UInt32[] Items = new UInt32[24];
+        public uint Id;
+        public uint Race;
+        public uint Class;
+        public uint Gender;
+        public uint[] Items = new uint[24];
 
         public override int Read()
         {
-            ID = GetUInt32(0);
+            Id = GetUInt32(0);
 
             var tmp = GetUInt32(1);
             Race = tmp & 0xFF;
@@ -112,7 +112,7 @@ namespace Common.Database.Dbc
             for (int i = 0; i < Items.Length; ++i)
                 Items[i] = GetUInt32(2 + i);
 
-            return (int)ID;
+            return (int)Id;
         }
     }
     #endregion

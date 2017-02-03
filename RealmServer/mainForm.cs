@@ -47,27 +47,27 @@ namespace RealmServer
             Log.Print(LogType.RealmServer, $"Successfully started in {Time.getMSTimeDiff(time, Time.getMSTime()) / 1000}s");
         }
 
-        AreaTableStore _AreaTableStore = new AreaTableStore();
-        CharStartOutfitStore _CharacterOutfitStore = new CharStartOutfitStore();
-        public static FactionStore _FactionStore = new FactionStore();
+        public readonly AreaTableReader AreaTableReader = new AreaTableReader();
+        public readonly CharStartOutfitReader CharacterOutfitReader = new CharStartOutfitReader();
+        public readonly FactionReader FactionReader = new FactionReader();
 
         public async void DatabaseManager()
         {
             Log.Print(LogType.RealmServer, $"Loading DBCs...");
-            await _CharacterOutfitStore.Load("CharStartOutfit.dbc");
-            await _AreaTableStore.Load("AreaTable.dbc");
-            await _FactionStore.Load("Faction.dbc");
+            await CharacterOutfitReader.Load("CharStartOutfit.dbc");
+            await AreaTableReader.Load("AreaTable.dbc");
+            await FactionReader.Load("Faction.dbc");
 
             for (int i = 0; i < 69; i++)
             {
-                var faction = _FactionStore.GetFaction(i);
+                var faction = FactionReader.GetFaction(i);
                 if (faction != null)
                 {
                     for (int ai = 0; ai < 3; ai++)
                     {
-                        if (HaveFlag(faction.flags[ai], 2 - 1))
+                        if (HaveFlag(faction.Flags[ai], 1 - 1))
                         {
-                            Console.WriteLine($"- Flag [ {faction.reputationFlags[ai].ToString().PadRight(5, ' ')}] Stat [ {(faction.reputationStats[ai]).ToString().PadRight(6, ' ')}] - FactionID: {faction.factionID.ToString().PadRight(5, '.')} = {faction.factionName}");
+                            Console.WriteLine($@"- Flag [ {faction.ReputationFlags[ai].ToString().PadRight(5, ' ')}] Stat [ {(faction.ReputationStats[ai]).ToString().PadRight(6, ' ')}] - FactionID: {faction.FactionId.ToString().PadRight(5, '.')} = {faction.FactionName}");
                         }
                     }
                 }
@@ -79,10 +79,9 @@ namespace RealmServer
             value = value >> flagPos;
             value = value % 2;
 
-            if (value == 1)
-                return true;
-            else
-                return false;
+            if (value == 1) return true;
+
+            return false;
         }
     }
 }

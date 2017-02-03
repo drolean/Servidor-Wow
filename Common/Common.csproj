@@ -77,7 +77,7 @@
     <Compile Include="Crypt\Srp6.cs" />
     <Compile Include="Crypt\VanillaCrypt.cs" />
     <Compile Include="Database\DatabaseModel.cs" />
-    <Compile Include="Database\DBCReader.cs" />
+    <Compile Include="Database\DbcReader.cs" />
     <Compile Include="Database\Dbc\DbcStructs.cs" />
     <Compile Include="Database\Tables\Characters.cs" />
     <Compile Include="Database\Tables\Realms.cs" />

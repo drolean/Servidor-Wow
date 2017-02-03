@@ -34,7 +34,7 @@ namespace RealmServer
         {
             for (int i = 0; i <= 63; i++)
             {
-                //var faction = MainForm._FactionStore.Get(i);
+                //var faction = MainForm.FactionReader.Get(i);
 
                 /*
 
