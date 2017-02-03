@@ -1,14 +1,14 @@
-﻿using Common.Database.Tables;
+﻿using System;
+using System.Collections.Generic;
+using Common.Database.Tables;
 using Common.Globals;
 using Common.Helpers;
 using Common.Network;
-using System;
-using System.Collections.Generic;
 
 namespace RealmServer.Handlers
 {
 
-    [Flags()]
+    [Flags]
     enum CharacterFlagState
     {
         CHARACTER_FLAG_NONE = 0x0,
@@ -42,7 +42,7 @@ namespace RealmServer.Handlers
         CHARACTER_FLAG_UNK28 = 0x8000000,
         CHARACTER_FLAG_UNK29 = 0x10000000,
         CHARACTER_FLAG_UNK30 = 0x20000000,
-        CHARACTER_FLAG_UNK31 = 0x40000000,
+        CHARACTER_FLAG_UNK31 = 0x40000000
         //CHARACTER_FLAG_UNK32 = 0x80000000,
     }
 
@@ -62,11 +62,11 @@ namespace RealmServer.Handlers
                 Write((byte)character.classe);
                 Write((byte)character.gender);
 
-                Write((byte)character.char_skin);
-                Write((byte)character.char_face);
-                Write((byte)character.char_hairStyle);
-                Write((byte)character.char_hairColor);
-                Write((byte)character.char_facialHair);
+                Write(character.char_skin);
+                Write(character.char_face);
+                Write(character.char_hairStyle);
+                Write(character.char_hairColor);
+                Write(character.char_facialHair);
 
                 Write(character.level); // int8
                 Write(character.MapZone); // int32
@@ -159,23 +159,50 @@ namespace RealmServer.Handlers
             session.SendPacket(new SmsgCharEnum(characters));
         }
 
-        public static int aba = 0;
         internal static void OnCharCreate(RealmServerSession session, CmsgCharCreate handler)
         {
-            /*
-            int result = (int) CharResponse.CHAR_CREATE_DISABLED;
+            int result = (int)LoginErrorCode.CHAR_CREATE_DISABLED;
 
-            try{
+            // Need Char Name
+            result = (int) LoginErrorCode.CHAR_NAME_ENTER;
 
-            } catch(Exception)
+            // Char name min 2
+            result = (int) LoginErrorCode.CHAR_NAME_TOO_SHORT;
+
+            // Char name max 12
+            result = (int) LoginErrorCode.CHAR_NAME_TOO_LONG;
+
+            // Char name only contain letter
+            result = (int) LoginErrorCode.CHAR_NAME_ONLY_LETTERS;
+
+            // Char name Profane
+            result = (int) LoginErrorCode.CHAR_NAME_PROFANE;
+
+            // Char name reserved
+            result = (int) LoginErrorCode.CHAR_NAME_RESERVED;
+
+            // Char name invalid
+            result = (int) LoginErrorCode.CHAR_NAME_FAILURE;
+
+            // Char name in use
+            result = (int) LoginErrorCode.CHAR_CREATE_NAME_IN_USE;
+
+            // Check Ally or Horde
+            result = (int) LoginErrorCode.CHAR_CREATE_PVP_TEAMS_VIOLATION;
+
+            // Check char limit create
+            result = (int) LoginErrorCode.CHAR_CREATE_SERVER_LIMIT;
+
+            try
             {
-                result = (int) CharResponse.CHAR_CREATE_ERROR;
+                //CHAR_CREATE_SUCCESS
                 session.SendPacket(new SmsgCharCreate(result));
             }
-            */
-            session.SendPacket(new SmsgCharCreate(aba));
-            Console.WriteLine($"Estou enviando: {aba}");
-            aba++; 
+            catch (Exception)
+            {
+                result = (int) LoginErrorCode.CHAR_CREATE_ERROR;
+                session.SendPacket(new SmsgCharCreate(result));
+            }
         }
     }
 }
