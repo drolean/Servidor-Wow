@@ -1,15 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Common.Database;
 using Common.Database.Tables;
 using RealmServer.Handlers;
-using Shaolinq;
-using System.Globalization;
-using Common.Globals;
 
 namespace RealmServer
 {
+
+    public class TReputation
+    {
+        // 1:"AtWar" clickable but not checked
+        // 3:"AtWar" clickable and checked
+        public int Flags = 0;
+        public int Value = 0;
+    }
+
     public class RealmServerDatabase : DatabaseModel<Models>
     {
         // Pega conta do usuario baseado no login
@@ -27,6 +32,32 @@ namespace RealmServer
 
         internal void CreateChar(CmsgCharCreate handler, Users users)
         {
+            for (int i = 0; i <= 63; i++)
+            {
+                //var faction = MainForm._FactionStore.Get(i);
+
+                /*
+
+            if factionFlag == i
+                For(0 to 3)
+
+                endFor
+            endif
+
+public bool HaveFlag(uint value, byte flagPos)
+{
+	value = value >> Convert.ToUInt32(flagPos);
+	value = value % 2;
+
+	if (value == 1) {
+		return true;
+	} else {
+		return false;
+	}
+}
+                */
+            }
+
             /*
             // Selecting Starter Itens Equipament
             CharStartOutfit startItems = CharStartOutfit.Values.FirstOrDefault(x => x.Match(handler.Race, handler.Class, handler.Gender));

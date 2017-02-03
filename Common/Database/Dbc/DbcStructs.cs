@@ -14,18 +14,18 @@ namespace Common.Database.Dbc
         public Int32 areaZone;
         public Int32 areaExploreFlag;
         public Int32 areaZoneType;
-        public Int32 areaLevel;       
+        public Int32 areaLevel;
         public String areaName;
 
         public override int Read()
         {
-            areaID          = GetInt32(0);
-            areaMapID       = GetInt32(1); // May be needed in the future
-            areaZone        = GetInt32(2);
+            areaID = GetInt32(0);
+            areaMapID = GetInt32(1); // May be needed in the future
+            areaZone = GetInt32(2);
             areaExploreFlag = GetInt32(3);
-            areaZoneType    = GetInt32(4);
-            areaLevel       = GetInt32(10);
-            areaName        = GetString(11);
+            areaZoneType = GetInt32(4);
+            areaLevel = GetInt32(10);
+            areaName = GetString(11);
 
             if (areaLevel > 255)
                 areaLevel = 255;
@@ -39,15 +39,21 @@ namespace Common.Database.Dbc
     #endregion
 
     #region Faction.dbc
-    public class FactionStore : DBCStore<Faction> { }
+    public class FactionStore : DBCStore<Faction>
+    {
+        public Faction GetFaction(int Id)
+        {
+            return RecordDataIndexed.Values.ToArray().Where(a => a.factionFlag == Id).FirstOrDefault();
+        }
+    }
 
     public class Faction : DBCRecordBase
     {
         public Int32 factionID;
         public Int32 factionFlag;
-        public Int32[] flags;
-        public Int32[] reputationStats;
-        public Int32[] reputationFlags;
+        public Int32[] flags = new int[4];
+        public Int32[] reputationStats = new int[4];
+        public Int32[] reputationFlags = new int[4];
         public String factionName;
 
         public override int Read()
@@ -70,7 +76,7 @@ namespace Common.Database.Dbc
             reputationFlags[2] = GetInt32(16);
             reputationFlags[3] = GetInt32(17);
 
-            factionName = GetString(19);
+            factionName = GetString(15);
 
             return (int)factionID;
         }

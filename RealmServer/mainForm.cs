@@ -39,34 +39,50 @@ namespace RealmServer
             DatabaseManager();
 
             RealmServerRouter.AddHandler<CmsgAuthSession>(RealmCMD.CMSG_AUTH_SESSION, RealmServerHandler.OnAuthSession);
-            RealmServerRouter.AddHandler<CmsgPing>       (RealmCMD.CMSG_PING,         RealmServerHandler.OnPingPacket);
+            RealmServerRouter.AddHandler<CmsgPing>(RealmCMD.CMSG_PING, RealmServerHandler.OnPingPacket);
 
-            RealmServerRouter.AddHandler                 (RealmCMD.CMSG_CHAR_ENUM,    CharacterHandler.OnCharEnum);
-            RealmServerRouter.AddHandler<CmsgCharCreate> (RealmCMD.CMSG_CHAR_CREATE,  CharacterHandler.OnCharCreate);
+            RealmServerRouter.AddHandler(RealmCMD.CMSG_CHAR_ENUM, CharacterHandler.OnCharEnum);
+            RealmServerRouter.AddHandler<CmsgCharCreate>(RealmCMD.CMSG_CHAR_CREATE, CharacterHandler.OnCharCreate);
 
             Log.Print(LogType.RealmServer, $"Successfully started in {Time.getMSTimeDiff(time, Time.getMSTime()) / 1000}s");
         }
 
         AreaTableStore _AreaTableStore = new AreaTableStore();
         CharStartOutfitStore _CharacterOutfitStore = new CharStartOutfitStore();
-        
+        public static FactionStore _FactionStore = new FactionStore();
+
         public async void DatabaseManager()
         {
             Log.Print(LogType.RealmServer, $"Loading DBCs...");
             await _CharacterOutfitStore.Load("CharStartOutfit.dbc");
-            await _AreaTableStore.Load("AreaTable.dbc"); 
+            await _AreaTableStore.Load("AreaTable.dbc");
+            await _FactionStore.Load("Faction.dbc");
 
-            /*
-            foreach ( var area in _AreaTableStore.RecordDataIndexed)
+            for (int i = 0; i < 69; i++)
             {
-                Console.WriteLine($"-------------- {area.Key} --------------");
-                string p = string.Join("\r\n", area.Value.areaMapID);
-
-                Console.WriteLine($"{p} - {area.Value.areaName}");
+                var faction = _FactionStore.GetFaction(i);
+                if (faction != null)
+                {
+                    for (int ai = 0; ai < 3; ai++)
+                    {
+                        if (HaveFlag(faction.flags[ai], 2 - 1))
+                        {
+                            Console.WriteLine($"- Flag [ {faction.reputationFlags[ai].ToString().PadRight(5, ' ')}] Stat [ {(faction.reputationStats[ai]).ToString().PadRight(6, ' ')}] - FactionID: {faction.factionID.ToString().PadRight(5, '.')} = {faction.factionName}");
+                        }
+                    }
+                }
             }
+        }
 
-            Console.WriteLine($"Total Carregado {_AreaTableStore.RecordDataIndexed.Count}");
-            */
+        public bool HaveFlag(int value, byte flagPos)
+        {
+            value = value >> flagPos;
+            value = value % 2;
+
+            if (value == 1)
+                return true;
+            else
+                return false;
         }
     }
 }
