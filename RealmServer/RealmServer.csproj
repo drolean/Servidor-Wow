@@ -45,7 +45,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Handlers\AuthHandler.cs" />
+    <Compile Include="Handlers\CharacterHandler.cs" />
     <Compile Include="mainForm.cs">
       <SubType>Form</SubType>
     </Compile>

@@ -4,6 +4,7 @@ using Common.Database.Tables;
 using Common.Globals;
 using Common.Helpers;
 using Common.Network;
+using System.Linq;
 
 namespace RealmServer.Handlers
 {
@@ -151,7 +152,7 @@ namespace RealmServer.Handlers
     }
     #endregion
 
-    internal class AuthHandler
+    internal class CharacterHandler
     {
         internal static void OnCharEnum(RealmServerSession session, byte[] data)
         {
@@ -164,45 +165,50 @@ namespace RealmServer.Handlers
             int result = (int)LoginErrorCode.CHAR_CREATE_DISABLED;
 
             // Need Char Name
-            result = (int) LoginErrorCode.CHAR_NAME_ENTER;
-
+            if (handler.Name == null)
+            {
+                result = (int)LoginErrorCode.CHAR_NAME_ENTER;
+            }
             // Char name min 2
-            result = (int) LoginErrorCode.CHAR_NAME_TOO_SHORT;
-
+            else if (handler.Name.Length <= 2)
+            {
+                result = (int)LoginErrorCode.CHAR_NAME_TOO_SHORT;
+            }
             // Char name max 12
-            result = (int) LoginErrorCode.CHAR_NAME_TOO_LONG;
-
+            else if (handler.Name.Length >= 12)
+            {
+                result = (int)LoginErrorCode.CHAR_NAME_TOO_LONG;
+            }
             // Char name only contain letter
-            result = (int) LoginErrorCode.CHAR_NAME_ONLY_LETTERS;
-
-            // Char name Profane
-            result = (int) LoginErrorCode.CHAR_NAME_PROFANE;
-
-            // Char name reserved
-            result = (int) LoginErrorCode.CHAR_NAME_RESERVED;
-
-            // Char name invalid
-            result = (int) LoginErrorCode.CHAR_NAME_FAILURE;
-
+            else if (handler.Name.Any(char.IsDigit))
+            {
+                result = (int)LoginErrorCode.CHAR_NAME_ONLY_LETTERS;
+            }
             // Char name in use
-            result = (int) LoginErrorCode.CHAR_CREATE_NAME_IN_USE;
+            else if (MainForm.Database.GetCharacaterByName(handler.Name) != null)
+            {
+                result = (int)LoginErrorCode.CHAR_CREATE_NAME_IN_USE;
+            }
 
-            // Check Ally or Horde
-            result = (int) LoginErrorCode.CHAR_CREATE_PVP_TEAMS_VIOLATION;
+            // Char name Profane            result = (int) LoginErrorCode.CHAR_NAME_PROFANE;
+            // Char name reserved           result = (int) LoginErrorCode.CHAR_NAME_RESERVED;
+            // Char name invalid            result = (int) LoginErrorCode.CHAR_NAME_FAILURE;
+            // Check Ally or Horde          result = (int) LoginErrorCode.CHAR_CREATE_PVP_TEAMS_VIOLATION;
+            // Check char limit create      result = (int) LoginErrorCode.CHAR_CREATE_SERVER_LIMIT;
 
-            // Check char limit create
-            result = (int) LoginErrorCode.CHAR_CREATE_SERVER_LIMIT;
-
+            // Check for both horde and alliance
+            // TODO: Only if it's a pvp realm
             try
             {
-                //CHAR_CREATE_SUCCESS
-                session.SendPacket(new SmsgCharCreate(result));
+                result = (int)LoginErrorCode.CHAR_CREATE_SUCCESS;
+                MainForm.Database.CreateChar(handler, session.Users);
             }
             catch (Exception)
             {
                 result = (int) LoginErrorCode.CHAR_CREATE_ERROR;
-                session.SendPacket(new SmsgCharCreate(result));
             }
+
+            session.SendPacket(new SmsgCharCreate(result));
         }
     }
 }

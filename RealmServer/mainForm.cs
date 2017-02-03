@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using Common.Globals;
 using Common.Helpers;
 using RealmServer.Handlers;
+using Common.Database.Dbc;
 
 namespace RealmServer
 {
@@ -35,14 +36,37 @@ namespace RealmServer
             var realmServerClass = new RealmServerClass(realmPoint);
 
             Database = new RealmServerDatabase();
+            DatabaseManager();
 
             RealmServerRouter.AddHandler<CmsgAuthSession>(RealmCMD.CMSG_AUTH_SESSION, RealmServerHandler.OnAuthSession);
             RealmServerRouter.AddHandler<CmsgPing>       (RealmCMD.CMSG_PING,         RealmServerHandler.OnPingPacket);
 
-            RealmServerRouter.AddHandler                 (RealmCMD.CMSG_CHAR_ENUM,    AuthHandler.OnCharEnum);
-            RealmServerRouter.AddHandler<CmsgCharCreate> (RealmCMD.CMSG_CHAR_CREATE,  AuthHandler.OnCharCreate);
+            RealmServerRouter.AddHandler                 (RealmCMD.CMSG_CHAR_ENUM,    CharacterHandler.OnCharEnum);
+            RealmServerRouter.AddHandler<CmsgCharCreate> (RealmCMD.CMSG_CHAR_CREATE,  CharacterHandler.OnCharCreate);
 
             Log.Print(LogType.RealmServer, $"Successfully started in {Time.getMSTimeDiff(time, Time.getMSTime()) / 1000}s");
+        }
+
+        AreaTableStore _AreaTableStore = new AreaTableStore();
+        CharStartOutfitStore _CharacterOutfitStore = new CharStartOutfitStore();
+        
+        public async void DatabaseManager()
+        {
+            Log.Print(LogType.RealmServer, $"Loading DBCs...");
+            await _CharacterOutfitStore.Load("CharStartOutfit.dbc");
+            await _AreaTableStore.Load("AreaTable.dbc"); 
+
+            /*
+            foreach ( var area in _AreaTableStore.RecordDataIndexed)
+            {
+                Console.WriteLine($"-------------- {area.Key} --------------");
+                string p = string.Join("\r\n", area.Value.areaMapID);
+
+                Console.WriteLine($"{p} - {area.Value.areaName}");
+            }
+
+            Console.WriteLine($"Total Carregado {_AreaTableStore.RecordDataIndexed.Count}");
+            */
         }
     }
 }
