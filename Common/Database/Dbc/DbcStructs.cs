@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
+using Common.Globals;
 
 namespace Common.Database.Dbc
 {
@@ -39,11 +42,44 @@ namespace Common.Database.Dbc
     #endregion
 
     #region Faction.dbc
+
     public class FactionReader : DbcReader<Faction>
     {
         public Faction GetFaction(int id)
         {
             return RecordDataIndexed.Values.ToArray().FirstOrDefault(a => a.FactionFlag == id);
+        }
+
+        public List<string> GenerateFactions(Races race)
+        {
+            List<string> listReturn = new List<string>();
+
+            for (int i = 0; i < 63; i++)
+            {
+                var faction = GetFaction(i);
+                if (faction != null)
+                {
+                    for (int flags = 0; flags < 4; flags++)
+                    {
+                        if (HaveFlag(faction.Flags[flags], race - 1))
+                            listReturn.Add($"{faction.FactionId}, {faction.ReputationFlags[flags]}, {faction.ReputationStats[flags]}");
+                    }
+                }
+                else
+                    listReturn.Add($"0, 0, 0");
+            }
+
+            return listReturn;
+        }
+
+        private static bool HaveFlag(int value, Races race)
+        {
+            value = value >> (int) race;
+            value = value % 2;
+
+            if (value == 1) return true;
+
+            return false;
         }
     }
 
@@ -79,6 +115,11 @@ namespace Common.Database.Dbc
             FactionName = GetString(19);
 
             return FactionId;
+        }
+
+        public IEnumerator GetEnumerator()
+        {
+            throw new NotImplementedException();
         }
     }
     #endregion

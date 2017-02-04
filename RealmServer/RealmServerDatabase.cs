@@ -6,15 +6,6 @@ using RealmServer.Handlers;
 
 namespace RealmServer
 {
-
-    public class TReputation
-    {
-        // 1:"AtWar" clickable but not checked
-        // 3:"AtWar" clickable and checked
-        public int Flags = 0;
-        public int Value = 0;
-    }
-
     public class RealmServerDatabase : DatabaseModel<Models>
     {
         // Pega conta do usuario baseado no login

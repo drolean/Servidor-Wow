@@ -52,8 +52,8 @@
       <HintPath>..\packages\Platform.Xml.Serialization.1.2.1.287\lib\net452\Platform.Xml.Serialization.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Shaolinq, Version=1.1.1.996, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Shaolinq.1.1.1.996\lib\net452\Shaolinq.dll</HintPath>
+    <Reference Include="Shaolinq, Version=1.1.1.1000, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Shaolinq.1.1.1.1000\lib\net452\Shaolinq.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Shaolinq.MySql, Version=1.1.1.996, Culture=neutral, processorArchitecture=MSIL">
@@ -71,7 +71,6 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Numerics" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Crypt\Srp6.cs" />
@@ -80,6 +79,7 @@
     <Compile Include="Database\DbcReader.cs" />
     <Compile Include="Database\Dbc\DbcStructs.cs" />
     <Compile Include="Database\Tables\Characters.cs" />
+    <Compile Include="Database\Tables\CharactersFactions.cs" />
     <Compile Include="Database\Tables\Realms.cs" />
     <Compile Include="Database\Tables\Users.cs" />
     <Compile Include="Helpers\BinaryWriterExtension.cs" />

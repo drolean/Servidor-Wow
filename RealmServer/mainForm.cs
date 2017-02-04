@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Reflection;
 using System.Windows.Forms;
@@ -58,30 +59,14 @@ namespace RealmServer
             await AreaTableReader.Load("AreaTable.dbc");
             await FactionReader.Load("Faction.dbc");
 
-            for (int i = 0; i < 69; i++)
+
+            var aba = FactionReader.GenerateFactions(Races.RACE_HUMAN);
+
+            foreach (var VARIABLE in aba)
             {
-                var faction = FactionReader.GetFaction(i);
-                if (faction != null)
-                {
-                    for (int ai = 0; ai < 3; ai++)
-                    {
-                        if (HaveFlag(faction.Flags[ai], 1 - 1))
-                        {
-                            Console.WriteLine($@"- Flag [ {faction.ReputationFlags[ai].ToString().PadRight(5, ' ')}] Stat [ {(faction.ReputationStats[ai]).ToString().PadRight(6, ' ')}] - FactionID: {faction.FactionId.ToString().PadRight(5, '.')} = {faction.FactionName}");
-                        }
-                    }
-                }
+                Console.WriteLine(VARIABLE);
             }
-        }
-
-        public bool HaveFlag(int value, byte flagPos)
-        {
-            value = value >> flagPos;
-            value = value % 2;
-
-            if (value == 1) return true;
-
-            return false;
+            
         }
     }
 }

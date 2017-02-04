@@ -38,6 +38,9 @@ namespace Common.Database
 
         [DataAccessObjects]
         public abstract DataAccessObjects<Characters> Characters { get; }
+
+        [DataAccessObjects]
+        public abstract DataAccessObjects<CharactersFactions> CharactersFactions { get; }
     }
 
     public class DatabaseManager : DatabaseModel<Models>
