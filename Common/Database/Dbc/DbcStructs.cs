@@ -127,33 +127,35 @@ namespace Common.Database.Dbc
     #region CharStartOutfit.dbc
     public class CharStartOutfitReader : DbcReader<CharStartOutfit>
     {
-        public CharStartOutfit Get(uint Class, uint race, uint gender)
+        public CharStartOutfit Get(Classes classe, Races race, Genders gender)
         {
-            return RecordDataIndexed.Values.ToArray().FirstOrDefault(c => c.Class == Class && c.Race == race && c.Gender == gender);
+            return
+                RecordDataIndexed.Values.ToArray()
+                    .FirstOrDefault(c => c.Class == (int) classe && c.Race == (int) race && c.Gender == (int) gender);
         }
     }
 
     public class CharStartOutfit : DbcRecordBase
     {
-        public uint Id;
+        public int Id;
         public uint Race;
         public uint Class;
         public uint Gender;
-        public uint[] Items = new uint[24];
+        public int[] Items = new int[24];
 
         public override int Read()
         {
-            Id = GetUInt32(0);
+            Id = GetInt32(0);
 
-            var tmp = GetUInt32(1);
-            Race = tmp & 0xFF;
-            Class = (tmp >> 8) & 0xFF;
-            Gender = (tmp >> 16) & 0xFF;
+            var tmp    = GetUInt32(1);
+                Race   = tmp & 0xFF;
+                Class  = (tmp >> 8) & 0xFF;
+                Gender = (tmp >> 16) & 0xFF;
 
             for (int i = 0; i < Items.Length; ++i)
-                Items[i] = GetUInt32(2 + i);
+                Items[i] = GetInt32(2 + i);
 
-            return (int)Id;
+            return Id;
         }
     }
     #endregion

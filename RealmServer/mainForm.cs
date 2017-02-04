@@ -21,7 +21,8 @@ namespace RealmServer
 
             InitializeComponent();
             Win32.AllocConsole();
-            Text = $@"{Assembly.GetExecutingAssembly().GetName().Name} v{Assembly.GetExecutingAssembly().GetName().Version}";
+            Text =
+                $@"{Assembly.GetExecutingAssembly().GetName().Name} v{Assembly.GetExecutingAssembly().GetName().Version}";
 
             // Add columns
             listView1.Columns.Add("Id", -2, HorizontalAlignment.Left);
@@ -45,12 +46,13 @@ namespace RealmServer
             RealmServerRouter.AddHandler(RealmCMD.CMSG_CHAR_ENUM, CharacterHandler.OnCharEnum);
             RealmServerRouter.AddHandler<CmsgCharCreate>(RealmCMD.CMSG_CHAR_CREATE, CharacterHandler.OnCharCreate);
 
-            Log.Print(LogType.RealmServer, $"Successfully started in {Time.getMSTimeDiff(time, Time.getMSTime()) / 1000}s");
+            Log.Print(LogType.RealmServer,
+                $"Successfully started in {Time.getMSTimeDiff(time, Time.getMSTime()) / 1000}s");
         }
 
         public readonly AreaTableReader AreaTableReader = new AreaTableReader();
-        public readonly CharStartOutfitReader CharacterOutfitReader = new CharStartOutfitReader();
-        public readonly FactionReader FactionReader = new FactionReader();
+        public static readonly CharStartOutfitReader CharacterOutfitReader = new CharStartOutfitReader();
+        public static readonly FactionReader FactionReader = new FactionReader();
 
         public async void DatabaseManager()
         {
@@ -58,15 +60,6 @@ namespace RealmServer
             await CharacterOutfitReader.Load("CharStartOutfit.dbc");
             await AreaTableReader.Load("AreaTable.dbc");
             await FactionReader.Load("Faction.dbc");
-
-
-            var aba = FactionReader.GenerateFactions(Races.RACE_HUMAN);
-
-            foreach (var VARIABLE in aba)
-            {
-                Console.WriteLine(VARIABLE);
-            }
-            
         }
     }
 }

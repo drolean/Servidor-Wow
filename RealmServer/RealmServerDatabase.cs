@@ -1,7 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Common.Database;
+using Common.Database.Dbc;
 using Common.Database.Tables;
+using Common.Globals;
 using RealmServer.Handlers;
 
 namespace RealmServer
@@ -23,31 +26,35 @@ namespace RealmServer
 
         internal void CreateChar(CmsgCharCreate handler, Users users)
         {
-            for (int i = 0; i <= 63; i++)
+            // Add Factions 
+            var InitiFactions = MainForm.FactionReader.GenerateFactions((Races)handler.Race);
+
+            // Initialize Character Variables
+
+            // Set Character Create Information
+
+            // Set Player Create Action Buttons
+
+            // Set Player Create Skills
+
+            // Set Player Taxi Zones 0-31
+
+            // Set Tutorial Flags
+
+            // Set Player Create Spells
+
+            // Set Player Create Items
+            CharStartOutfit startItems = MainForm.CharacterOutfitReader.Get((Classes)handler.Classe, (Races)handler.Race, (Genders)handler.Gender);
+
+            for (int j = 0; j < 12; ++j)
             {
-                //var faction = MainForm.FactionReader.Get(i);
+                if (startItems.Items[j] <= 0)
+                    continue;
 
-                /*
-
-            if factionFlag == i
-                For(0 to 3)
-
-                endFor
-            endif
-
-public bool HaveFlag(uint value, byte flagPos)
-{
-	value = value >> Convert.ToUInt32(flagPos);
-	value = value % 2;
-
-	if (value == 1) {
-		return true;
-	} else {
-		return false;
-	}
-}
-                */
+                Console.WriteLine(startItems.Items[j]);
             }
+            // First add bags
+            // Then add the rest of the items
 
             /*
             // Selecting Starter Itens Equipament
