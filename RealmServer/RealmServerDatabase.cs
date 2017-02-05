@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using Common.Database;
 using Common.Database.Dbc;
 using Common.Database.Tables;
 using Common.Globals;
 using RealmServer.Handlers;
+using Shaolinq;
 
 namespace RealmServer
 {
@@ -26,10 +28,15 @@ namespace RealmServer
 
         internal void CreateChar(CmsgCharCreate handler, Users users)
         {
-            // Add Factions 
+            // Factions 
             var InitiFactions = MainForm.FactionReader.GenerateFactions((Races)handler.Race);
 
-            // Initialize Character Variables
+            // Character Variables
+            var InitCharacter = MainForm.CharacterOutfitReader.Get((Classes)handler.Classe, (Races)handler.Race, (Genders)handler.Gender);
+
+            var InitRace = XmlReader.GetRace((Races)handler.Race);
+
+            var InitRaceClass = XmlReader.GetRaceClass((Races)handler.Race, (Classes)handler.Classe);
 
             // Set Character Create Information
 
@@ -45,7 +52,7 @@ namespace RealmServer
 
             // Set Player Create Items
             CharStartOutfit startItems = MainForm.CharacterOutfitReader.Get((Classes)handler.Classe, (Races)handler.Race, (Genders)handler.Gender);
-
+            /*
             for (int j = 0; j < 12; ++j)
             {
                 if (startItems.Items[j] <= 0)
@@ -53,6 +60,7 @@ namespace RealmServer
 
                 Console.WriteLine(XmlReader.GetItem(startItems.Items[j]));
             }
+            */
             // First add bags
             // Then add the rest of the items
 
@@ -62,11 +70,11 @@ namespace RealmServer
 
             // Selecting char data creation
             CharacterCreationInfo charStarter = GetCharStarter((RaceID)handler.Race);
-
+            */
             using (var scope = new DataAccessScope())
             {
                 // Salva Char
-                var Char = model.Characters.Create();
+                var Char = Model.Characters.Create();
                     Char.user       = users;
                     Char.name       = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(handler.Name);
                     Char.race       = (Races)handler.Race;
@@ -74,22 +82,21 @@ namespace RealmServer
                     Char.gender     = (Genders)handler.Gender;
                     Char.level      = 1;
                     Char.money      = 0;
-                    Char.MapId      = charStarter.MapID;
-                    Char.MapZone    = charStarter.MapZone;
-                    Char.MapX       = charStarter.MapX;
-                    Char.MapY       = charStarter.MapY;
-                    Char.MapZ       = charStarter.MapZ;
-                    Char.MapO       = charStarter.MapRotation;
-                    Char.char_skin
-                    Char.char_face
-                    Char.char_hairStyle
-                    Char.char_hairColor
-                    Char.char_facialHair
+                    Char.MapId      = InitRace.init.MapId;
+                    Char.MapZone    = InitRace.init.ZoneId;
+                    Char.MapX       = InitRace.init.MapX;
+                    Char.MapY       = InitRace.init.MapY;
+                    Char.MapZ       = InitRace.init.MapZ;
+                    Char.MapO       = InitRace.init.MapR;
+                    Char.char_skin       = handler.Skin;
+                    Char.char_face       = handler.Face;
+                    Char.char_hairStyle  = handler.HairStyle;
+                    Char.char_hairColor  = handler.HairColor;
+                    Char.char_facialHair = handler.FacialHair;
                     Char.created_at = DateTime.Now;
 
                 scope.Complete();
             }
-            */
         }
     }
 }

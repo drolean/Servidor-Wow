@@ -2,15 +2,12 @@
 using System.Collections.Generic;
 using Common.Database.Tables;
 using Common.Globals;
-using Common.Helpers;
 using Common.Network;
 using System.Linq;
 
 namespace RealmServer.Handlers
 {
-
-    [Flags]
-    enum CharacterFlagState
+    enum CharacterFlagState : int
     {
         CHARACTER_FLAG_NONE = 0x0,
         CHARACTER_FLAG_UNK1 = 0x1,
@@ -50,15 +47,14 @@ namespace RealmServer.Handlers
     #region SMSG_CHAR_ENUM
     public sealed class SmsgCharEnum : PacketServer
     {
-
         public SmsgCharEnum(List<Characters> characters) : base(RealmCMD.SMSG_CHAR_ENUM)
         {
-            // try catch to show error on retrieve list ?????
-            Write((byte)characters.Count);
+            Write((byte) characters.Count);
+
             foreach (Characters character in characters)
             {
                 Write((ulong) character.Id);
-                this.WriteCString(character.name);
+                WriteCString(character.name);
                 Write((byte)character.race);
                 Write((byte)character.classe);
                 Write((byte)character.gender);
@@ -78,14 +74,9 @@ namespace RealmServer.Handlers
                 Write(character.MapZ);
 
                 Write(0); // Guild ID
+                Write((int) CharacterFlagState.CHARACTER_FLAG_RENAME);
+                Write((byte) 0); //// Rest State Or //FirstLogin ???? Write((byte) (character.firsttime ? 1 : 0)); //FirstLogin  
 
-                Write((ulong)CharacterFlagState.CHARACTER_FLAG_GHOST);
-                                            // CHARACTER_FLAG_NONE - 
-                                            // CHARACTER_FLAG_LOCKED_FOR_TRANSFER - 
-                                            // CHARACTER_FLAG_LOCKED_BY_BILLING - 
-                                            // CHARACTER_FLAG_RENAME - 
-                                            // CHARACTER_FLAG_GHOST
-                Write(0); // Rest State Or //FirstLogin ???? Write((byte) (character.firsttime ? 1 : 0)); //FirstLogin 
 
                 Write(0); // PetModel
                 Write(0); // PetLevel
@@ -98,10 +89,13 @@ namespace RealmServer.Handlers
                 {
                     // No equiped item in this slot
                     Write(0); // Item Model
-                    Write((byte)0); // Item Slot
+                    Write((byte) 0); // Item Slot
 
                     // Do not show helmet or cloak
                 }
+
+                Write(0); // first bag display id
+                Write((byte) 0); // first bag inventory type
             }
         }
     }

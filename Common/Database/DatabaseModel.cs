@@ -43,6 +43,18 @@ namespace Common.Database
 
         [DataAccessObjects]
         public abstract DataAccessObjects<CharactersFactions> CharactersFactions { get; }
+
+        [DataAccessObjects]
+        public abstract DataAccessObjects<CharactersActionBars> CharactersActionBars { get; }
+
+        [DataAccessObjects]
+        public abstract DataAccessObjects<CharactersInventorys> CharactersInventorys { get; }
+
+        [DataAccessObjects]
+        public abstract DataAccessObjects<CharactersSkills> CharacteCharactersSkillsrsFactions { get; }
+
+        [DataAccessObjects]
+        public abstract DataAccessObjects<CharactersSpells> CharactersSpells { get; }
     }
 
     public class DatabaseManager : DatabaseModel<Models>

@@ -47,6 +47,7 @@ namespace RealmServer
 
             RealmServerRouter.AddHandler(RealmCMD.CMSG_CHAR_ENUM, CharacterHandler.OnCharEnum);
             RealmServerRouter.AddHandler<CmsgCharCreate>(RealmCMD.CMSG_CHAR_CREATE, CharacterHandler.OnCharCreate);
+            // CMSG_CHAR_RENAME
 
             Log.Print(LogType.RealmServer,
                 $"Successfully started in {Time.getMSTimeDiff(time, Time.getMSTime()) / 1000}s");

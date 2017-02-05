@@ -81,7 +81,11 @@
     <Compile Include="Database\DbcReader.cs" />
     <Compile Include="Database\Dbc\DbcStructs.cs" />
     <Compile Include="Database\Tables\Characters.cs" />
+    <Compile Include="Database\Tables\CharactersActionBars.cs" />
     <Compile Include="Database\Tables\CharactersFactions.cs" />
+    <Compile Include="Database\Tables\CharactersInventorys.cs" />
+    <Compile Include="Database\Tables\CharactersSkills.cs" />
+    <Compile Include="Database\Tables\CharactersSpells.cs" />
     <Compile Include="Database\Tables\Realms.cs" />
     <Compile Include="Database\Tables\Users.cs" />
     <Compile Include="Database\XmlReader.cs" />

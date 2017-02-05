@@ -4,9 +4,9 @@ using Shaolinq;
 namespace Common.Database.Tables
 {
     [DataAccessObject]
-    public abstract class CharactersFactions : DataAccessObject<int>
+    public abstract class CharactersSkills : DataAccessObject<int>
     {
-        [AutoIncrement] 
+        [AutoIncrement]
         [PersistedMember]
         public override int Id { get; set; }
 
@@ -14,13 +14,13 @@ namespace Common.Database.Tables
         public abstract Characters character { get; set; }
 
         [PersistedMember]
-        public abstract int faction { get; set; }
+        public abstract int skill { get; set; }
 
         [PersistedMember]
-        public abstract int standing { get; set; }
+        public abstract int value { get; set; }
 
         [PersistedMember]
-        public abstract int flags { get; set; }
+        public abstract int max { get; set; }
 
         [PersistedMember]
         public abstract DateTime? created_at { get; set; }

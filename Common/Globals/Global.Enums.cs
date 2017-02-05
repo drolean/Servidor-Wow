@@ -165,13 +165,13 @@
         QAServer     = 0x1C
     }
 
-    public enum Genders : byte
+    public enum Genders
     {
         GENDER_MALE = 0,
         GENDER_FEMALE = 1
     }
 
-    public enum Classes : byte
+    public enum Classes
     {
         CLASS_WARRIOR = 1,
         CLASS_PALADIN = 2,
@@ -184,10 +184,10 @@
         CLASS_DRUID = 11
     }
 
-    public enum Races : byte
+    public enum Races
     {
         RACE_HUMAN = 1,
-        RACE_ORC = 2,
+        RACE_ORC   = 2,
         RACE_DWARF = 3,
         RACE_NIGHT_ELF = 4,
         RACE_UNDEAD = 5,

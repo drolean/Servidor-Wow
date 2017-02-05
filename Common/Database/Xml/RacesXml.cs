@@ -64,19 +64,19 @@ namespace Common.Database.Xml
 
         /// <remarks/>
         [XmlAttribute]
-        public decimal MapX { get; set; }
+        public float MapX { get; set; }
 
         /// <remarks/>
         [XmlAttribute]
-        public string MapY { get; set; }
+        public float MapY { get; set; }
 
         /// <remarks/>
         [XmlAttribute]
-        public decimal MapZ { get; set; }
+        public float MapZ { get; set; }
 
         /// <remarks/>
         [XmlAttribute]
-        public decimal MapR { get; set; }
+        public float MapR { get; set; }
 
         /// <remarks/>
         [XmlAttribute]
