@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Globalization;
 using System.Runtime.InteropServices;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace RealmServer
@@ -27,6 +29,9 @@ namespace RealmServer
         [STAThread]
         static void Main()
         {
+            // Set errors in English
+            Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-us");
+
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new MainForm());

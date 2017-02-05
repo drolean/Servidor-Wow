@@ -12,17 +12,17 @@ namespace RealmServer
     public class RealmServerDatabase : DatabaseModel<Models>
     {
         // Pega conta do usuario baseado no login
-        public Users GetAccount(string username) => !model.Users.Any() ? null : model.Users.FirstOrDefault(a => a.username.ToLower() == username.ToLower());
+        public Users GetAccount(string username) => !Model.Users.Any() ? null : Model.Users.FirstOrDefault(a => a.username.ToLower() == username.ToLower());
 
         // Retorna lista de chars do usuario
         public List<Characters> GetCharacters(string username)
         {
             Users account = GetAccount(username);
-            return model.Characters.Where(a => a.user == account).ToList();
+            return Model.Characters.Where(a => a.user == account).ToList();
         }
 
         // Pega Char pelo nome
-        public Characters GetCharacaterByName(string username) => !model.Characters.Any() ? null : model.Characters.FirstOrDefault(a => a.name.ToLower() == username.ToLower());
+        public Characters GetCharacaterByName(string username) => !Model.Characters.Any() ? null : Model.Characters.FirstOrDefault(a => a.name.ToLower() == username.ToLower());
 
         internal void CreateChar(CmsgCharCreate handler, Users users)
         {
@@ -51,7 +51,7 @@ namespace RealmServer
                 if (startItems.Items[j] <= 0)
                     continue;
 
-                Console.WriteLine(startItems.Items[j]);
+                Console.WriteLine(XmlReader.GetItem(startItems.Items[j]));
             }
             // First add bags
             // Then add the rest of the items
