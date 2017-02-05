@@ -141,7 +141,7 @@ namespace Common.Database.Dbc
         public uint Race;
         public uint Class;
         public uint Gender;
-        public int[] Items = new int[24];
+        public int[] Items = new int[11];
 
         public override int Read()
         {

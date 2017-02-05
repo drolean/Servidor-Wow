@@ -4,25 +4,39 @@ using System.IO;
 using System.Linq;
 using System.Xml.Serialization;
 using Common.Database.Xml;
+using Common.Globals;
 using Common.Helpers;
 
 namespace Common.Database
 {
     public class XmlReader
     {
-        public static ItemsXml RetornoItems { get; private set; }
+        public static ItemsXml ItemsXml { get; private set; }
 
+        public static RacesXml RacesXml { get; private set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public static void Boot()
         {
             Log.Print(LogType.RealmServer, $"Loading XML...");
             try
             {
-                XmlSerializer serializer = new XmlSerializer(typeof(ItemsXml));
-                StreamReader reader = new StreamReader($"xml/items.xml");
-                RetornoItems = serializer.Deserialize(reader) as ItemsXml;
-                if (RetornoItems != null)
-                    Log.Print(LogType.RealmServer, $"- Items Loaded: {RetornoItems.Item.Count()}");
-                reader.Close();
+                XmlSerializer serializerItems = new XmlSerializer(typeof(ItemsXml));
+                StreamReader readerItems = new StreamReader($"xml/items.xml");
+                ItemsXml = serializerItems.Deserialize(readerItems) as ItemsXml;
+                if (ItemsXml != null)
+                    Log.Print(LogType.RealmServer, $"- Items Loaded: {ItemsXml.Item.Count()}");
+                readerItems.Close();
+
+                XmlSerializer serializerRaces = new XmlSerializer(typeof(RacesXml));
+                StreamReader readerRaces = new StreamReader($"xml/races.xml");
+                RacesXml = serializerRaces.Deserialize(readerRaces) as RacesXml;
+                if (RacesXml != null)
+                    Log.Print(LogType.RealmServer, $"- Races Loaded: {RacesXml.race.Count()}");
+                readerRaces.Close();
+
             }
             catch (Exception e)
             {
@@ -31,11 +45,57 @@ namespace Common.Database
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="race"></param>
+        /// <returns></returns>
+        public static racesRace GetRace(Races race)
+        {
+            try
+            {
+                return RacesXml?.race.FirstOrDefault(a => a.id == (int) race);
+            }
+            catch (Exception e)
+            {
+                var trace = new StackTrace(e, true);
+                Log.Print(LogType.Error, $"{e.Message}: {e.Source}\n{trace.GetFrame(trace.FrameCount - 1).GetFileName()}:{trace.GetFrame(trace.FrameCount - 1).GetFileLineNumber()}");
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="race"></param>
+        /// <param name="classe"></param>
+        /// <returns></returns>
+        public static racesRaceClass GetRaceClass(Races race, Classes classe)
+        {
+            try
+            {
+                return RacesXml.race.FirstOrDefault(ok => ok.id == (int) race)?.classes.First(ba => ba.id == classe.ToString());
+            }
+            catch (Exception e)
+            {
+                var trace = new StackTrace(e, true);
+                Log.Print(LogType.Error, $"{e.Message}: {e.Source}\n{trace.GetFrame(trace.FrameCount - 1).GetFileName()}:{trace.GetFrame(trace.FrameCount - 1).GetFileLineNumber()}");
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public static ItemsItem GetItem(int value)
         {
             try
             {
-                return RetornoItems.Item.First(a => a.id == value);
+                return ItemsXml.Item.First(a => a.id == value);
             }
             catch (Exception e)
             {
