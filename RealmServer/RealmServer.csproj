@@ -53,6 +53,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Handlers\CharacterHandler.cs" />
+    <Compile Include="Helpers\CharacterInitializator.cs" />
     <Compile Include="mainForm.cs">
       <SubType>Form</SubType>
     </Compile>

@@ -4,6 +4,7 @@ using Common.Database.Tables;
 using Common.Globals;
 using Common.Network;
 using System.Linq;
+using Common.Database;
 
 namespace RealmServer.Handlers
 {
@@ -84,14 +85,24 @@ namespace RealmServer.Handlers
 
                 // Get items
 
-                // Add model info
+                var inventory = MainForm.Database.GetInventory(character);
+
                 for (int slot = 0; slot < 19; slot++)
                 {
-                    // No equiped item in this slot
-                    Write(0); // Item Model
-                    Write((byte) 0); // Item Slot
+                    CharactersInventorys checkItem = inventory.FirstOrDefault(b => b.slot == slot);
 
-                    // Do not show helmet or cloak
+                    if (checkItem != null)
+                    {
+                        var item = XmlReader.GetItem((int)checkItem.item);
+
+                        Write(item.displayId);
+                        Write((byte)item.inventoryType);
+                    }
+                    else
+                    {
+                        Write(0);
+                        Write((byte)0);
+                    }
                 }
 
                 Write(0); // first bag display id
@@ -132,6 +143,20 @@ namespace RealmServer.Handlers
             HairColor = ReadByte();
             FacialHair= ReadByte();
             OutfitId  = ReadByte();
+        }
+    }
+    #endregion
+
+    #region CMSG_CHAR_RENAME
+    public sealed class CmsgCharRename : PacketReader
+    {
+        public long Id { get; private set; }
+        public string Name { get; private set; }
+
+        public CmsgCharRename(byte[] data) : base(data)
+        {
+            Id = ReadInt64();
+            Name = ReadCString();
         }
     }
     #endregion
@@ -203,6 +228,12 @@ namespace RealmServer.Handlers
             }
 
             session.SendPacket(new SmsgCharCreate(result));
+        }
+
+        internal static void OnCharRename(RealmServerSession session, CmsgCharRename handler)
+        {
+            Console.WriteLine(handler.Name);
+            Console.WriteLine(handler.Id);
         }
     }
 }

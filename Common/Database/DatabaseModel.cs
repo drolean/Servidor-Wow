@@ -51,7 +51,7 @@ namespace Common.Database
         public abstract DataAccessObjects<CharactersInventorys> CharactersInventorys { get; }
 
         [DataAccessObjects]
-        public abstract DataAccessObjects<CharactersSkills> CharacteCharactersSkillsrsFactions { get; }
+        public abstract DataAccessObjects<CharactersSkills> CharactersSkills { get; }
 
         [DataAccessObjects]
         public abstract DataAccessObjects<CharactersSpells> CharactersSpells { get; }

@@ -74,7 +74,7 @@ namespace Common.Database.Dbc
 
         private static bool HaveFlag(int value, Races race)
         {
-            value = value >> (int) race;
+            value = value >> (int)race;
             value = value % 2;
 
             if (value == 1) return true;
@@ -131,7 +131,7 @@ namespace Common.Database.Dbc
         {
             return
                 RecordDataIndexed.Values.ToArray()
-                    .FirstOrDefault(c => c.Class == (int) classe && c.Race == (int) race && c.Gender == (int) gender);
+                    .FirstOrDefault(c => c.Class == (int)classe && c.Race == (int)race && c.Gender == (int)gender);
         }
     }
 
@@ -147,15 +147,50 @@ namespace Common.Database.Dbc
         {
             Id = GetInt32(0);
 
-            var tmp    = GetUInt32(1);
-                Race   = tmp & 0xFF;
-                Class  = (tmp >> 8) & 0xFF;
-                Gender = (tmp >> 16) & 0xFF;
+            var tmp = GetUInt32(1);
+            Race = tmp & 0xFF;
+            Class = (tmp >> 8) & 0xFF;
+            Gender = (tmp >> 16) & 0xFF;
 
             for (int i = 0; i < Items.Length; ++i)
                 Items[i] = GetInt32(2 + i);
 
             return Id;
+        }
+    }
+    #endregion
+
+    #region ChrRaces.dbc
+    public class ChrRacesReader : DbcReader<ChrRaces>
+    {
+        public ChrRaces GetData(Races id)
+        {
+            return RecordDataIndexed.Values.ToArray().FirstOrDefault(a => a.raceID == (int) id);
+        }
+    }
+    public class ChrRaces : DbcRecordBase
+    {
+        public int raceID       = 0;
+        public int factionID    = 0;
+        public int modelM       = 0;
+        public int modelF       = 0;
+        public int teamID       = 0; //1 = Horde / 7 = Alliance
+        public uint taxiMask    = 0;
+        public int cinematicID  = 0;
+        public string name      = null;
+
+        public override int Read()
+        {
+            raceID      = GetInt32(0);
+            factionID   = GetInt32(2);
+            modelM      = GetInt32(4);
+            modelF      = GetInt32(5);
+            teamID      = GetInt32(8);
+            taxiMask    = GetUInt32(14);
+            cinematicID = GetInt32(16);
+            name        = GetString(17);
+
+            return raceID;
         }
     }
     #endregion

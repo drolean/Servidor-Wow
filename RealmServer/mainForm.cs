@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Net;
 using System.Reflection;
 using System.Windows.Forms;
@@ -9,6 +8,7 @@ using Common.Helpers;
 using RealmServer.Handlers;
 using Common.Database.Dbc;
 using Shaolinq;
+using RealmServer.Helpers;
 
 namespace RealmServer
 {
@@ -50,7 +50,7 @@ namespace RealmServer
 
             RealmServerRouter.AddHandler(RealmCMD.CMSG_CHAR_ENUM, CharacterHandler.OnCharEnum);
             RealmServerRouter.AddHandler<CmsgCharCreate>(RealmCMD.CMSG_CHAR_CREATE, CharacterHandler.OnCharCreate);
-            // CMSG_CHAR_RENAME
+            RealmServerRouter.AddHandler<CmsgCharRename>(RealmCMD.CMSG_CHAR_RENAME, CharacterHandler.OnCharRename);
 
             Log.Print(LogType.RealmServer,
                 $"Successfully started in {Time.getMSTimeDiff(time, Time.getMSTime()) / 1000}s");
@@ -59,6 +59,7 @@ namespace RealmServer
         public readonly AreaTableReader AreaTableReader = new AreaTableReader();
         public static readonly CharStartOutfitReader CharacterOutfitReader = new CharStartOutfitReader();
         public static readonly FactionReader FactionReader = new FactionReader();
+        public static readonly ChrRacesReader ChrRacesReader = new ChrRacesReader();
 
         public async void DatabaseManager()
         {
@@ -66,18 +67,35 @@ namespace RealmServer
             await CharacterOutfitReader.Load("CharStartOutfit.dbc");
             await AreaTableReader.Load("AreaTable.dbc");
             await FactionReader.Load("Faction.dbc");
+            await ChrRacesReader.Load("ChrRaces.dbc");
 
             TestCreate = new TestCreate();
-            TestCreate.CreateChar();
+            //TestCreate.CreateChar();
         }
     }
 
     public class TestCreate : DatabaseModel<Models>
     {
+        public static CharacterInitializator Helper { get; set; }
+
         public void CreateChar()
         {
             try
             {
+                Helper = new CharacterInitializator();
+
+                //Console.WriteLine(CharacterInitializator.GetClassManaType(Classes.CLASS_DRUID));
+                //Console.WriteLine(CharacterInitializator.GetRaceModel(Races.RACE_DWARF, Genders.GENDER_MALE));
+
+                // Set Player Taxi Zones ????
+                var initXml = MainForm.ChrRacesReader.GetData(Races.RACE_HUMAN);
+                for (int i = 0; i <= 31; i++)
+                {
+                    //Console.WriteLine(initXml.taxiMask);
+                }
+
+                var name = Guid.NewGuid().ToString().Replace("-", string.Empty).Substring(0, 8);
+
                 using (var scope = new DataAccessScope())
                 {
                     var initRace = XmlReader.GetRace(Races.RACE_HUMAN);
@@ -85,58 +103,26 @@ namespace RealmServer
                     // Salva Char
                     var Char = Model.Characters.Create();
                         Char.user = MainForm.Database.GetAccount("doe");
-                        Char.name = "Abacate";
-                        Char.race = Races.RACE_HUMAN;
-                        Char.classe = Classes.CLASS_PALADIN;
+                        Char.name = name;
+                        Char.race = Races.RACE_ORC;
+                        Char.classe = Classes.CLASS_SHAMAN;
                         Char.gender = Genders.GENDER_FEMALE;
                         Char.created_at = DateTime.Now;
 
-                    // Factions 
-                    var initiFactions = MainForm.FactionReader.GenerateFactions(Races.RACE_HUMAN);
-
-                    foreach (var valFaction in initiFactions)
-                    {
-                        string[] fac = valFaction.Split(',');
-
-                        var charFactions = Model.CharactersFactions.Create();
-                        charFactions.character = Char;
-                        charFactions.faction = Int32.Parse(fac[0]);
-                        charFactions.flags = Int32.Parse(fac[1]);
-                        charFactions.standing = Int32.Parse(fac[2]);
-                        charFactions.created_at = DateTime.Now;
-                    }
-
-                    // Set Player Create Items
-                    CharStartOutfit startItems = MainForm.CharacterOutfitReader.Get(Classes.CLASS_PALADIN, Races.RACE_HUMAN, Genders.GENDER_FEMALE);
-
-                    if (startItems == null)
-                        return;
-
-                    foreach (var VARIABLE in startItems.Items)
-                    {
-                        Console.WriteLine(VARIABLE);
-                    }
-
-                    for (int j = 0; j < 12; ++j)
-                    {
-                        if (startItems.Items[j] <= 0)
-                            continue;
-
-                        var item = XmlReader.GetItem(startItems.Items[j]);
-
-                        if (item == null)
-                            continue;
-
-                        var charInventory = Model.CharactersInventorys.Create();
-                        charInventory.character = Char;
-                        charInventory.item = (ulong)item.id;
-                        charInventory.stack = 1;
-                        //charInventory.slot = PrefInvSlot(item);
-                        charInventory.created_at = DateTime.Now;
-                    }
-
                     scope.Complete();
                 }
+
+                //
+                var charata = MainForm.Database.GetCharacaterByName(name);
+
+                Console.WriteLine(charata.name);
+
+                Helper.GenerateActionBar(charata);
+                Helper.GenerateFactions(charata);       // DONE
+                Helper.GenerateInventory(charata);      // DONE
+                Helper.GenerateSkills(charata);         // DONE
+                Helper.GenerateSpells(charata);         // DONE
+
             }
             catch (Exception e)
             {
