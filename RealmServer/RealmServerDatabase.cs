@@ -91,5 +91,22 @@ namespace RealmServer
 
             return;
         }
+
+        internal async void DeleteCharacter(int id)
+        {
+            Characters Char = Model.Characters.FirstOrDefault(a => a.Id == id);
+
+            using (var scope = new DataAccessScope())
+            {
+                await Model.Characters.Where(a => a.Id == id).DeleteAsync();
+                await Model.CharactersActionBars.Where(a => a.character == Char).DeleteAsync();
+                await Model.CharactersSkills.Where(a => a.character == Char).DeleteAsync();
+                await Model.CharactersSpells.Where(a => a.character == Char).DeleteAsync();
+                await Model.CharactersInventorys.Where(a => a.character == Char).DeleteAsync();
+                await Model.CharactersFactions.Where(a => a.character == Char).DeleteAsync();
+
+                await scope.CompleteAsync();
+            }
+        }
     }
 }

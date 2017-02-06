@@ -181,6 +181,28 @@ namespace RealmServer.Handlers
     }
     #endregion
 
+    #region CMSG_CHAR_DELETE
+    public class CmsgCharDelete : PacketReader
+    {
+        public int Id { get; private set; }
+
+        public CmsgCharDelete(byte[] data) : base(data)
+        {
+            Id = (int)ReadUInt64();
+        }
+    }
+    #endregion
+
+    #region SMSG_CHAR_DELETE
+    sealed class SmsgCharDelete : PacketServer
+    {
+        public SmsgCharDelete(LoginErrorCode code) : base(RealmCMD.SMSG_CHAR_DELETE)
+        {
+            Write((byte)code);
+        }
+    }
+    #endregion
+
     internal class CharacterHandler
     {
         internal static void OnCharEnum(RealmServerSession session, byte[] data)
@@ -258,6 +280,15 @@ namespace RealmServer.Handlers
 
             List<Characters> characters = MainForm.Database.GetCharacters(session.Users.username);
             session.SendPacket(new SmsgCharEnum(characters));
+        }
+
+        internal static void OnCharDelete(RealmServerSession session, CmsgCharDelete handler)
+        {
+            // if failed                CHAR_DELETE_FAILED
+            // if waiting for transfer  CHAR_DELETE_FAILED_LOCKED_FOR_TRANSFER
+            // if guild leader          CHAR_DELETE_FAILED_GUILD_LEADER
+            MainForm.Database.DeleteCharacter(handler.Id);
+            session.SendPacket(new SmsgCharDelete(LoginErrorCode.CHAR_DELETE_SUCCESS));
         }
     }
 }
