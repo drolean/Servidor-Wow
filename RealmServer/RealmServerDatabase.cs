@@ -152,5 +152,25 @@ namespace RealmServer
                 await scope.CompleteAsync();
             }
         }
+
+        internal Characters GetCharacter(uint guid)
+        {
+            return Model.Characters.FirstOrDefault(a => a.Id == guid);
+        }
+
+        internal List<CharactersSpells> GetSpells(Characters character)
+        {
+            return Model.CharactersSpells.Where(a => a.character == character).ToList();
+        }
+
+        internal List<CharactersFactions> GetFactions(Characters character)
+        {
+            return Model.CharactersFactions.Where(a => a.character == character).ToList();
+        }
+
+        internal List<CharactersActionBars> GetActionBar(Characters character)
+        {
+            return Model.CharactersActionBars.Where(a => a.character == character).ToList();
+        }
     }
 }

@@ -5,6 +5,7 @@ using Common.Globals;
 using Common.Network;
 using System.Linq;
 using Common.Database;
+using Common.Helpers;
 
 namespace RealmServer.Handlers
 {
@@ -201,6 +202,181 @@ namespace RealmServer.Handlers
     }
     #endregion
 
+    #region CMSG_PLAYER_LOGIN
+    public sealed class CmsgPlayerLogin : PacketReader
+    {
+        public uint Guid { get; private set; }
+
+        public CmsgPlayerLogin(byte[] data) : base(data)
+        {
+            Guid = ReadUInt32();
+        }
+    }
+    #endregion
+
+    #region CMSG_UPDATE_ACCOUNT_DATA
+    public sealed class CmsgUpdateAccountData : PacketReader
+    {
+        public uint DataId { get; private set; }
+        public uint UncompressedSize { get; private set; }
+
+        public CmsgUpdateAccountData(byte[] data) : base(data)
+        {
+            if ((data.Length - 1) < 13)
+                return;
+
+            DataId = ReadUInt32();
+            UncompressedSize = ReadUInt32();
+
+            if (DataId > 7)
+                return;
+
+            // How does Mangos Zero Handle the Account Data For the Character?
+
+            // Clear the entry
+
+            // Can not handle more than 65534 bytes
+
+            // Check if it's compressed, if so, decompress it
+        }
+    }
+    #endregion
+
+    #region SMSG_ACCOUNT_DATA_TIMES
+    class SmsgAccountDataTimes : PacketServer
+    {
+        public SmsgAccountDataTimes() : base(RealmCMD.SMSG_ACCOUNT_DATA_TIMES)
+        {
+            this.WriteNullByte(128);
+        }
+    }
+    #endregion
+
+    #region SMSG_TRIGGER_CINEMATIC
+    public sealed class SmsgTriggerCinematic : PacketServer
+    {
+        public SmsgTriggerCinematic(Characters character) : base(RealmCMD.SMSG_TRIGGER_CINEMATIC)
+        {
+            Write(XmlReader.GetRace(character.race).init.Cinematic);
+        }
+    }
+    #endregion
+
+    sealed class SmsgBindpointupdate : PacketServer
+    {
+        public SmsgBindpointupdate(Characters character) : base(RealmCMD.SMSG_BINDPOINTUPDATE)
+        {
+            Write(character.MapX);
+            Write(character.MapY);
+            Write(character.MapZ);
+            Write((uint)character.MapId);
+            Write((short)character.MapZone);
+        }
+    }
+
+    sealed class SmsgSetRestStart : PacketServer
+    {
+        public SmsgSetRestStart(Characters character) : base(RealmCMD.SMSG_SET_REST_START)
+        {
+            Write((byte)0);
+        }
+    }
+
+    sealed class SmsgTutorialFlags : PacketServer
+    {
+        //TODO Write the uint ids of 8 tutorial values
+        public SmsgTutorialFlags(Characters character) : base(RealmCMD.SMSG_TUTORIAL_FLAGS)
+        {
+            // [8*Int32] or [32 Bytes] or [256 Bits Flags] Total!!!
+            for (int i = 0; i < 8; i++)
+            {
+                Write((byte)0xff);
+            }
+        }
+    }
+
+    public sealed class SmsgLoginVerifyWorld : PacketServer
+    {
+        public SmsgLoginVerifyWorld(Characters character) : base(RealmCMD.SMSG_LOGIN_VERIFY_WORLD)
+        {
+            Write(character.MapId);
+            Write(character.MapX);
+            Write(character.MapY);
+            Write(character.MapZ);
+            Write(character.MapO);
+        }
+    }
+
+    sealed class SMSG_CORPSE_RECLAIM_DELAY : PacketServer
+    {
+        public SMSG_CORPSE_RECLAIM_DELAY() : base(RealmCMD.SMSG_CORPSE_RECLAIM_DELAY)
+        {
+            Write(30 * 1000);
+        }
+    }
+
+    sealed class SmsgInitialSpells : PacketServer
+    {
+        public SmsgInitialSpells(Characters character) : base(RealmCMD.SMSG_INITIAL_SPELLS)
+        {
+            // Implement Spell Cooldowns
+            var spells = MainForm.Database.GetSpells(character);
+
+            Write((byte)0); //int8
+            Write((ushort)spells.Count); //int16
+
+            //ushort slot = 1;
+            foreach (CharactersSpells spell in spells)
+            {
+                Write((ushort)spell.spell); //uint16
+                Write(0); //int16
+            }
+
+            Write((UInt16)spells.Count); //in16
+        }
+    }
+
+    sealed class SmsgInitializeFactions : PacketServer
+    {
+        public SmsgInitializeFactions(Characters character) : base(RealmCMD.SMSG_INITIALIZE_FACTIONS)
+        {
+            var factions = MainForm.Database.GetFactions(character);
+
+            Write((Int32)64);
+            foreach(var fact in factions)
+            {
+                Write((byte)  fact.flags); // Flag 
+                Write((Int32) fact.standing); // Value
+            }
+        }
+    }
+
+    sealed class SmsgActionButtons : PacketServer
+    {
+        public SmsgActionButtons(Characters character) : base(RealmCMD.SMSG_ACTION_BUTTONS)
+        {
+            List<CharactersActionBars> savedButtons = MainForm.Database.GetActionBar(character);
+
+            for (int button = 0; button < 120; button++) //  119    'or 480 ?
+            {
+                int index = savedButtons.FindIndex(b => b.button == button);
+
+                CharactersActionBars currentButton = index != -1 ? savedButtons[index] : null;
+
+                if (currentButton != null)
+                {
+                    UInt32 packedData = (UInt32)currentButton.action | (UInt32)currentButton.type << 24;
+                    Write((UInt32)packedData);
+                    //Write((UInt16)currentButton.action);
+                    //Write((int)currentButton.type);
+                    //Write((int)currentButton.); ?? misc???
+                }
+                else
+                    Write((UInt32)0);
+            }
+        }
+    }
+
     internal class CharacterHandler
     {
         internal static void OnCharEnum(RealmServerSession session, byte[] data)
@@ -292,6 +468,93 @@ namespace RealmServer.Handlers
             // if guild leader          CHAR_DELETE_FAILED_GUILD_LEADER
             MainForm.Database.DeleteCharacter(handler.Id);
             session.SendPacket(new SmsgCharDelete(LoginErrorCode.CHAR_DELETE_SUCCESS));
+        }
+
+        internal static void OnPlayerLogin(RealmServerSession session, CmsgPlayerLogin handler)
+        {
+            if(session.Character == null)
+                session.Character = MainForm.Database.GetCharacter(handler.Guid);
+
+            Log.Print(LogType.RealmServer, $"[{session.ConnectionRemoteIp}] Enter World [{session.Character.name} ({handler.Guid})]");
+
+            // SMSG_CORPSE_RECLAIM_DELAY
+            session.SendPacket(new SMSG_CORPSE_RECLAIM_DELAY());
+            
+            // Cast talents and racial passive spells
+
+            /////////////////////////////// PT1
+            // Setting instance ID
+
+            // Set player to transport
+
+            // If we have changed map
+
+            // Loading map cell if not loaded
+
+            // SMSG_BINDPOINTUPDATE
+            session.SendPacket(new SmsgBindpointupdate(session.Character));
+            
+            // SMSG_SET_REST_START
+            session.SendPacket(new SmsgSetRestStart(session.Character));
+
+            // SMSG_TUTORIAL_FLAGS
+            session.SendPacket(new SmsgTutorialFlags(session.Character));
+
+            // SMSG_SET_PROFICIENCY
+
+            // SMSG_UPDATE_AURA_DURATION
+
+            // SMSG_INITIAL_SPELLS
+            session.SendPacket(new SmsgInitialSpells(session.Character));
+
+            // SMSG_INITIALIZE_FACTIONS
+            session.SendPacket(new SmsgInitializeFactions(session.Character));
+
+            // SMSG_ACTION_BUTTONS
+            session.SendPacket(new SmsgActionButtons(session.Character));
+
+            // SMSG_INIT_WORLD_STATES
+            session.SendHexPacket(RealmCMD.SMSG_INIT_WORLD_STATES, "01 00 00 00 6C 00 AE 07 01 00 32 05 01 00 31 05 00 00 2E 05 00 00 F9 06 00 00 F3 06 00 00 F1 06 00 00 EE 06 00 00 ED 06 00 00 71 05 00 00 70 05 00 00 67 05 01 00 66 05 01 00 50 05 01 00 44 05 00 00 36 05 00 00 35 05 01 00 C6 03 00 00 C4 03 00 00 C2 03 00 00 A8 07 00 00 A3 07 0F 27 74 05 00 00 73 05 00 00 72 05 00 00 6F 05 00 00 6E 05 00 00 6D 05 00 00 6C 05 00 00 6B 05 00 00 6A 05 01 00 69 05 01 00 68 05 01 00 65 05 00 00 64 05 00 00 63 05 00 00 62 05 00 00 61 05 00 00 60 05 00 00 5F 05 00 00 5E 05 00 00 5D 05 00 00 5C 05 00 00 5B 05 00 00 5A 05 00 00 59 05 00 00 58 05 00 00 57 05 00 00 56 05 00 00 55 05 00 00 54 05 01 00 53 05 01 00 52 05 01 00 51 05 01 00 4F 05 00 00 4E 05 00 00 4D 05 01 00 4C 05 00 00 4B 05 00 00 45 05 00 00 43 05 01 00 42 05 00 00 40 05 00 00 3F 05 00 00 3E 05 00 00 3D 05 00 00 3C 05 00 00 3B 05 00 00 3A 05 01 00 39 05 00 00 38 05 00 00 37 05 00 00 34 05 00 00 33 05 00 00 30 05 00 00 2F 05 00 00 2D 05 01 00 16 05 01 00 15 05 00 00 B6 03 00 00 45 07 02 00 36 07 01 00 35 07 01 00 34 07 01 00 33 07 01 00 32 07 01 00 02 07 00 00 01 07 00 00 00 07 00 00 FE 06 00 00 FD 06 00 00 FC 06 00 00 FB 06 00 00 F8 06 00 00 F7 06 00 00 F6 06 00 00 F4 06 D0 07 F2 06 00 00 F0 06 00 00 EF 06 00 00 EC 06 00 00 EA 06 00 00 E9 06 00 00 E8 06 00 00 E7 06 00 00 18 05 00 00 17 05 00 00 03 07 00 00 ");
+
+            // SMSG_UPDATE_OBJECT for ourself
+                //FillAllUpdateFlags()
+                //SendUpdate()
+
+            // Adding to World
+                // AddToWorld(Me)
+
+            // Enable client moving
+                // SendTimeSyncReq(client)
+
+            // Send update on aura durations
+
+            /////////////////////////////// PT2 
+            // Update character status in database
+
+            // SMSG_ACCOUNT_DATA_TIMES
+            session.SendPacket(new SmsgAccountDataTimes());
+
+            // SMSG_TRIGGER_CINEMATIC
+            session.SendPacket(new SmsgTriggerCinematic(session.Character));
+
+            // SMSG_LOGIN_SETTIMESPEED
+
+            // Server Message Of The Day
+
+            // Guild Message Of The Day
+
+            // Social lists
+
+            // Send "Friend online"
+
+            // Send online notify for guild
+
+            // Put back character in group if disconnected
+        }
+
+        internal static void OnUpdateAccountData(RealmServerSession session, CmsgUpdateAccountData handler)
+        {
+            Console.WriteLine("Update Account Data Bucueta");
         }
     }
 }

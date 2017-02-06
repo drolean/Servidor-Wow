@@ -92,22 +92,31 @@ namespace Common.Database.Tables
 
         [PersistedMember]
         public abstract uint stast_mana { get; set; }
+
         [PersistedMember]
         public abstract uint stats_energy { get; set; }
+
         [PersistedMember]
         public abstract uint stats_rage { get; set; }
+
         [PersistedMember]
         public abstract uint stats_life { get; set; }
+
         [PersistedMember]
         public abstract uint stats_manaType { get; set; }
+
         [PersistedMember]
         public abstract uint stats_strength { get; set; }
+
         [PersistedMember]
         public abstract uint stats_agility { get; set; }
+
         [PersistedMember]
         public abstract uint stats_stamina { get; set; }
+
         [PersistedMember]
         public abstract uint stats_intellect { get; set; }
+
         [PersistedMember]
         public abstract uint stats_spirit { get; set; }
 

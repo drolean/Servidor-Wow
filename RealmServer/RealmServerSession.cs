@@ -10,10 +10,11 @@ using Common.Database.Tables;
 using Common.Globals;
 using Common.Helpers;
 using Common.Network;
+using System.Linq;
 
 namespace RealmServer
 {
-    public class RealmServerSession : IDisposable
+    public class RealmServerSession
     {
         public Socket ConnectionSocket { get; }
         public VanillaCrypt PacketCrypto { get; set; }
@@ -25,6 +26,7 @@ namespace RealmServer
 
         //
         public Users Users { get; set; }
+        public Characters Character;
 
         //
         public sealed class SmsgAuthChallenge : PacketServer
@@ -70,7 +72,7 @@ namespace RealmServer
 
         internal void SendPacket(int opcode, byte[] data)
         {
-            Log.Print(LogType.RealmServer, $"[{ConnectionSocket.RemoteEndPoint}] [INIT] Server -> Client [{((RealmCMD)opcode).ToString().PadRight(25, ' ')}] = {data.Length}");
+            Log.Print(LogType.RealmServer, $"[{ConnectionSocket.RemoteEndPoint}] [INIT] Server -> Client [{((RealmCMD)opcode).ToString().PadRight(25, ' ')}] = {data.Length} + 4 [header]");
             BinaryWriter writer = new BinaryWriter(new MemoryStream());
             byte[] header = Encode(data.Length, opcode);
             writer.Write(header);
@@ -80,8 +82,6 @@ namespace RealmServer
 
         internal void SendData(byte[] send, string v)
         {
-            Log.Print(LogType.RealmServer, $"[{ConnectionSocket.RemoteEndPoint}] [HEAD] Server -> Client [{v.PadRight(25, ' ')}] = {send.Length}");
-
             byte[] buffer = new byte[send.Length];
             Buffer.BlockCopy(send, 0, buffer, 0, send.Length);
 
@@ -245,6 +245,7 @@ namespace RealmServer
                           $"{buffer.PadLeft(16 - data.Length % 16, ' ')}|");
             }
         }
+
         private byte[] Encode(int size, int opcode)
         {
             int index = 0;
@@ -279,18 +280,23 @@ namespace RealmServer
                 length = BitConverter.ToUInt16(new[] { header[1], header[0] }, 0);
                 opcode = BitConverter.ToInt16(new[] { header[2], header[3] }, 0);
             }
-
-            header[0] = BitConverter.GetBytes(opcode)[0];
-            header[1] = BitConverter.GetBytes(opcode)[1];
-
-            header[2] = BitConverter.GetBytes(length)[0];
-            header[3] = BitConverter.GetBytes(length)[1];
         }
 
-        void IDisposable.Dispose()
+        public void SendHexPacket(RealmCMD opcode, string hex)
         {
-            ConnectionSocket.Dispose();
-            GC.SuppressFinalize(this);
+            string end = hex.Replace(" ", "").Replace("\n", "");
+
+            byte[] data = StringToByteArray(end);
+
+            SendPacket((int)opcode, data);
+        }
+
+        public static byte[] StringToByteArray(string hex)
+        {
+            return Enumerable.Range(0, hex.Length)
+                             .Where(x => x % 2 == 0)
+                             .Select(x => Convert.ToByte(hex.Substring(x, 2), 16))
+                             .ToArray();
         }
     }
 }
