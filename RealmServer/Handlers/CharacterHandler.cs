@@ -75,19 +75,20 @@ namespace RealmServer.Handlers
                 Write(character.MapZ);
 
                 Write(0); // Guild ID
+                // if DEAD or any Restriction 
                 Write((int) CharacterFlagState.CHARACTER_FLAG_NONE);
-                Write((byte) 1); //// Rest State Or //FirstLogin ???? Write((byte) (character.firsttime ? 1 : 0)); //FirstLogin  
+                // RestState
+                Write((byte) 0);
 
-
+                // SELECT modelid, level, entry FROM character_pet WHERE owner =
                 Write(0); // PetModel
                 Write(0); // PetLevel
-                Write(0); // PetFamily
+                Write(0); // PetFamily = SELECT family FROM creature_template WHERE entry
 
-                // Get items
-
+                // DONE: Get items
                 var inventory = MainForm.Database.GetInventory(character);
 
-                for (int slot = 0; slot < 19; slot++)
+                for (int slot = 0; slot < 20; slot++)
                 {
                     CharactersInventorys checkItem = inventory.FirstOrDefault(b => b.slot == slot);
 
@@ -104,9 +105,6 @@ namespace RealmServer.Handlers
                         Write((byte)0);
                     }
                 }
-
-                Write(0); // first bag display id
-                Write((byte) 0); // first bag inventory type
             }
         }
     }
@@ -266,6 +264,9 @@ namespace RealmServer.Handlers
         {
             int result = (int)LoginErrorCode.CHAR_NAME_FAILURE;
 
+            // Check for existing name
+
+            // DONE: Do the rename
             try
             {
                 result = (int)LoginErrorCode.RESPONSE_SUCCESS;
@@ -276,8 +277,10 @@ namespace RealmServer.Handlers
                 result = (int)LoginErrorCode.CHAR_NAME_FAILURE;
             }
 
+            // DONE: Send response
             session.SendPacket(new SmsgCharRename(result));
 
+            // ????? NEED TO REVIEW THIS to update CHAR LIST ENUM
             List<Characters> characters = MainForm.Database.GetCharacters(session.Users.username);
             session.SendPacket(new SmsgCharEnum(characters));
         }

@@ -83,16 +83,14 @@ namespace RealmServer
     {
         public static void OnAuthSession(RealmServerSession session, CmsgAuthSession handler)
         {
+            // DONE: Check Account
             session.Users = MainForm.Database.GetAccount(handler.User);
-            session.PacketCrypto = new VanillaCrypt();
-            session.PacketCrypto.Init(session.Users.sessionkey);
-            session.SendPacket(new SmsgAuthResponse());
-
-            // Check Account
 
             // Kick if existing
 
-            // Set client.SS_Hash
+            // DONE: Set Crypt Hash Player
+            session.PacketCrypto = new VanillaCrypt();
+            session.PacketCrypto.Init(session.Users.sessionkey);
 
             // Disconnect clients trying to enter with an invalid build
             //if (handler.Build < 5875 || handler.Build > 6141)
@@ -101,12 +99,19 @@ namespace RealmServer
 
             // If server full then queue, If GM/Admin let in
 
-            // Send packet
+            // Addons info reading
+
+            // DONE: Send packet
+            session.SendPacket(new SmsgAuthResponse());
         }
 
         public static void OnPingPacket(RealmServerSession session, CmsgPing handler)
         {
             session.SendPacket(new SmsgPong(handler.Ping));
+
+            // Set latency to char
+//            if (session.Character != null)
+//                session.Character.Latency = handler.Latency;
         }
     }
 }
