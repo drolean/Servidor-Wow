@@ -75,8 +75,8 @@ namespace RealmServer.Handlers
                 Write(character.MapZ);
 
                 Write(0); // Guild ID
-                Write((int) CharacterFlagState.CHARACTER_FLAG_RENAME);
-                Write((byte) 0); //// Rest State Or //FirstLogin ???? Write((byte) (character.firsttime ? 1 : 0)); //FirstLogin  
+                Write((int) CharacterFlagState.CHARACTER_FLAG_NONE);
+                Write((byte) 1); //// Rest State Or //FirstLogin ???? Write((byte) (character.firsttime ? 1 : 0)); //FirstLogin  
 
 
                 Write(0); // PetModel
