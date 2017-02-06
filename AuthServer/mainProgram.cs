@@ -27,7 +27,7 @@ namespace AuthServer
             Database = new AuthServerDatabase();
 
             // recreate database***
-            new DatabaseManager();
+            //new DatabaseManager();
 
             //
             AuthServerRouter.AddHandler<AuthLogonChallenge>(AuthCMD.CMD_AUTH_LOGON_CHALLENGE, AuthServerHandler.OnAuthLogonChallenge);
