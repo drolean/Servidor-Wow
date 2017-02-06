@@ -147,6 +147,16 @@ namespace RealmServer.Handlers
     }
     #endregion
 
+    #region SMSG_CHAR_CREATE
+    sealed class SmsgCharCreate : PacketServer
+    {
+        public SmsgCharCreate(int code) : base(RealmCMD.SMSG_CHAR_CREATE)
+        {
+            Write((byte)code);
+        }
+    }
+    #endregion
+
     #region CMSG_CHAR_RENAME
     public sealed class CmsgCharRename : PacketReader
     {
@@ -161,10 +171,10 @@ namespace RealmServer.Handlers
     }
     #endregion
 
-    #region SMSG_CHAR_CREATE
-    sealed class SmsgCharCreate : PacketServer
+    #region SMSG_CHAR_RENAME
+    sealed class SmsgCharRename : PacketServer
     {
-        public SmsgCharCreate(int code) : base(RealmCMD.SMSG_CHAR_CREATE)
+        public SmsgCharRename(int code) : base(RealmCMD.SMSG_CHAR_RENAME)
         {
             Write((byte)code);
         }
@@ -232,8 +242,22 @@ namespace RealmServer.Handlers
 
         internal static void OnCharRename(RealmServerSession session, CmsgCharRename handler)
         {
-            Console.WriteLine(handler.Name);
-            Console.WriteLine(handler.Id);
+            int result = (int)LoginErrorCode.CHAR_NAME_FAILURE;
+
+            try
+            {
+                result = (int)LoginErrorCode.RESPONSE_SUCCESS;
+                MainForm.Database.UpdateName(handler);
+            }
+            catch (Exception)
+            {
+                result = (int)LoginErrorCode.CHAR_NAME_FAILURE;
+            }
+
+            session.SendPacket(new SmsgCharRename(result));
+
+            List<Characters> characters = MainForm.Database.GetCharacters(session.Users.username);
+            session.SendPacket(new SmsgCharEnum(characters));
         }
     }
 }

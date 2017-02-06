@@ -78,5 +78,18 @@ namespace RealmServer
         {
             return Model.CharactersInventorys.Where(a => a.character == character).ToList();
         }
+
+        internal async void UpdateName(CmsgCharRename handler)
+        {
+            using (var scope = new DataAccessScope())
+            {
+                var character = Model.Characters.GetByPrimaryKey(handler.Id);
+                    character.name = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(handler.Name);
+
+                await scope.CompleteAsync();
+            }
+
+            return;
+        }
     }
 }

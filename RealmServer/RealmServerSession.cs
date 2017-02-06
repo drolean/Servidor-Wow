@@ -13,7 +13,7 @@ using Common.Network;
 
 namespace RealmServer
 {
-    public class RealmServerSession
+    public class RealmServerSession : IDisposable
     {
         public Socket ConnectionSocket { get; }
         public VanillaCrypt PacketCrypto { get; set; }
@@ -27,7 +27,7 @@ namespace RealmServer
         public Users Users { get; set; }
 
         //
-        sealed class SmsgAuthChallenge : PacketServer
+        public sealed class SmsgAuthChallenge : PacketServer
         {
             public SmsgAuthChallenge() : base(RealmCMD.SMSG_AUTH_CHALLENGE)
             {
@@ -40,7 +40,7 @@ namespace RealmServer
             }
         }
 
-        public RealmServerSession(int connectionId, Socket connectionSocket)
+        internal RealmServerSession(int connectionId, Socket connectionSocket)
         {
             ConnectionId = connectionId;
             ConnectionSocket = connectionSocket;
@@ -63,12 +63,12 @@ namespace RealmServer
             SendPacket(new SmsgAuthChallenge());
         }
 
-        public void SendPacket(PacketServer packet)
+        internal void SendPacket(PacketServer packet)
         {
             SendPacket(packet.Opcode, packet.Packet);
         }
 
-        public void SendPacket(int opcode, byte[] data)
+        internal void SendPacket(int opcode, byte[] data)
         {
             Log.Print(LogType.RealmServer, $"[{ConnectionSocket.RemoteEndPoint}] [INIT] Server -> Client [{((RealmCMD)opcode).ToString().PadRight(25, ' ')}] = {data.Length}");
             BinaryWriter writer = new BinaryWriter(new MemoryStream());
@@ -124,7 +124,7 @@ namespace RealmServer
             }
         }
 
-        public virtual void DataArrival(IAsyncResult asyncResult)
+        internal virtual void DataArrival(IAsyncResult asyncResult)
         {
             int bytesRecived = 0;
 
@@ -198,7 +198,7 @@ namespace RealmServer
             }
         }
 
-        public static void DumpPacket(byte[] data, RealmServerSession client)
+        internal static void DumpPacket(byte[] data, RealmServerSession client)
         {
             int j;
             string buffer = "";
@@ -245,7 +245,6 @@ namespace RealmServer
                           $"{buffer.PadLeft(16 - data.Length % 16, ' ')}|");
             }
         }
-
         private byte[] Encode(int size, int opcode)
         {
             int index = 0;
@@ -286,6 +285,12 @@ namespace RealmServer
 
             header[2] = BitConverter.GetBytes(length)[0];
             header[3] = BitConverter.GetBytes(length)[1];
+        }
+
+        void IDisposable.Dispose()
+        {
+            ConnectionSocket.Dispose();
+            GC.SuppressFinalize(this);
         }
     }
 }
