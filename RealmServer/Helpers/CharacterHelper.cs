@@ -8,68 +8,8 @@ using System;
 
 namespace RealmServer.Helpers
 {
-    public class CharacterInitializator : DatabaseModel<Models>
+    public class CharacterHelper : DatabaseModel<Models>
     {
-
-        #region ENUM's
-        public enum InventorySlots
-        {
-            SLOT_START      = 0,
-            SLOT_HEAD       = 0,
-            SLOT_NECK       = 1,
-            SLOT_SHOULDERS  = 2,
-            SLOT_SHIRT      = 3,
-            SLOT_CHEST      = 4,
-            SLOT_WAIST      = 5,
-            SLOT_LEGS       = 6,
-            SLOT_FEET       = 7,
-            SLOT_WRISTS     = 8,
-            SLOT_HANDS      = 9,
-            SLOT_FINGERL    = 10,
-            SLOT_FINGERR    = 11,
-            SLOT_TRINKETL   = 12,
-            SLOT_TRINKETR   = 13,
-            SLOT_BACK       = 14,
-            SLOT_MAINHAND   = 15,
-            SLOT_OFFHAND    = 16,
-            SLOT_RANGED     = 17,
-            SLOT_TABARD     = 18,
-            SLOT_END        = 19,
-
-            // Misc Types
-            SLOT_BAG_START  = 19,
-            SLOT_BAG1       = 19,
-            SLOT_BAG2       = 20,
-            SLOT_BAG3       = 21,
-            SLOT_BAG4       = 22,
-            SLOT_INBACKPACK = 23,
-            SLOT_BAG_END    = 23,
-
-            SLOT_ITEM_START = 23,
-            SLOT_ITEM_END   = 39,
-
-            SLOT_BANK_ITEM_START    = 39,
-            SLOT_BANK_ITEM_END      = 63,
-            SLOT_BANK_BAG_1         = 63,
-            SLOT_BANK_BAG_2         = 64,
-            SLOT_BANK_BAG_3         = 65,
-            SLOT_BANK_BAG_4         = 66,
-            SLOT_BANK_BAG_5         = 67,
-            SLOT_BANK_BAG_6         = 68,
-            SLOT_BANK_END           = 69
-        }
-
-        public enum ManaTypes : int
-        {
-            TYPE_MANA = 0,
-            TYPE_RAGE = 1,
-            TYPE_FOCUS = 2,
-            TYPE_ENERGY = 3,
-            TYPE_HAPPINESS = 4,
-            TYPE_HEALTH = -2
-        }
-        #endregion
-
         public static uint PrefInvSlot(ItemsItem item)
         {
             int[] slotTypes = {
@@ -323,5 +263,74 @@ namespace RealmServer.Helpers
                     countBag++;
             }
         }
+    }
+
+    public class TStatBar
+    {
+        private int _current;
+        public int Bonus;
+        public int Base;
+        public float Modifier = 1;
+
+        public void Increment(int incrementator = 1)
+        {
+            if (Current + incrementator < (Bonus + Base))
+                Current = Current + incrementator;
+            else
+                Current = Maximum;
+        }
+
+        public TStatBar(int currentVal, int baseVal, int bonusVal)
+        {
+            _current = currentVal;
+            Bonus = bonusVal;
+            Base = baseVal;
+        }
+
+        public int Maximum => (int)((Bonus + Base) * Modifier);
+
+        public int Current
+        {
+            get { return (int)(_current * Modifier); }
+            set
+            {
+                _current = value <= Maximum ? value : Maximum;
+                if (_current < 0)
+                    _current = 0;
+            }
+        }
+    }
+
+    public class TStat
+    {
+        public int Base;
+        public short PositiveBonus;
+        public short NegativeBonus = 0;
+        public float BaseModifier = 1;
+        public float Modifier = 1;
+        public int RealBase
+        {
+            get { return Base - PositiveBonus + NegativeBonus; }
+            set
+            {
+                Base = Base - PositiveBonus + NegativeBonus;
+                Base = value;
+                Base = Base + PositiveBonus - NegativeBonus;
+            }
+        }
+
+        public TStat(byte baseValue = 0, byte posValue = 0, byte negValue = 0)
+        {
+            Base = baseValue;
+            PositiveBonus = posValue;
+            PositiveBonus = negValue;
+        }
+    }
+
+    public class TDamage
+    {
+        public float Minimum = 0;
+        public float Maximum = 0;
+        public int Type = (int) DamageTypes.DMG_PHYSICAL;
     }
 }

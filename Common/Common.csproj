@@ -60,8 +60,8 @@
       <HintPath>..\packages\Shaolinq.MySql.1.1.1.1000\lib\net452\Shaolinq.MySql.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Shaolinq.Sqlite, Version=1.1.1.996, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Shaolinq.Sqlite.1.1.1.996\lib\net452\Shaolinq.Sqlite.dll</HintPath>
+    <Reference Include="Shaolinq.Sqlite, Version=1.1.1.1000, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Shaolinq.Sqlite.1.1.1.1000\lib\net452\Shaolinq.Sqlite.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -101,6 +101,7 @@
   <ItemGroup>
     <None Include="App.config" />
     <Compile Include="Globals\Global.Enums.cs" />
+    <Compile Include="Globals\Global.Confirm.cs" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup />

@@ -79,13 +79,13 @@ namespace RealmServer
 
     public class TestCreate : DatabaseModel<Models>
     {
-        public static CharacterInitializator Helper { get; set; }
+        public static CharacterHelper Helper { get; set; }
 
         public void CreateChar()
         {
             try
             {
-                Helper = new CharacterInitializator();
+                Helper = new CharacterHelper();
 
                 //Console.WriteLine(CharacterInitializator.GetClassManaType(Classes.CLASS_DRUID));
                 //Console.WriteLine(CharacterInitializator.GetRaceModel(Races.RACE_DWARF, Genders.GENDER_MALE));

@@ -13,7 +13,7 @@ namespace RealmServer
 {
     public class RealmServerDatabase : DatabaseModel<Models>
     {
-        internal static CharacterInitializator Helper { get; set; }
+        internal static CharacterHelper Helper { get; set; }
 
         // Pega conta do usuario baseado no login
         internal Users GetAccount(string username) => !Model.Users.Any() ? null : Model.Users.FirstOrDefault(a => a.username.ToLower() == username.ToLower());
@@ -30,7 +30,7 @@ namespace RealmServer
 
         internal void CreateChar(CmsgCharCreate handler, Users users)
         {
-            Helper = new CharacterInitializator();
+            Helper = new CharacterHelper();
 
             using (var scope = new DataAccessScope())
             {

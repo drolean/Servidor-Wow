@@ -1,11 +1,32 @@
-﻿namespace RealmServer.Objects
+﻿using System;
+using System.Collections;
+
+namespace RealmServer.Objects
 {
     public class BaseObject
     {
         /* AQUI VAI OS GLOBAL MUDAR DEPOIS PARA GLOBAL EM OUTRO ARQUIVO DE CONF */
         public const float DefaultDistanceVisible = 155.8f;
+        public static int DefaultMaxLevel = 60;                 // Max Player Level
+        public static int[] XPTable = new int[DefaultMaxLevel + 1];    // Max XPTable Level from Database
         /* AQUI VAI OS GLOBAL MUDAR DEPOIS PARA GLOBAL EM OUTRO ARQUIVO DE CONF */
-        /*
+
+        public int UpdateCount { get; private set; }
+        public int DataLength { get; set; }
+
+        public BitArray Mask { get; }
+        public Hashtable UpdateData { get; }
+
+        public BaseObject()
+        {
+            UpdateData = new Hashtable();
+            Mask = new BitArray(DataLength, false); 
+        }
+
+        // [START] Definições 
+        public ulong GUID = 0;
+        // [END] Definições
+
         public void SetUpdateField<T>(int index, T value, byte offset = 0)
         {
             UpdateCount++;
@@ -74,6 +95,5 @@
                     }
             }
         }
-        */
     }
 }
