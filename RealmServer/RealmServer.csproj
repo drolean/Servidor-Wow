@@ -52,6 +52,7 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Game\Objects\CharacterObject.cs" />
     <Compile Include="Handlers\CharacterHandler.cs" />
     <Compile Include="Helpers\CharacterHelper.cs" />
     <Compile Include="mainForm.cs">
@@ -100,9 +101,7 @@
       <Name>Common</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Game\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
