@@ -1,6 +1,4 @@
-﻿using System.Collections;
-
-namespace RealmServer.Objects
+﻿namespace RealmServer.Objects
 {
     public enum EObjectFields
     {
@@ -14,6 +12,7 @@ namespace RealmServer.Objects
 
     public class CharacterObject : BaseUnit
     {
+        /*
         private BitArray UpdateMask = new BitArray(FIELD_MASK_SIZE_PLAYER, false);
         private Hashtable UpdateData = new Hashtable();
 
@@ -29,5 +28,6 @@ namespace RealmServer.Objects
             SetUpdateFlag(EObjectFields.OBJECT_FIELD_TYPE, 25);
             SetUpdateFlag(EObjectFields.OBJECT_FIELD_SCALE_X, Size);
         }
+        */
     }
 }

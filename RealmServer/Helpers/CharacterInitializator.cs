@@ -105,9 +105,9 @@ namespace RealmServer.Helpers
             return (uint)slotTypes[item.inventoryType];
         }
         
-        public static ManaTypes GetClassManaType(Classes Classe)
+        public static ManaTypes GetClassManaType(Classes classe)
         {
-            switch (Classe)
+            switch (classe)
             {
                 case Classes.CLASS_DRUID:
                 case Classes.CLASS_HUNTER:
@@ -126,26 +126,26 @@ namespace RealmServer.Helpers
             }
         }
 
-        public static Genders GetRaceModel(Races Race, Genders Gender)
+        public static Genders GetRaceModel(Races race, Genders gender)
         {
-            switch (Race)
+            switch (race)
             {
                 case Races.RACE_HUMAN:
-                    return 49 + Gender;
+                    return 49 + gender;
                 case Races.RACE_ORC:
-                    return 51 + Gender;
+                    return 51 + gender;
                 case Races.RACE_DWARF:
-                    return 53 + Gender;
+                    return 53 + gender;
                 case Races.RACE_NIGHT_ELF:
-                    return 55 + Gender;
+                    return 55 + gender;
                 case Races.RACE_UNDEAD:
-                    return 57 + Gender;
+                    return 57 + gender;
                 case Races.RACE_TAUREN:
-                    return 59 + Gender;
+                    return 59 + gender;
                 case Races.RACE_GNOME:
-                    return 1563 + Gender;
+                    return 1563 + gender;
                 case Races.RACE_TROLL:
-                    return 1478 + Gender;
+                    return 1478 + gender;
             }
 
             return 16358 + Genders.GENDER_MALE;
@@ -161,12 +161,12 @@ namespace RealmServer.Helpers
             {
                 using (var scope = new DataAccessScope())
                 {
-                    var Skill = Model.CharactersSkills.Create();
-                        Skill.character = character;
-                        Skill.skill = skillBase.id;
-                        Skill.value = skillBase.min;
-                        Skill.max = skillBase.max;
-                        Skill.created_at = DateTime.Now;
+                    var skill = Model.CharactersSkills.Create();
+                        skill.character = character;
+                        skill.skill = skillBase.id;
+                        skill.value = skillBase.min;
+                        skill.max = skillBase.max;
+                        skill.created_at = DateTime.Now;
 
                     scope.Complete();
                 }
@@ -176,12 +176,12 @@ namespace RealmServer.Helpers
             {
                 using (var scope = new DataAccessScope())
                 {
-                    var Skill = Model.CharactersSkills.Create();
-                    Skill.character = character;
-                    Skill.skill = skillBase.id;
-                    Skill.value = skillBase.min;
-                    Skill.max = skillBase.max;
-                    Skill.created_at = DateTime.Now;
+                    var skill = Model.CharactersSkills.Create();
+                    skill.character = character;
+                    skill.skill = skillBase.id;
+                    skill.value = skillBase.min;
+                    skill.max = skillBase.max;
+                    skill.created_at = DateTime.Now;
 
                     scope.Complete();
                 }
@@ -214,7 +214,6 @@ namespace RealmServer.Helpers
         // DONE: Generate ActionBar for Creation Char
         public void GenerateActionBar(Characters character)
         {
-            var initRace = XmlReader.GetRace(character.race);
             var initRaceClass = XmlReader.GetRaceClass(character.race, character.classe);
             /*
             foreach (var actionBase in initRace.actions)
@@ -236,12 +235,12 @@ namespace RealmServer.Helpers
             {
                 using (var scope = new DataAccessScope())
                 {
-                    var ActionBar = Model.CharactersActionBars.Create();
-                    ActionBar.character = character;
-                    ActionBar.button = actionBase.button;
-                    ActionBar.action = actionBase.action;
-                    ActionBar.type = actionBase.type;
-                    ActionBar.created_at = DateTime.Now;
+                    var actionBar = Model.CharactersActionBars.Create();
+                    actionBar.character = character;
+                    actionBar.button = actionBase.button;
+                    actionBar.action = actionBase.action;
+                    actionBar.type = actionBase.type;
+                    actionBar.created_at = DateTime.Now;
 
                     scope.Complete();
                 }
@@ -258,11 +257,11 @@ namespace RealmServer.Helpers
             {
                 using (var scope = new DataAccessScope())
                 {
-                    var Spell = Model.CharactersSpells.Create();
-                    Spell.character = character;
-                    Spell.spell = spellBase.id;
-                    Spell.active = 1;
-                    Spell.created_at = DateTime.Now;
+                    var spell = Model.CharactersSpells.Create();
+                    spell.character = character;
+                    spell.spell = spellBase.id;
+                    spell.active = 1;
+                    spell.created_at = DateTime.Now;
 
                     scope.Complete();
                 }
@@ -272,11 +271,11 @@ namespace RealmServer.Helpers
             {
                 using (var scope = new DataAccessScope())
                 {
-                    var Spell = Model.CharactersSpells.Create();
-                    Spell.character = character;
-                    Spell.spell = spellBase.id;
-                    Spell.active = 1;
-                    Spell.created_at = DateTime.Now;
+                    var spell = Model.CharactersSpells.Create();
+                    spell.character = character;
+                    spell.spell = spellBase.id;
+                    spell.active = 1;
+                    spell.created_at = DateTime.Now;
 
                     scope.Complete();
                 }
@@ -320,7 +319,7 @@ namespace RealmServer.Helpers
                     scope.Complete();
                 }
 
-                if (CharacterInitializator.PrefInvSlot(item) == 23)
+                if (PrefInvSlot(item) == 23)
                     countBag++;
             }
         }

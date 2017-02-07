@@ -2,6 +2,6 @@
 {
     public class BaseUnit : BaseObject
     {
-        public const float CombatReach_Base = 2f;
+        public const float CombatReachBase = 2f;
     }
 }

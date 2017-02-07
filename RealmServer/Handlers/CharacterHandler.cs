@@ -295,7 +295,7 @@ namespace RealmServer.Handlers
         }
     }
 
-    public sealed class SmsgLoginVerifyWorld : PacketServer
+    sealed class SmsgLoginVerifyWorld : PacketServer
     {
         public SmsgLoginVerifyWorld(Characters character) : base(RealmCMD.SMSG_LOGIN_VERIFY_WORLD)
         {
@@ -307,9 +307,9 @@ namespace RealmServer.Handlers
         }
     }
 
-    sealed class SMSG_CORPSE_RECLAIM_DELAY : PacketServer
+    sealed class SmsgCorpseReclaimDelay : PacketServer
     {
-        public SMSG_CORPSE_RECLAIM_DELAY() : base(RealmCMD.SMSG_CORPSE_RECLAIM_DELAY)
+        public SmsgCorpseReclaimDelay() : base(RealmCMD.SMSG_CORPSE_RECLAIM_DELAY)
         {
             Write(30 * 1000);
         }
@@ -478,7 +478,7 @@ namespace RealmServer.Handlers
             Log.Print(LogType.RealmServer, $"[{session.ConnectionRemoteIp}] Enter World [{session.Character.name} ({handler.Guid})]");
 
             // SMSG_CORPSE_RECLAIM_DELAY
-            session.SendPacket(new SMSG_CORPSE_RECLAIM_DELAY());
+            session.SendPacket(new SmsgCorpseReclaimDelay());
             
             // Cast talents and racial passive spells
 
@@ -554,7 +554,7 @@ namespace RealmServer.Handlers
 
         internal static void OnUpdateAccountData(RealmServerSession session, CmsgUpdateAccountData handler)
         {
-            Console.WriteLine("Update Account Data Bucueta");
+            Console.WriteLine(@"Update Account Data Bucueta");
         }
     }
 }

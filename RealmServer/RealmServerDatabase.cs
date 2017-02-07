@@ -21,7 +21,7 @@ namespace RealmServer
         // Retorna lista de chars do usuario
         internal List<Characters> GetCharacters(string username)
         {
-            Users account = GetAccount(username);
+            var account = GetAccount(username);
             return Model.Characters.Where(a => a.user == account).ToList();
         }
 
@@ -85,13 +85,13 @@ namespace RealmServer
                 scope.Complete();
             }
 
-            var Character = MainForm.Database.GetCharacaterByName(CultureInfo.CurrentCulture.TextInfo.ToTitleCase(handler.Name));
+            var character = MainForm.Database.GetCharacaterByName(CultureInfo.CurrentCulture.TextInfo.ToTitleCase(handler.Name));
 
-            Helper.GenerateActionBar(Character);      // DONE: Generate Action Bar
-            Helper.GenerateFactions(Character);       // DONE: Generate Reputation Factions
-            Helper.GenerateSkills(Character);         // DONE: Generate Skills
-            Helper.GenerateSpells(Character);         // DONE: Generate Spells
-            Helper.GenerateInventory(Character);      // Generate Inventory
+            Helper.GenerateActionBar(character);      // DONE: Generate Action Bar
+            Helper.GenerateFactions(character);       // DONE: Generate Reputation Factions
+            Helper.GenerateSkills(character);         // DONE: Generate Skills
+            Helper.GenerateSpells(character);         // DONE: Generate Spells
+            Helper.GenerateInventory(character);      // Generate Inventory
 
         }
 
@@ -109,8 +109,6 @@ namespace RealmServer
 
                 await scope.CompleteAsync();
             }
-
-            return;
         }
 
         internal async void DeleteCharacter(int id)
@@ -118,7 +116,7 @@ namespace RealmServer
             // Check if char is own of player
                 // if not BAN account and IP
 
-            Characters Char = Model.Characters.FirstOrDefault(a => a.Id == id);
+            var Char = Model.Characters.FirstOrDefault(a => a.Id == id);
 
             using (var scope = new DataAccessScope())
             {
