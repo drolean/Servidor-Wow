@@ -297,5 +297,10 @@ namespace RealmServer
                              .Select(x => Convert.ToByte(hex.Substring(x, 2), 16))
                              .ToArray();
         }
+
+        internal void SendPacket(object p)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

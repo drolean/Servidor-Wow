@@ -61,9 +61,6 @@
       <DependentUpon>mainForm.cs</DependentUpon>
     </Compile>
     <Compile Include="mainProgram.cs" />
-    <Compile Include="Objects\BaseObject.cs" />
-    <Compile Include="Objects\BaseUnit.cs" />
-    <Compile Include="Objects\CharacterObject.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RealmServerClass.cs" />
     <Compile Include="RealmServerDatabase.cs" />
@@ -102,6 +99,9 @@
       <Project>{d831b37f-1e0e-4327-9f33-d9edbaae7648}</Project>
       <Name>Common</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Game\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using Common.Database.Tables;
-using Common.Globals;
-using Common.Network;
 using System.Linq;
 using Common.Database;
+using Common.Database.Tables;
+using Common.Globals;
 using Common.Helpers;
+using Common.Network;
 
 namespace RealmServer.Handlers
 {
-    enum CharacterFlagState : int
+    enum CharacterFlagState
     {
         CHARACTER_FLAG_NONE = 0x0,
         CHARACTER_FLAG_UNK1 = 0x1,
@@ -342,11 +342,11 @@ namespace RealmServer.Handlers
         {
             var factions = MainForm.Database.GetFactions(character);
 
-            Write((Int32)64);
+            Write(64);
             foreach(var fact in factions)
             {
                 Write((byte)  fact.flags); // Flag 
-                Write((Int32) fact.standing); // Value
+                Write(fact.standing); // Value
             }
         }
     }
@@ -366,7 +366,7 @@ namespace RealmServer.Handlers
                 if (currentButton != null)
                 {
                     UInt32 packedData = (UInt32)currentButton.action | (UInt32)currentButton.type << 24;
-                    Write((UInt32)packedData);
+                    Write(packedData);
                     //Write((UInt16)currentButton.action);
                     //Write((int)currentButton.type);
                     //Write((int)currentButton.); ?? misc???
