@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using Common.Database.Tables;
 using Common.Globals;
 using Common.Helpers;
 using Common.Network;
 using RealmServer.Game.Entitys;
+using RealmServer.Helpers;
 
 namespace RealmServer.Game
 {
@@ -57,7 +59,9 @@ namespace RealmServer.Game
             {
                 ObjectGuid = new ObjectGuid((ulong) character.Id),
                 Guid       = (ulong) character.Id,
+                Model      = (int) CharacterHelper.GetRaceModel(character.race, character.gender)
             };
+            Debug.WriteLine(CharacterHelper.GetRaceModel(character.race, character.gender));
 
             entity.WriteUpdateFields(writer);          
 
