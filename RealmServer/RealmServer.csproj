@@ -52,7 +52,7 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Game\Entitys\EntityBase.cs" />
+    <Compile Include="Game\Entitys\Base.cs" />
     <Compile Include="Game\Entitys\ObjectEntity.cs" />
     <Compile Include="Game\Entitys\PlayerEntity.cs" />
     <Compile Include="Game\UpdateObject.cs" />

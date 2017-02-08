@@ -3,12 +3,13 @@ using System.Collections;
 using System.Diagnostics;
 using System.IO;
 using Common.Helpers;
+using RealmServer.Helpers;
 
 namespace RealmServer.Game.Entitys
 {
     // Abstract DataLength & TypeID (Refactor due to GO containing 'TypeID')
     // Move all MaskSize, Mask, UpdateData, UpdateCount and Functions into own class
-    public class EntityBase
+    public class BaseEntity
     {
         public int MaskSize { get; }
         public BitArray Mask { get; }
@@ -16,7 +17,7 @@ namespace RealmServer.Game.Entitys
         public int UpdateCount { get; private set; }
         public virtual int DataLength { get; internal set; }
 
-        public EntityBase()
+        public BaseEntity()
         {
             MaskSize = (DataLength + 32) / 32;
             Mask = new BitArray(DataLength, false);
@@ -127,6 +128,17 @@ namespace RealmServer.Game.Entitys
             Mask.SetAll(false);
             UpdateCount = 0;
         }
+
+        // Base Import Mangos
+        //public ulong Guid = 0;
+        public float Size = 1.0f;
+        public byte Level = 0;
+        public int Model = 0;
+        public int Mount = 0;
+
+        public StatBar Life = new StatBar(1, 1, 0);
+        public StatBar Mana = new StatBar(1, 1, 0);
+
 
     }
 }

@@ -53,8 +53,13 @@ namespace RealmServer.Game
 
             writer.Write(0x1);
 
-            entity = new PlayerEntity(character) {ObjectGuid = new ObjectGuid((ulong) character.Id)};
-            entity.WriteUpdateFields(writer);
+            entity = new PlayerEntity(character)
+            {
+                ObjectGuid = new ObjectGuid((ulong) character.Id),
+                Guid       = (ulong) character.Id,
+            };
+
+            entity.WriteUpdateFields(writer);          
 
             return new UpdateObject(new List<byte[]> { ((MemoryStream) writer.BaseStream).ToArray() });
         }

@@ -1,24 +1,104 @@
 ﻿using Common.Database.Tables;
 using Common.Globals;
+using RealmServer.Helpers;
 
 namespace RealmServer.Game.Entitys
 {
-    public class PlayerEntity : ObjectEntity
+    public class UnitEntity : ObjectEntity
+    {
+        public UnitEntity(ObjectGuid objectGuid) : base(objectGuid)
+        {
+        }
+
+        public int CUnitFlags    = (int) UnitFlags.UNIT_FLAG_ATTACKABLE;
+        public int CDynamicFlags = 0;
+
+        //                       <<0    <<8    <<16    <<24
+        public uint CBytes0 = 0; // Race +       Classe +     Gender +     ManaType
+        public uint CBytes1 = 0; // StandState + PetLoyalty + ShapeShift + StealthFlag [CType(Invisibility > InvisibilityLevel.VISIBLE, Integer) * 2 << 24]
+        public uint CBytes2 = 0xeeeeee00; // ?    ?    ?    ?
+    }
+
+    public class PlayerEntity : UnitEntity
     {
         public override int DataLength => (int)EUnitFields.UnitEnd - 0x4;
 
+        public StatBar Rage   = new StatBar(1, 1, 0);
+        public StatBar Energy = new StatBar(1, 1, 0);
+
+        public Stat Strength  = new Stat();
+        public Stat Agility   = new Stat();
+        public Stat Stamina   = new Stat();
+        public Stat Intellect = new Stat();
+        public Stat Spirit    = new Stat();
+
+        // [ ] Character Information
+        public int ModelNative = 0;
+        
+        public int CPlayerBytes2 = 0x200ee00; //FacialHair,        ?,              BankSlotsAvailable, RestState
+        public int CPlayerBytes3 = 0; //Gender,            Alchohol,       Defender?,          LastWeekHonorRank
+
+        public FactionTemplates Faction = FactionTemplates.None; // FactionDBC????
+
         public PlayerEntity(Characters character) : base(new ObjectGuid((uint) character.Id, TypeId.TypeidPlayer, HighGuid.HighguidMoTransport))
         {
-            Guid = (uint)character.Id;
             SetUpdateField((int) EObjectFields.OBJECT_FIELD_TYPE, 25);
-            SetUpdateField((int) EObjectFields.OBJECT_FIELD_SCALE_X, 1f);
+            SetUpdateField((int) EObjectFields.OBJECT_FIELD_SCALE_X, Size);
+     
+            SetUpdateField((int) EUnitFields.UnitFieldHealth, Life.Current);
+            SetUpdateField((int) EUnitFields.UnitFieldPower1, Mana.Current);
+            SetUpdateField((int) EUnitFields.UnitFieldPower2, Rage.Current);
+            SetUpdateField((int) EUnitFields.UnitFieldPower4, Energy.Current);
+            SetUpdateField((int) EUnitFields.UnitFieldPower5, 0);
 
-            SetUpdateField((int) EUnitFields.UnitFieldLevel, 1);
-            SetUpdateField((int) EUnitFields.UnitFieldFactiontemplate, 7);           
+            SetUpdateField((int) EUnitFields.UnitFieldMaxhealth, Life.Maximum);
+            SetUpdateField((int) EUnitFields.UnitFieldMaxpower1, Mana.Maximum);
+            SetUpdateField((int) EUnitFields.UnitFieldMaxpower2, Rage.Maximum);
+            SetUpdateField((int) EUnitFields.UnitFieldMaxpower4, Energy.Maximum);
+            SetUpdateField((int) EUnitFields.UnitFieldMaxpower5, 0);
+
+            SetUpdateField((int) EUnitFields.UnitFieldBaseHealth, Life.Base);
+            SetUpdateField((int) EUnitFields.UnitFieldBaseMana, Mana.Base);
+            SetUpdateField((int) EUnitFields.UnitFieldLevel, Level);
+            SetUpdateField((int) EUnitFields.UnitFieldFactiontemplate, Faction);
+
+            SetUpdateField((int) EUnitFields.UnitFieldFlags, CUnitFlags);
+            SetUpdateField((int) EUnitFields.UnitFieldStat0, Strength.Base);
+            SetUpdateField((int) EUnitFields.UnitFieldStat1, Agility.Base);
+            SetUpdateField((int) EUnitFields.UnitFieldStat2, Stamina.Base);
+            SetUpdateField((int) EUnitFields.UnitFieldStat3, Spirit.Base);
+            SetUpdateField((int) EUnitFields.UnitFieldStat4, Intellect.Base);
+
             SetUpdateField((int) EUnitFields.UnitFieldBytes0, (byte) character.race, 0);
             SetUpdateField((int) EUnitFields.UnitFieldBytes0, (byte) character.classe, 1);
             SetUpdateField((int) EUnitFields.UnitFieldBytes0, (byte) character.gender, 2);
+
+            SetUpdateField((int) EUnitFields.UnitFieldBytes1, CBytes1);
+            SetUpdateField((int) EUnitFields.UnitFieldBytes2, CBytes2);
+            SetUpdateField((int) EUnitFields.UnitFieldDisplayid, Model);
+            SetUpdateField((int) EUnitFields.UnitFieldNativedisplayid, ModelNative);
+            SetUpdateField((int) EUnitFields.UnitFieldMountdisplayid, Mount);
+            SetUpdateField((int) EUnitFields.UnitDynamicFlags, CDynamicFlags);
+
+            //SetUpdateField((int) EPlayerFields.PLAYER_BYTES, character.char_skin, 0);
+            //SetUpdateField((int) EPlayerFields.PLAYER_BYTES, character.char_face, 1);
+            //SetUpdateField((int) EPlayerFields.PLAYER_BYTES, character.char_hairStyle, 2);
+            //SetUpdateField((int) EPlayerFields.PLAYER_BYTES, character.char_hairColor, 3);
+            //SetUpdateField((int) EPlayerFields.PLAYER_BYTES_2, CPlayerBytes2);
+            //SetUpdateField((int) EPlayerFields.PLAYER_BYTES_3, CPlayerBytes3);
         }
+    }
+
+    public enum FactionTemplates
+    {
+        // Fields
+        None = 0,
+        PLAYERHuman = 1,
+        PLAYEROrc = 2,
+        PLAYERDwarf = 3,
+        PLAYERNightElf = 4,
+        PLAYERUndead = 5,
+        PLAYERTauren = 6
     }
 
     enum EUnitFields

@@ -2,13 +2,12 @@
 
 namespace RealmServer.Game.Entitys
 {
-    public class ObjectEntity : EntityBase
+    public class ObjectEntity : BaseEntity
     {
         public ObjectGuid ObjectGuid { get; set; }
 
         public ulong Guid
         {
-            get { return (ulong) UpdateData[EObjectFields.OBJECT_FIELD_GUID]; }
             set { SetUpdateField((int) EObjectFields.OBJECT_FIELD_GUID, value); }
         }
 
