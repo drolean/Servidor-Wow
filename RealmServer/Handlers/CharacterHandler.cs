@@ -6,44 +6,44 @@ using Common.Database.Tables;
 using Common.Globals;
 using Common.Helpers;
 using Common.Network;
-using RealmServer.Game.Objects;
+using RealmServer.Game;
 
 namespace RealmServer.Handlers
 {
     enum CharacterFlagState
     {
-        CHARACTER_FLAG_NONE = 0x0,
-        CHARACTER_FLAG_UNK1 = 0x1,
-        CHARACTER_FLAG_UNK2 = 0x2,
-        CHARACTER_FLAG_LOCKED_FOR_TRANSFER = 0x4, //Character Locked for Paid Character Transfer
-        CHARACTER_FLAG_UNK4 = 0x8,
-        CHARACTER_FLAG_UNK5 = 0x10,
-        CHARACTER_FLAG_UNK6 = 0x20,
-        CHARACTER_FLAG_UNK7 = 0x40,
-        CHARACTER_FLAG_UNK8 = 0x80,
-        CHARACTER_FLAG_UNK9 = 0x100,
-        CHARACTER_FLAG_UNK10 = 0x200,
-        CHARACTER_FLAG_HIDE_HELM = 0x400,
-        CHARACTER_FLAG_HIDE_CLOAK = 0x800,
-        CHARACTER_FLAG_UNK13 = 0x1000,
-        CHARACTER_FLAG_GHOST = 0x2000, //Player is ghost in char selection screen
-        CHARACTER_FLAG_RENAME = 0x4000, //On login player will be asked to change name
-        CHARACTER_FLAG_UNK16 = 0x8000,
-        CHARACTER_FLAG_UNK17 = 0x10000,
-        CHARACTER_FLAG_UNK18 = 0x20000,
-        CHARACTER_FLAG_UNK19 = 0x40000,
-        CHARACTER_FLAG_UNK20 = 0x80000,
-        CHARACTER_FLAG_UNK21 = 0x100000,
-        CHARACTER_FLAG_UNK22 = 0x200000,
-        CHARACTER_FLAG_UNK23 = 0x400000,
-        CHARACTER_FLAG_UNK24 = 0x800000,
-        CHARACTER_FLAG_LOCKED_BY_BILLING = 0x1000000,
-        CHARACTER_FLAG_DECLINED = 0x2000000,
-        CHARACTER_FLAG_UNK27 = 0x4000000,
-        CHARACTER_FLAG_UNK28 = 0x8000000,
-        CHARACTER_FLAG_UNK29 = 0x10000000,
-        CHARACTER_FLAG_UNK30 = 0x20000000,
-        CHARACTER_FLAG_UNK31 = 0x40000000
+        CharacterFlagNone = 0x0,
+        CharacterFlagUnk1 = 0x1,
+        CharacterFlagUnk2 = 0x2,
+        CharacterFlagLockedForTransfer = 0x4, //Character Locked for Paid Character Transfer
+        CharacterFlagUnk4 = 0x8,
+        CharacterFlagUnk5 = 0x10,
+        CharacterFlagUnk6 = 0x20,
+        CharacterFlagUnk7 = 0x40,
+        CharacterFlagUnk8 = 0x80,
+        CharacterFlagUnk9 = 0x100,
+        CharacterFlagUnk10 = 0x200,
+        CharacterFlagHideHelm = 0x400,
+        CharacterFlagHideCloak = 0x800,
+        CharacterFlagUnk13 = 0x1000,
+        CharacterFlagGhost = 0x2000, //Player is ghost in char selection screen
+        CharacterFlagRename = 0x4000, //On login player will be asked to change name
+        CharacterFlagUnk16 = 0x8000,
+        CharacterFlagUnk17 = 0x10000,
+        CharacterFlagUnk18 = 0x20000,
+        CharacterFlagUnk19 = 0x40000,
+        CharacterFlagUnk20 = 0x80000,
+        CharacterFlagUnk21 = 0x100000,
+        CharacterFlagUnk22 = 0x200000,
+        CharacterFlagUnk23 = 0x400000,
+        CharacterFlagUnk24 = 0x800000,
+        CharacterFlagLockedByBilling = 0x1000000,
+        CharacterFlagDeclined = 0x2000000,
+        CharacterFlagUnk27 = 0x4000000,
+        CharacterFlagUnk28 = 0x8000000,
+        CharacterFlagUnk29 = 0x10000000,
+        CharacterFlagUnk30 = 0x20000000,
+        CharacterFlagUnk31 = 0x40000000
         //CHARACTER_FLAG_UNK32 = 0x80000000,
     }
 
@@ -78,7 +78,7 @@ namespace RealmServer.Handlers
 
                 Write(0); // Guild ID
                 // if DEAD or any Restriction 
-                Write((int) CharacterFlagState.CHARACTER_FLAG_NONE);
+                Write((int) CharacterFlagState.CharacterFlagNone);
                 // RestState
                 Write((byte) 0);
 
@@ -263,6 +263,7 @@ namespace RealmServer.Handlers
     }
     #endregion
 
+    #region SMSG_BINDPOINTUPDATE
     sealed class SmsgBindpointupdate : PacketServer
     {
         public SmsgBindpointupdate(Characters character) : base(RealmCMD.SMSG_BINDPOINTUPDATE)
@@ -274,7 +275,9 @@ namespace RealmServer.Handlers
             Write((short)character.MapZone);
         }
     }
+    #endregion
 
+    #region SMSG_SET_REST_START
     sealed class SmsgSetRestStart : PacketServer
     {
         public SmsgSetRestStart(Characters character) : base(RealmCMD.SMSG_SET_REST_START)
@@ -282,7 +285,9 @@ namespace RealmServer.Handlers
             Write((byte)120);
         }
     }
+    #endregion
 
+    #region SMSG_TUTORIAL_FLAGS
     sealed class SmsgTutorialFlags : PacketServer
     {
         //TODO Write the uint ids of 8 tutorial values
@@ -295,7 +300,9 @@ namespace RealmServer.Handlers
             }
         }
     }
+    #endregion
 
+    #region SMSG_LOGIN_VERIFY_WORLD
     sealed class SmsgLoginVerifyWorld : PacketServer
     {
         public SmsgLoginVerifyWorld(Characters character) : base(RealmCMD.SMSG_LOGIN_VERIFY_WORLD)
@@ -307,7 +314,9 @@ namespace RealmServer.Handlers
             Write(character.MapO);
         }
     }
+    #endregion
 
+    #region SMSG_CORPSE_RECLAIM_DELAY
     sealed class SmsgCorpseReclaimDelay : PacketServer
     {
         public SmsgCorpseReclaimDelay() : base(RealmCMD.SMSG_CORPSE_RECLAIM_DELAY)
@@ -315,7 +324,9 @@ namespace RealmServer.Handlers
             Write(30 * 1000);
         }
     }
+    #endregion
 
+    #region SMSG_INITIAL_SPELLS
     sealed class SmsgInitialSpells : PacketServer
     {
         public SmsgInitialSpells(Characters character) : base(RealmCMD.SMSG_INITIAL_SPELLS)
@@ -336,7 +347,9 @@ namespace RealmServer.Handlers
             Write((UInt16)spells.Count); //in16
         }
     }
+    #endregion
 
+    #region SMSG_INITIALIZE_FACTIONS
     sealed class SmsgInitializeFactions : PacketServer
     {
         public SmsgInitializeFactions(Characters character) : base(RealmCMD.SMSG_INITIALIZE_FACTIONS)
@@ -351,7 +364,9 @@ namespace RealmServer.Handlers
             }
         }
     }
+    #endregion
 
+    #region SMSG_ACTION_BUTTONS
     sealed class SmsgActionButtons : PacketServer
     {
         public SmsgActionButtons(Characters character) : base(RealmCMD.SMSG_ACTION_BUTTONS)
@@ -377,6 +392,7 @@ namespace RealmServer.Handlers
             }
         }
     }
+    #endregion 
 
     internal class CharacterHandler
     {
@@ -476,7 +492,7 @@ namespace RealmServer.Handlers
             if(session.Character == null)
                 session.Character = MainForm.Database.GetCharacter(handler.Guid);
 
-            Log.Print(LogType.RealmServer, $"[{session.ConnectionRemoteIp}] Enter World [{session.Character.name} ({handler.Guid})]");
+            Log.Print(LogType.RealmServer, $"[{session.ConnectionRemoteIp}] Client Login [{session.Character.name} ({handler.Guid})]");
 
             // SMSG_CORPSE_RECLAIM_DELAY
             session.SendPacket(new SmsgCorpseReclaimDelay());
@@ -518,9 +534,10 @@ namespace RealmServer.Handlers
             session.SendHexPacket(RealmCMD.SMSG_INIT_WORLD_STATES, "01 00 00 00 6C 00 AE 07 01 00 32 05 01 00 31 05 00 00 2E 05 00 00 F9 06 00 00 F3 06 00 00 F1 06 00 00 EE 06 00 00 ED 06 00 00 71 05 00 00 70 05 00 00 67 05 01 00 66 05 01 00 50 05 01 00 44 05 00 00 36 05 00 00 35 05 01 00 C6 03 00 00 C4 03 00 00 C2 03 00 00 A8 07 00 00 A3 07 0F 27 74 05 00 00 73 05 00 00 72 05 00 00 6F 05 00 00 6E 05 00 00 6D 05 00 00 6C 05 00 00 6B 05 00 00 6A 05 01 00 69 05 01 00 68 05 01 00 65 05 00 00 64 05 00 00 63 05 00 00 62 05 00 00 61 05 00 00 60 05 00 00 5F 05 00 00 5E 05 00 00 5D 05 00 00 5C 05 00 00 5B 05 00 00 5A 05 00 00 59 05 00 00 58 05 00 00 57 05 00 00 56 05 00 00 55 05 00 00 54 05 01 00 53 05 01 00 52 05 01 00 51 05 01 00 4F 05 00 00 4E 05 00 00 4D 05 01 00 4C 05 00 00 4B 05 00 00 45 05 00 00 43 05 01 00 42 05 00 00 40 05 00 00 3F 05 00 00 3E 05 00 00 3D 05 00 00 3C 05 00 00 3B 05 00 00 3A 05 01 00 39 05 00 00 38 05 00 00 37 05 00 00 34 05 00 00 33 05 00 00 30 05 00 00 2F 05 00 00 2D 05 01 00 16 05 01 00 15 05 00 00 B6 03 00 00 45 07 02 00 36 07 01 00 35 07 01 00 34 07 01 00 33 07 01 00 32 07 01 00 02 07 00 00 01 07 00 00 00 07 00 00 FE 06 00 00 FD 06 00 00 FC 06 00 00 FB 06 00 00 F8 06 00 00 F7 06 00 00 F6 06 00 00 F4 06 D0 07 F2 06 00 00 F0 06 00 00 EF 06 00 00 EC 06 00 00 EA 06 00 00 E9 06 00 00 E8 06 00 00 E7 06 00 00 18 05 00 00 17 05 00 00 03 07 00 00 ");
 
             // SMSG_UPDATE_OBJECT for ourself
-            session.SendPacket(CharacterObject.CreateObjectSelf(session.Character));
-                //FillAllUpdateFlags()
-                //SendUpdate()
+            session.SendPacket(UpdateObject.CreateOwnCharacterUpdate(session.Character, out session.Entity));
+
+                //FillAllUpdateFlags();
+                //SendUpdate() -> PrepareUpdate( contem os movimentos speeds )
 
             // Adding to World
                 // AddToWorld(Me)
@@ -537,7 +554,7 @@ namespace RealmServer.Handlers
             session.SendPacket(new SmsgAccountDataTimes());
 
             // SMSG_TRIGGER_CINEMATIC
-            session.SendPacket(new SmsgTriggerCinematic(session.Character));
+            //session.SendPacket(new SmsgTriggerCinematic(session.Character));
 
             // SMSG_LOGIN_SETTIMESPEED
 
@@ -552,6 +569,8 @@ namespace RealmServer.Handlers
             // Send online notify for guild
 
             // Put back character in group if disconnected
+
+            Log.Print(LogType.RealmServer, $"[{session.ConnectionRemoteIp}] Client Login COMPLETE [{session.Character.name} ({handler.Guid})]");
         }
 
         internal static void OnUpdateAccountData(RealmServerSession session, CmsgUpdateAccountData handler)

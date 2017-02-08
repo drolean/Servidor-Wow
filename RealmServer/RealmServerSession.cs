@@ -11,6 +11,7 @@ using Common.Globals;
 using Common.Helpers;
 using Common.Network;
 using System.Linq;
+using RealmServer.Game.Entitys;
 
 namespace RealmServer
 {
@@ -27,20 +28,7 @@ namespace RealmServer
         //
         public Users Users { get; set; }
         public Characters Character;
-
-        //
-        public sealed class SmsgAuthChallenge : PacketServer
-        {
-            public SmsgAuthChallenge() : base(RealmCMD.SMSG_AUTH_CHALLENGE)
-            {
-                Write(1);
-                Write((uint)new Random().Next(0, int.MaxValue));
-                Write(0);
-                Write(0);
-                Write(0);
-                Write(0);
-            }
-        }
+        internal PlayerEntity Entity;
 
         internal RealmServerSession(int connectionId, Socket connectionSocket)
         {
@@ -62,15 +50,21 @@ namespace RealmServer
 
             Thread.Sleep(500);
 
-            SendPacket(new SmsgAuthChallenge());
+            // Connection Packet
+            using (PacketServer packet = new PacketServer(RealmCMD.SMSG_AUTH_CHALLENGE))
+            {
+                packet.WriteBytes(new byte[] { 0x33, 0x18, 0x34, 0xC8 });
+                SendPacket(packet);
+            }
         }
 
         internal void SendPacket(PacketServer packet)
         {
+            LogPacket(packet);
             SendPacket(packet.Opcode, packet.Packet);
         }
 
-        internal void SendPacket(int opcode, byte[] data)
+        private void SendPacket(int opcode, byte[] data)
         {
             Log.Print(LogType.RealmServer, $"[{ConnectionSocket.RemoteEndPoint}] [INIT] Server -> Client [{((RealmCMD)opcode).ToString().PadRight(25, ' ')}] = {data.Length} + 4 [header]");
             BinaryWriter writer = new BinaryWriter(new MemoryStream());
@@ -80,7 +74,7 @@ namespace RealmServer
             SendData(((MemoryStream)writer.BaseStream).ToArray(), Convert.ToString((RealmCMD)opcode));
         }
 
-        internal void SendData(byte[] send, string v)
+        private void SendData(byte[] send, string opcode)
         {
             byte[] buffer = new byte[send.Length];
             Buffer.BlockCopy(send, 0, buffer, 0, send.Length);
@@ -281,7 +275,7 @@ namespace RealmServer
             }
         }
 
-        public void SendHexPacket(RealmCMD opcode, string hex)
+        internal void SendHexPacket(RealmCMD opcode, string hex)
         {
             string end = hex.Replace(" ", "").Replace("\n", "");
 
@@ -290,7 +284,7 @@ namespace RealmServer
             SendPacket((int)opcode, data);
         }
 
-        public static byte[] StringToByteArray(string hex)
+        private static byte[] StringToByteArray(string hex)
         {
             return Enumerable.Range(0, hex.Length)
                              .Where(x => x % 2 == 0)
@@ -298,9 +292,41 @@ namespace RealmServer
                              .ToArray();
         }
 
-        internal void SendPacket(object p)
+        private static string ByteArrayToHex(IReadOnlyCollection<byte> data)
         {
-            throw new NotImplementedException();
+            string packetOutput = string.Empty;
+
+            for (int i = 0; i < data.Count; i++)
+            {
+                packetOutput += i.ToString("X2") + " ";
+            }
+
+            return packetOutput;
+        }
+
+        private static void LogPacket(PacketServer packet)
+        {
+            try
+            {
+                var filename = "Packet-Log.txt";
+                if (!File.Exists(filename)) File.Create(filename).Close();
+
+                using (StreamWriter w = File.AppendText(filename))
+                {
+                    w.WriteLine(DateTime.Now.ToString("yyyy-M-d H:mm:ss"));
+                    w.WriteLine($"Length: {packet.Packet.Length}");
+                    w.WriteLine($"Opcode: {(RealmCMD)packet.Opcode}");
+                    w.WriteLine("Data: ");
+                    w.Write(ByteArrayToHex(packet.Packet));
+                    w.WriteLine();
+                    w.WriteLine();
+                }
+            }
+            catch (Exception e)
+            {
+                var trace = new StackTrace(e, true);
+                Log.Print(LogType.Error, $"{e.Message}: {e.Source}\n{trace.GetFrame(trace.FrameCount - 1).GetFileName()}:{trace.GetFrame(trace.FrameCount - 1).GetFileLineNumber()}");
+            }
         }
     }
 }

@@ -265,7 +265,7 @@ namespace RealmServer.Helpers
         }
     }
 
-    public class TStatBar
+    public class StatBar
     {
         private int _current;
         public int Bonus;
@@ -280,7 +280,7 @@ namespace RealmServer.Helpers
                 Current = Maximum;
         }
 
-        public TStatBar(int currentVal, int baseVal, int bonusVal)
+        public StatBar(int currentVal, int baseVal, int bonusVal)
         {
             _current = currentVal;
             Bonus = bonusVal;
@@ -301,7 +301,7 @@ namespace RealmServer.Helpers
         }
     }
 
-    public class TStat
+    public class Stat
     {
         public int Base;
         public short PositiveBonus;
@@ -319,7 +319,7 @@ namespace RealmServer.Helpers
             }
         }
 
-        public TStat(byte baseValue = 0, byte posValue = 0, byte negValue = 0)
+        public Stat(byte baseValue = 0, byte posValue = 0, byte negValue = 0)
         {
             Base = baseValue;
             PositiveBonus = posValue;
@@ -327,7 +327,7 @@ namespace RealmServer.Helpers
         }
     }
 
-    public class TDamage
+    public class Damage
     {
         public float Minimum = 0;
         public float Maximum = 0;

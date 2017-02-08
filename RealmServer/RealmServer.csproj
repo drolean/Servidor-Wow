@@ -52,7 +52,10 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Game\Objects\CharacterObject.cs" />
+    <Compile Include="Game\Entitys\EntityBase.cs" />
+    <Compile Include="Game\Entitys\ObjectEntity.cs" />
+    <Compile Include="Game\Entitys\PlayerEntity.cs" />
+    <Compile Include="Game\UpdateObject.cs" />
     <Compile Include="Handlers\CharacterHandler.cs" />
     <Compile Include="Helpers\CharacterHelper.cs" />
     <Compile Include="mainForm.cs">
