@@ -27,7 +27,6 @@ namespace RealmServer.Game.Entitys
         public void SetUpdateField<T>(int index, T value, byte offset = 0)
         {
             UpdateCount++;
-
             switch (value.GetType().Name)
             {
                 case "SByte":
@@ -67,8 +66,8 @@ namespace RealmServer.Game.Entitys
 
                     long tmpValue = (long) Convert.ChangeType(value, typeof(long));
 
-                    UpdateData[index] = (uint) (tmpValue & Int32.MaxValue);
-                    UpdateData[index + 1] = (uint) ((tmpValue >> 32) & Int32.MaxValue);
+                    UpdateData[index] = (uint) (tmpValue & int.MaxValue);
+                    UpdateData[index + 1] = (uint) ((tmpValue >> 32) & int.MaxValue);
 
                     break;
                 }
@@ -79,8 +78,8 @@ namespace RealmServer.Game.Entitys
 
                     ulong tmpValue = (ulong) Convert.ChangeType(value, typeof(ulong));
 
-                    UpdateData[index] = (uint) (tmpValue & UInt32.MaxValue);
-                    UpdateData[index + 1] = (uint) ((tmpValue >> 32) & UInt32.MaxValue);
+                    UpdateData[index] = (uint) (tmpValue & uint.MaxValue);
+                    UpdateData[index + 1] = (uint) ((tmpValue >> 32) & uint.MaxValue);
 
                     break;
                 }
@@ -102,7 +101,6 @@ namespace RealmServer.Game.Entitys
             for (int i = 0; i < Mask.Count; i++)
             {
                 if (!Mask.Get(i)) continue;
-
                 try
                 {
                     switch (UpdateData[i].GetType().Name)
@@ -132,12 +130,15 @@ namespace RealmServer.Game.Entitys
         // Base Import Mangos
         //public ulong Guid = 0;
         public float Size = 1.0f;
-        public byte Level = 0;
+        public static byte Level = 0;
         public int Model = 0;
         public int Mount = 0;
 
         public StatBar Life = new StatBar(1, 1, 0);
         public StatBar Mana = new StatBar(1, 1, 0);
+
+        public Stat[] Resistances = new Stat[7];
+
 
 
     }

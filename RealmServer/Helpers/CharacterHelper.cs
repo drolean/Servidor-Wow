@@ -56,13 +56,13 @@ namespace RealmServer.Helpers
                 case Classes.CLASS_PRIEST:
                 case Classes.CLASS_SHAMAN:
                 case Classes.CLASS_WARLOCK:
-                    return ManaTypes.TYPE_MANA;
+                    return ManaTypes.TypeMana;
                 case Classes.CLASS_ROGUE:
-                    return ManaTypes.TYPE_ENERGY;
+                    return ManaTypes.TypeEnergy;
                 case Classes.CLASS_WARRIOR:
-                    return ManaTypes.TYPE_RAGE;
+                    return ManaTypes.TypeRage;
                 default:
-                    return ManaTypes.TYPE_MANA;
+                    return ManaTypes.TypeMana;
             }
         }
 
@@ -331,6 +331,20 @@ namespace RealmServer.Helpers
     {
         public float Minimum = 0;
         public float Maximum = 0;
-        public int Type = (int) DamageTypes.DMG_PHYSICAL;
+        public int Type = (int) DamageTypes.DmgPhysical;
+    }
+
+    public class TDamageBonus
+    {
+        public int PositiveBonus = 0;
+        public int NegativeBonus = 0;
+        public float Modifier = 1;
+        public int Value => (int) ((PositiveBonus - NegativeBonus) * Modifier);
+
+        public TDamageBonus(byte posValue = 0, byte negValue = 0)
+        {
+            PositiveBonus = posValue;
+            PositiveBonus = negValue;
+        }
     }
 }

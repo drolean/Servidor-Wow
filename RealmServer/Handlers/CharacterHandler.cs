@@ -537,7 +537,7 @@ namespace RealmServer.Handlers
             session.SendPacket(UpdateObject.CreateOwnCharacterUpdate(session.Character, out session.Entity));
 
                 //FillAllUpdateFlags();
-                //SendUpdate() -> PrepareUpdate( contem os movimentos speeds )
+                //SendUpdate() -> Contem ao envio dos itens
 
             // Adding to World
                 // AddToWorld(Me)

@@ -57,11 +57,9 @@ namespace RealmServer.Game
 
             entity = new PlayerEntity(character)
             {
-                ObjectGuid = new ObjectGuid((ulong) character.Id),
-                Guid       = (ulong) character.Id,
-                Model      = (int) CharacterHelper.GetRaceModel(character.race, character.gender)
+                ObjectGuid  = new ObjectGuid((ulong) character.Id),
+                Guid        = (ulong) character.Id,
             };
-            Debug.WriteLine(CharacterHelper.GetRaceModel(character.race, character.gender));
 
             entity.WriteUpdateFields(writer);          
 

@@ -170,5 +170,10 @@ namespace RealmServer
         {
             return Model.CharactersActionBars.Where(a => a.character == character).ToList();
         }
+
+        internal List<CharactersSkills> GetSkills(Characters character)
+        {
+            return Model.CharactersSkills.Where(a => a.character == character).ToList();
+        }
     }
 }

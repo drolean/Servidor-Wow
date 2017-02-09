@@ -1,4 +1,6 @@
-﻿using Common.Database.Tables;
+﻿using System;
+using System.Collections.Generic;
+using Common.Database.Tables;
 using Common.Globals;
 using RealmServer.Helpers;
 
@@ -10,6 +12,8 @@ namespace RealmServer.Game.Entitys
         {
         }
 
+        public override int DataLength => (int)UnitFields.UNIT_END - 0x4;
+
         public int CUnitFlags    = (int) UnitFlags.UNIT_FLAG_ATTACKABLE;
         public int CDynamicFlags = 0;
 
@@ -17,290 +21,302 @@ namespace RealmServer.Game.Entitys
         public uint CBytes0 = 0; // Race +       Classe +     Gender +     ManaType
         public uint CBytes1 = 0; // StandState + PetLoyalty + ShapeShift + StealthFlag [CType(Invisibility > InvisibilityLevel.VISIBLE, Integer) * 2 << 24]
         public uint CBytes2 = 0xeeeeee00; // ?    ?    ?    ?
+
+        public float BoundingRadius = 0.389f;
+        public float CombatReach = 1.5f;
     }
 
     public class PlayerEntity : UnitEntity
     {
-        public override int DataLength => (int)EUnitFields.UnitEnd - 0x4;
+        public override int DataLength => (int)PlayerFields.PLAYER_END - 0x4;
 
         public StatBar Rage   = new StatBar(1, 1, 0);
         public StatBar Energy = new StatBar(1, 1, 0);
 
-        public Stat Strength  = new Stat();
+        public static Stat Strength  = new Stat();
         public Stat Agility   = new Stat();
         public Stat Stamina   = new Stat();
         public Stat Intellect = new Stat();
         public Stat Spirit    = new Stat();
 
         // [ ] Character Information
-        public int ModelNative = 0;
-        
+        public int ModelNative;
+        public int CPlayerBytes1 = 0;
         public int CPlayerBytes2 = 0x200ee00; //FacialHair,        ?,              BankSlotsAvailable, RestState
         public int CPlayerBytes3 = 0; //Gender,            Alchohol,       Defender?,          LastWeekHonorRank
 
+        public uint CPlayerFieldBytes = 0xeee00000;
+        public int CPlayerFieldBytes2 = 0;
+
+        public PlayerFlags CPlayerFlags = 0;
+
         public FactionTemplates Faction = FactionTemplates.None; // FactionDBC????
+
+        // Reputation
+        public byte WatchedFactionIndex = 0xff;
+
+        // [ ] XP and Level Managment
+        public int XP;
+        public int RestBonus;
+        public int DefaultMaxLevel = 60; //Max Player Level
+        public int XpTable = 400; //Max XPTable Level from Database
+
+        // [ ] Spell/Skill/Talents System
+        public byte TalentPoints = 0;
+
+        // [ ] Guilds
+        public uint GuildId = 0;
+        public byte GuildRank = 0;
+        public int GuildInvited = 0;
+        public int GuildInvitedBy = 0;
+        public bool IsInGuild => GuildId != 0;
+
+        // NAO SEI 
+        public int BaseUnarmedDamage => (int) ((AttackPower + AttackPowerMods) * 0.0714285714285714);
+        public int AttackPower = Level * 3 + Strength.Base * 3 - 20;
+        public int AttackPowerMods = 0;
+
+        private readonly Characters _character;
 
         public PlayerEntity(Characters character) : base(new ObjectGuid((uint) character.Id, TypeId.TypeidPlayer, HighGuid.HighguidMoTransport))
         {
-            SetUpdateField((int) EObjectFields.OBJECT_FIELD_TYPE, 25);
-            SetUpdateField((int) EObjectFields.OBJECT_FIELD_SCALE_X, Size);
+            /* Definindo Character */
+            _character = character;
+            Model = (int) CharacterHelper.GetRaceModel(character.race, character.gender);
+            ModelNative = (int)CharacterHelper.GetRaceModel(character.race, character.gender);
+            /* FIM das definições */
+
+            SetUpdateField((int) ObjectFields.OBJECT_FIELD_TYPE, 25);
+            SetUpdateField((int) ObjectFields.OBJECT_FIELD_SCALE_X, Size);
      
-            SetUpdateField((int) EUnitFields.UnitFieldHealth, Life.Current);
-            SetUpdateField((int) EUnitFields.UnitFieldPower1, Mana.Current);
-            SetUpdateField((int) EUnitFields.UnitFieldPower2, Rage.Current);
-            SetUpdateField((int) EUnitFields.UnitFieldPower4, Energy.Current);
-            SetUpdateField((int) EUnitFields.UnitFieldPower5, 0);
+            SetUpdateField((int) UnitFields.UNIT_FIELD_HEALTH, Life.Current);
+            SetUpdateField((int) UnitFields.UNIT_FIELD_POWER1, Mana.Current);
+            SetUpdateField((int) UnitFields.UNIT_FIELD_POWER2, Rage.Current);
+            SetUpdateField((int) UnitFields.UNIT_FIELD_POWER4, Energy.Current);
+            SetUpdateField((int) UnitFields.UNIT_FIELD_POWER5, 0);
 
-            SetUpdateField((int) EUnitFields.UnitFieldMaxhealth, Life.Maximum);
-            SetUpdateField((int) EUnitFields.UnitFieldMaxpower1, Mana.Maximum);
-            SetUpdateField((int) EUnitFields.UnitFieldMaxpower2, Rage.Maximum);
-            SetUpdateField((int) EUnitFields.UnitFieldMaxpower4, Energy.Maximum);
-            SetUpdateField((int) EUnitFields.UnitFieldMaxpower5, 0);
+            SetUpdateField((int) UnitFields.UNIT_FIELD_MAXHEALTH, Life.Maximum);
+            SetUpdateField((int) UnitFields.UNIT_FIELD_MAXPOWER1, Mana.Maximum);
+            SetUpdateField((int) UnitFields.UNIT_FIELD_MAXPOWER2, Rage.Maximum);
+            SetUpdateField((int) UnitFields.UNIT_FIELD_MAXPOWER4, Energy.Maximum);
+            SetUpdateField((int) UnitFields.UNIT_FIELD_MAXPOWER5, 0);
 
-            SetUpdateField((int) EUnitFields.UnitFieldBaseHealth, Life.Base);
-            SetUpdateField((int) EUnitFields.UnitFieldBaseMana, Mana.Base);
-            SetUpdateField((int) EUnitFields.UnitFieldLevel, Level);
-            SetUpdateField((int) EUnitFields.UnitFieldFactiontemplate, Faction);
+            SetUpdateField((int) UnitFields.UNIT_FIELD_BASE_HEALTH, Life.Base);
+            SetUpdateField((int) UnitFields.UNIT_FIELD_BASE_MANA, Mana.Base);
+            SetUpdateField((int) UnitFields.UNIT_FIELD_LEVEL, Level);
+            SetUpdateField((int) UnitFields.UNIT_FIELD_FACTIONTEMPLATE, Faction);
 
-            SetUpdateField((int) EUnitFields.UnitFieldFlags, CUnitFlags);
-            SetUpdateField((int) EUnitFields.UnitFieldStat0, Strength.Base);
-            SetUpdateField((int) EUnitFields.UnitFieldStat1, Agility.Base);
-            SetUpdateField((int) EUnitFields.UnitFieldStat2, Stamina.Base);
-            SetUpdateField((int) EUnitFields.UnitFieldStat3, Spirit.Base);
-            SetUpdateField((int) EUnitFields.UnitFieldStat4, Intellect.Base);
+            //SetUpdateField((int) UnitFields.UNIT_FIELD_FLAGS, CUnitFlags);
+            SetUpdateField((int) UnitFields.UNIT_FIELD_STAT0, Strength.Base);
+            SetUpdateField((int) UnitFields.UNIT_FIELD_STAT1, Agility.Base);
+            SetUpdateField((int) UnitFields.UNIT_FIELD_STAT2, Stamina.Base);
+            SetUpdateField((int) UnitFields.UNIT_FIELD_STAT3, Spirit.Base);
+            SetUpdateField((int) UnitFields.UNIT_FIELD_STAT4, Intellect.Base);
 
-            SetUpdateField((int) EUnitFields.UnitFieldBytes0, (byte) character.race, 0);
-            SetUpdateField((int) EUnitFields.UnitFieldBytes0, (byte) character.classe, 1);
-            SetUpdateField((int) EUnitFields.UnitFieldBytes0, (byte) character.gender, 2);
+            SetUpdateField((int) UnitFields.UNIT_FIELD_BYTES_0, (byte) character.race, 0);
+            SetUpdateField((int) UnitFields.UNIT_FIELD_BYTES_0, (byte) character.classe, 1);
+            SetUpdateField((int) UnitFields.UNIT_FIELD_BYTES_0, (byte) character.gender, 2);
+            
+            SetUpdateField((int) UnitFields.UNIT_FIELD_BYTES_1, CBytes1);
+            SetUpdateField((int) UnitFields.UNIT_FIELD_BYTES_2, CBytes2);
+            SetUpdateField((int) UnitFields.UNIT_FIELD_DISPLAYID, Model);
+            SetUpdateField((int) UnitFields.UNIT_FIELD_NATIVEDISPLAYID, ModelNative);
+            SetUpdateField((int) UnitFields.UNIT_FIELD_MOUNTDISPLAYID, Mount);
+            SetUpdateField((int) UnitFields.UNIT_DYNAMIC_FLAGS, CDynamicFlags);
+            
+            SetUpdateField((int) PlayerFields.PLAYER_BYTES, character.char_skin, 0);
+            SetUpdateField((int) PlayerFields.PLAYER_BYTES, character.char_face, 1);
+            SetUpdateField((int) PlayerFields.PLAYER_BYTES, character.char_hairStyle, 2);
+            SetUpdateField((int) PlayerFields.PLAYER_BYTES, character.char_hairColor, 3);
+            SetUpdateField((int) PlayerFields.PLAYER_BYTES_2, CPlayerBytes2);
+            SetUpdateField((int) PlayerFields.PLAYER_BYTES_3, CPlayerBytes3);
+            
+            SetUpdateField((int) PlayerFields.PLAYER_FIELD_WATCHED_FACTION_INDEX, WatchedFactionIndex);
 
-            SetUpdateField((int) EUnitFields.UnitFieldBytes1, CBytes1);
-            SetUpdateField((int) EUnitFields.UnitFieldBytes2, CBytes2);
-            SetUpdateField((int) EUnitFields.UnitFieldDisplayid, Model);
-            SetUpdateField((int) EUnitFields.UnitFieldNativedisplayid, ModelNative);
-            SetUpdateField((int) EUnitFields.UnitFieldMountdisplayid, Mount);
-            SetUpdateField((int) EUnitFields.UnitDynamicFlags, CDynamicFlags);
+            SetUpdateField((int) PlayerFields.PLAYER_XP, XP);
+            SetUpdateField((int) PlayerFields.PLAYER_NEXT_LEVEL_XP, XpTable);
+            SetUpdateField((int) PlayerFields.PLAYER_REST_STATE_EXPERIENCE, RestBonus);
+            
+            SetUpdateField((int) PlayerFields.PLAYER_FLAGS, CPlayerFlags);
+            SetUpdateField((int) PlayerFields.PLAYER_FIELD_BYTES, CPlayerFieldBytes);
+            SetUpdateField((int) PlayerFields.PLAYER_FIELD_BYTES2, CPlayerFieldBytes2);
 
-            //SetUpdateField((int) EPlayerFields.PLAYER_BYTES, character.char_skin, 0);
-            //SetUpdateField((int) EPlayerFields.PLAYER_BYTES, character.char_face, 1);
-            //SetUpdateField((int) EPlayerFields.PLAYER_BYTES, character.char_hairStyle, 2);
-            //SetUpdateField((int) EPlayerFields.PLAYER_BYTES, character.char_hairColor, 3);
-            //SetUpdateField((int) EPlayerFields.PLAYER_BYTES_2, CPlayerBytes2);
-            //SetUpdateField((int) EPlayerFields.PLAYER_BYTES_3, CPlayerBytes3);
+            SetUpdateField((int) UnitFields.UNIT_FIELD_BOUNDINGRADIUS, BoundingRadius);
+            SetUpdateField((int) UnitFields.UNIT_FIELD_COMBATREACH, CombatReach);
+
+            SetUpdateField((int) PlayerFields.PLAYER_CHARACTER_POINTS1, TalentPoints);
+            //SetUpdateFlag(EPlayerFields.PLAYER_CHARACTER_POINTS2, 0)
+
+            SetUpdateField((int) PlayerFields.PLAYER_GUILDID, GuildId);
+            SetUpdateField((int) PlayerFields.PLAYER_GUILDRANK, GuildRank);
+
+            SetUpdateField((int) UnitFields.UNIT_FIELD_MINDAMAGE, Damage.Minimum);
+            SetUpdateField((int) UnitFields.UNIT_FIELD_MAXDAMAGE, Damage.Maximum + BaseUnarmedDamage);
+            SetUpdateField((int) UnitFields.UNIT_FIELD_BASEATTACKTIME, AttackTime(WeaponAttackType.BaseAttack));
+            SetUpdateField((int) (UnitFields.UNIT_FIELD_BASEATTACKTIME + 1), AttackTime(WeaponAttackType.OffAttack));
+            SetUpdateField((int) UnitFields.UNIT_MOD_CAST_SPEED, 1.0F);
+            SetUpdateField((int) UnitFields.UNIT_FIELD_ATTACK_POWER, AttackPower);
+            SetUpdateField((int) UnitFields.UNIT_FIELD_RANGED_ATTACK_POWER, AttackPowerRanged);
+            SetUpdateField((int) PlayerFields.PLAYER_CRIT_PERCENTAGE, GetBasePercentCrit(character, 0));
+            SetUpdateField((int) PlayerFields.PLAYER_RANGED_CRIT_PERCENTAGE, GetBasePercentCrit(character, 0));
+            //SetUpdateFlag(EPlayerFields.PLAYER_FIELD_MOD_HEALING_DONE_POS, healing.PositiveBonus)
+            /*
+            for (byte i = 0; i <= 6; i++)
+            {
+                //SetUpdateFlag(EPlayerFields.PLAYER_SPELL_CRIT_PERCENTAGE1 + i, CType(0, Single))
+                SetUpdateField((int) (PlayerFields.PLAYER_FIELD_MOD_DAMAGE_DONE_POS + i), SpellDamage[i].PositiveBonus);
+                SetUpdateField((int) (PlayerFields.PLAYER_FIELD_MOD_DAMAGE_DONE_NEG + i), SpellDamage[i].NegativeBonus);
+                SetUpdateField((int) (PlayerFields.PLAYER_FIELD_MOD_DAMAGE_DONE_PCT + i), SpellDamage[i].Modifier);
+            }
+
+            SetUpdateField((int) (UnitFields.UNIT_FIELD_RESISTANCES + (int) DamageTypes.DmgPhysical), Resistances[(int) DamageTypes.DmgPhysical].Base);
+            SetUpdateField((int) (UnitFields.UNIT_FIELD_RESISTANCES + (int) DamageTypes.DmgHoly), Resistances[(int) DamageTypes.DmgHoly].Base);
+            SetUpdateField((int) (UnitFields.UNIT_FIELD_RESISTANCES + (int) DamageTypes.DmgFire), Resistances[(int) DamageTypes.DmgFire].Base);
+            SetUpdateField((int) (UnitFields.UNIT_FIELD_RESISTANCES + (int) DamageTypes.DmgNature), Resistances[(int) DamageTypes.DmgNature].Base);
+            SetUpdateField((int) (UnitFields.UNIT_FIELD_RESISTANCES + (int) DamageTypes.DmgFrost), Resistances[(int) DamageTypes.DmgFrost].Base);
+            SetUpdateField((int) (UnitFields.UNIT_FIELD_RESISTANCES + (int) DamageTypes.DmgShadow), Resistances[(int) DamageTypes.DmgShadow].Base);
+            SetUpdateField((int) (UnitFields.UNIT_FIELD_RESISTANCES + (int) DamageTypes.DmgArcane), Resistances[(int) DamageTypes.DmgArcane].Base);
+            */
+
+            SetUpdateField((int) PlayerFields.PLAYER_FIELD_COINAGE, Copper);
+
+            int skillCount = 0;
+            foreach (CharactersSkills skill in MainForm.Database.GetSkills(_character))
+            {
+                SetUpdateField((int) (PlayerFields.PLAYER_SKILL_INFO_1_1 + skillCount * 3), skill.skill);
+                SetUpdateField((int) (PlayerFields.PLAYER_SKILL_INFO_1_1 + skillCount * 3 + 1), skill.value + (skill.max << 16));
+                //SetUpdateField(PlayerFields.PLAYER_SKILL_INFO_1_1 + SkillsPositions(skill.Key) * 3 + 2, skill.Value.Bonus);
+                skillCount++;
+            }
+
+            SetUpdateField((int) UnitFields.UNIT_FIELD_RANGEDATTACKTIME, AttackTime(WeaponAttackType.RangedAttack));
+            SetUpdateField((int) UnitFields.UNIT_FIELD_MINOFFHANDDAMAGE, OffHandDamage.Minimum);
+            SetUpdateField((int) UnitFields.UNIT_FIELD_MAXOFFHANDDAMAGE, OffHandDamage.Maximum);
+            SetUpdateField((int) UnitFields.UNIT_FIELD_STAT0, Strength.Base);
+            SetUpdateField((int) UnitFields.UNIT_FIELD_STAT1, Agility.Base);
+            SetUpdateField((int) UnitFields.UNIT_FIELD_STAT2, Stamina.Base);
+            SetUpdateField((int) UnitFields.UNIT_FIELD_STAT3, Spirit.Base);
+            SetUpdateField((int) UnitFields.UNIT_FIELD_STAT4, Intellect.Base);
+
+            SetUpdateField((int) UnitFields.UNIT_FIELD_ATTACK_POWER_MODS, AttackPowerMods);
+            SetUpdateField((int) UnitFields.UNIT_FIELD_RANGED_ATTACK_POWER_MODS, AttackPowerModsRanged);
+            SetUpdateField((int) UnitFields.UNIT_FIELD_MINRANGEDDAMAGE, RangedDamage.Minimum);
+            SetUpdateField((int) UnitFields.UNIT_FIELD_MAXRANGEDDAMAGE, RangedDamage.Maximum + BaseRangedDamage);
+            SetUpdateField((int) UnitFields.UNIT_FIELD_ATTACK_POWER_MULTIPLIER, 0.0F);
+            SetUpdateField((int) UnitFields.UNIT_FIELD_RANGED_ATTACK_POWER_MULTIPLIER, 0.0F);
+
+            // QUESTS 
+
+            SetUpdateField((int) PlayerFields.PLAYER_BLOCK_PERCENTAGE, GetBasePercentBlock(character, 0));
+            SetUpdateField((int) PlayerFields.PLAYER_DODGE_PERCENTAGE, GetBasePercentDodge(character, 0));
+            SetUpdateField((int) PlayerFields.PLAYER_PARRY_PERCENTAGE, GetBasePercentParry(character, 0));
+
+            for (byte i = 0; i <= 64-1; i++)
+            {
+                SetUpdateField((int) (PlayerFields.PLAYER_EXPLORED_ZONES_1 + i), ZonesExplored[i]);
+            }
+
+            //SetUpdateField(PlayerFields.PLAYER_FIELD_LIFETIME_HONORBALE_KILLS, HonorKillsLifeTime);
+            //SetUpdateField(PlayerFields.PLAYER_FIELD_LIFETIME_DISHONORBALE_KILLS, DishonorKillsLifeTime);
+            SetUpdateField((int) PlayerFields.PLAYER_FIELD_SESSION_KILLS, HonorKillsToday + (Convert.ToInt32(DishonorKillsToday) << 16));
+            SetUpdateField((int) PlayerFields.PLAYER_FIELD_THIS_WEEK_KILLS, HonorKillsThisWeek);
+            SetUpdateField((int) PlayerFields.PLAYER_FIELD_LAST_WEEK_KILLS, HonorKillsLastWeek);
+            SetUpdateField((int) PlayerFields.PLAYER_FIELD_YESTERDAY_KILLS, HonorKillsYesterday);
+            SetUpdateField((int) PlayerFields.PLAYER_FIELD_THIS_WEEK_CONTRIBUTION, HonorPointsThisWeek);
+            SetUpdateField((int) PlayerFields.PLAYER_FIELD_LAST_WEEK_CONTRIBUTION, HonorPointsLastWeek);
+            SetUpdateField((int) PlayerFields.PLAYER_FIELD_YESTERDAY_CONTRIBUTION, HonorPointsYesterday);
+            SetUpdateField((int) PlayerFields.PLAYER_FIELD_LAST_WEEK_RANK, StandingLastWeek);
+
+            var inventory = MainForm.Database.GetInventory(character);
+
+            for (int i = (int) EquipmentSlots.EQUIPMENT_SLOT_START; i <= (int) (KeyRingSlots.KEYRING_SLOT_END - 1); i++)
+            {
+                if (inventory.Find(item => item.slot == i) != null)
+                {
+                    if (i < (int) EquipmentSlots.EQUIPMENT_SLOT_END)
+                    {
+                        SetUpdateField((int) (PlayerFields.PLAYER_VISIBLE_ITEM_1_0 + (i * PLAYER_VISIBLE_ITEM_SIZE)), inventory.Find(item => item.slot == i).item);
+                        // Include enchantment info
+                        SetUpdateField((int) (PlayerFields.PLAYER_VISIBLE_ITEM_1_PROPERTIES + i * PLAYER_VISIBLE_ITEM_SIZE), 0);
+                    }
+                    SetUpdateField((int) (PlayerFields.PLAYER_FIELD_INV_SLOT_HEAD + i * 2), inventory.Find(item => item.slot == i).Id);
+                }
+                else
+                {
+                    if (i < (int) EquipmentSlots.EQUIPMENT_SLOT_END)
+                    {
+                        SetUpdateField((int) (PlayerFields.PLAYER_VISIBLE_ITEM_1_0 + i * PLAYER_VISIBLE_ITEM_SIZE), 0);
+                        SetUpdateField((int) (PlayerFields.PLAYER_VISIBLE_ITEM_1_PROPERTIES + i * PLAYER_VISIBLE_ITEM_SIZE), 0);
+                    }
+                    SetUpdateField((int) (PlayerFields.PLAYER_FIELD_INV_SLOT_HEAD + i * 2), 0);
+                }
+            }
+
+            SetUpdateField((int) PlayerFields.PLAYER_AMMO_ID, AmmoId);
         }
-    }
 
-    public enum FactionTemplates
-    {
-        // Fields
-        None = 0,
-        PLAYERHuman = 1,
-        PLAYEROrc = 2,
-        PLAYERDwarf = 3,
-        PLAYERNightElf = 4,
-        PLAYERUndead = 5,
-        PLAYERTauren = 6
-    }
+        public int AmmoId = 0;
 
-    enum EUnitFields
-    {
-        UnitFieldCharm = 0x00 + EObjectFields.OBJECT_END, // Size:2
-        UnitFieldSummon = 0x02 + EObjectFields.OBJECT_END, // Size:2
-        UnitFieldCharmedby = 0x04 + EObjectFields.OBJECT_END, // Size:2
-        UnitFieldSummonedby = 0x06 + EObjectFields.OBJECT_END, // Size:2
-        UnitFieldCreatedby = 0x08 + EObjectFields.OBJECT_END, // Size:2
-        UnitFieldTarget = 0x0A + EObjectFields.OBJECT_END, // Size:2
-        UnitFieldPersuaded = 0x0C + EObjectFields.OBJECT_END, // Size:2
-        UnitFieldChannelObject = 0x0E + EObjectFields.OBJECT_END, // Size:2
-        UnitFieldHealth = 0x10 + EObjectFields.OBJECT_END, // Size:1
-        UnitFieldPower1 = 0x11 + EObjectFields.OBJECT_END, // Size:1
-        UnitFieldPower2 = 0x12 + EObjectFields.OBJECT_END, // Size:1
-        UnitFieldPower3 = 0x13 + EObjectFields.OBJECT_END, // Size:1
-        UnitFieldPower4 = 0x14 + EObjectFields.OBJECT_END, // Size:1
-        UnitFieldPower5 = 0x15 + EObjectFields.OBJECT_END, // Size:1
-        UnitFieldMaxhealth = 0x16 + EObjectFields.OBJECT_END, // Size:1
-        UnitFieldMaxpower1 = 0x17 + EObjectFields.OBJECT_END, // Size:1
-        UnitFieldMaxpower2 = 0x18 + EObjectFields.OBJECT_END, // Size:1
-        UnitFieldMaxpower3 = 0x19 + EObjectFields.OBJECT_END, // Size:1
-        UnitFieldMaxpower4 = 0x1A + EObjectFields.OBJECT_END, // Size:1
-        UnitFieldMaxpower5 = 0x1B + EObjectFields.OBJECT_END, // Size:1
-        UnitFieldLevel = 0x1C + EObjectFields.OBJECT_END, // Size:1
-        UnitFieldFactiontemplate = 0x1D + EObjectFields.OBJECT_END, // Size:1
-        UnitFieldBytes0 = 0x1E + EObjectFields.OBJECT_END, // Size:1
-        UnitVirtualItemSlotDisplay = 0x1F + EObjectFields.OBJECT_END, // Size:3
-        UnitVirtualItemSlotDisplay01 = 0x20 + EObjectFields.OBJECT_END,
-        UnitVirtualItemSlotDisplay02 = 0x21 + EObjectFields.OBJECT_END,
-        UnitVirtualItemInfo = 0x22 + EObjectFields.OBJECT_END, // Size:6
-        UnitVirtualItemInfo01 = 0x23 + EObjectFields.OBJECT_END,
-        UnitVirtualItemInfo02 = 0x24 + EObjectFields.OBJECT_END,
-        UnitVirtualItemInfo03 = 0x25 + EObjectFields.OBJECT_END,
-        UnitVirtualItemInfo04 = 0x26 + EObjectFields.OBJECT_END,
-        UnitVirtualItemInfo05 = 0x27 + EObjectFields.OBJECT_END,
-        UnitFieldFlags = 0x28 + EObjectFields.OBJECT_END, // Size:1
-        UnitFieldAura = 0x29 + EObjectFields.OBJECT_END, // Size:48
-        UnitFieldAuraLast = 0x58 + EObjectFields.OBJECT_END,
-        UnitFieldAuraflags = 0x59 + EObjectFields.OBJECT_END, // Size:6
-        UnitFieldAuraflags01 = 0x5a + EObjectFields.OBJECT_END,
-        UnitFieldAuraflags02 = 0x5b + EObjectFields.OBJECT_END,
-        UnitFieldAuraflags03 = 0x5c + EObjectFields.OBJECT_END,
-        UnitFieldAuraflags04 = 0x5d + EObjectFields.OBJECT_END,
-        UnitFieldAuraflags05 = 0x5e + EObjectFields.OBJECT_END,
-        UnitFieldAuralevels = 0x5f + EObjectFields.OBJECT_END, // Size:12
-        UnitFieldAuralevelsLast = 0x6a + EObjectFields.OBJECT_END,
-        UnitFieldAuraapplications = 0x6b + EObjectFields.OBJECT_END, // Size:12
-        UnitFieldAuraapplicationsLast = 0x76 + EObjectFields.OBJECT_END,
-        UnitFieldAurastate = 0x77 + EObjectFields.OBJECT_END, // Size:1
-        UnitFieldBaseattacktime = 0x78 + EObjectFields.OBJECT_END, // Size:2
-        UnitFieldOffhandattacktime = 0x79 + EObjectFields.OBJECT_END, // Size:2
-        UnitFieldRangedattacktime = 0x7a + EObjectFields.OBJECT_END, // Size:1
-        UnitFieldBoundingradius = 0x7b + EObjectFields.OBJECT_END, // Size:1
-        UnitFieldCombatreach = 0x7c + EObjectFields.OBJECT_END, // Size:1
-        UnitFieldDisplayid = 0x7d + EObjectFields.OBJECT_END, // Size:1
-        UnitFieldNativedisplayid = 0x7e + EObjectFields.OBJECT_END, // Size:1
-        UnitFieldMountdisplayid = 0x7f + EObjectFields.OBJECT_END, // Size:1
-        UnitFieldMindamage = 0x80 + EObjectFields.OBJECT_END, // Size:1
-        UnitFieldMaxdamage = 0x81 + EObjectFields.OBJECT_END, // Size:1
-        UnitFieldMinoffhanddamage = 0x82 + EObjectFields.OBJECT_END, // Size:1
-        UnitFieldMaxoffhanddamage = 0x83 + EObjectFields.OBJECT_END, // Size:1
-        UnitFieldBytes1 = 0x84 + EObjectFields.OBJECT_END, // Size:1
-        UnitFieldPetnumber = 0x85 + EObjectFields.OBJECT_END, // Size:1
-        UnitFieldPetNameTimestamp = 0x86 + EObjectFields.OBJECT_END, // Size:1
-        UnitFieldPetexperience = 0x87 + EObjectFields.OBJECT_END, // Size:1
-        UnitFieldPetnextlevelexp = 0x88 + EObjectFields.OBJECT_END, // Size:1
-        UnitDynamicFlags = 0x89 + EObjectFields.OBJECT_END, // Size:1
-        UnitChannelSpell = 0x8a + EObjectFields.OBJECT_END, // Size:1
-        UnitModCastSpeed = 0x8b + EObjectFields.OBJECT_END, // Size:1
-        UnitCreatedBySpell = 0x8c + EObjectFields.OBJECT_END, // Size:1
-        UnitNpcFlags = 0x8d + EObjectFields.OBJECT_END, // Size:1
-        UnitNpcEmotestate = 0x8e + EObjectFields.OBJECT_END, // Size:1
-        UnitTrainingPoints = 0x8f + EObjectFields.OBJECT_END, // Size:1
-        UnitFieldStat0 = 0x90 + EObjectFields.OBJECT_END, // Size:1
-        UnitFieldStat1 = 0x91 + EObjectFields.OBJECT_END, // Size:1
-        UnitFieldStat2 = 0x92 + EObjectFields.OBJECT_END, // Size:1
-        UnitFieldStat3 = 0x93 + EObjectFields.OBJECT_END, // Size:1
-        UnitFieldStat4 = 0x94 + EObjectFields.OBJECT_END, // Size:1
-        UnitFieldResistances = 0x95 + EObjectFields.OBJECT_END, // Size:7
-        UnitFieldResistances01 = 0x96 + EObjectFields.OBJECT_END,
-        UnitFieldResistances02 = 0x97 + EObjectFields.OBJECT_END,
-        UnitFieldResistances03 = 0x98 + EObjectFields.OBJECT_END,
-        UnitFieldResistances04 = 0x99 + EObjectFields.OBJECT_END,
-        UnitFieldResistances05 = 0x9a + EObjectFields.OBJECT_END,
-        UnitFieldResistances06 = 0x9b + EObjectFields.OBJECT_END,
-        UnitFieldBaseMana = 0x9c + EObjectFields.OBJECT_END, // Size:1
-        UnitFieldBaseHealth = 0x9d + EObjectFields.OBJECT_END, // Size:1
-        UnitFieldBytes2 = 0x9e + EObjectFields.OBJECT_END, // Size:1
-        UnitFieldAttackPower = 0x9f + EObjectFields.OBJECT_END, // Size:1
-        UnitFieldAttackPowerMods = 0xa0 + EObjectFields.OBJECT_END, // Size:1
-        UnitFieldAttackPowerMultiplier = 0xa1 + EObjectFields.OBJECT_END, // Size:1
-        UnitFieldRangedAttackPower = 0xa2 + EObjectFields.OBJECT_END, // Size:1
-        UnitFieldRangedAttackPowerMods = 0xa3 + EObjectFields.OBJECT_END, // Size:1
-        UnitFieldRangedAttackPowerMultiplier = 0xa4 + EObjectFields.OBJECT_END, // Size:1
-        UnitFieldMinrangeddamage = 0xa5 + EObjectFields.OBJECT_END, // Size:1
-        UnitFieldMaxrangeddamage = 0xa6 + EObjectFields.OBJECT_END, // Size:1
-        UnitFieldPowerCostModifier = 0xa7 + EObjectFields.OBJECT_END, // Size:7
-        UnitFieldPowerCostModifier01 = 0xa8 + EObjectFields.OBJECT_END,
-        UnitFieldPowerCostModifier02 = 0xa9 + EObjectFields.OBJECT_END,
-        UnitFieldPowerCostModifier03 = 0xaa + EObjectFields.OBJECT_END,
-        UnitFieldPowerCostModifier04 = 0xab + EObjectFields.OBJECT_END,
-        UnitFieldPowerCostModifier05 = 0xac + EObjectFields.OBJECT_END,
-        UnitFieldPowerCostModifier06 = 0xad + EObjectFields.OBJECT_END,
-        UnitFieldPowerCostMultiplier = 0xae + EObjectFields.OBJECT_END, // Size:7
-        UnitFieldPowerCostMultiplier01 = 0xaf + EObjectFields.OBJECT_END,
-        UnitFieldPowerCostMultiplier02 = 0xb0 + EObjectFields.OBJECT_END,
-        UnitFieldPowerCostMultiplier03 = 0xb1 + EObjectFields.OBJECT_END,
-        UnitFieldPowerCostMultiplier04 = 0xb2 + EObjectFields.OBJECT_END,
-        UnitFieldPowerCostMultiplier05 = 0xb3 + EObjectFields.OBJECT_END,
-        UnitFieldPowerCostMultiplier06 = 0xb4 + EObjectFields.OBJECT_END,
-        UnitFieldPadding = 0xb5 + EObjectFields.OBJECT_END,
-        UnitEnd = 0xb6 + EObjectFields.OBJECT_END,
+        // aqui em baixo e merda mover pra outro canto
+        public const int PLAYER_VISIBLE_ITEM_SIZE = 12;
 
-        PlayerDuelArbiter = 0x00 + UnitEnd, // Size:2
-        PlayerFlags = 0x02 + UnitEnd, // Size:1
-        PlayerGuildid = 0x03 + UnitEnd, // Size:1
-        PlayerGuildrank = 0x04 + UnitEnd, // Size:1
-        PlayerBytes = 0x05 + UnitEnd, // Size:1
-        PlayerBytes2 = 0x06 + UnitEnd, // Size:1
-        PlayerBytes3 = 0x07 + UnitEnd, // Size:1
-        PlayerDuelTeam = 0x08 + UnitEnd, // Size:1
-        PlayerGuildTimestamp = 0x09 + UnitEnd, // Size:1
-        PlayerQuestLog11 = 0x0A + UnitEnd, // count = 20
-        PlayerQuestLog12 = 0x0B + UnitEnd,
-        PlayerQuestLog13 = 0x0C + UnitEnd,
-        PlayerQuestLogLast1 = 0x43 + UnitEnd,
-        PlayerQuestLogLast2 = 0x44 + UnitEnd,
-        PlayerQuestLogLast3 = 0x45 + UnitEnd,
-        PlayerVisibleItem1Creator = 0x46 + UnitEnd, // Size:2, count = 19
-        PlayerVisibleItem10 = 0x48 + UnitEnd, // Size:8
-        PlayerVisibleItem1Properties = 0x50 + UnitEnd, // Size:1
-        PlayerVisibleItem1Pad = 0x51 + UnitEnd, // Size:1
-        PlayerVisibleItemLastCreator = 0x11e + UnitEnd,
-        PlayerVisibleItemLast0 = 0x120 + UnitEnd,
-        PlayerVisibleItemLastProperties = 0x128 + UnitEnd,
-        PlayerVisibleItemLastPad = 0x129 + UnitEnd,
-        PlayerFieldInvSlotHead = 0x12a + UnitEnd, // Size:46
-        PlayerFieldPackSlot1 = 0x158 + UnitEnd, // Size:32
-        PlayerFieldPackSlotLast = 0x176 + UnitEnd,
-        PlayerFieldBankSlot1 = 0x178 + UnitEnd, // Size:48
-        PlayerFieldBankSlotLast = 0x1a6 + UnitEnd,
-        PlayerFieldBankbagSlot1 = 0x1a8 + UnitEnd, // Size:12
-        PlayerFieldBankbagSlotLast = 0xab2 + UnitEnd,
-        PlayerFieldVendorbuybackSlot1 = 0x1b4 + UnitEnd, // Size:24
-        PlayerFieldVendorbuybackSlotLast = 0x1ca + UnitEnd,
-        PlayerFieldKeyringSlot1 = 0x1cc + UnitEnd, // Size:64
-        PlayerFieldKeyringSlotLast = 0x20a + UnitEnd,
-        PlayerFarsight = 0x20c + UnitEnd, // Size:2
-        PlayerFieldComboTarget = 0x20e + UnitEnd, // Size:2
-        PlayerXp = 0x210 + UnitEnd, // Size:1
-        PlayerNextLevelXp = 0x211 + UnitEnd, // Size:1
-        PlayerSkillInfo11 = 0x212 + UnitEnd, // Size:384
-        PlayerCharacterPoints1 = 0x392 + UnitEnd, // Size:1
-        PlayerCharacterPoints2 = 0x393 + UnitEnd, // Size:1
-        PlayerTrackCreatures = 0x394 + UnitEnd, // Size:1
-        PlayerTrackResources = 0x395 + UnitEnd, // Size:1
-        PlayerBlockPercentage = 0x396 + UnitEnd, // Size:1
-        PlayerDodgePercentage = 0x397 + UnitEnd, // Size:1
-        PlayerParryPercentage = 0x398 + UnitEnd, // Size:1
-        PlayerCritPercentage = 0x399 + UnitEnd, // Size:1
-        PlayerRangedCritPercentage = 0x39a + UnitEnd, // Size:1
-        PlayerExploredZones1 = 0x39b + UnitEnd, // Size:64
-        PlayerRestStateExperience = 0x3db + UnitEnd, // Size:1
-        PlayerFieldCoinage = 0x3dc + UnitEnd, // Size:1
-        PlayerFieldPosstat0 = 0x3DD + UnitEnd, // Size:1
-        PlayerFieldPosstat1 = 0x3DE + UnitEnd, // Size:1
-        PlayerFieldPosstat2 = 0x3DF + UnitEnd, // Size:1
-        PlayerFieldPosstat3 = 0x3E0 + UnitEnd, // Size:1
-        PlayerFieldPosstat4 = 0x3E1 + UnitEnd, // Size:1
-        PlayerFieldNegstat0 = 0x3E2 + UnitEnd, // Size:1
-        PlayerFieldNegstat1 = 0x3E3 + UnitEnd, // Size:1
-        PlayerFieldNegstat2 = 0x3E4 + UnitEnd, // Size:1
-        PlayerFieldNegstat3 = 0x3E5 + UnitEnd, // Size:1,
-        PlayerFieldNegstat4 = 0x3E6 + UnitEnd, // Size:1
-        PlayerFieldResistancebuffmodspositive = 0x3E7 + UnitEnd, // Size:7
-        PlayerFieldResistancebuffmodsnegative = 0x3EE + UnitEnd, // Size:7
-        PlayerFieldModDamageDonePos = 0x3F5 + UnitEnd, // Size:7
-        PlayerFieldModDamageDoneNeg = 0x3FC + UnitEnd, // Size:7
-        PlayerFieldModDamageDonePct = 0x403 + UnitEnd, // Size:7
-        PlayerFieldBytes = 0x40A + UnitEnd, // Size:1
-        PlayerAmmoId = 0x40B + UnitEnd, // Size:1
-        PlayerSelfResSpell = 0x40C + UnitEnd, // Size:1
-        PlayerFieldPvpMedals = 0x40D + UnitEnd, // Size:1
-        PlayerFieldBuybackPrice1 = 0x40E + UnitEnd, // count=12
-        PlayerFieldBuybackPriceLast = 0x419 + UnitEnd,
-        PlayerFieldBuybackTimestamp1 = 0x41A + UnitEnd, // count=12
-        PlayerFieldBuybackTimestampLast = 0x425 + UnitEnd,
-        PlayerFieldSessionKills = 0x426 + UnitEnd, // Size:1
-        PlayerFieldYesterdayKills = 0x427 + UnitEnd, // Size:1
-        PlayerFieldLastWeekKills = 0x428 + UnitEnd, // Size:1
-        PlayerFieldThisWeekKills = 0x429 + UnitEnd, // Size:1
-        PlayerFieldThisWeekContribution = 0x42a + UnitEnd, // Size:1
-        PlayerFieldLifetimeHonorableKills = 0x42b + UnitEnd, // Size:1
-        PlayerFieldLifetimeDishonorableKills = 0x42c + UnitEnd, // Size:1
-        PlayerFieldYesterdayContribution = 0x42d + UnitEnd, // Size:1
-        PlayerFieldLastWeekContribution = 0x42e + UnitEnd, // Size:1
-        PlayerFieldLastWeekRank = 0x42f + UnitEnd, // Size:1
-        PlayerFieldBytes2 = 0x430 + UnitEnd, // Size:1
-        PlayerFieldWatchedFactionIndex = 0x431 + UnitEnd, // Size:1
-        PlayerFieldCombatRating1 = 0x432 + UnitEnd, // Size:20
+        //Honor And Arena
+        public int HonorPoints = 0;
+        public int StandingLastWeek = 0;
+        public short HonorKillsToday = 0;
+        public short DishonorKillsToday = 0;
+        public short HonorKillsYesterday = 0;
+        public int HonorKillsThisWeek = 0;
+        public int HonorKillsLastWeek = 0;
+        public int HonorKillsLifeTime = 0;
+        public int DishonorKillsLifeTime = 0;
+        public int HonorPointsYesterday = 0;
+        public int HonorPointsThisWeek = 0;
+        public int HonorPointsLastWeek = 0;
 
-        PlayerEnd = 0x446 + UnitEnd
+        public uint[] ZonesExplored = { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+            0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+            0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 };
+
+        private object GetBasePercentParry(Characters character, int v)
+        {
+            return 2f;
+        }
+
+        private object GetBasePercentDodge(Characters character, int v)
+        {
+            return 2f;
+        }
+
+        private object GetBasePercentBlock(Characters character, int v)
+        {
+            return 2f;
+        }
+
+        public int BaseRangedDamage => (int)((AttackPower + AttackPowerMods) * 0.0714285714285714);
+
+        public Damage OffHandDamage = new Damage();
+        public Damage RangedDamage = new Damage();
+        public Damage Damage = new Damage();
+
+        public uint Copper = 0;
+
+        public TDamageBonus[] SpellDamage = new TDamageBonus[7];
+
+        private static object GetBasePercentCrit(Characters character, int p1)
+        {
+            return 2f;
+        }
+
+        private object AttackTime(WeaponAttackType index)
+        {
+            return AttackTimeBase[(int) index] * AttackTimeMods[(int) index];
+        }
+
+        public short[] AttackTimeBase = { 2000, 0,  0  };
+        public float[] AttackTimeMods = { 1f,   1f, 1f };
+
+        public int AttackPowerRanged = 0;
+        public int AttackPowerModsRanged = 0;
     }
 }

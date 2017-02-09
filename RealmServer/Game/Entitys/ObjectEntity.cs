@@ -8,7 +8,7 @@ namespace RealmServer.Game.Entitys
 
         public ulong Guid
         {
-            set { SetUpdateField((int) EObjectFields.OBJECT_FIELD_GUID, value); }
+            set { SetUpdateField((int) ObjectFields.OBJECT_FIELD_GUID, value); }
         }
 
         public ObjectEntity(ObjectGuid objectGuid)
