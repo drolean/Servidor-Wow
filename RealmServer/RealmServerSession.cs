@@ -27,6 +27,7 @@ namespace RealmServer
 
         //
         public Users Users { get; set; }
+        public Characters Target;
         public Characters Character;
         internal PlayerEntity Entity;
 

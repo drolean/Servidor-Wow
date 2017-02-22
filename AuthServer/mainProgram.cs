@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Net;
 using System.Reflection;
+using Common.Database;
 using Common.Globals;
 using Common.Helpers;
-using Common.Database;
 
 namespace AuthServer
 {

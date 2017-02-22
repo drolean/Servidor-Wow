@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using Common.Database.Tables;
 using Common.Globals;
 using Common.Helpers;
 using Common.Network;
 using RealmServer.Game.Entitys;
-using RealmServer.Helpers;
 
 namespace RealmServer.Game
 {
@@ -64,6 +62,37 @@ namespace RealmServer.Game
             entity.WriteUpdateFields(writer);          
 
             return new UpdateObject(new List<byte[]> { ((MemoryStream) writer.BaseStream).ToArray() });
+        }
+
+        internal static byte[] GenerateGuidBytes(ulong id)
+        {
+            byte[] packedGuid = new byte[9];
+            byte length = 1;
+
+            for (byte i = 0; id != 0; i++)
+            {
+                if ((id & 0xFF) != 0)
+                {
+                    packedGuid[0] |= (byte)(1 << i);
+                    packedGuid[length] = (byte)(id & 0xFF);
+                    ++length;
+                }
+
+                id >>= 8;
+            }
+
+            byte[] clippedArray = new byte[length];
+            Array.Copy(packedGuid, clippedArray, length);
+
+            return clippedArray;
+        }
+
+        public static void WriteBytes(BinaryWriter writer, byte[] data, int count = 0)
+        {
+            if (count == 0)
+                writer.Write(data);
+            else
+                writer.Write(data, 0, count);
         }
     }
 

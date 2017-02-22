@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Threading.Tasks;
 using Common.Database;
 using Common.Database.Tables;
 using Common.Globals;
@@ -93,6 +94,20 @@ namespace RealmServer
             Helper.GenerateSpells(character);         // DONE: Generate Spells
             Helper.GenerateInventory(character);      // Generate Inventory
 
+        }
+
+        internal async Task UpdateMovement(Characters character)
+        {
+            using (var scope = new DataAccessScope())
+            {
+                var update = Model.Characters.GetReference(character.Id);
+                update.MapX = character.MapX;
+                update.MapY = character.MapY;
+                update.MapZ = character.MapZ;
+                update.MapO = character.MapO;
+
+                await scope.CompleteAsync();
+            }
         }
 
         internal List<CharactersInventorys> GetInventory(Characters character)

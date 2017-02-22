@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using Common.Database;
 using Common.Database.Tables;
 using Common.Globals;
@@ -10,43 +11,6 @@ using RealmServer.Game;
 
 namespace RealmServer.Handlers
 {
-    enum CharacterFlagState
-    {
-        CharacterFlagNone = 0x0,
-        CharacterFlagUnk1 = 0x1,
-        CharacterFlagUnk2 = 0x2,
-        CharacterFlagLockedForTransfer = 0x4, //Character Locked for Paid Character Transfer
-        CharacterFlagUnk4 = 0x8,
-        CharacterFlagUnk5 = 0x10,
-        CharacterFlagUnk6 = 0x20,
-        CharacterFlagUnk7 = 0x40,
-        CharacterFlagUnk8 = 0x80,
-        CharacterFlagUnk9 = 0x100,
-        CharacterFlagUnk10 = 0x200,
-        CharacterFlagHideHelm = 0x400,
-        CharacterFlagHideCloak = 0x800,
-        CharacterFlagUnk13 = 0x1000,
-        CharacterFlagGhost = 0x2000, //Player is ghost in char selection screen
-        CharacterFlagRename = 0x4000, //On login player will be asked to change name
-        CharacterFlagUnk16 = 0x8000,
-        CharacterFlagUnk17 = 0x10000,
-        CharacterFlagUnk18 = 0x20000,
-        CharacterFlagUnk19 = 0x40000,
-        CharacterFlagUnk20 = 0x80000,
-        CharacterFlagUnk21 = 0x100000,
-        CharacterFlagUnk22 = 0x200000,
-        CharacterFlagUnk23 = 0x400000,
-        CharacterFlagUnk24 = 0x800000,
-        CharacterFlagLockedByBilling = 0x1000000,
-        CharacterFlagDeclined = 0x2000000,
-        CharacterFlagUnk27 = 0x4000000,
-        CharacterFlagUnk28 = 0x8000000,
-        CharacterFlagUnk29 = 0x10000000,
-        CharacterFlagUnk30 = 0x20000000,
-        CharacterFlagUnk31 = 0x40000000
-        //CHARACTER_FLAG_UNK32 = 0x80000000,
-    }
-
     #region SMSG_CHAR_ENUM
     public sealed class SmsgCharEnum : PacketServer
     {
@@ -223,7 +187,7 @@ namespace RealmServer.Handlers
 
         public CmsgUpdateAccountData(byte[] data) : base(data)
         {
-            if ((data.Length - 1) < 13)
+            if (data.Length - 1 < 13)
                 return;
 
             DataId = ReadUInt32();
@@ -392,10 +356,53 @@ namespace RealmServer.Handlers
             }
         }
     }
-    #endregion 
+    #endregion
+
+    #region SMSG_LOGOUT_RESPONSE
+    internal sealed class SmsgLogoutResponse : PacketServer
+    {
+        public SmsgLogoutResponse() : base(RealmCMD.SMSG_LOGOUT_RESPONSE)
+        {
+            Write((UInt32)0);
+            Write((byte)0); // 0x0 = Accept | 0xc = Denied
+        }
+    }
+    #endregion
+
+    #region SMSG_LOGOUT_COMPLETE
+    internal sealed class SmsgLogoutComplete : PacketServer
+    {
+        public SmsgLogoutComplete() : base(RealmCMD.SMSG_LOGOUT_COMPLETE)
+        {
+            Write((byte)0);
+        }
+    }
+    #endregion
+
+    #region SMSG_LOGOUT_CANCEL_ACK
+    internal sealed class SmsgLogoutCancelAck : PacketServer
+    {
+        public SmsgLogoutCancelAck() : base(RealmCMD.SMSG_LOGOUT_CANCEL_ACK)
+        {
+            Write((byte)0);
+        }
+    }
+    #endregion
+
+    #region SMSG_STANDSTATE_UPDATE
+    internal sealed class SmsgStandstateUpdate : PacketServer
+    {
+        public SmsgStandstateUpdate(byte state) : base(RealmCMD.SMSG_STANDSTATE_UPDATE)
+        {
+            Write((byte) state);
+        }
+    }
+    #endregion
 
     internal class CharacterHandler
     {
+        private static Dictionary<RealmServerSession, DateTime> _logoutQueue;
+
         internal static void OnCharEnum(RealmServerSession session, byte[] data)
         {
             List<Characters> characters = MainForm.Database.GetCharacters(session.Users.username);
@@ -575,7 +582,73 @@ namespace RealmServer.Handlers
 
         internal static void OnUpdateAccountData(RealmServerSession session, CmsgUpdateAccountData handler)
         {
-            Console.WriteLine(@"Update Account Data Bucueta");
+            // Nao Implementado ????
+        }
+
+        internal static void OnLogoutRequest(RealmServerSession session, byte[] data)
+        {
+            // Lose Invisibility
+
+            // Can't log out in combat
+
+            // Initialize packet
+            // - Disable Turn
+            // - StandState -> Sit
+            // - Send packet
+
+            // Let the client to exit
+
+            // While logout, the player can't move
+
+            // If the player is resting, then it's instant logout
+
+            _logoutQueue = new Dictionary<RealmServerSession, DateTime>();
+
+            if (_logoutQueue.ContainsKey(session)) _logoutQueue.Remove(session);
+
+            session.SendPacket(new SmsgLogoutResponse());
+            _logoutQueue.Add(session, DateTime.Now);
+
+            Thread thread = new Thread(Update);
+            thread.Start();
+        }
+
+        private static void Update()
+        {
+            while (true)
+            {
+                foreach (KeyValuePair<RealmServerSession, DateTime> entry in _logoutQueue.ToArray())
+                {
+                    if (DateTime.Now.Subtract(entry.Value).Seconds < 1) continue;
+                    entry.Key.SendPacket(new SmsgLogoutComplete());
+                    _logoutQueue.Remove(entry.Key);
+                }
+
+                Thread.Sleep(1000);
+            }
+        }
+
+        internal static void OnLogoutCancel(RealmServerSession session, PacketReader handler)
+        {
+            _logoutQueue.Remove(session);
+            session.SendPacket(new SmsgLogoutCancelAck());
+        }
+
+        internal static void OnStandStateChange(RealmServerSession session, PacketReader handler)
+        {
+            byte StandState = handler.ReadByte();
+
+            if (StandState == (int) StandStates.STANDSTATE_STAND)
+            {
+                Console.WriteLine("vai curintia");
+                //session.Entity.RemoveAurasByInterruptFlag(SpellAuraInterruptFlags.AURA_INTERRUPT_FLAG_NOT_SEATED);
+            }
+
+            //session.Entity.StandState = StandState;
+            //session.Entity.SetUpdateField((int) UnitFields.UNIT_FIELD_BYTES_1, session.Entity.cBytes1);
+            //session.Entity.SendCharacterUpdate();
+
+            session.SendPacket(new SmsgStandstateUpdate(StandState));
         }
     }
 }

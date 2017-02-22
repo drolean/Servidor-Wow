@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using Common.Database.Tables;
 using Common.Globals;
 using RealmServer.Helpers;

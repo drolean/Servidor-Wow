@@ -2,6 +2,7 @@
 using Platform.Validation;
 using Shaolinq;
 using Common.Globals;
+using System.Threading;
 
 namespace Common.Database.Tables
 {
@@ -119,6 +120,7 @@ namespace Common.Database.Tables
 
         [PersistedMember]
         public abstract uint stats_spirit { get; set; }
+        public Timer LogoutTimer { get; set; }
 
 
         /*

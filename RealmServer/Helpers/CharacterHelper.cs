@@ -236,10 +236,10 @@ namespace RealmServer.Helpers
 
             for (int j = 0; j < startItems.Items.Length; ++j)
             {
-                if (startItems.Items[j] <= 0)
+                if (j <= 0)
                     continue;
 
-                var item = XmlReader.GetItem(startItems.Items[j]);
+                var item = XmlReader.GetItem(j);
 
                 if (item == null)
                     continue;
