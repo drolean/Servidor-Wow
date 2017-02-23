@@ -394,7 +394,7 @@ namespace RealmServer.Handlers
     {
         public SmsgStandstateUpdate(byte state) : base(RealmCMD.SMSG_STANDSTATE_UPDATE)
         {
-            Write((byte) state);
+            Write(state);
         }
     }
     #endregion
@@ -649,9 +649,10 @@ namespace RealmServer.Handlers
                 //session.Entity.RemoveAurasByInterruptFlag(SpellAuraInterruptFlags.AURA_INTERRUPT_FLAG_NOT_SEATED);
             }
 
-            session.Entity.StandState = StandState;
-            session.Entity.SetUpdateField((int) UnitFields.UNIT_FIELD_BYTES_1, session.Entity.CBytes1);
-            session.Entity.SendCharacterUpdate();
+            Console.WriteLine(StandState);
+
+            //session.Entity.StandState = StandState;
+            session.Entity.SetUpdateField((int)UnitFields.UNIT_FIELD_BYTES_1, StandState, 0);
 
             session.SendPacket(new SmsgStandstateUpdate(StandState));
         }

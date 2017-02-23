@@ -125,6 +125,8 @@ namespace RealmServer.Handlers
         {
             string channelName = handler.ReadCString();
 
+            Log.Print(LogType.Debug, $"[{session.ConnectionRemoteIp}] Channel leave [{session.Character.name} ({channelName})]");
+
             // Adicionar a base de dados
             session.SendPacket(new SmsgChannelNotify(ChatChannelNotify.CHAT_YOU_LEFT_NOTICE, (ulong)session.Character.Id, channelName));
         }

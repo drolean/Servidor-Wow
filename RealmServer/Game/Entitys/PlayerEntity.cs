@@ -324,54 +324,5 @@ namespace RealmServer.Game.Entitys
 
         public int AttackPowerRanged = 0;
         public int AttackPowerModsRanged = 0;
-
-        public void SendCharacterUpdate(bool toNear = true, bool notMe = false)
-        {
-            if (UpdateData.Count == 0)
-                return;
-            /*
-            //DONE: Send to near
-            if (toNear && SeenBy.Count > 0)
-            {
-                UpdateClass forOthers = new UpdateClass();
-                forOthers.UpdateData = UpdateData.Clone;
-                forOthers.UpdateMask = UpdateMask.Clone;
-
-                PacketClass packetForOthers = new PacketClass(OPCODES.SMSG_UPDATE_OBJECT);
-                try
-                {
-                    packetForOthers.AddInt32(1);
-                    //Operations.Count
-                    packetForOthers.AddInt8(0);
-                    forOthers.AddToPacket(packetForOthers, ObjectUpdateType.UPDATETYPE_VALUES, this);
-                    SendToNearPlayers(packetForOthers);
-                }
-                finally
-                {
-                    packetForOthers.Dispose();
-                }
-            }
-            
-
-            if (notMe) return;
-
-            //if (client == null) return;
-
-            //DONE: Send to me
-            PacketServer packet = new PacketServer(RealmCMD.SMSG_UPDATE_OBJECT);
-            try
-            {
-                packet.Write((uint) 1);
-                packet.Write((byte) 0);
-                PrepareUpdate(packet, ObjectUpdateType.UPDATETYPE_VALUES);
-                client.Send(packet);
-                entity.WriteUpdateFields(writer);
-            }
-            finally
-            {
-                packet.Dispose();
-            }
-            */
-        }
     }
 }

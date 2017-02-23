@@ -59,7 +59,7 @@ namespace RealmServer.Game
                 Guid        = (ulong) character.Id,
             };
 
-            entity.WriteUpdateFields(writer);          
+            entity.WriteUpdateFields(writer);
 
             return new UpdateObject(new List<byte[]> { ((MemoryStream) writer.BaseStream).ToArray() });
         }
