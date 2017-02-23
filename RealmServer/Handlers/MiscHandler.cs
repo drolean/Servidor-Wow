@@ -49,6 +49,18 @@ namespace RealmServer.Handlers
     }
     #endregion
 
+    #region SMSG_SET_FACTION_STANDING
+    public sealed class SmsgSetFactionStanding : PacketServer
+    {
+        public SmsgSetFactionStanding() : base(RealmCMD.SMSG_SET_FACTION_STANDING)
+        {
+            //response.AddInt32(Client.Character.Reputation(faction).Flags)
+            //response.AddInt32(faction)
+            //response.AddInt32(Client.Character.Reputation(faction).Value)
+        }
+    }
+    #endregion   
+
     internal class MiscHandler
     {
         internal static void OnNameQuery(RealmServerSession session, PacketReader handler)
@@ -112,6 +124,35 @@ namespace RealmServer.Handlers
 
             // DONE: Send Packet
             session.SendPacket(new SmsgTextEmote(session.Character.Id, textEmote, (int) unk));
+        }
+
+        internal static void OnSetFactionAtwar(RealmServerSession session, PacketReader handler)
+        {
+            uint faction = handler.ReadUInt32();
+            byte enabled = handler.ReadByte();
+            
+            Log.Print(LogType.Debug, $"CMSG_SET_FACTION_ATWAR [faction={faction} enabled={enabled}]");
+
+            // SmsgSetFactionStanding
+        }
+
+        internal static void OnSetFactionInactive(RealmServerSession session, PacketReader handler)
+        {
+            uint faction = handler.ReadUInt32();
+            byte enabled = handler.ReadByte();
+
+            Log.Print(LogType.Debug, $"CMSG_SET_FACTION_INACTIVE [faction={faction} enabled={enabled}]");
+        }
+
+        internal static void OnSetWatchedFaction(RealmServerSession session, PacketReader handler)
+        {
+            uint faction = handler.ReadUInt32();
+
+            Log.Print(LogType.Debug, $"CMSG_SET_WATCHED_FACTION [faction={faction}]");
+
+            //client.Character.WatchedFactionIndex = faction
+            //client.Character.SetUpdateFlag(EPlayerFields.PLAYER_FIELD_WATCHED_FACTION_INDEX, faction)
+            //client.Character.SendCharacterUpdate(False)
         }
     }
 }

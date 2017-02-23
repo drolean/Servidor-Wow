@@ -309,15 +309,15 @@ namespace RealmServer
         {
             try
             {
-                var filename = "Packet-Log.txt";
+                if (!Directory.Exists("logs"))
+                    Directory.CreateDirectory("logs");
+
+                var filename = $"logs/packet_log-{DateTime.Now:yyyy-M-d}.txt";
                 if (!File.Exists(filename)) File.Create(filename).Close();
 
                 using (StreamWriter w = File.AppendText(filename))
                 {
-                    w.WriteLine(DateTime.Now.ToString("yyyy-M-d H:mm:ss"));
-                    w.WriteLine($"Length: {packet.Packet.Length}");
-                    w.WriteLine($"Opcode: {(RealmCMD)packet.Opcode}");
-                    w.WriteLine("Data: ");
+                    w.WriteLine($"[{DateTime.Now:yyyy-M-d H:mm:ss}] = Opcode: {(RealmCMD)packet.Opcode} [Length: {packet.Packet.Length}]");
                     w.Write(ByteArrayToHex(packet.Packet));
                     w.WriteLine();
                     w.WriteLine();

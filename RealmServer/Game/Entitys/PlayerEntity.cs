@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using Common.Database.Tables;
 using Common.Globals;
+using Common.Network;
 using RealmServer.Helpers;
 
 namespace RealmServer.Game.Entitys
@@ -294,6 +296,11 @@ namespace RealmServer.Game.Entitys
 
         public int BaseRangedDamage => (int)((AttackPower + AttackPowerMods) * 0.0714285714285714);
 
+        public List<ulong> InCombatWith = new List<ulong>();
+        public int lastPvpAction = 0;
+
+        public bool IsInCombat => (InCombatWith.Count > 0 || (DateTime.Now.Ticks - lastPvpAction) < 6000);
+
         public Damage OffHandDamage = new Damage();
         public Damage RangedDamage = new Damage();
         public Damage Damage = new Damage();
@@ -317,5 +324,54 @@ namespace RealmServer.Game.Entitys
 
         public int AttackPowerRanged = 0;
         public int AttackPowerModsRanged = 0;
+
+        public void SendCharacterUpdate(bool toNear = true, bool notMe = false)
+        {
+            if (UpdateData.Count == 0)
+                return;
+            /*
+            //DONE: Send to near
+            if (toNear && SeenBy.Count > 0)
+            {
+                UpdateClass forOthers = new UpdateClass();
+                forOthers.UpdateData = UpdateData.Clone;
+                forOthers.UpdateMask = UpdateMask.Clone;
+
+                PacketClass packetForOthers = new PacketClass(OPCODES.SMSG_UPDATE_OBJECT);
+                try
+                {
+                    packetForOthers.AddInt32(1);
+                    //Operations.Count
+                    packetForOthers.AddInt8(0);
+                    forOthers.AddToPacket(packetForOthers, ObjectUpdateType.UPDATETYPE_VALUES, this);
+                    SendToNearPlayers(packetForOthers);
+                }
+                finally
+                {
+                    packetForOthers.Dispose();
+                }
+            }
+            
+
+            if (notMe) return;
+
+            //if (client == null) return;
+
+            //DONE: Send to me
+            PacketServer packet = new PacketServer(RealmCMD.SMSG_UPDATE_OBJECT);
+            try
+            {
+                packet.Write((uint) 1);
+                packet.Write((byte) 0);
+                PrepareUpdate(packet, ObjectUpdateType.UPDATETYPE_VALUES);
+                client.Send(packet);
+                entity.WriteUpdateFields(writer);
+            }
+            finally
+            {
+                packet.Dispose();
+            }
+            */
+        }
     }
 }

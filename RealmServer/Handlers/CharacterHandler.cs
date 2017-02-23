@@ -361,10 +361,10 @@ namespace RealmServer.Handlers
     #region SMSG_LOGOUT_RESPONSE
     internal sealed class SmsgLogoutResponse : PacketServer
     {
-        public SmsgLogoutResponse() : base(RealmCMD.SMSG_LOGOUT_RESPONSE)
+        public SmsgLogoutResponse(LogoutResponseCode code) : base(RealmCMD.SMSG_LOGOUT_RESPONSE)
         {
-            Write((UInt32)0);
-            Write((byte)0); // 0x0 = Accept | 0xc = Denied
+            Write((UInt32) 0);
+            Write((byte) code);
         }
     }
     #endregion
@@ -589,7 +589,12 @@ namespace RealmServer.Handlers
         {
             // Lose Invisibility
 
-            // Can't log out in combat
+            // ???? Can't log out in combat
+            if (session.Entity.IsInCombat)
+            {
+                session.SendPacket(new SmsgLogoutResponse(LogoutResponseCode.LOGOUT_RESPONSE_DENIED));
+                return;
+            }
 
             // Initialize packet
             // - Disable Turn
@@ -606,7 +611,7 @@ namespace RealmServer.Handlers
 
             if (_logoutQueue.ContainsKey(session)) _logoutQueue.Remove(session);
 
-            session.SendPacket(new SmsgLogoutResponse());
+            session.SendPacket(new SmsgLogoutResponse(LogoutResponseCode.LOGOUT_RESPONSE_ACCEPTED));
             _logoutQueue.Add(session, DateTime.Now);
 
             Thread thread = new Thread(Update);
@@ -644,11 +649,17 @@ namespace RealmServer.Handlers
                 //session.Entity.RemoveAurasByInterruptFlag(SpellAuraInterruptFlags.AURA_INTERRUPT_FLAG_NOT_SEATED);
             }
 
-            //session.Entity.StandState = StandState;
-            //session.Entity.SetUpdateField((int) UnitFields.UNIT_FIELD_BYTES_1, session.Entity.cBytes1);
-            //session.Entity.SendCharacterUpdate();
+            session.Entity.StandState = StandState;
+            session.Entity.SetUpdateField((int) UnitFields.UNIT_FIELD_BYTES_1, session.Entity.CBytes1);
+            session.Entity.SendCharacterUpdate();
 
             session.SendPacket(new SmsgStandstateUpdate(StandState));
         }
+    }
+
+    public enum LogoutResponseCode : byte
+    {
+        LOGOUT_RESPONSE_ACCEPTED = 0x0,
+        LOGOUT_RESPONSE_DENIED = 0xc
     }
 }

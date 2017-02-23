@@ -2,6 +2,7 @@
 using System.IO;
 using System.Threading.Tasks;
 using Common.Globals;
+using Common.Helpers;
 using Common.Network;
 using RealmServer.Game;
 
@@ -142,6 +143,22 @@ namespace RealmServer.Handlers
             // CheckZone
 
             // Send Weather
+        }
+
+        internal static void OnAreaTrigger(RealmServerSession session, PacketReader handler)
+        {
+            uint triggerId = handler.ReadUInt32();
+            Log.Print(LogType.Debug, $"CMSG_AREATRIGGER [triggerID={triggerId}]");
+
+            // Check if in combat?
+
+            // Handling quest triggers
+
+            // Handling tavern triggers
+
+            // Handling teleport triggers
+
+            // Handling all other scripted triggers
         }
     }
 }

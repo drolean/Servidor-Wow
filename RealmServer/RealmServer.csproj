@@ -61,9 +61,12 @@
     <Compile Include="Handlers\CombatHandler.cs" />
     <Compile Include="Handlers\GMHandler.cs" />
     <Compile Include="Handlers\GroupHandler.cs" />
+    <Compile Include="Handlers\ItemHandler.cs" />
     <Compile Include="Handlers\MailHandler.cs" />
     <Compile Include="Handlers\MiscHandler.cs" />
     <Compile Include="Handlers\MovementHandler.cs" />
+    <Compile Include="Handlers\SocialHandler.cs" />
+    <Compile Include="Handlers\SpellHandler.cs" />
     <Compile Include="Handlers\TradeHandler.cs" />
     <Compile Include="Helpers\CharacterHelper.cs" />
     <Compile Include="mainForm.cs">

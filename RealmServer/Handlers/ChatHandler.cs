@@ -60,9 +60,9 @@ namespace RealmServer.Handlers
                     break;
             }
 
-            Write((uint)message.Length + 1);
+            Write((uint) message.Length + 1);
             Write(Encoding.UTF8.GetBytes(message + '\0'));
-            Write((byte)0); // Flag????
+            Write((byte) 0); // Flag????
         }
     }
     #endregion
