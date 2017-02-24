@@ -12,7 +12,7 @@ namespace AuthServer
         private readonly Socket _socketHandler;
         public Dictionary<int, AuthServerSession> ActiveConnections { get; protected set; }
 
-        private int ConnectionsCount => ActiveConnections.Count;
+        //private int ConnectionsCount => ActiveConnections.Count;
 
         public AuthServerClass(IPEndPoint authPoint)
         {

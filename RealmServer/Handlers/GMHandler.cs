@@ -1,5 +1,4 @@
-﻿using System;
-using Common.Globals;
+﻿using Common.Globals;
 using Common.Helpers;
 using Common.Network;
 
@@ -29,7 +28,7 @@ namespace RealmServer.Handlers
     }
     #endregion
 
-    internal class GMHandler
+    internal class GmHandler
     {
         internal static void OnGmTicketGetTicket(RealmServerSession session, PacketReader handler)
         {
@@ -63,18 +62,5 @@ namespace RealmServer.Handlers
 
             session.SendPacket(new SmsgGmticketCreate(GMTicketCreateResult.GMTICKET_CREATE_OK));
         }
-    }
-
-    public enum GMTicketSystemStatus
-    {
-        GMTICKET_SYSTEMSTATUS_ENABLED = 1,
-        GMTICKET_SYSTEMSTATUS_DISABLED = 2,
-        GMTICKET_SYSTEMSTATUS_SURVEY = 3
-    }
-
-    public enum GMTicketCreateResult
-    {
-        GMTICKET_ALREADY_HAVE = 1,
-        GMTICKET_CREATE_OK = 2
     }
 }

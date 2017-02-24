@@ -31,6 +31,42 @@ namespace RealmServer.Handlers
     }
     #endregion
 
+    #region CMSG_MOVE_TIME_SKIPPED
+    public sealed class CmsgMoveTimeSkipped : PacketReader
+    {
+        public ulong Guid;
+
+        public uint OutOfSyncDelay;
+
+        public CmsgMoveTimeSkipped(byte[] data) : base(data)
+        {
+            Guid = ReadPackedGuid(this);
+            OutOfSyncDelay = ReadUInt32();
+        }
+
+        public ulong ReadPackedGuid(BinaryReader reader)
+        {
+            byte mask = reader.ReadByte();
+
+            if (mask == 0)
+                return 0;
+
+            ulong res = 0;
+
+            int i = 0;
+            while (i < 8)
+            {
+                if ((mask & 1 << i) != 0)
+                    res += (ulong)reader.ReadByte() << (i * 8);
+
+                i++;
+            }
+
+            return res;
+        }
+    }
+    #endregion
+
     #region PS Movement handler
     internal sealed class PsMovement : PacketServer
     {
@@ -49,16 +85,9 @@ namespace RealmServer.Handlers
 
     internal class MovementHandler
     {
-        internal static void OnMoveTimeSkipped(RealmServerSession session, PacketReader handler)
+        internal static void OnMoveTimeSkipped(RealmServerSession session, CmsgMoveTimeSkipped handler)
         {
-            // TODO: Figure out why this is causing a freeze everytime the packet is called, Reference @ LN 180
-
-            // packet.GetUInt64()
-            // packet.GetUInt32()
-            // Dim MsTime As Integer = WS_Network.msTime()
-            // Dim ClientTimeDelay As Integer = MsTime - MsTime
-            // Dim MoveTime As Integer = (MsTime - (MsTime - ClientTimeDelay)) + 500 + MsTime
-            // packet.AddInt32(MoveTime, 10)
+            session.OutOfSyncDelay = handler.OutOfSyncDelay;
         }
 
         internal static void OnMoveFallLand(RealmServerSession session, PacketReader handler)
@@ -84,9 +113,9 @@ namespace RealmServer.Handlers
             session.Character.MapX = handler.MapX;
             session.Character.MapY = handler.MapY;
             session.Character.MapZ = handler.MapZ;
-
+            
             await MainForm.Database.UpdateMovement(session.Character);
-
+            /*
             // If character is falling below the world
             if (session.Character.MapZ < -500f)
                 //AllGraveYards.GoToNearestGraveyard(client.Character, false, true);

@@ -55,6 +55,9 @@ namespace Common.Database
 
         [DataAccessObjects]
         public abstract DataAccessObjects<CharactersSpells> CharactersSpells { get; }
+
+        [DataAccessObjects]
+        public abstract DataAccessObjects<CharactersSocials> CharactersSocials { get; }
     }
 
     public class DatabaseManager : DatabaseModel<Models>
@@ -70,44 +73,44 @@ namespace Common.Database
             using (var scope = new DataAccessScope())
             {
                 // Inserindo Usuarios
-                var User = Model.Users.Create();
-                User.name       = "John Doe";
-                User.username   = "john";
-                User.email      = "john@doe.com";
-                User.password   = "doe";
-                User.created_at = DateTime.Now;
+                var user = Model.Users.Create();
+                user.name       = "John Doe";
+                user.username   = "john";
+                user.email      = "john@doe.com";
+                user.password   = "doe";
+                user.created_at = DateTime.Now;
 
-                var User2 = Model.Users.Create();
-                User2.name       = "Dabal Doe";
-                User2.username   = "doe";
-                User2.email      = "dabal@doe.com";
-                User2.password   = "doe";
-                User2.created_at = DateTime.Now;
+                var user2 = Model.Users.Create();
+                user2.name       = "Dabal Doe";
+                user2.username   = "doe";
+                user2.email      = "dabal@doe.com";
+                user2.password   = "doe";
+                user2.created_at = DateTime.Now;
 
-                var User3 = Model.Users.Create();
-                User3.name       = "John Doe";
-                User3.username   = "ban";
-                User3.email      = "john@doe.com";
-                User3.password   = "doe";
-                User3.created_at = DateTime.Now;
-                User3.bannet_at  = DateTime.Now;
+                var user3 = Model.Users.Create();
+                user3.name       = "John Doe";
+                user3.username   = "ban";
+                user3.email      = "john@doe.com";
+                user3.password   = "doe";
+                user3.created_at = DateTime.Now;
+                user3.bannet_at  = DateTime.Now;
 
                 // Inserindo Realm
-                var RealmPVP = Model.Realms.Create();
-                RealmPVP.flag       = RealmFlag.NewPlayers;
-                RealmPVP.timezone   = RealmTimezone.AnyLocale;
-                RealmPVP.type       = RealmType.PVP;
-                RealmPVP.name       = "Firetree";
-                RealmPVP.address    = "127.0.0.1:1001";
-                RealmPVP.created_at = DateTime.Now;
+                var realmPvp = Model.Realms.Create();
+                realmPvp.flag       = RealmFlag.NewPlayers;
+                realmPvp.timezone   = RealmTimezone.AnyLocale;
+                realmPvp.type       = RealmType.PVP;
+                realmPvp.name       = "Firetree";
+                realmPvp.address    = "127.0.0.1:1001";
+                realmPvp.created_at = DateTime.Now;
 
-                var RealmPVE = Model.Realms.Create();
-                RealmPVE.flag       = RealmFlag.NewPlayers;
-                RealmPVE.timezone   = RealmTimezone.AnyLocale;
-                RealmPVE.type       = RealmType.Normal;
-                RealmPVE.name       = "Quel'Thalas";
-                RealmPVE.address    = "127.0.0.1:1001";
-                RealmPVE.created_at = DateTime.Now;
+                var realmPve = Model.Realms.Create();
+                realmPve.flag       = RealmFlag.NewPlayers;
+                realmPve.timezone   = RealmTimezone.AnyLocale;
+                realmPve.type       = RealmType.Normal;
+                realmPve.name       = "Quel'Thalas";
+                realmPve.address    = "127.0.0.1:1001";
+                realmPve.created_at = DateTime.Now;
 
                 scope.Complete();
             }

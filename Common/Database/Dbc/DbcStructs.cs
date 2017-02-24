@@ -165,32 +165,32 @@ namespace Common.Database.Dbc
     {
         public ChrRaces GetData(Races id)
         {
-            return RecordDataIndexed.Values.ToArray().FirstOrDefault(a => a.raceID == (int) id);
+            return RecordDataIndexed.Values.ToArray().FirstOrDefault(a => a.RaceId == (int) id);
         }
     }
     public class ChrRaces : DbcRecordBase
     {
-        public int raceID       = 0;
-        public int factionID    = 0;
-        public int modelM       = 0;
-        public int modelF       = 0;
-        public int teamID       = 0; //1 = Horde / 7 = Alliance
-        public uint taxiMask    = 0;
-        public int cinematicID  = 0;
-        public string name      = null;
+        public int RaceId;
+        public int FactionId;
+        public int ModelM;
+        public int ModelF;
+        public int TeamId; //1 = Horde / 7 = Alliance
+        public uint TaxiMask;
+        public int CinematicId;
+        public string Name;
 
         public override int Read()
         {
-            raceID      = GetInt32(0);
-            factionID   = GetInt32(2);
-            modelM      = GetInt32(4);
-            modelF      = GetInt32(5);
-            teamID      = GetInt32(8);
-            taxiMask    = GetUInt32(14);
-            cinematicID = GetInt32(16);
-            name        = GetString(17);
+            RaceId      = GetInt32(0);
+            FactionId   = GetInt32(2);
+            ModelM      = GetInt32(4);
+            ModelF      = GetInt32(5);
+            TeamId      = GetInt32(8);
+            TaxiMask    = GetUInt32(14);
+            CinematicId = GetInt32(16);
+            Name        = GetString(17);
 
-            return raceID;
+            return RaceId;
         }
     }
     #endregion

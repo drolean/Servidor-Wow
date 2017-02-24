@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Common.Database.Tables;
+﻿using System.Collections.Generic;
 using Common.Globals;
 using Common.Helpers;
 using Common.Network;
@@ -10,7 +8,7 @@ namespace RealmServer.Handlers
     #region SMSG_FRIEND_LIST
     sealed class SmsgFriendList : PacketServer
     {
-        public SmsgFriendList(int charId) : base(RealmCMD.SMSG_FRIEND_LIST)
+        public SmsgFriendList() : base(RealmCMD.SMSG_FRIEND_LIST)
         {
             // Query Database
 
@@ -54,7 +52,7 @@ namespace RealmServer.Handlers
     #region SMSG_IGNORE_LIST
     sealed class SmsgIgnoreList : PacketServer
     {
-        public SmsgIgnoreList(int charId) : base(RealmCMD.SMSG_IGNORE_LIST)
+        public SmsgIgnoreList() : base(RealmCMD.SMSG_IGNORE_LIST)
         {
             // Query Database
 
@@ -82,7 +80,7 @@ namespace RealmServer.Handlers
     #region SMSG_FRIEND_STATUS
     sealed class SmsgFriendStatus : PacketServer
     {
-        public SmsgFriendStatus(Characters character, FriendResult opcode) : base(RealmCMD.SMSG_FRIEND_STATUS)
+        public SmsgFriendStatus() : base(RealmCMD.SMSG_FRIEND_STATUS)
         {
             // Make Packet
             /*
@@ -112,7 +110,7 @@ namespace RealmServer.Handlers
     #region SMSG_WHO
     sealed class SmsgWho : PacketServer
     {
-        public SmsgWho(Characters character, FriendResult opcode) : base(RealmCMD.SMSG_WHO)
+        public SmsgWho() : base(RealmCMD.SMSG_WHO)
         {
             // Make Packet
             /*
@@ -140,13 +138,13 @@ namespace RealmServer.Handlers
     {
         internal static void OnFriendList(RealmServerSession session, PacketReader handler)
         {
-            session.SendPacket(new SmsgFriendList(session.Character.Id));
-            session.SendPacket(new SmsgIgnoreList(session.Character.Id));
+            session.SendPacket(new SmsgFriendList());
+            session.SendPacket(new SmsgIgnoreList());
         }
 
         internal static void OnAddFriend(RealmServerSession session, PacketReader handler)
         {
-            string Name = handler.ReadCString();
+            //string Name = handler.ReadCString();
 
             // Query Database 
 
@@ -155,7 +153,7 @@ namespace RealmServer.Handlers
 
         internal static void OnAddIgnore(RealmServerSession session, PacketReader handler)
         {
-            string Name = handler.ReadCString();
+            //string Name = handler.ReadCString();
 
             // Query Database 
 
@@ -164,7 +162,7 @@ namespace RealmServer.Handlers
 
         internal static void OnDelFriend(RealmServerSession session, PacketReader handler)
         {
-            ulong GUID = handler.ReadUInt64();
+            //ulong GUID = handler.ReadUInt64();
 
             // Query Database 
 
@@ -173,7 +171,7 @@ namespace RealmServer.Handlers
 
         internal static void OnDelIgnore(RealmServerSession session, PacketReader handler)
         {
-            ulong GUID = handler.ReadUInt64();
+            //ulong GUID = handler.ReadUInt64();
 
             // Query Database 
 
@@ -206,10 +204,9 @@ namespace RealmServer.Handlers
             if (stringsCount > 4)
                 return;
 
-            List<string> Strings = new List<string>();
             for (int i = 1; i <= stringsCount; i++)
             {
-                Strings.Add(handler.ReadCString());
+                new List<string>().Add(handler.ReadCString());
             }
 
             Log.Print(LogType.Debug,
@@ -221,26 +218,5 @@ namespace RealmServer.Handlers
 
             // SmsgWho
         }
-    }
-
-    public enum FriendResult : byte
-    {
-        FRIEND_DB_ERROR = 0x0,
-        FRIEND_LIST_FULL = 0x1,
-        FRIEND_ONLINE = 0x2,
-        FRIEND_OFFLINE = 0x3,
-        FRIEND_NOT_FOUND = 0x4,
-        FRIEND_REMOVED = 0x5,
-        FRIEND_ADDED_ONLINE = 0x6,
-        FRIEND_ADDED_OFFLINE = 0x7,
-        FRIEND_ALREADY = 0x8,
-        FRIEND_SELF = 0x9,
-        FRIEND_ENEMY = 0xa,
-        FRIEND_IGNORE_FULL = 0xb,
-        FRIEND_IGNORE_SELF = 0xc,
-        FRIEND_IGNORE_NOT_FOUND = 0xd,
-        FRIEND_IGNORE_ALREADY = 0xe,
-        FRIEND_IGNORE_ADDED = 0xf,
-        FRIEND_IGNORE_REMOVED = 0x10
     }
 }

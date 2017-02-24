@@ -230,16 +230,16 @@ namespace RealmServer.Helpers
             var stack = 1;
             uint countBag = 0;
             CharStartOutfit startItems = MainForm.CharacterOutfitReader.Get(character.classe, character.race, character.gender);
-
+            
             if (startItems == null)
                 return;
-
+            
             for (int j = 0; j < startItems.Items.Length; ++j)
             {
-                if (j <= 0)
+                if (startItems.Items[j] <= 0)
                     continue;
 
-                var item = XmlReader.GetItem(j);
+                var item = XmlReader.GetItem(startItems.Items[j]);
 
                 if (item == null)
                     continue;
@@ -334,14 +334,14 @@ namespace RealmServer.Helpers
         public int Type = (int) DamageTypes.DmgPhysical;
     }
 
-    public class TDamageBonus
+    public class DamageBonus
     {
-        public int PositiveBonus = 0;
+        public int PositiveBonus;
         public int NegativeBonus = 0;
         public float Modifier = 1;
         public int Value => (int) ((PositiveBonus - NegativeBonus) * Modifier);
 
-        public TDamageBonus(byte posValue = 0, byte negValue = 0)
+        public DamageBonus(byte posValue = 0, byte negValue = 0)
         {
             PositiveBonus = posValue;
             PositiveBonus = negValue;

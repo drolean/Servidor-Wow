@@ -12,7 +12,7 @@ namespace AuthServer
     #region CMD_AUTH_LOGON_CHALLENGE
     public sealed class AuthLogonChallenge : PacketReader
     {
-        public IPAddress IP;
+        public IPAddress Ip;
         public string Version;
         public ushort Build;
         public string Username;
@@ -20,7 +20,7 @@ namespace AuthServer
 
         public AuthLogonChallenge(byte[] data) : base(data)
         {
-            IP       = IPAddress.Parse(data[29] + "." + data[30] + "." + data[31] + "." + data[32]);
+            Ip       = IPAddress.Parse(data[29] + "." + data[30] + "." + data[31] + "." + data[32]);
             Version  = data[8] + "." + data[9] + "." + data[10];
             Build    = (ushort) BitConverter.ToInt16(new[] { data[11], data[12] }, 0);
             Language = (data[24] + data[23] +data[22] + data[21]).ToString();
@@ -94,8 +94,8 @@ namespace AuthServer
             {
                 Write((uint) realm.type);         // Type
                 Write((byte) realm.flag);         // Flag
-                this.WriteCString(realm.name);    // Name World
-                this.WriteCString(realm.address); // IP World
+                WriteCString(realm.name);    // Name World
+                WriteCString(realm.address); // IP World
                 Write(0.5f);                      // Pop
                 Write((byte) 0x00);               // Chars
                 Write((byte) realm.timezone);     // time
@@ -149,7 +149,7 @@ namespace AuthServer
                     case AccountState.OK:
                         Log.Print(LogType.AuthServer, $"[{session.ConnectionSocket.RemoteEndPoint}] Account found [{packet.Username}]");
                         session.AccountName = _user?.username;
-                        session.Srp = new Srp6(_user.username.ToUpper(), _user.password.ToUpper());
+                        if (_user != null) session.Srp = new Srp6(_user.username.ToUpper(), _user.password.ToUpper());
                         session.SendData(new PsAuthLogonChallange(session.Srp, AccountState.OK));
                         break;
                     case AccountState.UNKNOWN_ACCOUNT:

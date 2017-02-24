@@ -12,6 +12,7 @@ using Common.Helpers;
 using Common.Network;
 using System.Linq;
 using RealmServer.Game.Entitys;
+using RealmServer.Handlers;
 
 namespace RealmServer
 {
@@ -27,6 +28,8 @@ namespace RealmServer
 
         //
         public Users Users { get; set; }
+        public uint OutOfSyncDelay { get; set; }
+
         public Characters Target;
         public Characters Character;
         internal PlayerEntity Entity;
@@ -67,15 +70,15 @@ namespace RealmServer
 
         private void SendPacket(int opcode, byte[] data)
         {
-            Log.Print(LogType.RealmServer, $"[{ConnectionSocket.RemoteEndPoint}] [INIT] Server -> Client [{((RealmCMD)opcode).ToString().PadRight(25, ' ')}] = {data.Length} + 4 [header]");
+            Log.Print(LogType.RealmServer, $"[{ConnectionSocket.RemoteEndPoint}] [SERVER] [{((RealmCMD)opcode).ToString().PadRight(25, ' ')}] = {data.Length} + 4 [header]");
             BinaryWriter writer = new BinaryWriter(new MemoryStream());
             byte[] header = Encode(data.Length, opcode);
             writer.Write(header);
             writer.Write(data);
-            SendData(((MemoryStream)writer.BaseStream).ToArray(), Convert.ToString((RealmCMD)opcode));
+            SendData(((MemoryStream)writer.BaseStream).ToArray());
         }
 
-        private void SendData(byte[] send, string opcode)
+        private void SendData(byte[] send)
         {
             byte[] buffer = new byte[send.Length];
             Buffer.BlockCopy(send, 0, buffer, 0, send.Length);
@@ -175,7 +178,7 @@ namespace RealmServer
                     short opcode;
 
                     Decode(headerData, out length, out opcode);
-                    Log.Print(LogType.RealmServer, $"[{ConnectionSocket.RemoteEndPoint}] [INCO] Client -> Server [{((RealmCMD)opcode).ToString().PadRight(25, ' ')}] = {length}");
+                    Log.Print(LogType.RealmServer, $"[{ConnectionSocket.RemoteEndPoint}] [CLIENT] [{((RealmCMD)opcode).ToString().PadRight(25, ' ')}] = {length}");
                     RealmCMD code = (RealmCMD)opcode;
 
                     byte[] packetDate = new byte[length];
@@ -328,6 +331,12 @@ namespace RealmServer
                 var trace = new StackTrace(e, true);
                 Log.Print(LogType.Error, $"{e.Message}: {e.Source}\n{trace.GetFrame(trace.FrameCount - 1).GetFileName()}:{trace.GetFrame(trace.FrameCount - 1).GetFileLineNumber()}");
             }
+        }
+
+        internal void SendMessageMotd(string msg)
+        {
+            SendPacket(new SmsgMessagechat(ChatMessageType.CHAT_MSG_SYSTEM, ChatMessageLanguage.LANG_UNIVERSAL,
+                (ulong) Character.Id, msg));
         }
     }
 }

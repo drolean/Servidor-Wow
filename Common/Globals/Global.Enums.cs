@@ -1,5 +1,12 @@
 ﻿namespace Common.Globals
 {
+
+    public enum LogoutResponseCode : byte
+    {
+        LOGOUT_RESPONSE_ACCEPTED = 0x0,
+        LOGOUT_RESPONSE_DENIED = 0xc
+    }
+
     public enum BillingPlanFlags
     {
         SESSION_NONE = 0x00,

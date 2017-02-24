@@ -1,5 +1,4 @@
-﻿using System;
-using Common.Helpers;
+﻿using Common.Helpers;
 using Common.Network;
 
 namespace RealmServer.Handlers
@@ -9,7 +8,7 @@ namespace RealmServer.Handlers
         internal static void OnCastSpell(RealmServerSession session, PacketReader handler)
         {
             uint spellId = handler.ReadUInt32();
-            string target = handler.ReadCString();
+            //string target = handler.ReadCString();
 
             Log.Print(LogType.Debug, $"CSMG_CAST_SPELL [spellID={spellId}]");
 

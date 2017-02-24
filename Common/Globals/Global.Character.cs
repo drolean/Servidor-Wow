@@ -1,5 +1,164 @@
 ﻿namespace Common.Globals
 {
+    //Got them from ItemSubClass.dbc
+    public enum ITEM_CLASS : byte
+    {
+        ITEM_CLASS_CONSUMABLE = 0,
+        ITEM_CLASS_CONTAINER = 1,
+        ITEM_CLASS_WEAPON = 2,
+        ITEM_CLASS_JEWELRY = 3,
+        ITEM_CLASS_ARMOR = 4,
+        ITEM_CLASS_REAGENT = 5,
+        ITEM_CLASS_PROJECTILE = 6,
+        ITEM_CLASS_TRADE_GOODS = 7,
+        ITEM_CLASS_GENERIC = 8,
+        ITEM_CLASS_BOOK = 9,
+        ITEM_CLASS_MONEY = 10,
+        ITEM_CLASS_QUIVER = 11,
+        ITEM_CLASS_QUEST = 12,
+        ITEM_CLASS_KEY = 13,
+        ITEM_CLASS_PERMANENT = 14,
+        ITEM_CLASS_JUNK = 15
+    }
+
+    public enum GMTicketSystemStatus
+    {
+        GMTICKET_SYSTEMSTATUS_ENABLED = 1,
+        GMTICKET_SYSTEMSTATUS_DISABLED = 2,
+        GMTICKET_SYSTEMSTATUS_SURVEY = 3
+    }
+
+    public enum GMTicketCreateResult
+    {
+        GMTICKET_ALREADY_HAVE = 1,
+        GMTICKET_CREATE_OK = 2
+    }
+
+    public enum SHEATHE_SLOT : byte
+    {
+        SHEATHE_NONE = 0,
+        SHEATHE_WEAPON = 1,
+        SHEATHE_RANGED = 2
+    }
+
+    public enum FriendResult : byte
+    {
+        FRIEND_DB_ERROR = 0x0,
+        FRIEND_LIST_FULL = 0x1,
+        FRIEND_ONLINE = 0x2,
+        FRIEND_OFFLINE = 0x3,
+        FRIEND_NOT_FOUND = 0x4,
+        FRIEND_REMOVED = 0x5,
+        FRIEND_ADDED_ONLINE = 0x6,
+        FRIEND_ADDED_OFFLINE = 0x7,
+        FRIEND_ALREADY = 0x8,
+        FRIEND_SELF = 0x9,
+        FRIEND_ENEMY = 0xa,
+        FRIEND_IGNORE_FULL = 0xb,
+        FRIEND_IGNORE_SELF = 0xc,
+        FRIEND_IGNORE_NOT_FOUND = 0xd,
+        FRIEND_IGNORE_ALREADY = 0xe,
+        FRIEND_IGNORE_ADDED = 0xf,
+        FRIEND_IGNORE_REMOVED = 0x10
+    }
+
+    public enum ChatMsgs
+    {
+        CHAT_MSG_SAY = 0x00,
+        CHAT_MSG_PARTY = 0x01,
+        CHAT_MSG_GUILD = 0x02,
+        CHAT_MSG_OFFICER = 0x03,
+        CHAT_MSG_YELL = 0x04,
+        CHAT_MSG_WHISPER = 0x05,
+        CHAT_MSG_WHISPER_INFORM = 0x06,
+        CHAT_MSG_EMOTE = 0x07,
+        CHAT_MSG_TEXT_EMOTE = 0x08,
+        CHAT_MSG_SYSTEM = 0x09,
+        CHAT_MSG_MONSTER_SAY = 0x0A,
+        CHAT_MSG_MONSTER_YELL = 0x0B,
+        CHAT_MSG_MONSTER_EMOTE = 0x0C,
+        CHAT_MSG_CHANNEL = 0x0D,
+        CHAT_MSG_CHANNEL_JOIN = 0x0E,
+        CHAT_MSG_CHANNEL_LEAVE = 0xF,
+        CHAT_MSG_CHANNEL_LIST = 0x10,
+        CHAT_MSG_CHANNEL_NOTICE = 0x11,
+        CHAT_MSG_CHANNEL_NOTICE_USER = 0x12,
+        CHAT_MSG_AFK = 0x13,
+        CHAT_MSG_DND = 0x14,
+        CHAT_MSG_IGNORED = 0x16,
+        CHAT_MSG_SKILL = 0x17,
+        CHAT_MSG_LOOT = 0x18
+    }
+
+    public enum ChatMessageType : byte
+    {
+        CHAT_MSG_SAY = 0x00,
+        CHAT_MSG_PARTY = 0x01,
+        CHAT_MSG_RAID = 0x02,
+        CHAT_MSG_GUILD = 0x03,
+        CHAT_MSG_OFFICER = 0x04,
+        CHAT_MSG_YELL = 0x05,
+        CHAT_MSG_WHISPER = 0x06,
+        CHAT_MSG_WHISPER_INFORM = 0x07,
+        CHAT_MSG_EMOTE = 0x08,
+        CHAT_MSG_TEXT_EMOTE = 0x09,
+        CHAT_MSG_SYSTEM = 0x0A,
+        CHAT_MSG_MONSTER_SAY = 0x0B,
+        CHAT_MSG_MONSTER_YELL = 0x0C,
+        CHAT_MSG_MONSTER_EMOTE = 0x0D,
+        CHAT_MSG_CHANNEL = 0x0E,
+        CHAT_MSG_CHANNEL_JOIN = 0x0F,
+        CHAT_MSG_CHANNEL_LEAVE = 0x10,
+        CHAT_MSG_CHANNEL_LIST = 0x11,
+        CHAT_MSG_CHANNEL_NOTICE = 0x12,
+        CHAT_MSG_CHANNEL_NOTICE_USER = 0x13,
+        CHAT_MSG_AFK = 0x14,
+        CHAT_MSG_DND = 0x15,
+        CHAT_MSG_IGNORED = 0x16,
+        CHAT_MSG_SKILL = 0x17,
+        CHAT_MSG_LOOT = 0x18,
+        CHAT_MSG_BG_SYSTEM_NEUTRAL = 0x52,
+        CHAT_MSG_BG_SYSTEM_ALLIANCE = 0x53,
+        CHAT_MSG_BG_SYSTEM_HORDE = 0x54,
+        CHAT_MSG_RAID_LEADER = 0x57,
+        CHAT_MSG_RAID_WARNING = 0x58,
+        CHAT_MSG_BATTLEGROUND = 0x5C,
+        CHAT_MSG_BATTLEGROUND_LEADER = 0x5D,
+        CHAT_MSG_REPLY = 0x09,
+        CHAT_MSG_MONSTER_PARTY = 0x30, // 0x0D, just selected some free random value for avoid duplicates with really existed values
+        CHAT_MSG_MONSTER_WHISPER = 0x31, // 0x0F, just selected some free random value for avoid duplicates with really existed values
+        // CHAT_MSG_MONEY                  = 0x1C,
+        // CHAT_MSG_OPENING                = 0x1D,
+        // CHAT_MSG_TRADESKILLS            = 0x1E,
+        // CHAT_MSG_PET_INFO               = 0x1F,
+        // CHAT_MSG_COMBAT_MISC_INFO       = 0x20,
+        // CHAT_MSG_COMBAT_XP_GAIN         = 0x21,
+        // CHAT_MSG_COMBAT_HONOR_GAIN      = 0x22,
+        // CHAT_MSG_COMBAT_FACTION_CHANGE  = 0x23,
+        CHAT_MSG_RAID_BOSS_WHISPER = 0x29,
+        CHAT_MSG_RAID_BOSS_EMOTE = 0x2A
+        // CHAT_MSG_FILTERED               = 0x2B,
+        // CHAT_MSG_RESTRICTED             = 0x2E,
+    }
+
+    public enum ChatMessageLanguage : byte
+    {
+        LANG_UNIVERSAL = 0,
+        LANG_ORCISH = 1,
+        LANG_DARNASSIAN = 2,
+        LANG_TAURAHE = 3,
+        LANG_DWARVISH = 6,
+        LANG_COMMON = 7,
+        LANG_DEMONIC = 8,
+        LANG_TITAN = 9,
+        LANG_THALASSIAN = 10,
+        LANG_DRACONIC = 11,
+        LANG_KALIMAG = 12,
+        LANG_GNOMISH = 13,
+        LANG_TROLL = 14,
+        LANG_GUTTERSPEAK = 33
+    }
+
     public enum TradeStatus : byte
     {
         TRADE_TARGET_UNAVIABLE = 0,     // "[NAME] is busy"

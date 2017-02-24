@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Net;
 using System.Reflection;
-using Common.Database;
 using Common.Globals;
 using Common.Helpers;
 
@@ -13,7 +12,7 @@ namespace AuthServer
 
         static void Main()
         {
-            var time = Time.getMSTime();
+            var time = Time.GetMsTime();
             var authPoint = new IPEndPoint(IPAddress.Any, 3724);
 
             bool quitNow = false;
@@ -36,7 +35,7 @@ namespace AuthServer
 
 
             Log.Print(LogType.AuthServer,
-                $"Successfully started in {Time.getMSTimeDiff(time, Time.getMSTime()) / 1000}s");
+                $"Successfully started in {Time.GetMsTimeDiff(time, Time.GetMsTime()) / 1000}s");
 
             // Commands
             while (!quitNow)

@@ -51,6 +51,5 @@ namespace Common.Database.Xml
         public string startQuest { get; set; }
         public int subClass { get; set; }
         public int weaponSpeed { get; set; }
-
     }
 }

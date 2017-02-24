@@ -48,24 +48,24 @@ namespace Common.Helpers
             return (uint)Environment.TickCount;
         }
 
-        public static uint getMSTime()
+        public static uint GetMsTime()
         {
             return (uint)(UnixTimeMilliseconds - StartTime);
         }
 
-        public static uint getMSTimeDiff(uint oldMSTime, uint newMSTime)
+        public static uint GetMsTimeDiff(uint oldMsTime, uint newMsTime)
         {
-            if (oldMSTime > newMSTime)
-                return 0xFFFFFFFF - oldMSTime + newMSTime;
-            return newMSTime - oldMSTime;
+            if (oldMsTime > newMsTime)
+                return 0xFFFFFFFF - oldMsTime + newMsTime;
+            return newMsTime - oldMsTime;
         }
 
-        public static uint getMSTimeDiffNow(uint oldMSTime)
+        public static uint GetMsTimeDiffNow(uint oldMsTime)
         {
-            var newMSTime = getMSTime();
-            if (oldMSTime > newMSTime)
-                return 0xFFFFFFFF - oldMSTime + newMSTime;
-            return newMSTime - oldMSTime;
+            var newMsTime = GetMsTime();
+            if (oldMsTime > newMsTime)
+                return 0xFFFFFFFF - oldMsTime + newMsTime;
+            return newMsTime - oldMsTime;
         }
     }
 
@@ -73,59 +73,59 @@ namespace Common.Helpers
     {
         public TimeTrackerSmall(int expiry = 0)
         {
-            i_expiryTime = expiry;
+            _iExpiryTime = expiry;
         }
 
         public void Update(int diff)
         {
-            i_expiryTime -= diff;
+            _iExpiryTime -= diff;
         }
 
         public bool Passed()
         {
-            return i_expiryTime <= 0;
+            return _iExpiryTime <= 0;
         }
 
         public void Reset(int interval)
         {
-            i_expiryTime = interval;
+            _iExpiryTime = interval;
         }
 
         public int GetExpiry()
         {
-            return i_expiryTime;
+            return _iExpiryTime;
         }
-        int i_expiryTime;
+        int _iExpiryTime;
     }
 
     public class TimeTracker
     {
         public TimeTracker(int expiry)
         {
-            i_expiryTime = expiry;
+            _iExpiryTime = expiry;
         }
 
         public void Update(int diff)
         {
-            i_expiryTime -= diff;
+            _iExpiryTime -= diff;
         }
 
         public bool Passed()
         {
-            return i_expiryTime <= 0;
+            return _iExpiryTime <= 0;
         }
 
         public void Reset(int interval)
         {
-            i_expiryTime = interval;
+            _iExpiryTime = interval;
         }
 
         public int GetExpiry()
         {
-            return i_expiryTime;
+            return _iExpiryTime;
         }
 
-        int i_expiryTime;
+        int _iExpiryTime;
     }
 
     public class IntervalTimer
@@ -180,33 +180,32 @@ namespace Common.Helpers
 
     public class PeriodicTimer
     {
-        public PeriodicTimer(int period, int start_time)
+        public PeriodicTimer(int period, int startTime)
         {
-            i_period = period;
-            i_expireTime = start_time;
+            _iPeriod = period;
+            _iExpireTime = startTime;
         }
 
         public bool Update(int diff)
         {
-            if ((i_expireTime -= diff) > 0)
+            if ((_iExpireTime -= diff) > 0)
                 return false;
 
-            i_expireTime += i_period > diff ? i_period : diff;
+            _iExpireTime += _iPeriod > diff ? _iPeriod : diff;
             return true;
         }
 
-        public void SetPeriodic(int period, int start_time)
+        public void SetPeriodic(int period, int startTime)
         {
-            i_expireTime = start_time;
-            i_period = period;
+            _iExpireTime = startTime;
+            _iPeriod = period;
         }
 
         // Tracker interface
-        public void TUpdate(int diff) { i_expireTime -= diff; }
-        public bool TPassed() { return i_expireTime <= 0; }
-        public void TReset(int diff, int period) { i_expireTime += period > diff ? period : diff; }
+        public bool Passed() { return _iExpireTime <= 0; }
+        public void Reset(int diff, int period) { _iExpireTime += period > diff ? period : diff; }
 
-        int i_period;
-        int i_expireTime;
+        int _iPeriod;
+        int _iExpireTime;
     }
 }

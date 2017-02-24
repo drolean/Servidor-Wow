@@ -16,17 +16,29 @@ namespace RealmServer
     {
         internal static CharacterHelper Helper { get; set; }
 
-        // Pega conta do usuario baseado no login
+        /// <summary>
+        /// Get account based on login
+        /// </summary>
+        /// <param name="username"></param>
+        /// <returns></returns>
         internal Users GetAccount(string username) => !Model.Users.Any() ? null : Model.Users.FirstOrDefault(a => a.username.ToLower() == username.ToLower());
 
-        // Retorna lista de chars do usuario
+        /// <summary>
+        /// Retrieve characters by username
+        /// </summary>
+        /// <param name="username"></param>
+        /// <returns></returns>
         internal List<Characters> GetCharacters(string username)
         {
             var account = GetAccount(username);
             return Model.Characters.Where(a => a.user == account).ToList();
         }
 
-        // Pega Char pelo nome
+        /// <summary>
+        /// Retrieve character by char name
+        /// </summary>
+        /// <param name="username"></param>
+        /// <returns></returns>
         internal Characters GetCharacaterByName(string username) => !Model.Characters.Any() ? null : Model.Characters.FirstOrDefault(a => a.name.ToLower() == username.ToLower());
 
         internal void CreateChar(CmsgCharCreate handler, Users users)
@@ -92,10 +104,35 @@ namespace RealmServer
             Helper.GenerateFactions(character);       // DONE: Generate Reputation Factions
             Helper.GenerateSkills(character);         // DONE: Generate Skills
             Helper.GenerateSpells(character);         // DONE: Generate Spells
-            Helper.GenerateInventory(character);      // Generate Inventory
+            Helper.GenerateInventory(character);      // DONE: Generate Inventory
 
         }
 
+        public async void UpdateCharacter(int charId, string objeto, string value = null)
+        {
+            using (var scope = new DataAccessScope())
+            {
+                var character = Model.Characters.GetReference(charId);
+
+                // Define Online/Offline
+                if (objeto == "online" && character.is_online)
+                    character.is_online = false;
+                else
+                    character.is_online = true;
+
+                // Define primeiro Login
+                if (objeto == "firstlogin")
+                    character.is_movie_played = true;
+
+                await scope.CompleteAsync();
+            }
+        }
+
+        /// <summary>
+        /// Update movement on database
+        /// </summary>
+        /// <param name="character"></param>
+        /// <returns></returns>
         internal async Task UpdateMovement(Characters character)
         {
             using (var scope = new DataAccessScope())
@@ -110,11 +147,20 @@ namespace RealmServer
             }
         }
 
+        /// <summary>
+        /// Get inventory of character
+        /// </summary>
+        /// <param name="character"></param>
+        /// <returns></returns>
         internal List<CharactersInventorys> GetInventory(Characters character)
         {
             return Model.CharactersInventorys.Where(a => a.character == character).ToList();
         }
 
+        /// <summary>
+        /// Update character name
+        /// </summary>
+        /// <param name="handler"></param>
         internal async void UpdateName(CmsgCharRename handler)
         {
             using (var scope = new DataAccessScope())
@@ -126,6 +172,10 @@ namespace RealmServer
             }
         }
 
+        /// <summary>
+        /// Delete character
+        /// </summary>
+        /// <param name="id"></param>
         internal async void DeleteCharacter(int id)
         {
             // Check if char is own of player
@@ -155,10 +205,12 @@ namespace RealmServer
                 // Delete Petitions
                 // Delete GM Tickets
                 // Delete Corpse
-                // Delete Social
+                // DONE: Delete Social
+                await Model.CharactersSocials.Where(a => a.character == Char).DeleteAsync();
+
                 // Delete Quests
                 // Delete Honor
-                
+
                 // DONE: Delete Character
                 await Model.Characters.Where(a => a.Id == id).DeleteAsync();
 
@@ -166,11 +218,21 @@ namespace RealmServer
             }
         }
 
+        /// <summary>
+        /// Retrieve character by ID
+        /// </summary>
+        /// <param name="guid"></param>
+        /// <returns></returns>
         internal Characters GetCharacter(uint guid)
         {
             return Model.Characters.FirstOrDefault(a => a.Id == guid);
         }
 
+        /// <summary>
+        /// Get Spells of Character
+        /// </summary>
+        /// <param name="character"></param>
+        /// <returns></returns>
         internal List<CharactersSpells> GetSpells(Characters character)
         {
             return Model.CharactersSpells.Where(a => a.character == character).ToList();

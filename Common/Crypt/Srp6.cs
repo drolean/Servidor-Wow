@@ -100,12 +100,12 @@ namespace Common.Crypt
             return BigInteger.ModPow(generator, privateKey, modulus);
         }
 
-        private static BigInteger GenerateScrambler(BigInteger A, BigInteger B)
+        private static BigInteger GenerateScrambler(BigInteger a, BigInteger b)
         {
-            return Hash(A.ToProperByteArray(), B.ToProperByteArray());
+            return Hash(a.ToProperByteArray(), b.ToProperByteArray());
         }
 
-        private static BigInteger GenerateClientProof(string identifier, BigInteger modulus, BigInteger generator, BigInteger salt, BigInteger sessionKey, BigInteger A, BigInteger B)
+        private static BigInteger GenerateClientProof(string identifier, BigInteger modulus, BigInteger generator, BigInteger salt, BigInteger sessionKey, BigInteger a, BigInteger b)
         {
             // M = H(H(N) xor H(g), H(I), s, A, B, K)
             var nHash = Sha1Hash(modulus.ToProperByteArray());
@@ -115,7 +115,7 @@ namespace Common.Crypt
             for (int i = 0, j = nHash.Length; i < j; i++)
                 nHash[i] ^= gHash[i];
 
-            return Hash(nHash, Sha1Hash(Encoding.ASCII.GetBytes(identifier)), salt.ToProperByteArray(), A.ToProperByteArray(), B.ToProperByteArray(), sessionKey.ToProperByteArray());
+            return Hash(nHash, Sha1Hash(Encoding.ASCII.GetBytes(identifier)), salt.ToProperByteArray(), a.ToProperByteArray(), b.ToProperByteArray(), sessionKey.ToProperByteArray());
         }
 
         private static BigInteger GenerateSessionKey(BigInteger clientEphemeral, BigInteger serverEphemeral, BigInteger privateServerEphemeral, BigInteger modulus, BigInteger verifier)
@@ -123,9 +123,9 @@ namespace Common.Crypt
             return Interleave(BigInteger.ModPow(clientEphemeral * BigInteger.ModPow(verifier, GenerateScrambler(clientEphemeral, serverEphemeral), modulus), privateServerEphemeral, modulus));
         }
 
-        private static BigInteger GenerateServerProof(BigInteger A, BigInteger clientProof, BigInteger sessionKey)
+        private static BigInteger GenerateServerProof(BigInteger a, BigInteger clientProof, BigInteger sessionKey)
         {
-            return Hash(A.ToProperByteArray(), clientProof.ToProperByteArray(), sessionKey.ToProperByteArray());
+            return Hash(a.ToProperByteArray(), clientProof.ToProperByteArray(), sessionKey.ToProperByteArray());
         }
 
         // http://www.ietf.org/rfc/rfc2945.txt
@@ -134,14 +134,14 @@ namespace Common.Crypt
         {
             var T = sessionKey.ToProperByteArray().SkipWhile(b => b == 0).ToArray(); // Remove all leading 0-bytes
             if ((T.Length & 0x1) == 0x1) T = T.Skip(1).ToArray(); // Needs to be an even length, skip 1 byte if not
-            var G = Sha1Hash(Enumerable.Range(0, T.Length).Where(i => (i & 0x1) == 0x0).Select(i => T[i]).ToArray());
-            var H = Sha1Hash(Enumerable.Range(0, T.Length).Where(i => (i & 0x1) == 0x1).Select(i => T[i]).ToArray());
+            var g = Sha1Hash(Enumerable.Range(0, T.Length).Where(i => (i & 0x1) == 0x0).Select(i => T[i]).ToArray());
+            var h = Sha1Hash(Enumerable.Range(0, T.Length).Where(i => (i & 0x1) == 0x1).Select(i => T[i]).ToArray());
 
             var result = new byte[40];
-            for (int i = 0, r_c = 0; i < result.Length / 2; i++)
+            for (int i = 0, rC = 0; i < result.Length / 2; i++)
             {
-                result[r_c++] = G[i];
-                result[r_c++] = H[i];
+                result[rC++] = g[i];
+                result[rC++] = h[i];
             }
 
             return result.ToPositiveBigInteger();
