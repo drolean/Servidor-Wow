@@ -65,7 +65,7 @@ namespace Common.Crypt
 
         public BigInteger Multiplier { get; } = 3;
 
-        public BigInteger PrivateKey { get; private set; }
+        public BigInteger PrivateKey { get; internal set; }
 
         public BigInteger Verifier { get; }
 

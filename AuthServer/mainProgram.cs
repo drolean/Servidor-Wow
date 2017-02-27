@@ -22,6 +22,7 @@ namespace AuthServer
             Log.Print(LogType.AuthServer, $"Version {Assembly.GetExecutingAssembly().GetName().Version}");
             Log.Print(LogType.AuthServer, $"Running on .NET Framework Version {Environment.Version}");
 
+            // ReSharper disable once UnusedVariable
             var authServerClass = new AuthServerClass(authPoint);
 
             Database = new AuthServerDatabase();
@@ -41,25 +42,47 @@ namespace AuthServer
                 switch (command)
                 {
                     case "/db":
+                    case "db":
+                        // ReSharper disable once ObjectCreationAsStatement
                         new DatabaseManager();
                         Log.Print(LogType.Console, $"Database recreated.");
                         break;
 
                     case "/gc":
+                    case "gc":
                         GC.Collect();
                         Log.Print(LogType.Console,
                             $"Total Memory: {Convert.ToSingle(GC.GetTotalMemory(false) / 1024 / 1024)}MB");
                         break;
 
                     case "/q":
+                    case "q":
                         quitNow = true;
                         break;
 
+                    case "/help":
+                    case "help":
+                    case "/?":
+                    case "?":
+                        PrintHelp();
+                        Console.WriteLine();
+                        break;
                     default:
                         Log.Print(LogType.Debug, $"Unknown Command: {command}");
                         break;
                 }
             }
+        }
+
+        private static void PrintHelp()
+        {
+            Console.Clear();
+            Console.WriteLine("AuthServer help\n");
+            Console.WriteLine("Commands: \n");
+            Console.WriteLine("\t/db\t\t\tRecreate database.");
+            Console.WriteLine("\t/gc\t\t\tShow garbage collection.");
+            Console.WriteLine("\t/q\t\t\tExit application.");
+            Console.WriteLine("\t/help\t\t\tShow this help.");
         }
     }
 }
