@@ -95,8 +95,8 @@ namespace RealmServer.Game.Entitys
 
         public void WriteUpdateFields(BinaryWriter packet)
         {
-            packet.Write((byte)MaskSize);
-            packet.WriteBitArray(Mask, (MaskSize * 4));    // Int32 = 4 Bytes
+            packet.Write((byte) MaskSize);
+            packet.WriteBitArray(Mask, (MaskSize * 4)); // Int32 = 4 Bytes
 
             for (int i = 0; i < Mask.Count; i++)
             {
@@ -106,20 +106,21 @@ namespace RealmServer.Game.Entitys
                     switch (UpdateData[i].GetType().Name)
                     {
                         case "UInt32":
-                            packet.Write((uint)UpdateData[i]);
+                            packet.Write((uint) UpdateData[i]);
                             break;
                         case "Single":
-                            packet.Write((float)UpdateData[i]);
+                            packet.Write((float) UpdateData[i]);
                             break;
                         default:
-                            packet.Write((int)UpdateData[i]);
+                            packet.Write((int) UpdateData[i]);
                             break;
                     }
                 }
                 catch (Exception e)
                 {
                     var trace = new StackTrace(e, true);
-                    Log.Print(LogType.Error, $"{e.Message}: {e.Source}\n{trace.GetFrame(trace.FrameCount - 1).GetFileName()}:{trace.GetFrame(trace.FrameCount - 1).GetFileLineNumber()}");
+                    Log.Print(LogType.Error,
+                        $"{e.Message}: {e.Source}\n{trace.GetFrame(trace.FrameCount - 1).GetFileName()}:{trace.GetFrame(trace.FrameCount - 1).GetFileLineNumber()}");
                 }
             }
 
@@ -128,18 +129,11 @@ namespace RealmServer.Game.Entitys
         }
 
         // Base Import Mangos
-        //public ulong Guid = 0;
         public float Size = 1.0f;
         public static byte Level = 0;
         public int Model = 0;
-        public int Mount = 0;
 
         public StatBar Life = new StatBar(1, 1, 0);
         public StatBar Mana = new StatBar(1, 1, 0);
-
-        public Stat[] Resistances = new Stat[7];
-
-
-
     }
 }

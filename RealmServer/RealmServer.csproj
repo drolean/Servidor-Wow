@@ -58,7 +58,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Game\Entitys\Base.cs" />
+    <Compile Include="Game\Entitys\GameObject.cs" />
     <Compile Include="Game\Entitys\ObjectEntity.cs" />
+    <Compile Include="Game\ObjectGuid.cs" />
     <Compile Include="Game\Entitys\PlayerEntity.cs" />
     <Compile Include="Game\UpdateObject.cs" />
     <Compile Include="Handlers\CharacterHandler.cs" />
@@ -87,6 +89,8 @@
     <Compile Include="RealmServerHandler.cs" />
     <Compile Include="RealmServerRouter.cs" />
     <Compile Include="RealmServerSession.cs" />
+    <Compile Include="Scripting\ScriptCompiler.cs" />
+    <Compile Include="Scripting\ScriptManager.cs" />
     <EmbeddedResource Include="mainForm.resx">
       <DependentUpon>mainForm.cs</DependentUpon>
     </EmbeddedResource>

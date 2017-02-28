@@ -125,7 +125,7 @@ namespace RealmServer.Handlers
 
         internal static void OnCompleteCinematic(RealmServerSession session, PacketReader handler)
         {
-            //MainForm.Database.UpdateCharacter(session.Character.Id, "firstlogin");
+            MainForm.Database.UpdateCharacter(session.Character.Id, "firstlogin");
         }
 
         internal static void OnSetFactionAtwar(RealmServerSession session, PacketReader handler)

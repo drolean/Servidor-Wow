@@ -223,14 +223,9 @@ namespace RealmServer.Handlers
     {
         public SmsgTriggerCinematic(Characters character) : base(RealmCMD.SMSG_TRIGGER_CINEMATIC)
         {
-            Write((byte)141);
-
             try
             {
-                Console.WriteLine(
-                    $"Cibnematic vindo [{XmlReader.GetRace(character.race).init.Cinematic}] = {XmlReader.GetRace(character.race).id}");
-
-                //Write((byte) 141);//XmlReader.GetRace(character.race).init.Cinematic);
+                Write((int) XmlReader.GetRace(character.race).init.Cinematic);
             }
             catch (Exception e)
             {
@@ -338,7 +333,7 @@ namespace RealmServer.Handlers
             foreach(var fact in factions)
             {
                 Write((byte) fact.flags); // Flag 
-                Write(fact.standing); // Value
+                Write((byte) fact.standing); // Value
             }
         }
     }
@@ -359,14 +354,14 @@ namespace RealmServer.Handlers
 
                 if (currentButton != null)
                 {
-                    UInt32 packedData = (UInt32)currentButton.action | (UInt32)currentButton.type << 24;
+                    UInt32 packedData = (UInt32) currentButton.action | (UInt32) currentButton.type << 24;
                     Write(packedData);
                     //Write((UInt16)currentButton.action);
                     //Write((int)currentButton.type);
                     //Write((int)currentButton.); ?? misc???
                 }
                 else
-                    Write((UInt32)0);
+                    Write((UInt32) 0);
             }
         }
     }
@@ -398,7 +393,7 @@ namespace RealmServer.Handlers
     {
         public SmsgLogoutCancelAck() : base(RealmCMD.SMSG_LOGOUT_CANCEL_ACK)
         {
-            Write((byte)0);
+            Write((byte) 0);
         }
     }
     #endregion
@@ -419,43 +414,16 @@ namespace RealmServer.Handlers
         public SmsgInitWorldStates(Characters character) : base(RealmCMD.SMSG_INIT_WORLD_STATES)
         {
             ushort numberOfFields;
+
             switch (character.MapZone)
             {
                 case 0: case 1:case 4:case 8:case 10:case 11:case 12:case 36:case 38:case 40:case 41:case 51:case 267:case 1519:case 1537:case 2257:case 2918:
                     numberOfFields = 6;
                     break;
-                case 2597:
-                    numberOfFields = 81;
-                    break;
-                case 3277:
-                    numberOfFields = 14;
-                    break;
-                case 3358:
-                case 3820:
-                    numberOfFields = 38;
-                    break;
-                case 3483:
-                    numberOfFields = 22;
-                    break;
-                case 3519:
-                    numberOfFields = 36;
-                    break;
-                case 3521:
-                    numberOfFields = 35;
-                    break;
-                case 3698:case 3702:case 3968:
-                    numberOfFields = 9;
-                    break;
-                case 3703:
-                    numberOfFields = 9;
-                    break;
                 default:
                     numberOfFields = 10;
                     break;
             }
-            //INT32 Write((uint)blocks.Count);
-            //INT8 Write((byte)hasTansport);
-            //UINT16 Write((ushort)spell.spell);
 
             Write((ulong) character.MapId);
             Write((uint) character.MapZone);
@@ -482,7 +450,7 @@ namespace RealmServer.Handlers
     {
         public SmsgLoginSettimespeed() : base(RealmCMD.SMSG_LOGIN_SETTIMESPEED)
         {
-            Write((uint)SecsToTimeBitFields(DateTime.Now)); // Time
+            Write((uint) SecsToTimeBitFields(DateTime.Now)); // Time
             Write(0.01666667f); // Speed
         }
 
@@ -506,33 +474,7 @@ namespace RealmServer.Handlers
         internal static void OnCharCreate(RealmServerSession session, CmsgCharCreate handler)
         {
             int result;
-
-            // Need Char Name
-            if (handler.Name == null)
-            {
-                result = (int)LoginErrorCode.CHAR_NAME_ENTER;
-            }
-            // Char name min 2
-            else if (handler.Name.Length <= 2)
-            {
-                result = (int)LoginErrorCode.CHAR_NAME_TOO_SHORT;
-            }
-            // Char name max 12
-            else if (handler.Name.Length >= 12)
-            {
-                result = (int)LoginErrorCode.CHAR_NAME_TOO_LONG;
-            }
-            // Char name only contain letter
-            else if (handler.Name.Any(char.IsDigit))
-            {
-                result = (int)LoginErrorCode.CHAR_NAME_ONLY_LETTERS;
-            }
-            // Char name in use
-            else if (MainForm.Database.GetCharacaterByName(handler.Name) != null)
-            {
-                result = (int)LoginErrorCode.CHAR_CREATE_NAME_IN_USE;
-            }
-
+            
             // Char name Profane            result = (int) LoginErrorCode.CHAR_NAME_PROFANE;
             // Char name reserved           result = (int) LoginErrorCode.CHAR_NAME_RESERVED;
             // Char name invalid            result = (int) LoginErrorCode.CHAR_NAME_FAILURE;
@@ -540,7 +482,7 @@ namespace RealmServer.Handlers
             // Check char limit create      result = (int) LoginErrorCode.CHAR_CREATE_SERVER_LIMIT;
 
             // Check for both horde and alliance
-            // TODO: Only if it's a pvp realm
+            // Only if it's a pvp realm
             try
             {
                 result = (int)LoginErrorCode.CHAR_CREATE_SUCCESS;
@@ -595,6 +537,8 @@ namespace RealmServer.Handlers
             // Part One
             session.SendPacket(new SmsgLoginVerifyWorld(session.Character));
             session.SendPacket(new SmsgAccountDataTimes());
+            session.SendMessageMotd($"Welcome to World of Warcraft.");
+            session.SendMessageMotd($"Servidor do caralho vai curintia ....");
 
             // Part Two
             session.SendPacket(new SmsgSetRestStart());
@@ -605,14 +549,11 @@ namespace RealmServer.Handlers
             session.SendPacket(new SmsgActionButtons(session.Character));
             session.SendPacket(new SmsgInitializeFactions(session.Character));
 
-            //if (session.Character.is_movie_played == false)
-            session.SendPacket(new SmsgTriggerCinematic(session.Character));
+            if (session.Character.is_movie_played == false)
+                session.SendPacket(new SmsgTriggerCinematic(session.Character));
 
             session.SendPacket(new SmsgInitWorldStates(session.Character));
             session.SendPacket(UpdateObject.CreateOwnCharacterUpdate(session.Character, out session.Entity));
-
-            session.SendMessageMotd($"Welcome to World of Warcraft.");
-            session.SendMessageMotd($"Servidor do caralho vai curintia ....");
 
             /*
             // SMSG_CORPSE_RECLAIM_DELAY

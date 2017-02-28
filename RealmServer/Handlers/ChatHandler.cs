@@ -62,6 +62,7 @@ namespace RealmServer.Handlers
 
             Write((uint) message.Length + 1);
             Write(Encoding.UTF8.GetBytes(message + '\0'));
+            // check flag of CHAR [0 = normal] [1 = AFK] [2 = DND] [3 = GM]
             Write((byte) 0); // Flag????
         }
     }
@@ -202,7 +203,7 @@ namespace RealmServer.Handlers
         }
 
         internal static void OnMessageChat(RealmServerSession session, PacketReader handler)
-        {
+        {            
             ChatMessageType msgType = (ChatMessageType) handler.ReadUInt32();
             ChatMessageLanguage msgLanguage = (ChatMessageLanguage) handler.ReadUInt32();
 
@@ -217,18 +218,74 @@ namespace RealmServer.Handlers
             }
 
             string message = handler.ReadCString();
-           
-            switch ((ChatMsgs)msgType)
+
+            switch ((ChatMsgs) msgType)
             {
                 case ChatMsgs.CHAT_MSG_SAY:
                 case ChatMsgs.CHAT_MSG_YELL:
                 case ChatMsgs.CHAT_MSG_EMOTE:
-                    session.SendPacket(new SmsgMessagechat(msgType, msgLanguage, (ulong)session.Character.Id, message));
+                    session.SendPacket(new SmsgMessagechat(msgType, msgLanguage, (ulong) session.Character.Id, message));
                     break;
                 default:
                     Console.WriteLine($@"veio aqui algo [{msgType}]");
+                    session.SendPacket(new SmsgMessagechat(msgType, msgLanguage, (ulong)session.Character.Id, message));
                     break;
             }
+            /*
+                Missing handler: CMSG_NEXT_CINEMATIC_CAMERA
+                2 - Raid
+                3 - Guild
+                4 - Officer
+                6 - Whisper From
+                7 - Whisper To
+                8 - Emote
+                9 - nao sei
+                10 - Server
+                17 - nao sei  cinza
+                20 - AFK
+                21 - DND
+                22 - Ignore
+                23 - nao sei azul
+                24 - verde
+                            Write((byte) type);
+                            Write((uint) msgLanguage);
+                            Write(characterId);
+                            Write((uint) message.Length + 1);
+                            Write(Encoding.UTF8.GetBytes(message + '\0'));
+                            Write((byte)0); // Flag????
+
+                13 - ti´po emote
+                26 - whispers: algo
+                            Write((byte) type);
+                            Write((uint) msgLanguage);
+                            Write((uint) 0);
+                            Write(characterId);
+                            Write((uint) message.Length + 1);
+                            Write(Encoding.UTF8.GetBytes(message + '\0'));
+                            Write((byte) 0); // 0 = normal / 1 = AFK / 2 = DND / 3 = GM
+
+                11 - npc Says
+                12 - npc Yells
+                            Write((byte) type);
+                            Write((uint) msgLanguage);
+                            Write((uint) 0);
+                            Write(characterId);
+                            Write(characterId);
+                            Write((uint) message.Length + 1);
+                            Write(Encoding.UTF8.GetBytes(message + '\0'));
+                            Write((byte) 0); // 0 = normal / 1 = AFK / 2 = DND / 3 = GM
+
+                0- say
+                1 - party
+                5 - yell
+                            Write((byte) type);
+                            Write((uint) msgLanguage);
+                            Write(characterId);
+                            Write(characterId);
+                            Write((uint) message.Length + 1);
+                            Write(Encoding.UTF8.GetBytes(message + '\0'));
+                            Write((byte) 0); // 0 = normal / 1 = AFK / 2 = DND / 3 = GM
+            */
         }
     }
 }

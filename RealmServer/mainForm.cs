@@ -9,16 +9,13 @@ using Common.Helpers;
 using RealmServer.Handlers;
 using Common.Database.Dbc;
 using Common.Network;
-using Shaolinq;
-using RealmServer.Helpers;
+using RealmServer.Scripting;
 
 namespace RealmServer
 {
     public partial class MainForm : Form
     {
         public static RealmServerDatabase Database { get; set; }
-
-        public static TestCreate TestCreate;
 
         public MainForm()
         {
@@ -45,7 +42,11 @@ namespace RealmServer
             Database = new RealmServerDatabase();
             DatabaseManager();
 
+            //
             XmlReader.Boot();
+
+            //
+            ScriptManager.Boot();
 
             RealmServerRouter.AddHandler<CmsgAuthSession>(RealmCMD.CMSG_AUTH_SESSION, RealmServerHandler.OnAuthSession);
             RealmServerRouter.AddHandler<CmsgPing>(RealmCMD.CMSG_PING, RealmServerHandler.OnPingPacket);
@@ -56,43 +57,43 @@ namespace RealmServer
             RealmServerRouter.AddHandler<CmsgCharRename>(RealmCMD.CMSG_CHAR_RENAME, CharacterHandler.OnCharRename);
             RealmServerRouter.AddHandler<CmsgCharDelete>(RealmCMD.CMSG_CHAR_DELETE, CharacterHandler.OnCharDelete);
             RealmServerRouter.AddHandler<CmsgPlayerLogin>(RealmCMD.CMSG_PLAYER_LOGIN, CharacterHandler.OnPlayerLogin);
-            //RealmServerRouter.AddHandler<CmsgUpdateAccountData>(RealmCMD.CMSG_UPDATE_ACCOUNT_DATA, CharacterHandler.OnUpdateAccountData);
+            RealmServerRouter.AddHandler<CmsgUpdateAccountData>(RealmCMD.CMSG_UPDATE_ACCOUNT_DATA, CharacterHandler.OnUpdateAccountData);
             RealmServerRouter.AddHandler(RealmCMD.CMSG_LOGOUT_REQUEST, CharacterHandler.OnLogoutRequest);
             RealmServerRouter.AddHandler<PacketReader>(RealmCMD.CMSG_LOGOUT_CANCEL, CharacterHandler.OnLogoutCancel);
             RealmServerRouter.AddHandler<PacketReader>(RealmCMD.CMSG_STANDSTATECHANGE, CharacterHandler.OnStandStateChange); 
 
             // Miscs Handlers
-            //RealmServerRouter.AddHandler<PacketReader>(RealmCMD.CMSG_NAME_QUERY, MiscHandler.OnNameQuery);
-            //RealmServerRouter.AddHandler<PacketReader>(RealmCMD.CMSG_SET_ACTIVE_MOVER, MiscHandler.OnSetActiveMover);
-            //RealmServerRouter.AddHandler(RealmCMD.CMSG_QUERY_TIME, MiscHandler.OnQueryTime);
-            //RealmServerRouter.AddHandler<PacketReader>(RealmCMD.CMSG_BATTLEFIELD_STATUS, MiscHandler.OnBattlefieldStatus);
-            //RealmServerRouter.AddHandler<PacketReader>(RealmCMD.CMSG_MEETINGSTONE_INFO, MiscHandler.OnMeetingstoneInfo);
+            RealmServerRouter.AddHandler<PacketReader>(RealmCMD.CMSG_NAME_QUERY, MiscHandler.OnNameQuery);
+            RealmServerRouter.AddHandler<PacketReader>(RealmCMD.CMSG_SET_ACTIVE_MOVER, MiscHandler.OnSetActiveMover);
+            RealmServerRouter.AddHandler(RealmCMD.CMSG_QUERY_TIME, MiscHandler.OnQueryTime);
+            RealmServerRouter.AddHandler<PacketReader>(RealmCMD.CMSG_BATTLEFIELD_STATUS, MiscHandler.OnBattlefieldStatus);
+            RealmServerRouter.AddHandler<PacketReader>(RealmCMD.CMSG_MEETINGSTONE_INFO, MiscHandler.OnMeetingstoneInfo);
             RealmServerRouter.AddHandler<PacketReader>(RealmCMD.CMSG_TEXT_EMOTE, MiscHandler.OnTextEmote);
             RealmServerRouter.AddHandler<PacketReader>(RealmCMD.CMSG_SET_FACTION_ATWAR, MiscHandler.OnSetFactionAtwar);
             RealmServerRouter.AddHandler<PacketReader>(RealmCMD.CMSG_SET_FACTION_INACTIVE, MiscHandler.OnSetFactionInactive);
             RealmServerRouter.AddHandler<PacketReader>(RealmCMD.CMSG_SET_WATCHED_FACTION, MiscHandler.OnSetWatchedFaction);
-            //RealmServerRouter.AddHandler<PacketReader>(RealmCMD.CMSG_COMPLETE_CINEMATIC, MiscHandler.OnCompleteCinematic); 
+            RealmServerRouter.AddHandler<PacketReader>(RealmCMD.CMSG_COMPLETE_CINEMATIC, MiscHandler.OnCompleteCinematic); 
 
             // Group Handler
-            //RealmServerRouter.AddHandler<PacketReader>(RealmCMD.CMSG_REQUEST_RAID_INFO, GroupHandler.OnRequestRaidInfo);
+            RealmServerRouter.AddHandler<PacketReader>(RealmCMD.CMSG_REQUEST_RAID_INFO, GroupHandler.OnRequestRaidInfo);
 
             // GM Handler
-            //RealmServerRouter.AddHandler<PacketReader>(RealmCMD.CMSG_GMTICKET_GETTICKET, GmHandler.OnGmTicketGetTicket);
+            RealmServerRouter.AddHandler<PacketReader>(RealmCMD.CMSG_GMTICKET_GETTICKET, GmHandler.OnGmTicketGetTicket);
             RealmServerRouter.AddHandler<PacketReader>(RealmCMD.CMSG_GMTICKET_SYSTEMSTATUS, GmHandler.OnGmTicketSystemStatus);
             RealmServerRouter.AddHandler<PacketReader>(RealmCMD.CMSG_GMTICKET_CREATE, GmHandler.OnGmTicketCreate); 
 
             // Mail Handler
-            //RealmServerRouter.AddHandler<PacketReader>(RealmCMD.MSG_QUERY_NEXT_MAIL_TIME, MailHandler.OnQueryNextMailTime);
+            RealmServerRouter.AddHandler<PacketReader>(RealmCMD.MSG_QUERY_NEXT_MAIL_TIME, MailHandler.OnQueryNextMailTime);
 
             // Character Movement Handler
             MovementOpcodes.ForEach(code => RealmServerRouter.AddHandler(code, MovementHandler.GenerateResponse(code)));
-            //RealmServerRouter.AddHandler<CmsgMoveTimeSkipped>(RealmCMD.CMSG_MOVE_TIME_SKIPPED, MovementHandler.OnMoveTimeSkipped);
-            //RealmServerRouter.AddHandler<PacketReader>(RealmCMD.MSG_MOVE_FALL_LAND, MovementHandler.OnMoveFallLand);
-            //RealmServerRouter.AddHandler<PacketReader>(RealmCMD.CMSG_ZONEUPDATE, MovementHandler.OnZoneUpdate);
+            RealmServerRouter.AddHandler<CmsgMoveTimeSkipped>(RealmCMD.CMSG_MOVE_TIME_SKIPPED, MovementHandler.OnMoveTimeSkipped);
+            RealmServerRouter.AddHandler<PacketReader>(RealmCMD.MSG_MOVE_FALL_LAND, MovementHandler.OnMoveFallLand);
+            RealmServerRouter.AddHandler<PacketReader>(RealmCMD.CMSG_ZONEUPDATE, MovementHandler.OnZoneUpdate);
             RealmServerRouter.AddHandler<PacketReader>(RealmCMD.CMSG_AREATRIGGER, MovementHandler.OnAreaTrigger);
 
             // Chat Handler
-            //RealmServerRouter.AddHandler<PacketReader>(RealmCMD.CMSG_JOIN_CHANNEL, ChatHandler.OnJoinChannel);
+            RealmServerRouter.AddHandler<PacketReader>(RealmCMD.CMSG_JOIN_CHANNEL, ChatHandler.OnJoinChannel);
             RealmServerRouter.AddHandler<PacketReader>(RealmCMD.CMSG_LEAVE_CHANNEL, ChatHandler.OnLeaveChannel);
             RealmServerRouter.AddHandler<PacketReader>(RealmCMD.CMSG_CHANNEL_LIST, ChatHandler.OnChannelList);
             RealmServerRouter.AddHandler<PacketReader>(RealmCMD.CMSG_CHANNEL_PASSWORD, ChatHandler.OnChannelPassword);
@@ -134,7 +135,13 @@ namespace RealmServer
             Log.Print(LogType.RealmServer,
                 $"Successfully started in {Time.GetMsTimeDiff(time, Time.GetMsTime()) / 1000}s");
         }
-        
+
+        public sealed override string Text
+        {
+            get { return base.Text; }
+            set { base.Text = value; }
+        }
+
         private static readonly List<RealmCMD> MovementOpcodes = new List<RealmCMD>()
         {
             RealmCMD.MSG_MOVE_HEARTBEAT,
@@ -169,66 +176,6 @@ namespace RealmServer
             await AreaTableReader.Load("AreaTable.dbc");
             await FactionReader.Load("Faction.dbc");
             await ChrRacesReader.Load("ChrRaces.dbc");
-
-            TestCreate = new TestCreate();
-            //TestCreate.CreateChar();
-        }
-    }
-
-    public class TestCreate : DatabaseModel<Models>
-    {
-        public static CharacterHelper Helper { get; set; }
-
-        public void CreateChar()
-        {
-            try
-            {
-                Helper = new CharacterHelper();
-
-                //Console.WriteLine(CharacterInitializator.GetClassManaType(Classes.CLASS_DRUID));
-                //Console.WriteLine(CharacterInitializator.GetRaceModel(Races.RACE_DWARF, Genders.GENDER_MALE));
-
-                // Set Player Taxi Zones ????
-                var initXml = MainForm.ChrRacesReader.GetData(Races.RACE_HUMAN);
-                for (int i = 0; i <= 31; i++)
-                {
-                    //Console.WriteLine(initXml.taxiMask);
-                }
-
-                var name = Guid.NewGuid().ToString().Replace("-", string.Empty).Substring(0, 8);
-
-                using (var scope = new DataAccessScope())
-                {
-                    var initRace = XmlReader.GetRace(Races.RACE_HUMAN);
-
-                    // Salva Char
-                    var Char = Model.Characters.Create();
-                        Char.user = MainForm.Database.GetAccount("doe");
-                        Char.name = name;
-                        Char.race = Races.RACE_ORC;
-                        Char.classe = Classes.CLASS_SHAMAN;
-                        Char.gender = Genders.GENDER_FEMALE;
-                        Char.created_at = DateTime.Now;
-
-                    scope.Complete();
-                }
-
-                //
-                var charata = MainForm.Database.GetCharacaterByName(name);
-
-                Console.WriteLine(charata.name);
-
-                Helper.GenerateActionBar(charata);
-                Helper.GenerateFactions(charata);       // DONE
-                Helper.GenerateInventory(charata);      // DONE
-                Helper.GenerateSkills(charata);         // DONE
-                Helper.GenerateSpells(charata);         // DONE
-
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-            }
         }
     }
 }

@@ -12,16 +12,16 @@ namespace RealmServer.Game
     public class UpdateObject : PacketServer
     {
         public UpdateObject(List<byte[]> blocks, int hasTansport = 0) : base(RealmCMD.SMSG_UPDATE_OBJECT)
-		{
-            Write((uint)blocks.Count);
-            Write((byte)hasTansport);
+        {
+            Write((uint) blocks.Count);
+            Write((byte) hasTansport);
             blocks.ForEach(Write);
         }
 
         public static UpdateObject CreateOwnCharacterUpdate(Characters character, out PlayerEntity entity)
         {
             BinaryWriter writer = new BinaryWriter(new MemoryStream());
-            writer.Write((byte)ObjectUpdateType.UPDATETYPE_CREATE_OBJECT_SELF);
+            writer.Write((byte) ObjectUpdateType.UPDATETYPE_CREATE_OBJECT_SELF);
 
             writer.WritePackedUInt64((ulong) character.Id);
 
@@ -55,13 +55,13 @@ namespace RealmServer.Game
 
             entity = new PlayerEntity(character)
             {
-                ObjectGuid  = new ObjectGuid((ulong) character.Id),
-                Guid        = (ulong) character.Id,
+                ObjectGuid = new ObjectGuid((ulong) character.Id),
+                Guid = (ulong) character.Id,
             };
 
             entity.WriteUpdateFields(writer);
 
-            return new UpdateObject(new List<byte[]> { ((MemoryStream) writer.BaseStream).ToArray() });
+            return new UpdateObject(new List<byte[]> {((MemoryStream) writer.BaseStream).ToArray()});
         }
 
         internal static byte[] GenerateGuidBytes(ulong id)
@@ -73,8 +73,8 @@ namespace RealmServer.Game
             {
                 if ((id & 0xFF) != 0)
                 {
-                    packedGuid[0] |= (byte)(1 << i);
-                    packedGuid[length] = (byte)(id & 0xFF);
+                    packedGuid[0] |= (byte) (1 << i);
+                    packedGuid[length] = (byte) (id & 0xFF);
                     ++length;
                 }
 
@@ -133,22 +133,22 @@ namespace RealmServer.Game
         MoveflagTurnRight = 0x00000020,
         MoveflagPitchUp = 0x00000040,
         MoveflagPitchDown = 0x00000080,
-        MoveflagWalkMode = 0x00000100,               // Walking
+        MoveflagWalkMode = 0x00000100, // Walking
 
         MoveflagLevitating = 0x00000400,
-        MoveflagRoot = 0x00000800,               // [-ZERO] is it really need and correct value
+        MoveflagRoot = 0x00000800, // [-ZERO] is it really need and correct value
         MoveflagFalling = 0x00002000,
         MoveflagFallingfar = 0x00004000,
-        MoveflagSwimming = 0x00200000,               // appears with fly flag also
-        MoveflagAscending = 0x00400000,               // [-ZERO] is it really need and correct value
-        MoveflagCanFly = 0x00800000,               // [-ZERO] is it really need and correct value
-        MoveflagFlying = 0x01000000,               // [-ZERO] is it really need and correct value
+        MoveflagSwimming = 0x00200000, // appears with fly flag also
+        MoveflagAscending = 0x00400000, // [-ZERO] is it really need and correct value
+        MoveflagCanFly = 0x00800000, // [-ZERO] is it really need and correct value
+        MoveflagFlying = 0x01000000, // [-ZERO] is it really need and correct value
 
-        MoveflagOntransport = 0x02000000,               // Used for flying on some creatures
-        MoveflagSplineElevation = 0x04000000,               // used for flight paths
-        MoveflagSplineEnabled = 0x08000000,               // used for flight paths
-        MoveflagWaterwalking = 0x10000000,               // prevent unit from falling through water
-        MoveflagSafeFall = 0x20000000,               // active rogue safe fall spell (passive)
+        MoveflagOntransport = 0x02000000, // Used for flying on some creatures
+        MoveflagSplineElevation = 0x04000000, // used for flight paths
+        MoveflagSplineEnabled = 0x08000000, // used for flight paths
+        MoveflagWaterwalking = 0x10000000, // prevent unit from falling through water
+        MoveflagSafeFall = 0x20000000, // active rogue safe fall spell (passive)
         MoveflagHover = 0x40000000
     }
 }
