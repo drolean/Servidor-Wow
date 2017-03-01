@@ -7,12 +7,13 @@ using Common.Helpers;
 
 namespace RealmServer
 {
-    internal class RealmServerClass : IDisposable
+    public class RealmServerClass : IDisposable
     {
         private readonly Socket _socketHandler;
         public Dictionary<int, RealmServerSession> ActiveConnections { get; protected set; }
+        public static List<RealmServerSession> Sessions = new List<RealmServerSession>();
 
-        //private int ConnectionsCount => ActiveConnections.Count;
+        private int ConnectionsCount => ActiveConnections.Count;
 
         public RealmServerClass(IPEndPoint authPoint)
         {
@@ -63,5 +64,7 @@ namespace RealmServer
             _socketHandler.Dispose();
             GC.SuppressFinalize(this);
         }
+
+
     }
 }

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Globalization;
+﻿using System.Globalization;
 using System.Linq;
 using System.Numerics;
 using System.Security.Cryptography;
@@ -7,31 +6,6 @@ using System.Text;
 
 namespace Common.Crypt
 {
-    public static class Extensions
-    {
-        public static byte[] Pad(this byte[] bytes, int count)
-        {
-            Array.Resize(ref bytes, count);
-            return bytes;
-        }
-    }
-
-    public static class SrpHelperExtensions
-    {
-        public static byte[] ToProperByteArray(this BigInteger b)
-        {
-            var bytes = b.ToByteArray();
-            if (b.Sign == 1 && bytes.Length > 1 && bytes[bytes.Length - 1] == 0)
-                Array.Resize(ref bytes, bytes.Length - 1);
-            return bytes;
-        }
-
-        public static BigInteger ToPositiveBigInteger(this byte[] bytes)
-        {
-            return new BigInteger(bytes.Concat(new byte[] { 0 }).ToArray());
-        }
-    }
-
     public class Srp6
     {
         public Srp6(string identifier, BigInteger salt, BigInteger verifier)

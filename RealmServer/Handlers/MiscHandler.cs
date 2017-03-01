@@ -71,7 +71,7 @@ namespace RealmServer.Handlers
             ulong guid = handler.ReadUInt64();
 
             // Asking for player name
-            Characters target = MainForm.Database.GetCharacter((uint)guid);
+            Characters target = MainForm.Database.GetCharacter((uint) guid);
 
             if (target != null)
                 session.SendPacket(new SmsgNameQueryResponse(target));

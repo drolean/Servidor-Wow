@@ -329,8 +329,8 @@ namespace RealmServer.Handlers
         {
             var factions = MainForm.Database.GetFactions(character);
 
-            Write(64);
-            foreach(var fact in factions)
+            Write((uint) factions.Count);
+            foreach (var fact in factions)
             {
                 Write((byte) fact.flags); // Flag 
                 Write((byte) fact.standing); // Value

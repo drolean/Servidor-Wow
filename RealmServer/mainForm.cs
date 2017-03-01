@@ -16,6 +16,8 @@ namespace RealmServer
     public partial class MainForm : Form
     {
         public static RealmServerDatabase Database { get; set; }
+        
+        public static RealmServerClass RealmServerClass { get; set; }
 
         public MainForm()
         {
@@ -37,17 +39,23 @@ namespace RealmServer
             Log.Print(LogType.RealmServer, $"Version {Assembly.GetExecutingAssembly().GetName().Version}");
             Log.Print(LogType.RealmServer, $"Running on .NET Framework Version {Environment.Version}");
 
-            var realmServerClass = new RealmServerClass(realmPoint);
+            // Socket Class
+            RealmServerClass = new RealmServerClass(realmPoint);
 
+            // Database
             Database = new RealmServerDatabase();
             DatabaseManager();
 
-            //
+            // XML Items
             XmlReader.Boot();
 
-            //
+            // Scripting
             ScriptManager.Boot();
 
+            // Units on World
+            
+
+            // 
             RealmServerRouter.AddHandler<CmsgAuthSession>(RealmCMD.CMSG_AUTH_SESSION, RealmServerHandler.OnAuthSession);
             RealmServerRouter.AddHandler<CmsgPing>(RealmCMD.CMSG_PING, RealmServerHandler.OnPingPacket);
 

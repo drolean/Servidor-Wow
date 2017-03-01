@@ -67,7 +67,9 @@
     <Reference Include="System.Xml.Serialization" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Crypt\Extensions.cs" />
     <Compile Include="Crypt\Srp6.cs" />
+    <Compile Include="Crypt\SrpHelperExtensions.cs" />
     <Compile Include="Crypt\VanillaCrypt.cs" />
     <Compile Include="Database\DatabaseModel.cs" />
     <Compile Include="Database\DbcReader.cs" />
@@ -89,6 +91,7 @@
     <Compile Include="Helpers\BinaryWriterExtension.cs" />
     <Compile Include="Helpers\Log.cs" />
     <Compile Include="Helpers\Time.cs" />
+    <Compile Include="Helpers\ZLib.cs" />
     <Compile Include="Network\PacketReader.cs" />
     <Compile Include="Network\PacketServer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

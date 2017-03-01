@@ -60,6 +60,7 @@
     <Compile Include="Game\Entitys\Base.cs" />
     <Compile Include="Game\Entitys\GameObject.cs" />
     <Compile Include="Game\Entitys\ObjectEntity.cs" />
+    <Compile Include="Game\Entitys\UnitEntity.cs" />
     <Compile Include="Game\ObjectGuid.cs" />
     <Compile Include="Game\Entitys\PlayerEntity.cs" />
     <Compile Include="Game\UpdateObject.cs" />
@@ -76,6 +77,7 @@
     <Compile Include="Handlers\SpellHandler.cs" />
     <Compile Include="Handlers\TradeHandler.cs" />
     <Compile Include="Helpers\CharacterHelper.cs" />
+    <Compile Include="Helpers\CommandsHelper.cs" />
     <Compile Include="mainForm.cs">
       <SubType>Form</SubType>
     </Compile>

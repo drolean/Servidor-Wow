@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.IO.Compression;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
@@ -10,7 +11,6 @@ using Common.Database.Tables;
 using Common.Globals;
 using Common.Helpers;
 using Common.Network;
-using System.Linq;
 using RealmServer.Game.Entitys;
 using RealmServer.Handlers;
 
@@ -196,7 +196,7 @@ namespace RealmServer
             }
         }
 
-        internal static void DumpPacket(byte[] data, RealmServerSession client)
+        internal static void DumpPacket(byte[] data, RealmServerSession client = null)
         {
             int j;
             string buffer = "";
@@ -279,23 +279,6 @@ namespace RealmServer
             }
         }
 
-        internal void SendHexPacket(RealmCMD opcode, string hex)
-        {
-            string end = hex.Replace(" ", "").Replace("\n", "");
-
-            byte[] data = StringToByteArray(end);
-
-            SendPacket((int)opcode, data);
-        }
-
-        private static byte[] StringToByteArray(string hex)
-        {
-            return Enumerable.Range(0, hex.Length)
-                             .Where(x => x % 2 == 0)
-                             .Select(x => Convert.ToByte(hex.Substring(x, 2), 16))
-                             .ToArray();
-        }
-
         private static string ByteArrayToHex(IReadOnlyCollection<byte> data)
         {
             string packetOutput = string.Empty;
@@ -333,10 +316,43 @@ namespace RealmServer
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="msg"></param>
         internal void SendMessageMotd(string msg)
         {
             SendPacket(new SmsgMessagechat(ChatMessageType.CHAT_MSG_SYSTEM, ChatMessageLanguage.LANG_UNIVERSAL,
                 (ulong) Character.Id, msg));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="packet"></param>
+        internal void TransmitToAll(PacketServer packet)
+        {
+            Sessions.FindAll(s => s.Character != null).ForEach(s => s.SendPacket(packet));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="playerName"></param>
+        /// <returns></returns>
+        internal static RealmServerSession GetSessionByPlayerName(string playerName)
+        {
+            return Sessions.Find(user => user.Character.name.ToLower() == playerName.ToLower());
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="userName"></param>
+        /// <returns></returns>
+        internal static RealmServerSession GetSessionByUserName(string userName)
+        {
+            return Sessions.Find(user => user.ConnectionId == int.Parse(userName));
         }
     }
 }

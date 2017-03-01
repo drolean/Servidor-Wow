@@ -55,10 +55,9 @@ namespace RealmServer.Game
 
             entity = new PlayerEntity(character)
             {
-                ObjectGuid = new ObjectGuid((ulong) character.Id),
-                Guid = (ulong) character.Id,
+                ObjectGuid = new ObjectGuid((ulong)character.Id),
+                Guid = (ulong)character.Id,
             };
-
             entity.WriteUpdateFields(writer);
 
             return new UpdateObject(new List<byte[]> {((MemoryStream) writer.BaseStream).ToArray()});

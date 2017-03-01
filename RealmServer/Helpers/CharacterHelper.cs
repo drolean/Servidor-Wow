@@ -44,7 +44,18 @@ namespace RealmServer.Helpers
 
             return (uint)slotTypes[item.inventoryType];
         }
-        
+
+        internal static float GetScale(Races race, Genders gender)
+        {
+            if (race == Races.RACE_TAUREN && gender== Genders.GENDER_MALE)
+                return 1.3f;
+
+            if (race == Races.RACE_TAUREN)
+                return 1.25f;
+
+            return 1f;
+        }
+
         public static ManaTypes GetClassManaType(Classes classe)
         {
             switch (classe)

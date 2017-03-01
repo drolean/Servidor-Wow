@@ -15,7 +15,9 @@ namespace RealmServer.Game.Entitys
         public BitArray Mask { get; }
         public Hashtable UpdateData { get; }
         public int UpdateCount { get; private set; }
+
         public virtual int DataLength { get; internal set; }
+        public virtual string Name { get; set; }
 
         public BaseEntity()
         {
@@ -128,9 +130,9 @@ namespace RealmServer.Game.Entitys
             UpdateCount = 0;
         }
 
-        // Base Import Mangos
+        // Base Stats
         public float Size = 1.0f;
-        public static byte Level = 0;
+        public static int Level = 1;
         public int Model = 0;
 
         public StatBar Life = new StatBar(1, 1, 0);

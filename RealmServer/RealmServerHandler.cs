@@ -1,5 +1,9 @@
-﻿using Common.Crypt;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using Common.Crypt;
 using Common.Globals;
+using Common.Helpers;
 using Common.Network;
 
 namespace RealmServer
@@ -8,15 +12,21 @@ namespace RealmServer
     #region CMSG_AUTH_SESSION
     public sealed class CmsgAuthSession : PacketReader
     {
-        public int Build { get; private set; }
-        public int Unk2 { get; private set; }
-        public string User { get; }
+        public int ClientVersion { get; }
+        public int ClientSessionId { get; }
+        public string ClientAccount { get; }
+        public int ClientSeed { get; }
+        public byte[] ClientHash;
+        public int ClientAddOnsSize;
 
         public CmsgAuthSession(byte[] data) : base(data)
         {
-            Build = ReadInt32();
-            Unk2  = ReadInt32();
-            User  = ReadCString();
+            ClientVersion   = ReadInt32();
+            ClientSessionId = ReadInt32();
+            ClientAccount   = ReadCString();
+            ClientSeed      = ReadInt32();
+            ClientHash      = ReadBytes(20);         
+            ClientAddOnsSize = ReadInt32();
         }
     }
     #endregion
@@ -65,12 +75,50 @@ namespace RealmServer
     }
     #endregion
 
+    #region SMSG_ADDON_INFO
+    internal sealed class SmsgAddonInfo : PacketServer
+    {
+        private static int aba = 0;
+        public SmsgAddonInfo(List<string> addOnsNames) : base(RealmCMD.SMSG_ADDON_INFO)
+        {
+            for (int i = 0; i <= 11/*addOnsNames.Count - 1*/; i++)
+            {
+                /*
+                if (File.Exists($"interface\\{addOnsNames[i]}.pub"))
+                {
+                    Write((byte)2); // AddOn Type [1-enabled, 0-banned, 2-blizzard]
+                    Write((byte)1);
+
+                    FileStream fs = new FileStream($"interface\\{addOnsNames[i]}.pub", FileMode.Open, FileAccess.Read,
+                        FileShare.Read, 258, FileOptions.SequentialScan);
+                    byte[] fb = new byte[257];
+                    fs.Read(fb, 0, 257);
+
+                    //NOTE: Read from file
+                    //AddByteArray(fb);
+
+                    Write((uint)0);
+                    Write((short)0);
+                } else
+                {
+                    */
+                    //We don't have hash data or already sent to client
+                    Write((byte) 2); // AddOn Type [1-enabled, 0-banned, 2-blizzard]
+                    Write((byte) 1);
+                    Write((uint) 0);
+                    Write((short) 0);                   
+                //}
+            }
+        }
+    }
+    #endregion
+
     internal class RealmServerHandler
     {
         public static void OnAuthSession(RealmServerSession session, CmsgAuthSession handler)
         {
             // DONE: Check Account
-            session.Users = MainForm.Database.GetAccount(handler.User);
+            session.Users = MainForm.Database.GetAccount(handler.ClientAccount);
 
             // Kick if existing
 
@@ -85,7 +133,26 @@ namespace RealmServer
 
             // If server full then queue, If GM/Admin let in
 
-            // Addons info reading
+            // DONE: Addons info reading
+            #region NOT USED
+            var addonData = handler.ReadBytes((int)handler.BaseStream.Length - (int)handler.BaseStream.Position);
+            var decompressed = ZLib.Decompress(addonData);
+            //RealmServerSession.DumpPacket(decompressed);
+            List<string> addOnsNames = new List<string>();
+            using (var reader = new PacketReader(new MemoryStream(decompressed)))
+            {
+                var count = reader.BaseStream.Length / sizeof(int);
+                for (var i = 0; i < count; ++i)
+                {
+                    //var addonName = reader.ReadString();
+                    //if (addonName.Equals("")) continue;
+                    //addOnsNames.Add(addonName);
+                }
+            }
+            #endregion
+
+            // DONE: Send Addon Packet
+            session.SendPacket(new SmsgAddonInfo(addOnsNames));
 
             // DONE: Send packet
             session.SendPacket(new SmsgAuthResponse());

@@ -3,6 +3,7 @@ using System.Text;
 using Common.Globals;
 using Common.Helpers;
 using Common.Network;
+using RealmServer.Helpers;
 
 namespace RealmServer.Handlers
 {
@@ -20,12 +21,14 @@ namespace RealmServer.Handlers
     #endregion
 
     #region SMSG_MESSAGECHAT
+
     internal sealed class SmsgMessagechat : PacketServer
     {
-        public SmsgMessagechat(ChatMessageType type, ChatMessageLanguage language, ulong id, string message, string channelName = null) : base(RealmCMD.SMSG_MESSAGECHAT)
+        public SmsgMessagechat(ChatMessageType type, ChatMessageLanguage language, ulong id, string message,
+            string channelName = null) : base(RealmCMD.SMSG_MESSAGECHAT)
         {
-            Write((byte)type);
-            Write((uint)language);
+            Write((byte) type);
+            Write((uint) language);
 
             switch (type)
             {
@@ -219,20 +222,22 @@ namespace RealmServer.Handlers
 
             string message = handler.ReadCString();
 
+            // Call Commands
+            new CommandsHelper(session, message);
+
             switch ((ChatMsgs) msgType)
             {
                 case ChatMsgs.CHAT_MSG_SAY:
                 case ChatMsgs.CHAT_MSG_YELL:
                 case ChatMsgs.CHAT_MSG_EMOTE:
-                    session.SendPacket(new SmsgMessagechat(msgType, msgLanguage, (ulong) session.Character.Id, message));
+                    session.SendPacket(new SmsgMessagechat(msgType, ChatMessageLanguage.LANG_UNIVERSAL, (ulong) session.Character.Id, message));
                     break;
                 default:
                     Console.WriteLine($@"veio aqui algo [{msgType}]");
-                    session.SendPacket(new SmsgMessagechat(msgType, msgLanguage, (ulong)session.Character.Id, message));
+                    session.SendPacket(new SmsgMessagechat(msgType, ChatMessageLanguage.LANG_UNIVERSAL, (ulong)session.Character.Id, message));
                     break;
             }
             /*
-                Missing handler: CMSG_NEXT_CINEMATIC_CAMERA
                 2 - Raid
                 3 - Guild
                 4 - Officer
