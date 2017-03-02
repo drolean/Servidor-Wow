@@ -8,7 +8,6 @@ using RealmServer.Game;
 
 namespace RealmServer.Handlers
 {
-
     #region MSG_MOVE_INFO
     public sealed class MsgMoveInfo : PacketReader
     {

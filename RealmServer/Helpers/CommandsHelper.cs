@@ -1,13 +1,11 @@
 ﻿using System;
 using Common.Globals;
-using RealmServer.Game.Entitys;
 using RealmServer.Handlers;
 
 namespace RealmServer.Helpers
 {
     internal class CommandsHelper
     {
-
         public CommandsHelper(RealmServerSession session, string message)
         {
             string[] splitMessage = message.Split(' ');

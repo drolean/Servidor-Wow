@@ -17,7 +17,7 @@ namespace RealmServer.Handlers
             SetSheath(session.Entity, sheathed);
         }
 
-        public static void SetSheath(PlayerEntity objCharacter, SHEATHE_SLOT state)
+        internal static void SetSheath(PlayerEntity objCharacter, SHEATHE_SLOT state)
         {
             switch (state)
             {

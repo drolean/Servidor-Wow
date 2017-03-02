@@ -108,7 +108,7 @@ namespace RealmServer
 
         }
 
-        public async void UpdateCharacter(int charId, string objeto, string value = null)
+        internal async void UpdateCharacter(int charId, string objeto, string value = null)
         {
             using (var scope = new DataAccessScope())
             {

@@ -7,7 +7,6 @@ using RealmServer.Helpers;
 
 namespace RealmServer.Handlers
 {
-
     #region SMSG_CHANNEL_NOTIFY
     internal sealed class SmsgChannelNotify : PacketServer
     {

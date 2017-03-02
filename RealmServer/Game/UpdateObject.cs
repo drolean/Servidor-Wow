@@ -86,7 +86,7 @@ namespace RealmServer.Game
             return clippedArray;
         }
 
-        public static void WriteBytes(BinaryWriter writer, byte[] data, int count = 0)
+        internal static void WriteBytes(BinaryWriter writer, byte[] data, int count = 0)
         {
             if (count == 0)
                 writer.Write(data);

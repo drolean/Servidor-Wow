@@ -10,7 +10,7 @@ namespace RealmServer.Helpers
 {
     public class CharacterHelper : DatabaseModel<Models>
     {
-        public static uint PrefInvSlot(ItemsItem item)
+        internal static uint PrefInvSlot(ItemsItem item)
         {
             int[] slotTypes = {
                 (int)InventorySlots.SLOT_INBACKPACK,    // NONE EQUIP
@@ -56,7 +56,7 @@ namespace RealmServer.Helpers
             return 1f;
         }
 
-        public static ManaTypes GetClassManaType(Classes classe)
+        internal static ManaTypes GetClassManaType(Classes classe)
         {
             switch (classe)
             {
@@ -77,7 +77,7 @@ namespace RealmServer.Helpers
             }
         }
 
-        public static Genders GetRaceModel(Races race, Genders gender)
+        internal static Genders GetRaceModel(Races race, Genders gender)
         {
             switch (race)
             {
@@ -103,7 +103,7 @@ namespace RealmServer.Helpers
         }
 
         // DONE: Generate Skills for Creation Char 
-        public void GenerateSkills(Characters character)
+        internal void GenerateSkills(Characters character)
         {
             var initRace = XmlReader.GetRace(character.race);
             var initRaceClass = XmlReader.GetRaceClass(character.race, character.classe);
@@ -140,7 +140,7 @@ namespace RealmServer.Helpers
         }
 
         // DONE: Generate Factions(Reputation) for Creation Char
-        public void GenerateFactions(Characters character)
+        internal void GenerateFactions(Characters character)
         {
             var initiFactions = MainForm.FactionReader.GenerateFactions(character.race);
 
@@ -163,7 +163,7 @@ namespace RealmServer.Helpers
         }
 
         // DONE: Generate ActionBar for Creation Char
-        public void GenerateActionBar(Characters character)
+        internal void GenerateActionBar(Characters character)
         {
             var initRaceClass = XmlReader.GetRaceClass(character.race, character.classe);
             /*
@@ -199,7 +199,7 @@ namespace RealmServer.Helpers
         }
 
         // DONE: Generate Spells for Creation Char Player
-        public void GenerateSpells(Characters character)
+        internal void GenerateSpells(Characters character)
         {
             var initRace = XmlReader.GetRace(character.race);
             var initRaceClass = XmlReader.GetRaceClass(character.race, character.classe);
@@ -236,7 +236,7 @@ namespace RealmServer.Helpers
         // Generate Player Taxi Zones
 
         // Generate Inventory for Creation Char
-        public void GenerateInventory(Characters character)
+        internal void GenerateInventory(Characters character)
         {
             var stack = 1;
             uint countBag = 0;

@@ -11,12 +11,12 @@ namespace RealmServer
         public delegate void ProcessLoginPacketCallbackTypes<in T>(RealmServerSession session, T handler);
         public static readonly Dictionary<RealmCMD, ProcessLoginPacketCallback> MCallbacks = new Dictionary<RealmCMD, ProcessLoginPacketCallback>();
 
-        public static void AddHandler(RealmCMD opcode, ProcessLoginPacketCallback handler)
+        internal static void AddHandler(RealmCMD opcode, ProcessLoginPacketCallback handler)
         {
             MCallbacks.Add(opcode, handler);
         }
 
-        public static void AddHandler<T>(RealmCMD opcode, ProcessLoginPacketCallbackTypes<T> callback)
+        internal static void AddHandler<T>(RealmCMD opcode, ProcessLoginPacketCallbackTypes<T> callback)
         {
             AddHandler(opcode, (session, data) =>
             {
@@ -38,5 +38,4 @@ namespace RealmServer
             }
         }
     }
-
 }

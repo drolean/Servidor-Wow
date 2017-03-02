@@ -64,7 +64,5 @@ namespace RealmServer
             _socketHandler.Dispose();
             GC.SuppressFinalize(this);
         }
-
-
     }
 }

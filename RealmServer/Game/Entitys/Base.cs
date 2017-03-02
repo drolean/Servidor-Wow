@@ -7,8 +7,6 @@ using RealmServer.Helpers;
 
 namespace RealmServer.Game.Entitys
 {
-    // Abstract DataLength & TypeID (Refactor due to GO containing 'TypeID')
-    // Move all MaskSize, Mask, UpdateData, UpdateCount and Functions into own class
     public class BaseEntity
     {
         public int MaskSize { get; }
