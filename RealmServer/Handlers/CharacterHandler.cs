@@ -9,6 +9,7 @@ using Common.Globals;
 using Common.Helpers;
 using Common.Network;
 using RealmServer.Game;
+using RealmServer.Game.Managers;
 
 namespace RealmServer.Handlers
 {
@@ -631,7 +632,10 @@ namespace RealmServer.Handlers
             // Spawn Player
             session.SendPacket(new SmsgInitWorldStates(session.Character));
             session.SendPacket(UpdateObject.CreateOwnCharacterUpdate(session.Character, out session.Entity));
+            EntityManager.DispatchOnPlayerSpawn(session.Entity);
 
+            // Nao sei
+            session.Entity.Session = session;
             /*          
             // Cast talents and racial passive spells
 

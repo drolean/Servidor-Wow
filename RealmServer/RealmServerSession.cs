@@ -31,7 +31,7 @@ namespace RealmServer
 
         public Characters Target;
         public Characters Character;
-        internal PlayerEntity Entity;
+        public PlayerEntity Entity;
 
         internal RealmServerSession(int connectionId, Socket connectionSocket)
         {

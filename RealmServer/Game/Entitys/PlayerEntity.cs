@@ -15,7 +15,9 @@ namespace RealmServer.Game.Entitys
         // [ ] Character Information
         public int ModelNative;
         public override string Name => Character.name;
-        
+
+        public RealmServerSession Session { get; internal set; }
+
         public PlayerEntity(Characters character)
             : base(new ObjectGuid((uint) character.Id, TypeId.TypeidPlayer, HighGuid.HighguidMoTransport))
         {
@@ -52,12 +54,39 @@ namespace RealmServer.Game.Entitys
             SetUpdateField((int) PlayerFields.PLAYER_BYTES, character.char_hairStyle, 2);
             SetUpdateField((int) PlayerFields.PLAYER_BYTES, character.char_hairColor, 3);
 
-            SetUpdateField((int) PlayerFields.PLAYER_BYTES_2, character.char_facialHair, 0);
+            SetUpdateField((int) PlayerFields.PLAYER_BYTES_2, character.char_facialHair);
 
             SetUpdateField((int) PlayerFields.PLAYER_XP, 0);
             SetUpdateField((int) PlayerFields.PLAYER_NEXT_LEVEL_XP, 400);
             SetUpdateField((int) PlayerFields.PLAYER_SKILL_INFO_1_1, 26);
             SetUpdateField((int) PlayerFields.PLAYER_FIELD_WATCHED_FACTION_INDEX, -1);
+
+            // Setup Equiped Itens
+            var inventory = MainForm.Database.GetInventory(character);
+            for (int j = 0; j < 112; j++)
+            {
+                if (inventory.Find(item => item.slot == j) != null)
+                {
+                    if (j < 19)
+                    {
+                        SetUpdateField(
+                            (int) PlayerFields.PLAYER_VISIBLE_ITEM_1_0 +
+                            (int) inventory.Find(item => item.slot == j).slot * 12,
+                            inventory.Find(item => item.slot == j).item);
+                        SetUpdateField((int) PlayerFields.PLAYER_VISIBLE_ITEM_1_PROPERTIES + j * 12, 0);
+                    }
+
+                    SetUpdateField((int) PlayerFields.PLAYER_FIELD_INV_SLOT_HEAD + j * 2,
+                        inventory.Find(item => item.slot == j).Id);
+                }
+                else
+                {
+                    if (j < 19)
+                        SetUpdateField((int) PlayerFields.PLAYER_VISIBLE_ITEM_1_0 + j * 12, 0);
+
+                    SetUpdateField((int) PlayerFields.PLAYER_FIELD_INV_SLOT_HEAD + j * 2, 0);
+                }
+            }
         }
     }
 }

@@ -9,6 +9,7 @@ using Common.Helpers;
 using RealmServer.Handlers;
 using Common.Database.Dbc;
 using Common.Network;
+using RealmServer.Game.Managers;
 using RealmServer.Scripting;
 
 namespace RealmServer
@@ -42,18 +43,18 @@ namespace RealmServer
             // Socket Class
             RealmServerClass = new RealmServerClass(realmPoint);
 
+            // XML Items
+            XmlReader.Boot();
+
             // Database
             Database = new RealmServerDatabase();
             DatabaseManager();
 
-            // XML Items
-            XmlReader.Boot();
-
             // Scripting
             ScriptManager.Boot();
 
-            // Units on World
-            
+            // [WORLD] PlayerManager
+            PlayerManager.Boot();
 
             // 
             RealmServerRouter.AddHandler<CmsgAuthSession>(RealmCMD.CMSG_AUTH_SESSION, RealmServerHandler.OnAuthSession);
@@ -179,7 +180,7 @@ namespace RealmServer
 
         public async void DatabaseManager()
         {
-            Log.Print(LogType.RealmServer, $"Loading DBCs...");
+            Log.Print(LogType.Loading, $"Loading DBCs ......................... [OK]");
             await CharacterOutfitReader.Load("CharStartOutfit.dbc");
             await AreaTableReader.Load("AreaTable.dbc");
             await FactionReader.Load("Faction.dbc");

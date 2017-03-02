@@ -9,7 +9,8 @@ namespace Common.Helpers
         AuthServer,
         RealmServer,
         Console,
-        Error
+        Error,
+        Loading,
     }
 
     public class Log
@@ -20,7 +21,8 @@ namespace Common.Helpers
             { LogType.AuthServer,  ConsoleColor.Green },
             { LogType.RealmServer, ConsoleColor.Green },
             { LogType.Console,     ConsoleColor.Magenta },
-            { LogType.Error,       ConsoleColor.DarkRed }
+            { LogType.Error,       ConsoleColor.DarkRed },
+            { LogType.Loading,     ConsoleColor.Cyan },
         };
 
         public static void Print(LogType type, object obj)

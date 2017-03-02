@@ -29,7 +29,7 @@ namespace RealmServer.Scripting
 
             _watcher.EnableRaisingEvents = true;
 
-            Log.Print(LogType.Console, $"Scripts Initialized.");
+            Log.Print(LogType.Loading, $"Scripts Initialized  ................. [OK]");
         }
 
         private static void LoadScripts()

@@ -146,11 +146,15 @@ namespace RealmServer.Handlers
             Log.Print(LogType.Debug, $"CMSG_SET_FACTION_INACTIVE [faction={faction} enabled={enabled}]");
         }
 
+        public static int aba = 0;
         internal static void OnSetWatchedFaction(RealmServerSession session, PacketReader handler)
         {
             uint faction = handler.ReadUInt32();
+            // eae funcionou
+            session.Entity.SetUpdateField((int)PlayerFields.PLAYER_FIELD_WATCHED_FACTION_INDEX, aba);
+            Log.Print(LogType.Debug, $"CMSG_SET_WATCHED_FACTION [faction={faction}] => {aba}");
 
-            Log.Print(LogType.Debug, $"CMSG_SET_WATCHED_FACTION [faction={faction}]");
+            aba++;
 
             //client.Character.WatchedFactionIndex = faction
             //client.Character.SetUpdateFlag(EPlayerFields.PLAYER_FIELD_WATCHED_FACTION_INDEX, faction)

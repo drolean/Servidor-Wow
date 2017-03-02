@@ -61,6 +61,8 @@
     <Compile Include="Game\Entitys\GameObject.cs" />
     <Compile Include="Game\Entitys\ObjectEntity.cs" />
     <Compile Include="Game\Entitys\UnitEntity.cs" />
+    <Compile Include="Game\Managers\EntityManager.cs" />
+    <Compile Include="Game\Managers\PlayerManager.cs" />
     <Compile Include="Game\ObjectGuid.cs" />
     <Compile Include="Game\Entitys\PlayerEntity.cs" />
     <Compile Include="Game\UpdateObject.cs" />
@@ -129,9 +131,7 @@
   <ItemGroup>
     <Content Include="server-wow.ico" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Game\Managers\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
