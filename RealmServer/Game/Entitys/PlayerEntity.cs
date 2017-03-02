@@ -1,4 +1,5 @@
-﻿using Common.Database;
+﻿using System.Collections.Generic;
+using Common.Database;
 using Common.Database.Tables;
 using Common.Globals;
 using RealmServer.Helpers;
@@ -17,6 +18,7 @@ namespace RealmServer.Game.Entitys
         public override string Name => Character.name;
 
         public RealmServerSession Session { get; internal set; }
+        public List<PlayerEntity> KnownPlayers { get; internal set; }
 
         public PlayerEntity(Characters character)
             : base(new ObjectGuid((uint) character.Id, TypeId.TypeidPlayer, HighGuid.HighguidMoTransport))

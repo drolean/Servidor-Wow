@@ -634,8 +634,10 @@ namespace RealmServer.Handlers
             session.SendPacket(UpdateObject.CreateOwnCharacterUpdate(session.Character, out session.Entity));
             EntityManager.DispatchOnPlayerSpawn(session.Entity);
 
+
             // Nao sei
             session.Entity.Session = session;
+
             /*          
             // Cast talents and racial passive spells
 

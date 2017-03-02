@@ -26,7 +26,7 @@ namespace RealmServer.Helpers
                 switch (attributeName)
                 {
                     case "level":
-                        session.Entity.SetUpdateField((int)UnitFields.UNIT_FIELD_LEVEL, attributeValue);
+                        session.Entity.SetUpdateField((int) UnitFields.UNIT_FIELD_LEVEL, attributeValue);
                         break;
 
                     case "scale":
@@ -34,7 +34,8 @@ namespace RealmServer.Helpers
                         break;
 
                     case "gender":
-                        session.Entity.SetUpdateField((int) UnitFields.UNIT_FIELD_BYTES_0, (byte) int.Parse(attributeValue), 2);
+                        session.Entity.SetUpdateField((int) UnitFields.UNIT_FIELD_BYTES_0,
+                            (byte) int.Parse(attributeValue), 2);
                         break;
 
                     case "model":
@@ -42,7 +43,8 @@ namespace RealmServer.Helpers
                         break;
 
                     case "state":
-                        session.Entity.SetUpdateField((int) UnitFields.UNIT_NPC_EMOTESTATE, (byte) int.Parse(attributeValue));
+                        session.Entity.SetUpdateField((int) UnitFields.UNIT_NPC_EMOTESTATE,
+                            (byte) int.Parse(attributeValue));
                         break;
 
                     case "standstate":

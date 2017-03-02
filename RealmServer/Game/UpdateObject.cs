@@ -55,10 +55,39 @@ namespace RealmServer.Game
 
             entity = new PlayerEntity(character)
             {
-                ObjectGuid = new ObjectGuid((ulong)character.Id),
-                Guid = (ulong)character.Id
+                ObjectGuid = new ObjectGuid((ulong) character.Id),
+                Guid = (ulong) character.Id
             };
             entity.WriteUpdateFields(writer);
+
+            return new UpdateObject(new List<byte[]> {((MemoryStream) writer.BaseStream).ToArray()});
+        }
+
+        internal static PacketServer UpdateValues(PlayerEntity player)
+        {
+            BinaryWriter writer = new BinaryWriter(new MemoryStream());
+            writer.Write((byte) ObjectUpdateType.UPDATETYPE_VALUES);
+
+            byte[] guidBytes = GenerateGuidBytes(player.ObjectGuid.RawGuid);
+            WriteBytes(writer, guidBytes, guidBytes.Length);
+
+            player.WriteUpdateFields(writer);
+
+            return new UpdateObject(new List<byte[]> {(writer.BaseStream as MemoryStream)?.ToArray()},
+                (player is PlayerEntity) ? 0 : 1);
+        }
+
+        internal static PacketServer CreateOutOfRangeUpdate(List<ObjectEntity> despawnPlayer)
+        {
+            BinaryWriter writer = new BinaryWriter(new MemoryStream());
+            writer.Write((byte) ObjectUpdateType.UPDATETYPE_OUT_OF_RANGE_OBJECTS);
+
+            writer.Write((uint) despawnPlayer.Count);
+
+            foreach (ObjectEntity entity in despawnPlayer)
+            {
+                writer.WritePackedUInt64(entity.ObjectGuid.RawGuid);
+            }
 
             return new UpdateObject(new List<byte[]> {((MemoryStream) writer.BaseStream).ToArray()});
         }
