@@ -36,7 +36,7 @@ namespace RealmServer.Handlers
     #endregion
 
     #region SMSG_TEXT_EMOTE
-    public sealed class SmsgTextEmote : PacketServer
+    internal sealed class SmsgTextEmote : PacketServer
     {
         public SmsgTextEmote(int guid, uint emoteId, int textId) : base(RealmCMD.SMSG_TEXT_EMOTE)
         {
@@ -50,16 +50,16 @@ namespace RealmServer.Handlers
     #endregion
 
     #region SMSG_SET_FACTION_STANDING
-    public sealed class SmsgSetFactionStanding : PacketServer
+    internal sealed class SmsgSetFactionStanding : PacketServer
     {
-        public SmsgSetFactionStanding() : base(RealmCMD.SMSG_SET_FACTION_STANDING)
+        public SmsgSetFactionStanding(int faction, byte enabled, int standing) : base(RealmCMD.SMSG_SET_FACTION_STANDING)
         {
-            //response.AddInt32(Client.Character.Reputation(faction).Flags)
-            //response.AddInt32(faction)
-            //response.AddInt32(Client.Character.Reputation(faction).Value)
+            Write((uint) enabled); // flag.database
+            Write((uint) faction); // id.database
+            Write((uint) standing); // standing.database
         }
     }
-    #endregion   
+    #endregion
 
     internal class MiscHandler
     {
@@ -103,7 +103,7 @@ namespace RealmServer.Handlers
         internal static void OnTextEmote(RealmServerSession session, PacketReader handler)
         {
             if (handler.BaseStream.Length < 20) return;
-                
+
             uint textEmote = handler.ReadUInt32();
             uint unk = handler.ReadUInt32();
             //ulong guid = handler.ReadUInt64();
@@ -115,7 +115,7 @@ namespace RealmServer.Handlers
             // Doing emotes to guards
 
             // Send Emote animation
-            session.Entity.SetUpdateField((int)UnitFields.UNIT_NPC_EMOTESTATE, 0x0);
+            session.Entity.SetUpdateField((int) UnitFields.UNIT_NPC_EMOTESTATE, 0x0);
 
             // Find Creature / Player with the recv GUID
 
@@ -130,35 +130,49 @@ namespace RealmServer.Handlers
 
         internal static void OnSetFactionAtwar(RealmServerSession session, PacketReader handler)
         {
-            uint faction = handler.ReadUInt32();
+            // Adicionar Faccao a base de dados
+            int faction = handler.ReadInt32();
             byte enabled = handler.ReadByte();
+
+            // [7 Enabled] --- [5 Disabled]
+            MainForm.Database.FactionInative(session.Character.Id, faction + 1, (byte) (enabled == 1 ? 7 : 5));
+
+            var factionDb = MainForm.Database.FactionGet(session.Character, faction + 1);
             
-            Log.Print(LogType.Debug, $"CMSG_SET_FACTION_ATWAR [faction={faction} enabled={enabled}]");
 
             // SmsgSetFactionStanding
+            session.SendPacket(new SmsgSetFactionStanding(faction, enabled, factionDb.standing));
         }
 
+        // [DONE] Set Inactive Faction
         internal static void OnSetFactionInactive(RealmServerSession session, PacketReader handler)
         {
-            uint faction = handler.ReadUInt32();
+            // Adicionar Faccao a base de dados
+            int faction = handler.ReadInt32();
             byte enabled = handler.ReadByte();
 
-            Log.Print(LogType.Debug, $"CMSG_SET_FACTION_INACTIVE [faction={faction} enabled={enabled}]");
+            // [17 Enabled] --- [49 Disabled]
+            MainForm.Database.FactionInative(session.Character.Id, faction + 1, (byte) (enabled == 1 ? 49 : 17));
+            /*
+                7 = At War / 5 = Enable At War Button / 3 = At War / 2 = Enable At War Button / 33 = Inative / 37 = Inative com At War
+                39 = Inative At War / 49 = Inative / 51 = Inative At War[Button Disabled] / 53 = Inative
+                enabled = 17 / 19 = At War /  33 = Inative
+            */
         }
 
-        public static int aba = 0;
+        // [DONE] Set Watched Faction
         internal static void OnSetWatchedFaction(RealmServerSession session, PacketReader handler)
         {
-            uint faction = handler.ReadUInt32();
-            // eae funcionou
-            session.Entity.SetUpdateField((int)PlayerFields.PLAYER_FIELD_WATCHED_FACTION_INDEX, aba);
-            Log.Print(LogType.Debug, $"CMSG_SET_WATCHED_FACTION [faction={faction}] => {aba}");
+            int faction = handler.ReadInt32();
 
-            aba++;
+            if (faction == -1)
+                faction = 0xff;
 
-            //client.Character.WatchedFactionIndex = faction
-            //client.Character.SetUpdateFlag(EPlayerFields.PLAYER_FIELD_WATCHED_FACTION_INDEX, faction)
-            //client.Character.SendCharacterUpdate(False)
+            if (faction < 0 || faction > 255)
+                return;
+
+            MainForm.Database.UpdateCharacter(session.Character.Id, "watchFaction", faction.ToString());
+            session.Entity.SetUpdateField((int) PlayerFields.PLAYER_FIELD_WATCHED_FACTION_INDEX, faction);
         }
     }
 }

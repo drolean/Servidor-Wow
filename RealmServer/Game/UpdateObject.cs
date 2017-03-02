@@ -74,7 +74,7 @@ namespace RealmServer.Game
             player.WriteUpdateFields(writer);
 
             return new UpdateObject(new List<byte[]> {(writer.BaseStream as MemoryStream)?.ToArray()},
-                (player is PlayerEntity) ? 0 : 1);
+                player is PlayerEntity ? 0 : 1);
         }
 
         internal static PacketServer CreateOutOfRangeUpdate(List<ObjectEntity> despawnPlayer)

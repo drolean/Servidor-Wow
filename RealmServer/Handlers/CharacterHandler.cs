@@ -364,6 +364,7 @@ namespace RealmServer.Handlers
 
     sealed class SmsgInitializeFactions : PacketServer
     {
+
         public SmsgInitializeFactions(Characters character) : base(RealmCMD.SMSG_INITIALIZE_FACTIONS)
         {
             var factions = MainForm.Database.GetFactions(character);
@@ -372,7 +373,7 @@ namespace RealmServer.Handlers
             foreach (var fact in factions)
             {
                 Write((byte) fact.flags); // Flag 
-                Write((byte) fact.standing); // Value
+                Write(fact.standing); // Value
             }
         }
     }
@@ -742,13 +743,11 @@ namespace RealmServer.Handlers
 
         internal static void OnStandStateChange(RealmServerSession session, PacketReader handler)
         {
+            // Precisa verificar ao sentar e levantar quando vai sentar de novo ele nao faz nada
             byte standState = handler.ReadByte();
-
-            Console.WriteLine(standState);
-
-            //session.Entity.StandState = StandState;
+            //client.Character.WatchedFactionIndex = faction
+            //session.Entity.standState = standState;
             session.Entity.SetUpdateField((int) UnitFields.UNIT_FIELD_BYTES_1, standState);
-
             session.SendPacket(new SmsgStandstateUpdate(standState));
         }
     }

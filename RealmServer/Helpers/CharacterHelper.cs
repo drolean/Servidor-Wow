@@ -264,7 +264,7 @@ namespace RealmServer.Helpers
                         inventory.character  = character;
                         inventory.item       = (ulong)item.id;
                         inventory.stack      = (uint) stack;
-                        inventory.slot       = (PrefInvSlot(item) == 23) ? 23 + countBag : PrefInvSlot(item);
+                        inventory.slot       = PrefInvSlot(item) == 23 ? 23 + countBag : PrefInvSlot(item);
                         inventory.created_at = DateTime.Now;
 
                     scope.Complete();
@@ -285,7 +285,7 @@ namespace RealmServer.Helpers
 
         public void Increment(int incrementator = 1)
         {
-            if (Current + incrementator < (Bonus + Base))
+            if (Current + incrementator < Bonus + Base)
                 Current = Current + incrementator;
             else
                 Current = Maximum;

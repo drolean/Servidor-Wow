@@ -124,8 +124,17 @@ namespace RealmServer
                 if (objeto == "firstlogin")
                     character.is_movie_played = true;
 
+                // Define primeiro Login
+                if (objeto == "watchFaction" && value != null)
+                    character.watched_faction = int.Parse(value);
+
                 await scope.CompleteAsync();
             }
+        }
+
+        internal CharactersFactions FactionGet(Characters character, int id)
+        {
+            return Model.CharactersFactions.First(a => a.Id == id && a.character == character);
         }
 
         /// <summary>
@@ -251,6 +260,16 @@ namespace RealmServer
         internal List<CharactersSkills> GetSkills(Characters character)
         {
             return Model.CharactersSkills.Where(a => a.character == character).ToList();
+        }
+
+        public async void FactionInative(int characterId, int faction, byte enabled)
+        {
+            using (var scope = new DataAccessScope())
+            {
+                var factions = Model.CharactersFactions.GetReference(new { Id = faction, CharacterId = characterId });
+                   factions.flags = enabled;
+                await scope.CompleteAsync();
+            }
         }
     }
 }

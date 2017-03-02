@@ -96,7 +96,7 @@ namespace RealmServer.Game.Entitys
         public void WriteUpdateFields(BinaryWriter packet)
         {
             packet.Write((byte) MaskSize);
-            packet.WriteBitArray(Mask, (MaskSize * 4)); // Int32 = 4 Bytes
+            packet.WriteBitArray(Mask, MaskSize * 4); // Int32 = 4 Bytes
 
             for (int i = 0; i < Mask.Count; i++)
             {
