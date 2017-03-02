@@ -78,7 +78,6 @@ namespace RealmServer
     #region SMSG_ADDON_INFO
     internal sealed class SmsgAddonInfo : PacketServer
     {
-        private static int aba = 0;
         public SmsgAddonInfo(List<string> addOnsNames) : base(RealmCMD.SMSG_ADDON_INFO)
         {
             for (int i = 0; i <= 11/*addOnsNames.Count - 1*/; i++)
@@ -117,10 +116,14 @@ namespace RealmServer
     {
         public static void OnAuthSession(RealmServerSession session, CmsgAuthSession handler)
         {
+            // Check the version of client trying to connect [5875]
+
             // DONE: Check Account
             session.Users = MainForm.Database.GetAccount(handler.ClientAccount);
 
             // Kick if existing
+
+            // Check if account is banned
 
             // DONE: Set Crypt Hash Player
             session.PacketCrypto = new VanillaCrypt();
@@ -150,6 +153,12 @@ namespace RealmServer
                 }
             }
             #endregion
+
+            // Update [IP / Build]
+
+            // Create Log 
+
+            // Init Warden
 
             // DONE: Send Addon Packet
             session.SendPacket(new SmsgAddonInfo(addOnsNames));

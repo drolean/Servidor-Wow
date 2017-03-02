@@ -264,8 +264,7 @@ namespace RealmServer
 
         private void Decode(byte[] header, out ushort length, out short opcode)
         {
-            if (PacketCrypto != null)
-                PacketCrypto.Decrypt(header, 6);
+            PacketCrypto?.Decrypt(header, 6);
 
             if (PacketCrypto == null)
             {

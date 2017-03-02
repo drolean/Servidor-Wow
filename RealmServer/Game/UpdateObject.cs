@@ -11,14 +11,14 @@ namespace RealmServer.Game
 {
     public class UpdateObject : PacketServer
     {
-        public UpdateObject(List<byte[]> blocks, int hasTansport = 0) : base(RealmCMD.SMSG_UPDATE_OBJECT)
+        private UpdateObject(List<byte[]> blocks, int hasTansport = 0) : base(RealmCMD.SMSG_UPDATE_OBJECT)
         {
             Write((uint) blocks.Count);
             Write((byte) hasTansport);
             blocks.ForEach(Write);
         }
 
-        public static UpdateObject CreateOwnCharacterUpdate(Characters character, out PlayerEntity entity)
+        internal static UpdateObject CreateOwnCharacterUpdate(Characters character, out PlayerEntity entity)
         {
             BinaryWriter writer = new BinaryWriter(new MemoryStream());
             writer.Write((byte) ObjectUpdateType.UPDATETYPE_CREATE_OBJECT_SELF);
@@ -56,7 +56,7 @@ namespace RealmServer.Game
             entity = new PlayerEntity(character)
             {
                 ObjectGuid = new ObjectGuid((ulong)character.Id),
-                Guid = (ulong)character.Id,
+                Guid = (ulong)character.Id
             };
             entity.WriteUpdateFields(writer);
 

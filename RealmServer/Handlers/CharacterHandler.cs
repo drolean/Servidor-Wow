@@ -12,8 +12,10 @@ using RealmServer.Game;
 
 namespace RealmServer.Handlers
 {
+
     #region SMSG_CHAR_ENUM
-    public sealed class SmsgCharEnum : PacketServer
+
+    sealed class SmsgCharEnum : PacketServer
     {
         public SmsgCharEnum(List<Characters> characters) : base(RealmCMD.SMSG_CHAR_ENUM)
         {
@@ -23,9 +25,9 @@ namespace RealmServer.Handlers
             {
                 Write((ulong) character.Id);
                 WriteCString(character.name);
-                Write((byte)character.race);
-                Write((byte)character.classe);
-                Write((byte)character.gender);
+                Write((byte) character.race);
+                Write((byte) character.classe);
+                Write((byte) character.gender);
 
                 Write(character.char_skin);
                 Write(character.char_face);
@@ -61,24 +63,26 @@ namespace RealmServer.Handlers
 
                     if (checkItem != null)
                     {
-                        var item = XmlReader.GetItem((int)checkItem.item);
+                        var item = XmlReader.GetItem((int) checkItem.item);
 
                         Write(item.displayId);
-                        Write((byte)item.inventoryType);
+                        Write((byte) item.inventoryType);
                     }
                     else
                     {
                         Write(0);
-                        Write((byte)0);
+                        Write((byte) 0);
                     }
                 }
             }
         }
     }
+
     #endregion
 
     #region  CMSG_CHAR_CREATE
-    public sealed class CmsgCharCreate : PacketReader
+
+    sealed class CmsgCharCreate : PacketReader
     {
         public string Name { get; private set; }
 
@@ -96,34 +100,38 @@ namespace RealmServer.Handlers
 
         public CmsgCharCreate(byte[] data) : base(data)
         {
-            Name      = ReadCString();
+            Name = ReadCString();
 
-            Race      = ReadByte();
-            Classe    = ReadByte();
-            Gender    = ReadByte();
+            Race = ReadByte();
+            Classe = ReadByte();
+            Gender = ReadByte();
 
-            Skin      = ReadByte();
-            Face      = ReadByte();
+            Skin = ReadByte();
+            Face = ReadByte();
             HairStyle = ReadByte();
             HairColor = ReadByte();
-            FacialHair= ReadByte();
-            OutfitId  = ReadByte();
+            FacialHair = ReadByte();
+            OutfitId = ReadByte();
         }
     }
+
     #endregion
 
     #region SMSG_CHAR_CREATE
+
     sealed class SmsgCharCreate : PacketServer
     {
         public SmsgCharCreate(int code) : base(RealmCMD.SMSG_CHAR_CREATE)
         {
-            Write((byte)code);
+            Write((byte) code);
         }
     }
+
     #endregion
 
     #region CMSG_CHAR_RENAME
-    public sealed class CmsgCharRename : PacketReader
+
+    sealed class CmsgCharRename : PacketReader
     {
         public long Id { get; private set; }
         public string Name { get; private set; }
@@ -134,20 +142,24 @@ namespace RealmServer.Handlers
             Name = ReadCString();
         }
     }
+
     #endregion
 
     #region SMSG_CHAR_RENAME
+
     sealed class SmsgCharRename : PacketServer
     {
         public SmsgCharRename(int code) : base(RealmCMD.SMSG_CHAR_RENAME)
         {
-            Write((byte)code);
+            Write((byte) code);
         }
     }
+
     #endregion
 
     #region CMSG_CHAR_DELETE
-    public sealed class CmsgCharDelete : PacketReader
+
+    sealed class CmsgCharDelete : PacketReader
     {
         public int Id { get; private set; }
 
@@ -156,20 +168,24 @@ namespace RealmServer.Handlers
             Id = (int) ReadUInt64();
         }
     }
+
     #endregion
 
     #region SMSG_CHAR_DELETE
+
     sealed class SmsgCharDelete : PacketServer
     {
         public SmsgCharDelete(LoginErrorCode code) : base(RealmCMD.SMSG_CHAR_DELETE)
         {
-            Write((byte)code);
+            Write((byte) code);
         }
     }
+
     #endregion
 
     #region CMSG_PLAYER_LOGIN
-    public sealed class CmsgPlayerLogin : PacketReader
+
+    sealed class CmsgPlayerLogin : PacketReader
     {
         public uint Guid { get; private set; }
 
@@ -178,10 +194,12 @@ namespace RealmServer.Handlers
             Guid = ReadUInt32();
         }
     }
+
     #endregion
 
     #region CMSG_UPDATE_ACCOUNT_DATA
-    public sealed class CmsgUpdateAccountData : PacketReader
+
+    sealed class CmsgUpdateAccountData : PacketReader
     {
         public uint DataId { get; private set; }
         public uint UncompressedSize { get; private set; }
@@ -195,6 +213,7 @@ namespace RealmServer.Handlers
             UncompressedSize = ReadUInt32();
 
             if (DataId > 7)
+                // ReSharper disable once RedundantJumpStatement
                 return;
 
             // How does Mangos Zero Handle the Account Data For the Character?
@@ -206,20 +225,24 @@ namespace RealmServer.Handlers
             // Check if it's compressed, if so, decompress it
         }
     }
+
     #endregion
 
     #region SMSG_ACCOUNT_DATA_TIMES
-    class SmsgAccountDataTimes : PacketServer
+
+    sealed class SmsgAccountDataTimes : PacketServer
     {
         public SmsgAccountDataTimes() : base(RealmCMD.SMSG_ACCOUNT_DATA_TIMES)
         {
             this.WriteNullByte(128);
         }
     }
+
     #endregion
 
     #region SMSG_TRIGGER_CINEMATIC
-    public sealed class SmsgTriggerCinematic : PacketServer
+
+    sealed class SmsgTriggerCinematic : PacketServer
     {
         public SmsgTriggerCinematic(Characters character) : base(RealmCMD.SMSG_TRIGGER_CINEMATIC)
         {
@@ -230,13 +253,16 @@ namespace RealmServer.Handlers
             catch (Exception e)
             {
                 var trace = new StackTrace(e, true);
-                Log.Print(LogType.Error, $"{e.Message}: {e.Source}\n{trace.GetFrame(trace.FrameCount - 1).GetFileName()}:{trace.GetFrame(trace.FrameCount - 1).GetFileLineNumber()}");
+                Log.Print(LogType.Error,
+                    $"{e.Message}: {e.Source}\n{trace.GetFrame(trace.FrameCount - 1).GetFileName()}:{trace.GetFrame(trace.FrameCount - 1).GetFileLineNumber()}");
             }
         }
     }
+
     #endregion
 
     #region SMSG_BINDPOINTUPDATE
+
     sealed class SmsgBindpointupdate : PacketServer
     {
         public SmsgBindpointupdate(Characters character) : base(RealmCMD.SMSG_BINDPOINTUPDATE)
@@ -248,9 +274,11 @@ namespace RealmServer.Handlers
             Write((short) character.MapZone);
         }
     }
+
     #endregion
 
     #region SMSG_SET_REST_START
+
     sealed class SmsgSetRestStart : PacketServer
     {
         public SmsgSetRestStart() : base(RealmCMD.SMSG_SET_REST_START)
@@ -258,9 +286,11 @@ namespace RealmServer.Handlers
             Write((byte) 0);
         }
     }
+
     #endregion
 
     #region SMSG_TUTORIAL_FLAGS
+
     sealed class SmsgTutorialFlags : PacketServer
     {
         //TODO Write the uint ids of 8 tutorial values
@@ -273,9 +303,11 @@ namespace RealmServer.Handlers
             }
         }
     }
+
     #endregion
 
     #region SMSG_LOGIN_VERIFY_WORLD
+
     sealed class SmsgLoginVerifyWorld : PacketServer
     {
         public SmsgLoginVerifyWorld(Characters character) : base(RealmCMD.SMSG_LOGIN_VERIFY_WORLD)
@@ -287,9 +319,11 @@ namespace RealmServer.Handlers
             Write(character.MapO);
         }
     }
+
     #endregion
 
     #region SMSG_CORPSE_RECLAIM_DELAY
+
     sealed class SmsgCorpseReclaimDelay : PacketServer
     {
         public SmsgCorpseReclaimDelay() : base(RealmCMD.SMSG_CORPSE_RECLAIM_DELAY)
@@ -297,9 +331,11 @@ namespace RealmServer.Handlers
             Write(30 * 1000);
         }
     }
+
     #endregion
 
     #region SMSG_INITIAL_SPELLS
+
     sealed class SmsgInitialSpells : PacketServer
     {
         public SmsgInitialSpells(Characters character) : base(RealmCMD.SMSG_INITIAL_SPELLS)
@@ -320,9 +356,11 @@ namespace RealmServer.Handlers
             Write((UInt16) spells.Count); //in16
         }
     }
+
     #endregion
 
     #region SMSG_INITIALIZE_FACTIONS
+
     sealed class SmsgInitializeFactions : PacketServer
     {
         public SmsgInitializeFactions(Characters character) : base(RealmCMD.SMSG_INITIALIZE_FACTIONS)
@@ -337,9 +375,11 @@ namespace RealmServer.Handlers
             }
         }
     }
+
     #endregion
 
     #region SMSG_ACTION_BUTTONS
+
     sealed class SmsgActionButtons : PacketServer
     {
         public SmsgActionButtons(Characters character) : base(RealmCMD.SMSG_ACTION_BUTTONS)
@@ -365,9 +405,11 @@ namespace RealmServer.Handlers
             }
         }
     }
+
     #endregion
 
     #region SMSG_LOGOUT_RESPONSE
+
     internal sealed class SmsgLogoutResponse : PacketServer
     {
         public SmsgLogoutResponse(LogoutResponseCode code) : base(RealmCMD.SMSG_LOGOUT_RESPONSE)
@@ -376,19 +418,23 @@ namespace RealmServer.Handlers
             Write((byte) code);
         }
     }
+
     #endregion
 
     #region SMSG_LOGOUT_COMPLETE
+
     internal sealed class SmsgLogoutComplete : PacketServer
     {
         public SmsgLogoutComplete() : base(RealmCMD.SMSG_LOGOUT_COMPLETE)
         {
-            Write((byte)0);
+            Write((byte) 0);
         }
     }
+
     #endregion
 
     #region SMSG_LOGOUT_CANCEL_ACK
+
     internal sealed class SmsgLogoutCancelAck : PacketServer
     {
         public SmsgLogoutCancelAck() : base(RealmCMD.SMSG_LOGOUT_CANCEL_ACK)
@@ -396,9 +442,11 @@ namespace RealmServer.Handlers
             Write((byte) 0);
         }
     }
+
     #endregion
 
     #region SMSG_STANDSTATE_UPDATE
+
     internal sealed class SmsgStandstateUpdate : PacketServer
     {
         public SmsgStandstateUpdate(byte state) : base(RealmCMD.SMSG_STANDSTATE_UPDATE)
@@ -406,9 +454,11 @@ namespace RealmServer.Handlers
             Write(state);
         }
     }
+
     #endregion
 
     #region SMSG_INIT_WORLD_STATES
+
     internal sealed class SmsgInitWorldStates : PacketServer
     {
         public SmsgInitWorldStates(Characters character) : base(RealmCMD.SMSG_INIT_WORLD_STATES)
@@ -417,7 +467,23 @@ namespace RealmServer.Handlers
 
             switch (character.MapZone)
             {
-                case 0: case 1:case 4:case 8:case 10:case 11:case 12:case 36:case 38:case 40:case 41:case 51:case 267:case 1519:case 1537:case 2257:case 2918:
+                case 0:
+                case 1:
+                case 4:
+                case 8:
+                case 10:
+                case 11:
+                case 12:
+                case 36:
+                case 38:
+                case 40:
+                case 41:
+                case 51:
+                case 267:
+                case 1519:
+                case 1537:
+                case 2257:
+                case 2918:
                     numberOfFields = 6;
                     break;
                 default:
@@ -443,9 +509,11 @@ namespace RealmServer.Handlers
             Write((ulong) 0x0);
         }
     }
+
     #endregion
 
     #region SMSG_LOGIN_SETTIMESPEED
+
     public sealed class SmsgLoginSettimespeed : PacketServer
     {
         public SmsgLoginSettimespeed() : base(RealmCMD.SMSG_LOGIN_SETTIMESPEED)
@@ -456,9 +524,11 @@ namespace RealmServer.Handlers
 
         public static int SecsToTimeBitFields(DateTime dateTime)
         {
-            return (dateTime.Year - 100) << 24 | dateTime.Month << 20 | (dateTime.Day - 1) << 14 | (int)dateTime.DayOfWeek << 11 | dateTime.Hour << 6 | dateTime.Minute;
+            return (dateTime.Year - 100) << 24 | dateTime.Month << 20 | (dateTime.Day - 1) << 14 |
+                   (int) dateTime.DayOfWeek << 11 | dateTime.Hour << 6 | dateTime.Minute;
         }
     }
+
     #endregion
 
     internal class CharacterHandler
@@ -474,7 +544,7 @@ namespace RealmServer.Handlers
         internal static void OnCharCreate(RealmServerSession session, CmsgCharCreate handler)
         {
             int result;
-            
+
             // Char name Profane            result = (int) LoginErrorCode.CHAR_NAME_PROFANE;
             // Char name reserved           result = (int) LoginErrorCode.CHAR_NAME_RESERVED;
             // Char name invalid            result = (int) LoginErrorCode.CHAR_NAME_FAILURE;
@@ -485,7 +555,7 @@ namespace RealmServer.Handlers
             // Only if it's a pvp realm
             try
             {
-                result = (int)LoginErrorCode.CHAR_CREATE_SUCCESS;
+                result = (int) LoginErrorCode.CHAR_CREATE_SUCCESS;
                 MainForm.Database.CreateChar(handler, session.Users);
             }
             catch (Exception)
@@ -505,12 +575,12 @@ namespace RealmServer.Handlers
             // DONE: Do the rename
             try
             {
-                result = (int)LoginErrorCode.RESPONSE_SUCCESS;
+                result = (int) LoginErrorCode.RESPONSE_SUCCESS;
                 MainForm.Database.UpdateName(handler);
             }
             catch (Exception)
             {
-                result = (int)LoginErrorCode.CHAR_NAME_FAILURE;
+                result = (int) LoginErrorCode.CHAR_NAME_FAILURE;
             }
 
             // DONE: Send response
@@ -650,8 +720,8 @@ namespace RealmServer.Handlers
             // ???? Can't log out in combat
             //if (session.Entity.IsInCombat)
             //{
-                //session.SendPacket(new SmsgLogoutResponse(LogoutResponseCode.LOGOUT_RESPONSE_DENIED));
-                //return;
+            //session.SendPacket(new SmsgLogoutResponse(LogoutResponseCode.LOGOUT_RESPONSE_DENIED));
+            //return;
             //}
 
             // Initialize packet
@@ -689,6 +759,7 @@ namespace RealmServer.Handlers
 
                 Thread.Sleep(1000);
             }
+            // ReSharper disable once FunctionNeverReturns
         }
 
         internal static void OnLogoutCancel(RealmServerSession session, PacketReader handler)
@@ -704,7 +775,7 @@ namespace RealmServer.Handlers
             Console.WriteLine(standState);
 
             //session.Entity.StandState = StandState;
-            session.Entity.SetUpdateField((int)UnitFields.UNIT_FIELD_BYTES_1, standState);
+            session.Entity.SetUpdateField((int) UnitFields.UNIT_FIELD_BYTES_1, standState);
 
             session.SendPacket(new SmsgStandstateUpdate(standState));
         }
