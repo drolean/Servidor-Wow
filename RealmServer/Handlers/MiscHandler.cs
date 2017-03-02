@@ -128,6 +128,7 @@ namespace RealmServer.Handlers
             MainForm.Database.UpdateCharacter(session.Character.Id, "firstlogin");
         }
 
+        // [DONE] Set Faction AT War
         internal static void OnSetFactionAtwar(RealmServerSession session, PacketReader handler)
         {
             // Adicionar Faccao a base de dados

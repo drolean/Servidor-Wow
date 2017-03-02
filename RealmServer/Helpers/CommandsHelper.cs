@@ -14,7 +14,8 @@ namespace RealmServer.Helpers
 
             if (splitMessage[0].ToLower() == "aba")
             {
-                session.SendPacket(new SmsgInitializeFactions(session.Character));
+                //session.SendPacket(new SmsgInitializeFactions(session.Character));
+                session.Entity.SetUpdateField((int) UnitFields.UNIT_NPC_EMOTESTATE, int.Parse(splitMessage[1].ToLower()));
             }
 
             if (splitMessage[0].ToLower() == "emote")
