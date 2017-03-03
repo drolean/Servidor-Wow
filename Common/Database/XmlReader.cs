@@ -12,8 +12,9 @@ namespace Common.Database
     public class XmlReader
     {
         public static ItemsXml ItemsXml { get; private set; }
-
         public static RacesXml RacesXml { get; private set; }
+        public static ObjectsXml[] ObjectsXml { get; set; }
+        public static string[] Files { get; private set; }
 
         /// <summary>
         /// 
@@ -23,6 +24,7 @@ namespace Common.Database
             Log.Print(LogType.Loading, "Loading XML .......................... [OK]");
             try
             {
+                // Items
                 XmlSerializer serializerItems = new XmlSerializer(typeof(ItemsXml));
                 StreamReader readerItems = new StreamReader("xml/items.xml");
                 ItemsXml = serializerItems.Deserialize(readerItems) as ItemsXml;
@@ -30,12 +32,29 @@ namespace Common.Database
                     Log.Print(LogType.Loading, $"=_ Items Loaded: {ItemsXml.Item.Count()}");
                 readerItems.Close();
 
+                // Races
                 XmlSerializer serializerRaces = new XmlSerializer(typeof(RacesXml));
                 StreamReader readerRaces = new StreamReader("xml/races.xml");
                 RacesXml = serializerRaces.Deserialize(readerRaces) as RacesXml;
                 if (RacesXml != null)
                     Log.Print(LogType.Loading, $"=_ Races Loaded: {RacesXml.race.Count()}");
                 readerRaces.Close();
+
+                // Game Objects
+                if (Directory.Exists("xml/world"))
+                {
+                    Files = Directory.GetFiles("xml/world", @"*.xml", SearchOption.TopDirectoryOnly);
+
+                    foreach (var VARIABLE in Files)
+                    {
+                        XmlSerializer serielizerObjects = new XmlSerializer(typeof(ObjectsXml));
+                        StreamReader readerObjcets = new StreamReader(VARIABLE);
+                        ObjectsXml = serializerRaces.Deserialize(readerRaces) as ObjectsXml[];
+                        if (ObjectsXml != null)
+                            Log.Print(LogType.Loading, $"=_ Races Loaded: {ObjectsXml.Count()}");
+                        readerObjcets.Close();
+                    }
+                }
 
             }
             catch (Exception e)

@@ -85,6 +85,7 @@
     <Compile Include="Database\Tables\Users.cs" />
     <Compile Include="Database\XmlReader.cs" />
     <Compile Include="Database\Xml\ItemsXml.cs" />
+    <Compile Include="Database\Xml\ObjectsXml.cs" />
     <Compile Include="Database\Xml\RacesXml.cs" />
     <Compile Include="Globals\Global.Character.cs" />
     <Compile Include="Globals\Global.Opcodes.cs" />
