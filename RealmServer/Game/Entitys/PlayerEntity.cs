@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Common.Database;
+using Common.Database.Dbc;
 using Common.Database.Tables;
 using Common.Globals;
 using RealmServer.Helpers;
@@ -23,7 +25,7 @@ namespace RealmServer.Game.Entitys
         public PlayerEntity(Characters character)
             : base(new ObjectGuid((uint) character.Id, TypeId.TypeidPlayer, HighGuid.HighguidMoTransport))
         {
-            var initRace = XmlReader.GetRace(character.race);
+            ChrRaces chrRaces = MainForm.ChrRacesReader.GetData(character.race);
 
             /* Definindo Character */
             Character = character;
@@ -39,9 +41,9 @@ namespace RealmServer.Game.Entitys
 
             SetUpdateField((int) UnitFields.UNIT_FIELD_MAXHEALTH, Life.Maximum);
 
-            // To Display Level Correct need this [START]
+            // To Display Level Correct need this [START] 
             SetUpdateField((int) UnitFields.UNIT_FIELD_LEVEL, Level);
-            SetUpdateField((int) UnitFields.UNIT_FIELD_FACTIONTEMPLATE, initRace.id);
+            SetUpdateField((int) UnitFields.UNIT_FIELD_FACTIONTEMPLATE, chrRaces.FactionId);
             // [END]
 
             SetUpdateField((int) UnitFields.UNIT_FIELD_BYTES_0, (byte) character.race);
@@ -56,13 +58,14 @@ namespace RealmServer.Game.Entitys
             SetUpdateField((int) PlayerFields.PLAYER_BYTES, character.char_hairStyle, 2);
             SetUpdateField((int) PlayerFields.PLAYER_BYTES, character.char_hairColor, 3);
 
-            SetUpdateField((int) PlayerFields.PLAYER_BYTES_2, character.char_facialHair);
+            SetUpdateField((int) PlayerFields.PLAYER_BYTES_2, character.char_facialHair, 0);
 
             SetUpdateField((int) PlayerFields.PLAYER_XP, 0);
             SetUpdateField((int) PlayerFields.PLAYER_NEXT_LEVEL_XP, 400);
             SetUpdateField((int) PlayerFields.PLAYER_SKILL_INFO_1_1, 26);
-            SetUpdateField((int) PlayerFields.PLAYER_FIELD_WATCHED_FACTION_INDEX, -1);
+            SetUpdateField((int) PlayerFields.PLAYER_FIELD_WATCHED_FACTION_INDEX, character.watched_faction);
 
+            /*
             // Setup Equiped Itens
             var inventory = MainForm.Database.GetInventory(character);
             for (int j = 0; j < 112; j++)
@@ -89,6 +92,7 @@ namespace RealmServer.Game.Entitys
                     SetUpdateField((int) PlayerFields.PLAYER_FIELD_INV_SLOT_HEAD + j * 2, 0);
                 }
             }
+            */
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using Common.Database.Tables;
 using Common.Globals;
 using Common.Helpers;
@@ -12,8 +13,9 @@ namespace RealmServer.Handlers
         public SmsgNameQueryResponse(Characters character) : base(RealmCMD.SMSG_NAME_QUERY_RESPONSE)
         {
             Write((ulong) character.Id);
-            WriteCString(character.name);
-            //Write((byte)0); // realm name for cross realm BG usage
+            //WriteCString(character.name);
+            Write(Encoding.UTF8.GetBytes(character.name + '\0'));
+            Write((byte)0); // realm name for cross realm BG usage
             Write((uint) character.race);
             Write((uint) character.gender);
             Write((uint) character.classe);

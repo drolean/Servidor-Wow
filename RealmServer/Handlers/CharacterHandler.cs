@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using Common.Database;
+using Common.Database.Dbc;
 using Common.Database.Tables;
 using Common.Globals;
 using Common.Helpers;
@@ -245,18 +246,9 @@ namespace RealmServer.Handlers
 
     sealed class SmsgTriggerCinematic : PacketServer
     {
-        public SmsgTriggerCinematic(Characters character) : base(RealmCMD.SMSG_TRIGGER_CINEMATIC)
+        public SmsgTriggerCinematic(int cinematic) : base(RealmCMD.SMSG_TRIGGER_CINEMATIC)
         {
-            try
-            {
-                Write((int) XmlReader.GetRace(character.race).init.Cinematic);
-            }
-            catch (Exception e)
-            {
-                var trace = new StackTrace(e, true);
-                Log.Print(LogType.Error,
-                    $"{e.Message}: {e.Source}\n{trace.GetFrame(trace.FrameCount - 1).GetFileName()}:{trace.GetFrame(trace.FrameCount - 1).GetFileLineNumber()}");
-            }
+            Write(cinematic);
         }
     }
 
@@ -609,7 +601,10 @@ namespace RealmServer.Handlers
 
             // Send Cinematic if first time
             if (session.Character.is_movie_played == false)
-                session.SendPacket(new SmsgTriggerCinematic(session.Character)); // DONE
+            {
+                ChrRaces chrRaces = MainForm.ChrRacesReader.GetData(session.Character.race);
+                session.SendPacket(new SmsgTriggerCinematic(chrRaces.CinematicId)); // DONE
+            }
 
             // Part Three
             session.SendPacket(new SmsgCorpseReclaimDelay()); // DONE

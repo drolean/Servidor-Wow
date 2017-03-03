@@ -1,4 +1,5 @@
 ﻿using System;
+using Common.Database.Dbc;
 using Common.Globals;
 using RealmServer.Handlers;
 
@@ -14,7 +15,8 @@ namespace RealmServer.Helpers
 
             if (splitMessage[0].ToLower() == "a")
             {
-                session.SendPacket(new SmsgSetRestStart());
+                //session.SendPacket(new SmsgSetRestStart());
+                session.SendPacket(new SmsgTriggerCinematic(int.Parse(splitMessage[1].ToLower())));
             }
 
             if (splitMessage[0].ToLower() == "aba")
