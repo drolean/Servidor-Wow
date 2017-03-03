@@ -11,8 +11,6 @@ namespace RealmServer.Handlers
     {
         internal static void OnSetsHeathed(RealmServerSession session, PacketReader handler)
         {
-            //If(packet.Data.Length - 1) < 9 Then Exit Sub
-
             SHEATHE_SLOT sheathed = (SHEATHE_SLOT) handler.ReadInt32();
             SetSheath(session.Entity, sheathed);
         }
@@ -38,8 +36,7 @@ namespace RealmServer.Handlers
             }
 
             session.Target = RealmServerSession.Sessions.FirstOrDefault(s => s.Character.Id == (int) guid)?.Character;
-            session.Entity.SetUpdateField((int) UnitFields.UNIT_FIELD_TARGET, session.Target);
-            //session.Entity.SendCharacterUpdate();
+            session.Entity.SetUpdateField((int) UnitFields.UNIT_FIELD_TARGET, guid);
         }
     }
 }

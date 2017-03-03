@@ -92,6 +92,9 @@ namespace Common.Database.Tables
         public abstract DateTime? updated_at { get; set; }
 
         [PersistedMember]
+        public abstract string tutorial { get; set; }
+
+        [PersistedMember]
         public abstract int watched_faction { get; set; }
 
         [PersistedMember]

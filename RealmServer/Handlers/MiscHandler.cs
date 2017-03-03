@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Text;
 using Common.Database.Tables;
 using Common.Globals;
 using Common.Helpers;
@@ -13,7 +12,7 @@ namespace RealmServer.Handlers
         public SmsgNameQueryResponse(Characters character) : base(RealmCMD.SMSG_NAME_QUERY_RESPONSE)
         {
             Write((ulong) character.Id);
-            Write(Encoding.UTF8.GetBytes(character.name + '\0'));
+            WriteCString(character.name);
             //Write((byte)0); // realm name for cross realm BG usage
             Write((uint) character.race);
             Write((uint) character.gender);
@@ -30,7 +29,7 @@ namespace RealmServer.Handlers
             DateTime baseDate = new DateTime(1970, 1, 1);
             TimeSpan ts = DateTime.Now - baseDate;
 
-            Write((uint)ts.TotalSeconds);
+            Write((uint) ts.TotalSeconds);
         }
     }
     #endregion
@@ -128,6 +127,25 @@ namespace RealmServer.Handlers
             MainForm.Database.UpdateCharacter(session.Character.Id, "firstlogin");
         }
 
+        internal static void OnTutorialClear(RealmServerSession session, PacketReader handler)
+        {
+            // Aqui seta como feito tutorial
+            Console.WriteLine("Tutoriais Feitos");
+        }
+
+        internal static void OnTutorialFlag(RealmServerSession session, PacketReader handler)
+        {
+            int flag = handler.ReadInt32();
+            Console.WriteLine($@"vem FLAG [{flag}] {flag / 8} [{1 << 7 - flag % 8}]");
+            //client.Character.TutorialFlags((Flag \ 8)) = client.Character.TutorialFlags((Flag \ 8)) + (1 << 7 - (Flag Mod 8))           
+            //client.Character.TutorialFlags((Flag / 8)) == client.Character.TutorialFlags((Flag / 8)) + (1 << 7 - (Flag % 8))
+        }
+
+        internal static void OnTutorialReset(RealmServerSession session, PacketReader handler)
+        {
+            Console.WriteLine("Tutoriais Resetados");
+        }
+
         // [DONE] Set Faction AT War
         internal static void OnSetFactionAtwar(RealmServerSession session, PacketReader handler)
         {
@@ -140,7 +158,6 @@ namespace RealmServer.Handlers
 
             var factionDb = MainForm.Database.FactionGet(session.Character, faction + 1);
             
-
             // SmsgSetFactionStanding
             session.SendPacket(new SmsgSetFactionStanding(faction, enabled, factionDb.standing));
         }

@@ -12,10 +12,15 @@ namespace RealmServer.Helpers
 
             Console.WriteLine($@"[Comando]: {splitMessage[0].ToLower()}");
 
+            if (splitMessage[0].ToLower() == "a")
+            {
+                session.SendPacket(new SmsgSetRestStart());
+            }
+
             if (splitMessage[0].ToLower() == "aba")
             {
                 //session.SendPacket(new SmsgInitializeFactions(session.Character));
-                session.Entity.SetUpdateField((int) UnitFields.UNIT_NPC_EMOTESTATE, int.Parse(splitMessage[1].ToLower()));
+                session.Entity.SetUpdateField((int)UnitFields.UNIT_NPC_EMOTESTATE, int.Parse(splitMessage[1].ToLower()));
             }
 
             if (splitMessage[0].ToLower() == "emote")

@@ -284,7 +284,7 @@ namespace RealmServer.Handlers
     {
         public SmsgSetRestStart() : base(RealmCMD.SMSG_SET_REST_START)
         {
-            Write((byte) 0);
+            Write((uint) 0);
         }
     }
 
@@ -300,7 +300,7 @@ namespace RealmServer.Handlers
             // [8*Int32] or [32 Bytes] or [256 Bits Flags] Total!!!
             for (int i = 0; i < 8; i++)
             {
-                Write((byte) 0xff);
+                Write((byte) 0);
             }
         }
     }
@@ -469,22 +469,6 @@ namespace RealmServer.Handlers
 
             switch (character.MapZone)
             {
-                case 0:
-                case 1:
-                case 4:
-                case 8:
-                case 10:
-                case 11:
-                case 12:
-                case 36:
-                case 38:
-                case 40:
-                case 41:
-                case 51:
-                case 267:
-                case 1519:
-                case 1537:
-                case 2257:
                 case 2918:
                     numberOfFields = 6;
                     break;
@@ -609,32 +593,31 @@ namespace RealmServer.Handlers
             // Change Player Status Online
 
             // Part One
-            session.SendPacket(new SmsgLoginVerifyWorld(session.Character));
-            session.SendPacket(new SmsgAccountDataTimes());
-            session.SendMessageMotd($"Welcome to World of Warcraft.");
-            session.SendMessageMotd($"Servidor do caralho vai curintia ....");
+            session.SendPacket(new SmsgLoginVerifyWorld(session.Character)); // DONE 
+            session.SendPacket(new SmsgAccountDataTimes()); // DONE
+            session.SendMessageMotd($"Welcome to World of Warcraft."); // DONE
+            session.SendMessageMotd($"Servidor do caralho vai curintia ...."); // DONE
 
             // Part Two
             session.SendPacket(new SmsgSetRestStart());
-            session.SendPacket(new SmsgBindpointupdate(session.Character));
+            session.SendPacket(new SmsgBindpointupdate(session.Character)); // DONE
             session.SendPacket(new SmsgTutorialFlags());
-            session.SendPacket(new SmsgLoginSettimespeed());
+            session.SendPacket(new SmsgLoginSettimespeed()); // DONE
             session.SendPacket(new SmsgInitialSpells(session.Character));
-            session.SendPacket(new SmsgActionButtons(session.Character));
-            session.SendPacket(new SmsgInitializeFactions(session.Character));
+            session.SendPacket(new SmsgActionButtons(session.Character)); // DONE
+            session.SendPacket(new SmsgInitializeFactions(session.Character)); // DONE
 
             // Send Cinematic if first time
             if (session.Character.is_movie_played == false)
-                session.SendPacket(new SmsgTriggerCinematic(session.Character));
+                session.SendPacket(new SmsgTriggerCinematic(session.Character)); // DONE
 
             // Part Three
-            session.SendPacket(new SmsgCorpseReclaimDelay());
+            session.SendPacket(new SmsgCorpseReclaimDelay()); // DONE
 
             // Spawn Player
             session.SendPacket(new SmsgInitWorldStates(session.Character));
             session.SendPacket(UpdateObject.CreateOwnCharacterUpdate(session.Character, out session.Entity));
             EntityManager.DispatchOnPlayerSpawn(session.Entity);
-
 
             // Nao sei
             session.Entity.Session = session;

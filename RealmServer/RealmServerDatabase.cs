@@ -81,6 +81,7 @@ namespace RealmServer
                     Char.char_hairColor  = handler.HairColor;
                     Char.char_facialHair = handler.FacialHair;
                     Char.created_at = DateTime.Now;
+                    Char.watched_faction = 255;
 
                     // Set Another status 
 
@@ -105,7 +106,6 @@ namespace RealmServer
             Helper.GenerateSkills(character);         // DONE: Generate Skills
             Helper.GenerateSpells(character);         // DONE: Generate Spells
             Helper.GenerateInventory(character);      // DONE: Generate Inventory
-
         }
 
         internal async void UpdateCharacter(int charId, string objeto, string value = null)
