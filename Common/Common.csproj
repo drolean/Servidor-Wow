@@ -91,6 +91,7 @@
     <Compile Include="Helpers\BinaryWriterExtension.cs" />
     <Compile Include="Helpers\Log.cs" />
     <Compile Include="Helpers\Time.cs" />
+    <Compile Include="Helpers\Utils.cs" />
     <Compile Include="Helpers\ZLib.cs" />
     <Compile Include="Network\PacketReader.cs" />
     <Compile Include="Network\PacketServer.cs" />

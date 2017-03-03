@@ -24,8 +24,7 @@ namespace RealmServer.Game.Managers
         {
             return PlayerManager.Players.FindAll(p => p.KnownPlayers.Contains(playerEntity));
         }
-
-        public static List<RealmServerSession> SessionsWhoKnow(PlayerEntity playerEntity, bool includeSelf = false)
+        private static List<RealmServerSession> SessionsWhoKnow(PlayerEntity playerEntity, bool includeSelf = false)
         {
             List<RealmServerSession> sessions = PlayersWhoKnow(playerEntity).ConvertAll(p => p.Session);
 

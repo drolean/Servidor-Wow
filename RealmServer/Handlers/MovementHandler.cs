@@ -164,6 +164,12 @@ namespace RealmServer.Handlers
 
             uint zoneId = handler.ReadUInt32();
             session.Character.MapZone = (int) zoneId;
+            session.SendMessageMotd(
+                $"Zone Update ID: {session.Character.MapZone} => {MainForm.AreaTableReader.GetArea(session.Character.MapZone).AreaName} " +
+                $"[{MainForm.AreaTableReader.GetArea(session.Character.MapZone).AreaName.ToCamelCase()}]");
+            Console.WriteLine(
+                $@"algo Update [ID={session.Character.MapId}] => [Zone={session.Character.MapZone}] => {MainForm
+                    .AreaTableReader.GetArea(session.Character.MapZone).AreaName}");
 
             // CheckZone
 

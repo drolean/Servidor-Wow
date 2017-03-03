@@ -9,6 +9,7 @@ using Common.Helpers;
 using RealmServer.Handlers;
 using Common.Database.Dbc;
 using Common.Network;
+using RealmServer.Game.GameObjects;
 using RealmServer.Game.Managers;
 using RealmServer.Scripting;
 
@@ -16,9 +17,9 @@ namespace RealmServer
 {
     public partial class MainForm : Form
     {
-        public static RealmServerDatabase Database { get; set; }
-        
+        public static RealmServerDatabase Database { get; set; }       
         public static RealmServerClass RealmServerClass { get; set; }
+        public static GameObjectComponent GameObjectComponent { get; set; }
 
         public MainForm()
         {
@@ -40,9 +41,6 @@ namespace RealmServer
             Log.Print(LogType.RealmServer, $"Version {Assembly.GetExecutingAssembly().GetName().Version}");
             Log.Print(LogType.RealmServer, $"Running on .NET Framework Version {Environment.Version}");
 
-            // Socket Class
-            RealmServerClass = new RealmServerClass(realmPoint);
-
             // XML Items
             XmlReader.Boot();
 
@@ -53,8 +51,9 @@ namespace RealmServer
             // Scripting
             ScriptManager.Boot();
 
-            // [WORLD] PlayerManager
+            // [WORLD] PlayerManager / ObjectManager
             PlayerManager.Boot();
+            GameObjectComponent = new GameObjectComponent();
 
             // 
             RealmServerRouter.AddHandler<CmsgAuthSession>(RealmCMD.CMSG_AUTH_SESSION, RealmServerHandler.OnAuthSession);
@@ -149,6 +148,9 @@ namespace RealmServer
             RealmServerRouter.AddHandler<PacketReader>(RealmCMD.CMSG_FORCE_MOVE_ROOT_ACK, OnNull);   // DONE
             RealmServerRouter.AddHandler<PacketReader>(RealmCMD.CMSG_FORCE_MOVE_UNROOT_ACK, OnNull); // DONE
 
+            // Socket Class
+            RealmServerClass = new RealmServerClass(realmPoint);
+
             Log.Print(LogType.RealmServer,
                 $"Successfully started in {Time.GetMsTimeDiff(time, Time.GetMsTime()) / 1000}s");
         }
@@ -186,7 +188,7 @@ namespace RealmServer
             RealmCMD.MSG_MOVE_SET_PITCH
         };
 
-        public readonly AreaTableReader AreaTableReader = new AreaTableReader();
+        public static readonly AreaTableReader AreaTableReader = new AreaTableReader();
         public static readonly CharStartOutfitReader CharacterOutfitReader = new CharStartOutfitReader();
         public static readonly ChrRacesReader ChrRacesReader = new ChrRacesReader();
         public static readonly EmotesTextReader EmotesTextReader = new EmotesTextReader();

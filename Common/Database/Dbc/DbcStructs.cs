@@ -8,7 +8,14 @@ namespace Common.Database.Dbc
 {
 
     #region AreaTable.dbc
-    public class AreaTableReader : DbcReader<AreaTable> { }
+
+    public class AreaTableReader : DbcReader<AreaTable>
+    {
+        public AreaTable GetArea(int id)
+        {
+            return RecordDataIndexed.Values.ToArray().FirstOrDefault(a => a.AreaId == id);
+        }
+    }
 
     public class AreaTable : DbcRecordBase
     {

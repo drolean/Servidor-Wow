@@ -21,6 +21,7 @@ namespace RealmServer.Game.Entitys
 
         public RealmServerSession Session { get; internal set; }
         public List<PlayerEntity> KnownPlayers { get; internal set; }
+        public List<GameObjectEntity> KnownGameObjects { get; internal set; }
 
         public PlayerEntity(Characters character)
             : base(new ObjectGuid((uint) character.Id, TypeId.TypeidPlayer, HighGuid.HighguidMoTransport))

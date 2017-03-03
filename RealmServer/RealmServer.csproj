@@ -57,8 +57,10 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Game\Entitys\Base.cs" />
-    <Compile Include="Game\Entitys\GameObject.cs" />
+    <Compile Include="Game\GameObjects\EntityComponent.cs" />
+    <Compile Include="Game\GameObjects\GameObjectComponent.cs" />
+    <Compile Include="Game\Entitys\BaseEntity.cs" />
+    <Compile Include="Game\Entitys\GameObjectEntity.cs" />
     <Compile Include="Game\Entitys\ObjectEntity.cs" />
     <Compile Include="Game\Entitys\UnitEntity.cs" />
     <Compile Include="Game\Managers\EntityManager.cs" />

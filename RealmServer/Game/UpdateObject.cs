@@ -77,11 +77,11 @@ namespace RealmServer.Game
                 player is PlayerEntity ? 0 : 1);
         }
 
+        // Out of Range Player
         internal static PacketServer CreateOutOfRangeUpdate(List<ObjectEntity> despawnPlayer)
         {
             BinaryWriter writer = new BinaryWriter(new MemoryStream());
             writer.Write((byte) ObjectUpdateType.UPDATETYPE_OUT_OF_RANGE_OBJECTS);
-
             writer.Write((uint) despawnPlayer.Count);
 
             foreach (ObjectEntity entity in despawnPlayer)
@@ -90,6 +90,13 @@ namespace RealmServer.Game
             }
 
             return new UpdateObject(new List<byte[]> {((MemoryStream) writer.BaseStream).ToArray()});
+        }
+
+        // Out of Range Object
+        internal static PacketServer CreateOutOfRangeUpdate(GameObjectEntity gameObjectEntityEntity)
+        {
+            var despawnEntity = new List<ObjectEntity> {gameObjectEntityEntity};
+            return CreateOutOfRangeUpdate(despawnEntity);
         }
 
         internal static byte[] GenerateGuidBytes(ulong id)
