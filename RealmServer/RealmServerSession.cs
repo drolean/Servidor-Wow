@@ -110,7 +110,7 @@ namespace RealmServer
         {
             try
             {
-                Log.Print(LogType.AuthServer, "User Disconnected");
+                Log.Print(LogType.RealmServer, "User Disconnected");
                 ConnectionSocket.Shutdown(SocketShutdown.Both);
                 ConnectionSocket.Close();
             }
@@ -201,7 +201,7 @@ namespace RealmServer
             string buffer = "";
 
             if (client == null)
-                Log.Print($"DEBUG: Packet Dump");
+                Log.Print("DEBUG: Packet Dump");
             else
                 Log.Print($"[{client.ConnectionSocket.RemoteEndPoint}] DEBUG: Packet Dump");
 

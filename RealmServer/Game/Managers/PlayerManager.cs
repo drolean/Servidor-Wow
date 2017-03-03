@@ -19,7 +19,7 @@ namespace RealmServer.Game.Managers
 
             new Thread(Update).Start();
 
-            Log.Print(LogType.Loading, $"PlayerManager Loaded ................. [OK]");
+            Log.Print(LogType.Loading, "PlayerManager Loaded ................. [OK]");
         }
 
         private static void Update()

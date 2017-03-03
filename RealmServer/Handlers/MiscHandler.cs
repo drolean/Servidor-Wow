@@ -39,11 +39,11 @@ namespace RealmServer.Handlers
     #region SMSG_TEXT_EMOTE
     internal sealed class SmsgTextEmote : PacketServer
     {
-        public SmsgTextEmote(int guid, uint emoteId, int textId) : base(RealmCMD.SMSG_TEXT_EMOTE)
+        public SmsgTextEmote(int guid, uint textEmote, int textId) : base(RealmCMD.SMSG_TEXT_EMOTE)
         {
-            Write((ulong) guid);
-            Write(emoteId);
-            Write((uint) textId);
+            this.WritePackedUInt64((ulong) guid);
+            Write(textEmote);
+            Write((uint) 0xff);
             Write((uint) 1);
             Write((byte) 0);
         }
@@ -107,23 +107,22 @@ namespace RealmServer.Handlers
 
             uint textEmote = handler.ReadUInt32();
             uint unk = handler.ReadUInt32();
-            //ulong guid = handler.ReadUInt64();
+            ulong guid = handler.ReadUInt64();
 
-            Log.Print(LogType.Debug, $"[{session.ConnectionSocket}] CMSG_TEXT_EMOTE [TextEmote={textEmote} Unk={unk}]");
+            Log.Print(LogType.Debug, $"[{session.ConnectionSocket}] CMSG_TEXT_EMOTE [TEXTENITE={textEmote} UNK={unk} GUID={guid}]");
 
-            // Some quests needs emotes being done
-
-            // Doing emotes to guards
-
-            // Send Emote animation
-            session.Entity.SetUpdateField((int) UnitFields.UNIT_NPC_EMOTESTATE, 0x0);
-
-            // Find Creature / Player with the recv GUID
+            // DONE: Send Emote animation
+            var checkEmote = MainForm.EmotesTextReader.GetData((int) textEmote);
+            if (checkEmote != null)
+            {
+                session.Entity.SetUpdateField((int) UnitFields.UNIT_NPC_EMOTESTATE, checkEmote.EmoteId);
+            }           
 
             // DONE: Send Packet
             session.SendPacket(new SmsgTextEmote(session.Character.Id, textEmote, (int) unk));
         }
 
+        // [DONE]  After complete set movieplayed to true
         internal static void OnCompleteCinematic(RealmServerSession session, PacketReader handler)
         {
             MainForm.Database.UpdateCharacter(session.Character.Id, "firstlogin");

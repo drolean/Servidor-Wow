@@ -66,7 +66,7 @@ namespace Common.Database.Dbc
                     }
                 }
                 else
-                    listReturn.Add($"0, 0, 0");
+                    listReturn.Add("0, 0, 0");
             }
 
             return listReturn;
@@ -165,7 +165,7 @@ namespace Common.Database.Dbc
     {
         public ChrRaces GetData(Races id)
         {
-            return RecordDataIndexed.Values.ToArray().FirstOrDefault(a => a.RaceId == (int) id);
+            return RecordDataIndexed.Values.ToArray().FirstOrDefault(a => a.RaceId == (int)id);
         }
     }
     public class ChrRaces : DbcRecordBase
@@ -181,17 +181,48 @@ namespace Common.Database.Dbc
 
         public override int Read()
         {
-            RaceId      = GetInt32(0);
-            FactionId   = GetInt32(2);
-            ModelM      = GetInt32(4);
-            ModelF      = GetInt32(5);
-            TeamId      = GetInt32(8);
-            TaxiMask    = GetUInt32(14);
+            RaceId = GetInt32(0);
+            FactionId = GetInt32(2);
+            ModelM = GetInt32(4);
+            ModelF = GetInt32(5);
+            TeamId = GetInt32(8);
+            TaxiMask = GetUInt32(14);
             CinematicId = GetInt32(16);
-            Name        = GetString(17);
+            Name = GetString(17);
 
             return RaceId;
         }
     }
     #endregion
+
+    #region EmotesText.dbc
+    public class EmotesTextReader : DbcReader<EmotesText>
+    {
+        public EmotesText GetData(int id)
+        {
+            return RecordDataIndexed.Values.ToArray().FirstOrDefault(a => a.Id == id);
+        }
+    }
+
+    public class EmotesText : DbcRecordBase
+    {
+        public int Id;
+        public string EmoteName;
+        public int EmoteId;
+        public int[] MEmoteText = new int[16];
+
+        public override int Read()
+        {
+            Id = GetInt32(0);
+            EmoteName = GetString(1);
+            EmoteId = GetInt32(2);
+
+            for (int i = 0; i < MEmoteText.Length; ++i)
+                MEmoteText[i] = GetInt32(2 + i);
+
+            return Id;
+        }
+    }
+    #endregion
+
 }

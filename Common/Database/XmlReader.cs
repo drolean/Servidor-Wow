@@ -20,18 +20,18 @@ namespace Common.Database
         /// </summary>
         public static void Boot()
         {
-            Log.Print(LogType.Loading, $"Loading XML .......................... [OK]");
+            Log.Print(LogType.Loading, "Loading XML .......................... [OK]");
             try
             {
                 XmlSerializer serializerItems = new XmlSerializer(typeof(ItemsXml));
-                StreamReader readerItems = new StreamReader($"xml/items.xml");
+                StreamReader readerItems = new StreamReader("xml/items.xml");
                 ItemsXml = serializerItems.Deserialize(readerItems) as ItemsXml;
                 if (ItemsXml != null)
                     Log.Print(LogType.Loading, $"=_ Items Loaded: {ItemsXml.Item.Count()}");
                 readerItems.Close();
 
                 XmlSerializer serializerRaces = new XmlSerializer(typeof(RacesXml));
-                StreamReader readerRaces = new StreamReader($"xml/races.xml");
+                StreamReader readerRaces = new StreamReader("xml/races.xml");
                 RacesXml = serializerRaces.Deserialize(readerRaces) as RacesXml;
                 if (RacesXml != null)
                     Log.Print(LogType.Loading, $"=_ Races Loaded: {RacesXml.race.Count()}");

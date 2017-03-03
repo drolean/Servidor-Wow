@@ -45,7 +45,7 @@ namespace AuthServer
                     case "db":
                         // ReSharper disable once ObjectCreationAsStatement
                         new DatabaseManager();
-                        Log.Print(LogType.Console, $"Database recreated.");
+                        Log.Print(LogType.Console, "Database recreated.");
                         break;
 
                     case "/gc":

@@ -52,7 +52,7 @@ namespace AuthServer
                     return i;
             }
 
-            Log.Print(LogType.Error, $"Couldn't find free ID");
+            Log.Print(LogType.Error, "Couldn't find free ID");
             return 0;
         }
 

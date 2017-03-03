@@ -114,11 +114,8 @@ namespace RealmServer.Handlers
             session.Character.MapZ = handler.MapZ;
             
             await MainForm.Database.UpdateMovement(session.Character);
-            /*
+
             // If character is falling below the world
-            if (session.Character.MapZ < -500f)
-                //AllGraveYards.GoToNearestGraveyard(client.Character, false, true);
-                return;
 
             // Boarding transport
 
@@ -132,6 +129,7 @@ namespace RealmServer.Handlers
 
             // If character is moving
             // - Stop emotes if moving
+            session.Entity.SetUpdateField((int) UnitFields.UNIT_NPC_EMOTESTATE, 0);
             // - Stop casting
 
             // If character is turning
@@ -139,7 +137,6 @@ namespace RealmServer.Handlers
             // Movement time calculation
 
             // Send to nearby players
-            RealmServerSession.Sessions.FindAll(s => s != session).ForEach(s => s.SendPacket(new PsMovement(session, handler, code)));
 
             // They may slow the movement down so let's do them after the packet is sent
 

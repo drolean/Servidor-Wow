@@ -35,8 +35,8 @@ namespace RealmServer
             listView1.Columns.Add("Char", 120, HorizontalAlignment.Left);
             listView1.Columns.Add("Location", -2, HorizontalAlignment.Left);
 
-            Log.Print(LogType.RealmServer, $"World of Warcraft (Realm Server/World Server)");
-            Log.Print(LogType.RealmServer, $"Supported WoW Client 1.2.1");
+            Log.Print(LogType.RealmServer, "World of Warcraft (Realm Server/World Server)");
+            Log.Print(LogType.RealmServer, "Supported WoW Client 1.2.1");
             Log.Print(LogType.RealmServer, $"Version {Assembly.GetExecutingAssembly().GetName().Version}");
             Log.Print(LogType.RealmServer, $"Running on .NET Framework Version {Environment.Version}");
 
@@ -58,18 +58,18 @@ namespace RealmServer
 
             // 
             RealmServerRouter.AddHandler<CmsgAuthSession>(RealmCMD.CMSG_AUTH_SESSION, RealmServerHandler.OnAuthSession);
-            RealmServerRouter.AddHandler<CmsgPing>(RealmCMD.CMSG_PING, RealmServerHandler.OnPingPacket);
+            RealmServerRouter.AddHandler<CmsgPing>(RealmCMD.CMSG_PING, RealmServerHandler.OnPingPacket);                    // DONE
 
             // Character Handlers
-            RealmServerRouter.AddHandler(RealmCMD.CMSG_CHAR_ENUM, CharacterHandler.OnCharEnum); // DONE
-            RealmServerRouter.AddHandler<CmsgCharCreate>(RealmCMD.CMSG_CHAR_CREATE, CharacterHandler.OnCharCreate); // DONE
-            RealmServerRouter.AddHandler<CmsgCharRename>(RealmCMD.CMSG_CHAR_RENAME, CharacterHandler.OnCharRename); // DONE
-            RealmServerRouter.AddHandler<CmsgCharDelete>(RealmCMD.CMSG_CHAR_DELETE, CharacterHandler.OnCharDelete); //
+            RealmServerRouter.AddHandler(RealmCMD.CMSG_CHAR_ENUM, CharacterHandler.OnCharEnum);                             // DONE
+            RealmServerRouter.AddHandler<CmsgCharCreate>(RealmCMD.CMSG_CHAR_CREATE, CharacterHandler.OnCharCreate);         // DONE
+            RealmServerRouter.AddHandler<CmsgCharRename>(RealmCMD.CMSG_CHAR_RENAME, CharacterHandler.OnCharRename);         // DONE
+            RealmServerRouter.AddHandler<CmsgCharDelete>(RealmCMD.CMSG_CHAR_DELETE, CharacterHandler.OnCharDelete);         // DONE
             RealmServerRouter.AddHandler<CmsgPlayerLogin>(RealmCMD.CMSG_PLAYER_LOGIN, CharacterHandler.OnPlayerLogin);
             RealmServerRouter.AddHandler<CmsgUpdateAccountData>(RealmCMD.CMSG_UPDATE_ACCOUNT_DATA, CharacterHandler.OnUpdateAccountData);
-            RealmServerRouter.AddHandler(RealmCMD.CMSG_LOGOUT_REQUEST, CharacterHandler.OnLogoutRequest);
-            RealmServerRouter.AddHandler<PacketReader>(RealmCMD.CMSG_LOGOUT_CANCEL, CharacterHandler.OnLogoutCancel);
-            RealmServerRouter.AddHandler<PacketReader>(RealmCMD.CMSG_STANDSTATECHANGE, CharacterHandler.OnStandStateChange); 
+            RealmServerRouter.AddHandler(RealmCMD.CMSG_LOGOUT_REQUEST, CharacterHandler.OnLogoutRequest);                   // PARTIAL
+            RealmServerRouter.AddHandler<PacketReader>(RealmCMD.CMSG_LOGOUT_CANCEL, CharacterHandler.OnLogoutCancel);       // DONE
+            RealmServerRouter.AddHandler<PacketReader>(RealmCMD.CMSG_STANDSTATECHANGE, CharacterHandler.OnStandStateChange);// PARTIAL
 
             // Miscs Handlers
             RealmServerRouter.AddHandler<PacketReader>(RealmCMD.CMSG_NAME_QUERY, MiscHandler.OnNameQuery);
@@ -78,10 +78,10 @@ namespace RealmServer
             RealmServerRouter.AddHandler<PacketReader>(RealmCMD.CMSG_BATTLEFIELD_STATUS, MiscHandler.OnBattlefieldStatus);
             RealmServerRouter.AddHandler<PacketReader>(RealmCMD.CMSG_MEETINGSTONE_INFO, MiscHandler.OnMeetingstoneInfo);
             RealmServerRouter.AddHandler<PacketReader>(RealmCMD.CMSG_TEXT_EMOTE, MiscHandler.OnTextEmote);
-            RealmServerRouter.AddHandler<PacketReader>(RealmCMD.CMSG_SET_FACTION_ATWAR, MiscHandler.OnSetFactionAtwar); // DONE
-            RealmServerRouter.AddHandler<PacketReader>(RealmCMD.CMSG_SET_FACTION_INACTIVE, MiscHandler.OnSetFactionInactive); // DONE
-            RealmServerRouter.AddHandler<PacketReader>(RealmCMD.CMSG_SET_WATCHED_FACTION, MiscHandler.OnSetWatchedFaction); // DONE
-            RealmServerRouter.AddHandler<PacketReader>(RealmCMD.CMSG_COMPLETE_CINEMATIC, MiscHandler.OnCompleteCinematic); // DONE
+            RealmServerRouter.AddHandler<PacketReader>(RealmCMD.CMSG_SET_FACTION_ATWAR, MiscHandler.OnSetFactionAtwar);         // DONE
+            RealmServerRouter.AddHandler<PacketReader>(RealmCMD.CMSG_SET_FACTION_INACTIVE, MiscHandler.OnSetFactionInactive);   // DONE
+            RealmServerRouter.AddHandler<PacketReader>(RealmCMD.CMSG_SET_WATCHED_FACTION, MiscHandler.OnSetWatchedFaction);     // DONE
+            RealmServerRouter.AddHandler<PacketReader>(RealmCMD.CMSG_COMPLETE_CINEMATIC, MiscHandler.OnCompleteCinematic);      // DONE
             RealmServerRouter.AddHandler<PacketReader>(RealmCMD.CMSG_TUTORIAL_FLAG, MiscHandler.OnTutorialFlag);
             RealmServerRouter.AddHandler<PacketReader>(RealmCMD.CMSG_TUTORIAL_CLEAR, MiscHandler.OnTutorialClear);
             RealmServerRouter.AddHandler<PacketReader>(RealmCMD.CMSG_TUTORIAL_RESET, MiscHandler.OnTutorialReset);
@@ -144,8 +144,18 @@ namespace RealmServer
             // Spell Handler
             RealmServerRouter.AddHandler<PacketReader>(RealmCMD.CMSG_CAST_SPELL, SpellHandler.OnCastSpell);
 
+            // Nulled Packets
+            RealmServerRouter.AddHandler<PacketReader>(RealmCMD.CMSG_NEXT_CINEMATIC_CAMERA, OnNull); // DONE
+            RealmServerRouter.AddHandler<PacketReader>(RealmCMD.CMSG_FORCE_MOVE_ROOT_ACK, OnNull);   // DONE
+            RealmServerRouter.AddHandler<PacketReader>(RealmCMD.CMSG_FORCE_MOVE_UNROOT_ACK, OnNull); // DONE
+
             Log.Print(LogType.RealmServer,
                 $"Successfully started in {Time.GetMsTimeDiff(time, Time.GetMsTime()) / 1000}s");
+        }
+
+        private void OnNull(RealmServerSession session, PacketReader handler)
+        {
+            Log.Print(LogType.Debug, "Null Code");
         }
 
         public sealed override string Text
@@ -178,16 +188,19 @@ namespace RealmServer
 
         public readonly AreaTableReader AreaTableReader = new AreaTableReader();
         public static readonly CharStartOutfitReader CharacterOutfitReader = new CharStartOutfitReader();
-        public static readonly FactionReader FactionReader = new FactionReader();
         public static readonly ChrRacesReader ChrRacesReader = new ChrRacesReader();
+        public static readonly EmotesTextReader EmotesTextReader = new EmotesTextReader();
+        public static readonly FactionReader FactionReader = new FactionReader();
+        
 
         public async void DatabaseManager()
         {
-            Log.Print(LogType.Loading, $"Loading DBCs ......................... [OK]");
-            await CharacterOutfitReader.Load("CharStartOutfit.dbc");
+            Log.Print(LogType.Loading, "Loading DBCs ......................... [OK]");
             await AreaTableReader.Load("AreaTable.dbc");
-            await FactionReader.Load("Faction.dbc");
+            await CharacterOutfitReader.Load("CharStartOutfit.dbc");
             await ChrRacesReader.Load("ChrRaces.dbc");
+            await EmotesTextReader.Load("EmotesText.dbc");
+            await FactionReader.Load("Faction.dbc");
         }
     }
 }

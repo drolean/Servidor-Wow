@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using Common.Database;
@@ -408,7 +407,6 @@ namespace RealmServer.Handlers
     {
         public SmsgLogoutResponse(LogoutResponseCode code) : base(RealmCMD.SMSG_LOGOUT_RESPONSE)
         {
-            Write((UInt32) 0);
             Write((byte) code);
         }
     }
@@ -509,9 +507,50 @@ namespace RealmServer.Handlers
 
     #endregion
 
+    #region SMSG_FORCE_MOVE_ROOT
+    internal sealed class SmsgForceMoveRoot : PacketServer
+    {
+        public SmsgForceMoveRoot(int characterId) : base(RealmCMD.SMSG_FORCE_MOVE_ROOT)
+        {
+            this.WritePackedUInt64((ulong) characterId);
+            Write((uint) 0);
+        }
+    }
+    #endregion
+
+
+    #region SMSG_FORCE_MOVE_UNROOT
+    internal sealed class SmsgForceMoveUnroot : PacketServer
+    {
+        public SmsgForceMoveUnroot(int characterId) : base(RealmCMD.SMSG_FORCE_MOVE_UNROOT)
+        {
+            this.WritePackedUInt64((ulong)characterId);
+            Write((uint)0);
+        }
+    }
+    #endregion
+
     internal class CharacterHandler
     {
+        #region Logout
         private static Dictionary<RealmServerSession, DateTime> _logoutQueue;
+
+        private static void Update(int sec)
+        {
+            while (true)
+            {
+                foreach (KeyValuePair<RealmServerSession, DateTime> entry in _logoutQueue.ToArray())
+                {
+                    if (DateTime.Now.Subtract(entry.Value).Seconds < sec) continue;
+                    entry.Key.SendPacket(new SmsgLogoutComplete());
+                    _logoutQueue.Remove(entry.Key);
+                }
+
+                Thread.Sleep(1000);
+            }
+            // ReSharper disable once FunctionNeverReturns
+        }
+        #endregion
 
         internal static void OnCharEnum(RealmServerSession session, byte[] data)
         {
@@ -587,8 +626,8 @@ namespace RealmServer.Handlers
             // Part One
             session.SendPacket(new SmsgLoginVerifyWorld(session.Character)); // DONE 
             session.SendPacket(new SmsgAccountDataTimes()); // DONE
-            session.SendMessageMotd($"Welcome to World of Warcraft."); // DONE
-            session.SendMessageMotd($"Servidor do caralho vai curintia ...."); // DONE
+            session.SendMessageMotd("Welcome to World of Warcraft."); // DONE
+            session.SendMessageMotd("Servidor do caralho vai curintia ...."); // DONE
 
             // Part Two
             session.SendPacket(new SmsgSetRestStart());
@@ -664,67 +703,64 @@ namespace RealmServer.Handlers
             // Nao Implementado ????
         }
 
+        // PARTIAL
         internal static void OnLogoutRequest(RealmServerSession session, byte[] data)
         {
-            // Lose Invisibility
-
-            // ???? Can't log out in combat
-            //if (session.Entity.IsInCombat)
-            //{
-            //session.SendPacket(new SmsgLogoutResponse(LogoutResponseCode.LOGOUT_RESPONSE_DENIED));
-            //return;
-            //}
-
-            // Initialize packet
-            // - Disable Turn
-            // - StandState -> Sit
-            // - Send packet
-
-            // Let the client to exit
-
-            // While logout, the player can't move
-
-            // If the player is resting, then it's instant logout
-
             _logoutQueue = new Dictionary<RealmServerSession, DateTime>();
-
             if (_logoutQueue.ContainsKey(session)) _logoutQueue.Remove(session);
 
-            session.SendPacket(new SmsgLogoutResponse(LogoutResponseCode.LOGOUT_RESPONSE_ACCEPTED));
-            _logoutQueue.Add(session, DateTime.Now);
+            // Lose Invisibility
 
-            Thread thread = new Thread(Update);
+            // ???? Can't log out in combat         
+
+            // DONE: Disable Movement
+            session.Entity.SetUpdateField((int) UnitFields.UNIT_FIELD_FLAGS, UnitFlags.UNIT_FLAG_STUNTED);
+
+            // DONE: StandState -> Sit
+            session.Entity.SetUpdateField((int) UnitFields.UNIT_FIELD_BYTES_1, StandStates.STANDSTATE_SIT);
+            session.SendPacket(new SmsgStandstateUpdate((byte) StandStates.STANDSTATE_SIT));
+
+            // DONE: Send Logout 
+            session.SendPacket(new SmsgLogoutResponse(LogoutResponseCode.LOGOUT_RESPONSE_ACCEPTED));
+
+            // DONE: While logout, the player can't move
+            session.SendPacket(new SmsgForceMoveRoot(session.Character.Id));
+
+            // If the player is resting, then it's instant logout
+            _logoutQueue.Add(session, DateTime.Now);
+            Thread thread = new Thread(() => Update(20));
             thread.Start();
         }
 
-        private static void Update()
-        {
-            while (true)
-            {
-                foreach (KeyValuePair<RealmServerSession, DateTime> entry in _logoutQueue.ToArray())
-                {
-                    if (DateTime.Now.Subtract(entry.Value).Seconds < 1) continue;
-                    entry.Key.SendPacket(new SmsgLogoutComplete());
-                    _logoutQueue.Remove(entry.Key);
-                }
-
-                Thread.Sleep(1000);
-            }
-            // ReSharper disable once FunctionNeverReturns
-        }
-
+        // DONE
         internal static void OnLogoutCancel(RealmServerSession session, PacketReader handler)
         {
+            // Remove from logout queue
             _logoutQueue.Remove(session);
+
+            // DONE: Enable Turn
+            session.Entity.SetUpdateField((int) UnitFields.UNIT_FIELD_FLAGS, UnitFlags.UNIT_FLAG_NONE);
+
+            // DONE: StandState -> Stand
+            session.Entity.SetUpdateField((int) UnitFields.UNIT_FIELD_BYTES_1, StandStates.STANDSTATE_STAND);
+            session.SendPacket(new SmsgStandstateUpdate((byte) StandStates.STANDSTATE_STAND));
+
+            // DONE: Stop client logout
             session.SendPacket(new SmsgLogoutCancelAck());
+
+            // DONE: Enable moving
+            session.SendPacket(new SmsgForceMoveUnroot(session.Character.Id));
         }
 
+        // PARTIAL
         internal static void OnStandStateChange(RealmServerSession session, PacketReader handler)
         {
             // Precisa verificar ao sentar e levantar quando vai sentar de novo ele nao faz nada
             byte standState = handler.ReadByte();
-            //client.Character.WatchedFactionIndex = faction
-            //session.Entity.standState = standState;
+
+            if (standState == (int) StandStates.STANDSTATE_STAND)
+                //client.Character.RemoveAurasByInterruptFlag(SpellAuraInterruptFlags.AURA_INTERRUPT_FLAG_NOT_SEATED);
+
             session.Entity.SetUpdateField((int) UnitFields.UNIT_FIELD_BYTES_1, standState);
             session.SendPacket(new SmsgStandstateUpdate(standState));
         }

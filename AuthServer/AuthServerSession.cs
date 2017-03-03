@@ -153,7 +153,7 @@ namespace AuthServer
             string buffer = "";
 
             if (client == null)
-                Log.Print($"DEBUG: Packet Dump");
+                Log.Print("DEBUG: Packet Dump");
             else
                 Log.Print($"[{client.ConnectionSocket.RemoteEndPoint}] DEBUG: Packet Dump");
 

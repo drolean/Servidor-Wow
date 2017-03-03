@@ -1,7 +1,7 @@
 ﻿namespace Common.Globals
 {
 
-    public enum StandStates : byte
+    public enum StandStates : int
     {
         STANDSTATE_STAND = 0,
         STANDSTATE_SIT = 1,
