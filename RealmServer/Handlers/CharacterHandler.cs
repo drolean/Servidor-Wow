@@ -518,7 +518,6 @@ namespace RealmServer.Handlers
     }
     #endregion
 
-
     #region SMSG_FORCE_MOVE_UNROOT
     internal sealed class SmsgForceMoveUnroot : PacketServer
     {
@@ -544,6 +543,7 @@ namespace RealmServer.Handlers
                     if (DateTime.Now.Subtract(entry.Value).Seconds < sec) continue;
                     entry.Key.SendPacket(new SmsgLogoutComplete());
                     _logoutQueue.Remove(entry.Key);
+                    EntityManager.DispatchOnPlayerDespawn(entry.Key.Entity);
                 }
 
                 Thread.Sleep(1000);
@@ -651,10 +651,11 @@ namespace RealmServer.Handlers
             // Spawn Player
             session.SendPacket(new SmsgInitWorldStates(session.Character));
             session.SendPacket(UpdateObject.CreateOwnCharacterUpdate(session.Character, out session.Entity));
-            EntityManager.DispatchOnPlayerSpawn(session.Entity);
 
             // Nao sei
             session.Entity.Session = session;
+
+            EntityManager.DispatchOnPlayerSpawn(session.Entity);
 
             /*          
             // Cast talents and racial passive spells

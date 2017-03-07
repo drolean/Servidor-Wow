@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using Common.Database.Dbc;
 using Common.Database.Tables;
 using Common.Globals;
@@ -6,6 +7,27 @@ using RealmServer.Helpers;
 
 namespace RealmServer.Game.Entitys
 {
+    public abstract class UpdateBlock
+    {
+        public string Info { get; internal set; }
+        public byte[] Data { get; internal set; }
+
+        internal BinaryWriter Writer;
+
+        protected UpdateBlock()
+        {
+            Writer = new BinaryWriter(new MemoryStream());
+        }
+
+        public void Build()
+        {
+            BuildData();
+            Data = (Writer.BaseStream as MemoryStream)?.ToArray();
+        }
+
+        public abstract void BuildData();
+    }
+
     public class PlayerEntity : UnitEntity
     {
         public override int DataLength => (int) PlayerFields.PLAYER_END - 0x4;
@@ -18,20 +40,28 @@ namespace RealmServer.Game.Entitys
         public override string Name => Character.name;
 
         public RealmServerSession Session { get; internal set; }
-        public List<PlayerEntity> KnownPlayers { get; internal set; }
-        public List<GameObjectEntity> KnownGameObjects { get; internal set; }
+
+        // Know Lists
+        public List<PlayerEntity> KnownPlayers { get; set; }
+        public List<GameObjectEntity> KnownGameObjects { get; set; }
+        public List<UnitEntity> KnownUnits { get; set; }
+
+        //
+        public List<ObjectEntity> OutOfRangeEntitys { get; set; }
+        public List<UpdateBlock> UpdateBlocks { get; set; }
 
         public PlayerEntity(Characters character)
             : base(new ObjectGuid((uint) character.Id, TypeId.TypeidPlayer, HighGuid.HighguidMoTransport))
         {
             /* Inicializadores */
+            Character = character;
             KnownPlayers = new List<PlayerEntity>();
             KnownGameObjects = new List<GameObjectEntity>();
+            KnownUnits = new List<UnitEntity>();
 
             ChrRaces chrRaces = MainForm.ChrRacesReader.GetData(character.race);
 
             /* Definindo Character */
-            Character = character;
             Model = (int) CharacterHelper.GetRaceModel(character.race, character.gender);
             ModelNative = (int) CharacterHelper.GetRaceModel(character.race, character.gender);
             Scale = CharacterHelper.GetScale(character.race, character.gender);

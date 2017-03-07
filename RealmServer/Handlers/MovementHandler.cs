@@ -112,7 +112,8 @@ namespace RealmServer.Handlers
             session.Character.MapX = handler.MapX;
             session.Character.MapY = handler.MapY;
             session.Character.MapZ = handler.MapZ;
-            
+            session.Character.MapO = handler.MapR;
+
             await MainForm.Database.UpdateMovement(session.Character);
 
             // If character is falling below the world
@@ -150,6 +151,8 @@ namespace RealmServer.Handlers
                 Aggro range
                 Creatures that are following you will have a more smooth movement
              */
+            RealmServerSession.Sessions.FindAll(s => s != session)
+                .ForEach(s => s.SendPacket(new PsMovement(session, handler, code)));
         }
 
         internal static void OnMoveHeartbeat(RealmServerSession session, PacketReader handler)

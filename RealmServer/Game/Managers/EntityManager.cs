@@ -15,7 +15,7 @@ namespace RealmServer.Game.Managers
             OnPlayerSpawn?.Invoke(entity);
         }
 
-        private static void DispatchOnPlayerDespawn(PlayerEntity playerEntity)
+        internal static void DispatchOnPlayerDespawn(PlayerEntity playerEntity)
         {
             OnPlayerDespawn?.Invoke(playerEntity);
         }
@@ -24,7 +24,8 @@ namespace RealmServer.Game.Managers
         {
             return PlayerManager.Players.FindAll(p => p.KnownPlayers.Contains(playerEntity));
         }
-        private static List<RealmServerSession> SessionsWhoKnow(PlayerEntity playerEntity, bool includeSelf = false)
+
+        internal static List<RealmServerSession> SessionsWhoKnow(PlayerEntity playerEntity, bool includeSelf = false)
         {
             List<RealmServerSession> sessions = PlayersWhoKnow(playerEntity).ConvertAll(p => p.Session);
 
