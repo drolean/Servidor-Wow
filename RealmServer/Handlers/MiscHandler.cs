@@ -46,6 +46,7 @@ namespace RealmServer.Handlers
             Write((uint) 0xff);
             Write((uint) 1);
             Write((byte) 0);
+            Console.WriteLine($@"SmsgTextEmote -> {textId}");
         }
     }
     #endregion
@@ -114,9 +115,7 @@ namespace RealmServer.Handlers
             // DONE: Send Emote animation
             var checkEmote = MainForm.EmotesTextReader.GetData((int) textEmote);
             if (checkEmote != null)
-            {
                 session.Entity.SetUpdateField((int) UnitFields.UNIT_NPC_EMOTESTATE, checkEmote.EmoteId);
-            }           
 
             // DONE: Send Packet
             session.SendPacket(new SmsgTextEmote(session.Character.Id, textEmote, (int) unk));
@@ -131,7 +130,7 @@ namespace RealmServer.Handlers
         internal static void OnTutorialClear(RealmServerSession session, PacketReader handler)
         {
             // Aqui seta como feito tutorial
-            Console.WriteLine("Tutoriais Feitos");
+            Console.WriteLine(@"Tutoriais Feitos");
         }
 
         internal static void OnTutorialFlag(RealmServerSession session, PacketReader handler)
@@ -144,7 +143,7 @@ namespace RealmServer.Handlers
 
         internal static void OnTutorialReset(RealmServerSession session, PacketReader handler)
         {
-            Console.WriteLine("Tutoriais Resetados");
+            Console.WriteLine(@"Tutoriais Resetados");
         }
 
         // [DONE] Set Faction AT War

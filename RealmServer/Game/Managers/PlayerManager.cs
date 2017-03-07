@@ -82,20 +82,13 @@ namespace RealmServer.Game.Managers
         private static void DespawnPlayer(PlayerEntity remote, PlayerEntity playerEntity)
         {
             List<ObjectEntity> despawnPlayer = new List<ObjectEntity> { playerEntity };
-
-            // Should be sending playerEntity entityEntity
             remote.Session.SendPacket(UpdateObject.CreateOutOfRangeUpdate(despawnPlayer));
-
-            // Add it to known players
             remote.KnownPlayers.Remove(playerEntity);
         }
 
         private static void SpawnPlayer(PlayerEntity remote, PlayerEntity playerEntity)
         {
-            // Should be sending playerEntity entityEntity
             remote.Session.SendPacket(UpdateObject.CreateCharacterUpdate(playerEntity.Character));
-
-            // Add it to known players
             remote.KnownPlayers.Add(playerEntity);
         }
 

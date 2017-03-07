@@ -7,26 +7,6 @@ using RealmServer.Helpers;
 
 namespace RealmServer.Game.Entitys
 {
-    public abstract class UpdateBlock
-    {
-        public string Info { get; internal set; }
-        public byte[] Data { get; internal set; }
-
-        internal BinaryWriter Writer;
-
-        protected UpdateBlock()
-        {
-            Writer = new BinaryWriter(new MemoryStream());
-        }
-
-        public void Build()
-        {
-            BuildData();
-            Data = (Writer.BaseStream as MemoryStream)?.ToArray();
-        }
-
-        public abstract void BuildData();
-    }
 
     public class PlayerEntity : UnitEntity
     {
@@ -47,9 +27,6 @@ namespace RealmServer.Game.Entitys
         public List<UnitEntity> KnownUnits { get; set; }
 
         //
-        public List<ObjectEntity> OutOfRangeEntitys { get; set; }
-        public List<UpdateBlock> UpdateBlocks { get; set; }
-
         public PlayerEntity(Characters character)
             : base(new ObjectGuid((uint) character.Id, TypeId.TypeidPlayer, HighGuid.HighguidMoTransport))
         {

@@ -230,6 +230,7 @@ namespace RealmServer.Handlers
                 case ChatMsgs.CHAT_MSG_YELL:
                 case ChatMsgs.CHAT_MSG_EMOTE:
                     session.SendPacket(new SmsgMessagechat(msgType, ChatMessageLanguage.LANG_UNIVERSAL, (ulong) session.Character.Id, message));
+                    session.Entity.KnownPlayers.ForEach(s => s.Session.SendPacket(new SmsgMessagechat(msgType, ChatMessageLanguage.LANG_UNIVERSAL, (ulong)session.Character.Id, message)));
                     break;
                 default:
                     Console.WriteLine($@"veio aqui algo [{msgType}]");
