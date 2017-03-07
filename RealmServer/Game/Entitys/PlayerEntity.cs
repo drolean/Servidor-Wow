@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Common.Database;
+﻿using System.Collections.Generic;
 using Common.Database.Dbc;
 using Common.Database.Tables;
 using Common.Globals;
@@ -26,6 +24,10 @@ namespace RealmServer.Game.Entitys
         public PlayerEntity(Characters character)
             : base(new ObjectGuid((uint) character.Id, TypeId.TypeidPlayer, HighGuid.HighguidMoTransport))
         {
+            /* Inicializadores */
+            KnownPlayers = new List<PlayerEntity>();
+            KnownGameObjects = new List<GameObjectEntity>();
+
             ChrRaces chrRaces = MainForm.ChrRacesReader.GetData(character.race);
 
             /* Definindo Character */

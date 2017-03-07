@@ -45,7 +45,6 @@ namespace RealmServer.Game.GameObjects
             // Spawning && Despawning
             foreach (PlayerEntity player in PlayerManager.Players)
             {
-                //Console.WriteLine($"algo Update [ID={player.Character.MapId}] => [Zone={player.Character.MapZone}] => {MainForm.AreaTableReader.GetArea(player.Character.MapZone).AreaName}");
                 foreach (T entity in Entitys)
                 {
                     if (InRange(player, entity, 1000) && !PlayerKnowsEntity(player, entity)) // DISTANCE
@@ -66,7 +65,6 @@ namespace RealmServer.Game.GameObjects
         internal virtual void SpawnEntityForPlayer(PlayerEntity playerEntity, T entity)
         {
             EntityListFromPlayer(playerEntity).Add(entity);
-
         }
 
         internal bool PlayerKnowsEntity(PlayerEntity playerEntity, T entity)

@@ -8,7 +8,6 @@ namespace Common.Database.Dbc
 {
 
     #region AreaTable.dbc
-
     public class AreaTableReader : DbcReader<AreaTable>
     {
         public AreaTable GetArea(int id)
@@ -232,4 +231,29 @@ namespace Common.Database.Dbc
     }
     #endregion
 
+    #region Map.dbc
+    public class MapReader : DbcReader<Map>
+    {
+        public Map GetArea(int id)
+        {
+            return RecordDataIndexed.Values.ToArray().FirstOrDefault(a => a.MapId == id);
+        }
+    }
+
+    public class Map : DbcRecordBase
+    {
+        public int MapId;
+        public string MapName;
+        public string MapString;
+
+        public override int Read()
+        {
+            MapId = GetInt32(0);
+            MapName = GetString(1);
+            MapString = GetString(4);
+
+            return MapId;
+        }
+    }
+    #endregion
 }

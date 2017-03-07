@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using Common.Database.Tables;
+using Common.Database.Xml;
 using Common.Globals;
 using Common.Helpers;
 using Common.Network;
@@ -63,6 +64,40 @@ namespace RealmServer.Game
             return new UpdateObject(new List<byte[]> {((MemoryStream) writer.BaseStream).ToArray()});
         }
 
+        internal static UpdateObject CreateGameObject(zoneObjeto gameObject)
+        {
+            BinaryWriter writer = new BinaryWriter(new MemoryStream());
+            writer.Write((byte) ObjectUpdateType.UPDATETYPE_CREATE_OBJECT);
+
+            GameObjectEntity entity = new GameObjectEntity(gameObject);
+
+            writer.WritePackedUInt64(entity.ObjectGuid.RawGuid);
+
+            writer.Write((byte) TypeId.TypeidGameobject);
+
+            ObjectUpdateFlag updateFlags = ObjectUpdateFlag.UpdateflagTransport |
+                                           ObjectUpdateFlag.UpdateflagAll |
+                                           ObjectUpdateFlag.UpdateflagHasPosition;
+
+            writer.Write((byte) updateFlags);
+
+            // Position
+            writer.Write(gameObject.map.mapX);
+            writer.Write(gameObject.map.mapY);
+            writer.Write(gameObject.map.mapZ);
+
+            writer.Write((float) 0); // R
+
+            writer.Write((uint) 0x1); // Unkown... time?
+            writer.Write((uint) 0); // Unkown... time?
+
+
+            entity.WriteUpdateFields(writer);
+
+            return new UpdateObject(new List<byte[]> {(writer.BaseStream as MemoryStream)?.ToArray()}, 1);
+        }
+
+        // Update Values Player
         internal static PacketServer UpdateValues(PlayerEntity player)
         {
             BinaryWriter writer = new BinaryWriter(new MemoryStream());

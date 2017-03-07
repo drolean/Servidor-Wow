@@ -8,68 +8,61 @@ namespace Common.Database.Xml
     public class ObjectsXml
     {
         /// <remarks/>
-        [XmlElement("object")]
-        public objectsObject[] @object { get; set; }
+        [XmlElement("objeto")]
+        public zoneObjeto[] objeto { get; set; }
     }
 
     /// <remarks/>
     [XmlType(AnonymousType = true)]
-    public class objectsObject
+    public class zoneObjeto
     {
         /// <remarks/>
-        public ushort entry { get; set; }
-
-        /// <remarks/>
-        public objectsObjectMap map { get; set; }
-
-        /// <remarks/>
-        public objectsObjectConfig config { get; set; }
-
-        /// <remarks/>
-        [XmlArray]
-        [XmlArrayItem("rotation", IsNullable = false)]
-        public byte[] rotations { get; set; }
+        public zoneObjetoMap map { get; set; }
 
         /// <remarks/>
         [XmlAttribute]
-        public byte id { get; set; }
+        public uint id { get; set; }
+
+        /// <remarks/>
+        [XmlAttribute]
+        public byte entry { get; set; }
+
+        /// <remarks/>
+        [XmlAttribute]
+        public string name { get; set; }
+
+        /// <remarks/>
+        [XmlAttribute]
+        public byte type { get; set; }
+
+        /// <remarks/>
+        [XmlAttribute]
+        public byte model { get; set; }
+
+        /// <remarks/>
+        [XmlAttribute]
+        public byte flags { get; set; }
     }
 
     /// <remarks/>
     [XmlType(AnonymousType = true)]
-    public class objectsObjectMap
+    public class zoneObjetoMap
     {
         /// <remarks/>
         [XmlAttribute]
-        public string x { get; set; }
+        public float mapX { get; set; }
 
         /// <remarks/>
         [XmlAttribute]
-        public string y { get; set; }
+        public float mapY { get; set; }
 
         /// <remarks/>
         [XmlAttribute]
-        public string z { get; set; }
+        public float mapZ { get; set; }
 
         /// <remarks/>
         [XmlAttribute]
-        public string o { get; set; }
+        public byte mapO { get; set; }
     }
 
-    /// <remarks/>
-    [XmlType(AnonymousType = true)]
-    public class objectsObjectConfig
-    {
-        /// <remarks/>
-        [XmlAttribute]
-        public string spawntime { get; set; }
-
-        /// <remarks/>
-        [XmlAttribute]
-        public string animprogress { get; set; }
-
-        /// <remarks/>
-        [XmlAttribute]
-        public string state { get; set; }
-    }
 }

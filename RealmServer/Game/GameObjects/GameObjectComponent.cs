@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using Common.Database.Xml;
 using RealmServer.Game.Entitys;
 
 namespace RealmServer.Game.GameObjects
@@ -7,22 +9,22 @@ namespace RealmServer.Game.GameObjects
     {
         internal override void GenerateEntitysForPlayer(PlayerEntity playerEntity)
         {
-            /*
-            List<WorldGameObjects> gameObjects = Main.Database.GetGameObjects(playerEntity, 1000); // DISTANCE
+            Console.WriteLine(@"GenerateEntitysForPlayer");
+            List<zoneObjeto> gameObjects = MainForm.Database.GetGameObjects(playerEntity, 1000); // DISTANCE
 
             gameObjects.ForEach(closeGo =>
             {
-                AddEntityToWorld(new GameObjectEntity(closeGo));
+                Console.WriteLine(closeGo.id);
+                //AddEntityToWorld(new GameObjectEntity(closeGo));
+                playerEntity.Session.SendPacket(UpdateObject.CreateGameObject(closeGo));
             });
-            */
         }
 
         internal override bool InRange(PlayerEntity playerEntity, GameObjectEntity entity, float range)
         {
             double distance = GetDistance(playerEntity.Character.MapX, playerEntity.Character.MapY,
                 playerEntity.Character.MapX, playerEntity.Character.MapY);
-            //entity.GameObjects.mapX, entity.GameObjects.mapY);
-            return distance < 30; // DISTANCE
+            return distance < 30;
         }
 
         internal override List<GameObjectEntity> EntityListFromPlayer(PlayerEntity playerEntity)

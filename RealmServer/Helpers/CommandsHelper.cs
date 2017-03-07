@@ -9,12 +9,25 @@ namespace RealmServer.Helpers
     internal class CommandsHelper
     {
         public static int aba = 0;
-        public static UnitFlags value = UnitFlags.UNIT_FLAG_NONE;
+        public static UnitFlags Value = UnitFlags.UNIT_FLAG_NONE;
         public CommandsHelper(RealmServerSession session, string message)
         {
             string[] splitMessage = message.Split(' ');
 
             Console.WriteLine($@"[Comando]: {splitMessage[0].ToLower()}");
+
+            if (splitMessage[0].ToLower() == "gps")
+            {
+                session.SendMessageMotd(
+                    $"MapX: {session.Character.MapX} = MapY: {session.Character.MapY} = MapZ: {session.Character.MapZ} = MapO: {session.Character.MapO}");
+                Console.WriteLine($@"MapX: {session.Character.MapX} = MapY: {session.Character.MapY} = MapZ: {session.Character.MapZ} = MapO: {session.Character.MapO}");
+                Console.WriteLine($@"----------------------------");
+                Console.WriteLine($@"Players: {session.Entity.KnownPlayers.Count}");
+                Console.WriteLine($@"Objects: {session.Entity.KnownGameObjects.Count} ");
+                // Creatures
+                // Corpses
+                // You are seen by:
+            }
 
             if (splitMessage[0].ToLower() == "a")
             {
@@ -31,8 +44,8 @@ namespace RealmServer.Helpers
             {
                 // Disable Movement
                 session.Entity.SetUpdateField((int)UnitFields.UNIT_FIELD_FLAGS, UnitFlags.UNIT_FLAG_STUNTED); // UNIT_FLAG_STUNTED
-                Console.WriteLine($@"Atual: [{value}] NEW {Enum.GetValues(typeof(UnitFlags)).Cast<UnitFlags>().SkipWhile(e => e != value).Skip(1).First()}");
-                value = Enum.GetValues(typeof(UnitFlags)).Cast<UnitFlags>().SkipWhile(e => e != value).Skip(1).First();
+                Console.WriteLine($@"Atual: [{Value}] NEW {Enum.GetValues(typeof(UnitFlags)).Cast<UnitFlags>().SkipWhile(e => e != Value).Skip(1).First()}");
+                Value = Enum.GetValues(typeof(UnitFlags)).Cast<UnitFlags>().SkipWhile(e => e != Value).Skip(1).First();
 
                 // StandState -> Sit 
                 session.Entity.SetUpdateField((int) UnitFields.UNIT_FIELD_BYTES_1, 1); //StandStates.STANDSTATE_SIT);

@@ -13,8 +13,7 @@ namespace Common.Database
     {
         public static ItemsXml ItemsXml { get; private set; }
         public static RacesXml RacesXml { get; private set; }
-        public static ObjectsXml[] ObjectsXml { get; set; }
-        public static string[] Files { get; private set; }
+        public static ObjectsXml ObjectsAzeroth { get; set; }
 
         /// <summary>
         /// 
@@ -41,21 +40,12 @@ namespace Common.Database
                 readerRaces.Close();
 
                 // Game Objects
-                if (Directory.Exists("xml/world"))
-                {
-                    Files = Directory.GetFiles("xml/world", @"*.xml", SearchOption.TopDirectoryOnly);
-
-                    foreach (var VARIABLE in Files)
-                    {
-                        XmlSerializer serielizerObjects = new XmlSerializer(typeof(ObjectsXml));
-                        StreamReader readerObjcets = new StreamReader(VARIABLE);
-                        ObjectsXml = serializerRaces.Deserialize(readerRaces) as ObjectsXml[];
-                        if (ObjectsXml != null)
-                            Log.Print(LogType.Loading, $"=_ Races Loaded: {ObjectsXml.Count()}");
-                        readerObjcets.Close();
-                    }
-                }
-
+                XmlSerializer serializerObjects = new XmlSerializer(typeof(ObjectsXml));
+                StreamReader readerObjects = new StreamReader("xml/world/0-azeroth.xml");
+                ObjectsAzeroth = serializerObjects.Deserialize(readerObjects) as ObjectsXml;
+                //if (ObjectsAzeroth != null)
+                    //Log.Print(LogType.Loading, $"=_ Azeroth Loaded: [Spawn: {ObjectsAzeroth.creature.Length} / Objects: {ObjectsAzeroth.objeto}]");
+                readerObjects.Close();
             }
             catch (Exception e)
             {

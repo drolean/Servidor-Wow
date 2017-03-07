@@ -5,7 +5,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Common.Database;
 using Common.Database.Tables;
+using Common.Database.Xml;
 using Common.Globals;
+using RealmServer.Game.Entitys;
 using RealmServer.Handlers;
 using Shaolinq;
 using RealmServer.Helpers;
@@ -15,6 +17,15 @@ namespace RealmServer
     public class RealmServerDatabase : DatabaseModel<Models>
     {
         internal static CharacterHelper Helper { get; set; }
+
+        internal List<zoneObjeto> GetGameObjects(PlayerEntity entity, float radius)
+        {
+            //79486470,690857
+            Console.WriteLine($"GetGameObjects: [{radius}] => {Math.Pow(entity.Character.MapX - entity.Character.MapY, 2)}");
+            return
+                XmlReader.ObjectsAzeroth.objeto.Where(
+                    a => a.id == 31000001).ToList();
+        }
 
         /// <summary>
         /// Get account based on login

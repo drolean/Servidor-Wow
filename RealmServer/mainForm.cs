@@ -193,7 +193,7 @@ namespace RealmServer
         public static readonly ChrRacesReader ChrRacesReader = new ChrRacesReader();
         public static readonly EmotesTextReader EmotesTextReader = new EmotesTextReader();
         public static readonly FactionReader FactionReader = new FactionReader();
-        
+        public static readonly MapReader MapReader = new MapReader();
 
         public async void DatabaseManager()
         {
@@ -203,6 +203,7 @@ namespace RealmServer
             await ChrRacesReader.Load("ChrRaces.dbc");
             await EmotesTextReader.Load("EmotesText.dbc");
             await FactionReader.Load("Faction.dbc");
+            await MapReader.Load("Map.dbc");
         }
     }
 }
