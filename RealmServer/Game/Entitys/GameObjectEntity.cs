@@ -8,22 +8,26 @@ namespace RealmServer.Game.Entitys
         public TypeId TypeId => TypeId.TypeidGameobject;
         public override int DataLength => (int)GameObjectFields.GAMEOBJECT_END;
 
+        public zoneObjeto GameObjects { get; set; }
+
         public GameObjectEntity(zoneObjeto zoneObjeto) : base(new ObjectGuid(zoneObjeto.id, TypeId.TypeidGameobject, HighGuid.HighguidGameobject))
         {
-            SetUpdateField((int) ObjectFields.OBJECT_FIELD_TYPE, 0x21);
-            SetUpdateField((int) ObjectFields.OBJECT_FIELD_ENTRY, (byte) zoneObjeto.entry);
-            SetUpdateField((int) ObjectFields.OBJECT_FIELD_SCALE_X, 1);
-            SetUpdateField((int) GameObjectFields.GAMEOBJECT_DISPLAYID, zoneObjeto.entry);
+            GameObjects = zoneObjeto;
 
-            SetUpdateField((int) GameObjectFields.GAMEOBJECT_FLAGS, (int)zoneObjeto.flags);
-            SetUpdateField((int) GameObjectFields.GAMEOBJECT_TYPE_ID, zoneObjeto.type);
+            SetUpdateField((int) ObjectFields.OBJECT_FIELD_TYPE, 0x21);
+            SetUpdateField((int) ObjectFields.OBJECT_FIELD_ENTRY, (byte) 1);
+            SetUpdateField((int) ObjectFields.OBJECT_FIELD_SCALE_X, 1);
+            SetUpdateField((int) GameObjectFields.GAMEOBJECT_DISPLAYID, 31); //zoneObjeto.entry);
+
+            SetUpdateField((int) GameObjectFields.GAMEOBJECT_FLAGS, 00); //(int)zoneObjeto.flags);
+            SetUpdateField((int) GameObjectFields.GAMEOBJECT_TYPE_ID, 2); //zoneObjeto.type);
 
             SetUpdateField((int) GameObjectFields.GAMEOBJECT_POS_X, zoneObjeto.map.mapX);
             SetUpdateField((int) GameObjectFields.GAMEOBJECT_POS_Y, zoneObjeto.map.mapY);
             SetUpdateField((int) GameObjectFields.GAMEOBJECT_POS_Z, zoneObjeto.map.mapZ);
             SetUpdateField((int) GameObjectFields.GAMEOBJECT_FACING, zoneObjeto.map.mapO);
 
-            //SetUpdateField((int) GameObjectFields.GAMEOBJECT_DYN_FLAGS, zoneObjeto.type);
+            SetUpdateField((int) GameObjectFields.GAMEOBJECT_DYN_FLAGS, 2); //zoneObjeto.type);
 
             Console.WriteLine($@"=> Adicionado Objeto [{zoneObjeto.name}] => [{(GameObjectType) zoneObjeto.type}]");
         }

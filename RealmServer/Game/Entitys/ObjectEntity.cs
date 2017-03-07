@@ -1,6 +1,4 @@
-﻿using Common.Globals;
-
-namespace RealmServer.Game.Entitys
+﻿namespace RealmServer.Game.Entitys
 {
     public class ObjectEntity : BaseEntity
     {

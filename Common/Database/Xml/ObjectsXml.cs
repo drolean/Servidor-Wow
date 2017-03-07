@@ -62,7 +62,7 @@ namespace Common.Database.Xml
 
         /// <remarks/>
         [XmlAttribute]
-        public byte mapO { get; set; }
+        public float mapO { get; set; }
     }
 
 }

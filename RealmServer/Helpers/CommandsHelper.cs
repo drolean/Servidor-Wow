@@ -8,7 +8,7 @@ namespace RealmServer.Helpers
 {
     internal class CommandsHelper
     {
-        public static int aba = 0;
+        public static int Aba;
         public static UnitFlags Value = UnitFlags.UNIT_FLAG_NONE;
         public CommandsHelper(RealmServerSession session, string message)
         {
@@ -23,7 +23,7 @@ namespace RealmServer.Helpers
                 Console.WriteLine($@"MapX: {session.Character.MapX} = MapY: {session.Character.MapY} = MapZ: {session.Character.MapZ} = MapO: {session.Character.MapO}");
                 Console.WriteLine($@"----------------------------");
                 Console.WriteLine($@"Players: {session.Entity.KnownPlayers.Count}");
-                Console.WriteLine($@"Objects: {session.Entity.KnownGameObjects.Count} ");
+                //Console.WriteLine($@"Objects: {session.Entity.KnownGameObjects.Count} ");
                 // Creatures
                 // Corpses
                 // You are seen by:
@@ -52,10 +52,10 @@ namespace RealmServer.Helpers
 
                 Thread.Sleep(1000);
 
-                session.SendPacket(new SmsgStandstateUpdate((byte) 1));
+                session.SendPacket(new SmsgStandstateUpdate(1));
 
-                Console.WriteLine(aba);
-                aba++;
+                Console.WriteLine(Aba);
+                Aba++;
             }
 
             if (splitMessage[0].ToLower() == "emote")
@@ -91,9 +91,6 @@ namespace RealmServer.Helpers
                     case "e":
                         session.Entity.SetUpdateField((int) UnitFields.UNIT_NPC_EMOTESTATE,
                             (byte) int.Parse(attributeValue));
-                        break;
-
-                    default:
                         break;
                 }
             }

@@ -9,8 +9,6 @@ namespace RealmServer.Game.Managers
 {
     internal class PlayerManager
     {
-        public static int DistanciaFoda = 20;
-
         public static List<PlayerEntity> Players { get; private set; }
 
         internal static void Boot()
@@ -95,7 +93,7 @@ namespace RealmServer.Game.Managers
         internal static bool InRangeCheck(PlayerEntity playerEntityA, PlayerEntity playerEntityB)
         {
             double distance = GetDistance(playerEntityA.Character.MapX, playerEntityA.Character.MapY, playerEntityB.Character.MapX, playerEntityB.Character.MapY);
-            return distance < DistanciaFoda; // DISTANCE
+            return distance < MainForm.DistanciaFoda; // DISTANCE
         }
 
         internal static double GetDistance(float aX, float aY, float bX, float bY)

@@ -47,10 +47,10 @@ namespace RealmServer.Game.GameObjects
             {
                 foreach (T entity in Entitys)
                 {
-                    if (InRange(player, entity, 1000) && !PlayerKnowsEntity(player, entity)) // DISTANCE
+                    if (InRange(player, entity, MainForm.DistanciaFoda) && !PlayerKnowsEntity(player, entity)) // DISTANCE
                         SpawnEntityForPlayer(player, entity);
 
-                    if (!InRange(player, entity, 5000) && PlayerKnowsEntity(player, entity)) // DISTANCE
+                    if (!InRange(player, entity, MainForm.DistanciaFoda) && PlayerKnowsEntity(player, entity)) // DISTANCE
                         DespawnEntityForPlayer(player, entity);
                 }
             }
@@ -59,7 +59,6 @@ namespace RealmServer.Game.GameObjects
         internal virtual void DespawnEntityForPlayer(PlayerEntity playerEntity, T entity)
         {
             EntityListFromPlayer(playerEntity).Remove(entity);
-            playerEntity.Session.SendPacket(UpdateObject.CreateOutOfRangeUpdate(entity as GameObjectEntity));
         }
 
         internal virtual void SpawnEntityForPlayer(PlayerEntity playerEntity, T entity)

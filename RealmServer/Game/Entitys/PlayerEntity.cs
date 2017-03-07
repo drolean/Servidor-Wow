@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.IO;
 using Common.Database.Dbc;
 using Common.Database.Tables;
 using Common.Globals;
@@ -7,7 +6,6 @@ using RealmServer.Helpers;
 
 namespace RealmServer.Game.Entitys
 {
-
     public class PlayerEntity : UnitEntity
     {
         public override int DataLength => (int) PlayerFields.PLAYER_END - 0x4;
@@ -23,8 +21,6 @@ namespace RealmServer.Game.Entitys
 
         // Know Lists
         public List<PlayerEntity> KnownPlayers { get; set; }
-        public List<GameObjectEntity> KnownGameObjects { get; set; }
-        public List<UnitEntity> KnownUnits { get; set; }
 
         //
         public PlayerEntity(Characters character)
@@ -33,8 +29,6 @@ namespace RealmServer.Game.Entitys
             /* Inicializadores */
             Character = character;
             KnownPlayers = new List<PlayerEntity>();
-            KnownGameObjects = new List<GameObjectEntity>();
-            KnownUnits = new List<UnitEntity>();
 
             ChrRaces chrRaces = MainForm.ChrRacesReader.GetData(character.race);
 
@@ -68,7 +62,7 @@ namespace RealmServer.Game.Entitys
             SetUpdateField((int) PlayerFields.PLAYER_BYTES, character.char_hairStyle, 2);
             SetUpdateField((int) PlayerFields.PLAYER_BYTES, character.char_hairColor, 3);
 
-            SetUpdateField((int) PlayerFields.PLAYER_BYTES_2, character.char_facialHair, 0);
+            SetUpdateField((int) PlayerFields.PLAYER_BYTES_2, character.char_facialHair);
 
             SetUpdateField((int) PlayerFields.PLAYER_XP, 0);
             SetUpdateField((int) PlayerFields.PLAYER_NEXT_LEVEL_XP, 400);

@@ -9,7 +9,6 @@ using Common.Helpers;
 using RealmServer.Handlers;
 using Common.Database.Dbc;
 using Common.Network;
-using RealmServer.Game.GameObjects;
 using RealmServer.Game.Managers;
 using RealmServer.Scripting;
 
@@ -17,9 +16,12 @@ namespace RealmServer
 {
     public partial class MainForm : Form
     {
+        // DISTANCIA MODA  FOCA
+        public static int DistanciaFoda = 30;
+
         public static RealmServerDatabase Database { get; set; }       
         public static RealmServerClass RealmServerClass { get; set; }
-        public static GameObjectComponent GameObjectComponent { get; set; }
+        //public static GameObjectComponent GameObjectComponent { get; set; }
 
         public MainForm()
         {
@@ -53,7 +55,7 @@ namespace RealmServer
 
             // [WORLD] PlayerManager / ObjectManager
             PlayerManager.Boot();
-            GameObjectComponent = new GameObjectComponent();
+            //GameObjectComponent = new GameObjectComponent();
 
             // 
             RealmServerRouter.AddHandler<CmsgAuthSession>(RealmCMD.CMSG_AUTH_SESSION, RealmServerHandler.OnAuthSession);

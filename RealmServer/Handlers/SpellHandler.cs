@@ -24,7 +24,7 @@ namespace RealmServer.Handlers
     #region SMSG_SPELL_GO
     public sealed class SmsgSpellGo : PacketServer
     {
-        private static int aba = 0;
+        private static int _aba;
         public SmsgSpellGo(PlayerEntity caster, PlayerEntity target, uint spellId) : base(RealmCMD.SMSG_SPELL_GO)
         {
             byte[] casterGuid = UpdateObject.GenerateGuidBytes(caster.ObjectGuid.RawGuid);
@@ -33,14 +33,14 @@ namespace RealmServer.Handlers
             UpdateObject.WriteBytes(this, casterGuid);
             UpdateObject.WriteBytes(this, targetGuid);
             Write(spellId);
-            Write((UInt16) aba); //SpellCastFlags.CAST_FLAG_UNKNOWN9); // Cast Flags!?
+            Write((UInt16) _aba); //SpellCastFlags.CAST_FLAG_UNKNOWN9); // Cast Flags!?
             Write((Byte) 1); // Target Length
             Write(target.ObjectGuid.RawGuid);
             Write((Byte) 0); // End
             Write((UInt16) 2); // TARGET_FLAG_UNIT
             UpdateObject.WriteBytes(this, targetGuid); // Packed GUID
-            Console.WriteLine($"vem aqui baragad = {aba}");
-            aba++;
+            Console.WriteLine($@"vem aqui baragad = {_aba}");
+            _aba++;
         }
     }
     #endregion

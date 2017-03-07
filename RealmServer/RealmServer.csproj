@@ -58,7 +58,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Game\GameObjects\EntityComponent.cs" />
-    <Compile Include="Game\GameObjects\GameObjectComponent.cs" />
     <Compile Include="Game\Entitys\BaseEntity.cs" />
     <Compile Include="Game\Entitys\GameObjectEntity.cs" />
     <Compile Include="Game\Entitys\ObjectEntity.cs" />
