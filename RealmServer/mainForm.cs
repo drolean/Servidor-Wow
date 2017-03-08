@@ -17,7 +17,7 @@ namespace RealmServer
     public partial class MainForm : Form
     {
         // DISTANCIA MODA  FOCA
-        public static int DistanciaFoda = 30;
+        public static int DistanciaFoda = 75;
 
         public static RealmServerDatabase Database { get; set; }       
         public static RealmServerClass RealmServerClass { get; set; }

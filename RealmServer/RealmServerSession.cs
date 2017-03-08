@@ -21,7 +21,7 @@ namespace RealmServer
         public Socket ConnectionSocket { get; }
         public VanillaCrypt PacketCrypto { get; set; }
         public const int BufferSize = 2048 * 2;
-        public int ConnectionId { get; private set; }
+        public int ConnectionId { get; }
         public byte[] DataBuffer { get; }
         public string ConnectionRemoteIp => ConnectionSocket.RemoteEndPoint.ToString();
         public static List<RealmServerSession> Sessions = new List<RealmServerSession>();
@@ -201,10 +201,9 @@ namespace RealmServer
             int j;
             string buffer = "";
 
-            if (client == null)
-                Log.Print("DEBUG: Packet Dump");
-            else
-                Log.Print($"[{client.ConnectionSocket.RemoteEndPoint}] DEBUG: Packet Dump");
+            Log.Print(client == null
+                ? "DEBUG: Packet Dump"
+                : $"[{client.ConnectionSocket.RemoteEndPoint}] DEBUG: Packet Dump");
 
             if (data.Length % 16 == 0)
             {

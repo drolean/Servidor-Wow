@@ -20,8 +20,19 @@ namespace RealmServer
 
         internal List<zoneObjeto> GetGameObjects(PlayerEntity entity, float radius)
         {
-            Console.WriteLine($@"GetGameObjects: [{radius}] => {Math.Pow(entity.Character.MapX - entity.Character.MapY, 2)}");
-            return XmlReader.ObjectsAzeroth.objeto.Where(a => a.id == 31000001).ToList();
+            var result =
+                XmlReader.ObjectsAzeroth.objeto.Where(
+                        a =>
+                            Math.Sqrt((entity.Character.MapX - a.map.mapX) * (entity.Character.MapX - a.map.mapX) +
+                                      (a.map.mapY - entity.Character.MapY) * (a.map.mapY - entity.Character.MapY)) <= radius)
+                    .ToList();
+/*
+            foreach (var variable in result)
+            {
+                Console.WriteLine($@"GetGameObjects: [{radius} / {variable.id}] => {variable.name} ");
+            }
+*/
+            return result;
         }
 
         /// <summary>

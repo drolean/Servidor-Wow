@@ -719,7 +719,8 @@ namespace RealmServer.Handlers
 
             // DONE: StandState -> Sit
             session.Entity.SetUpdateField((int) UnitFields.UNIT_FIELD_BYTES_1, StandStates.STANDSTATE_SIT);
-            session.SendPacket(new SmsgStandstateUpdate((byte) StandStates.STANDSTATE_SIT));
+            session.Entity.KnownPlayers.ForEach(
+                s => s.Session.SendPacket(new SmsgStandstateUpdate((byte) StandStates.STANDSTATE_SIT)));
 
             // DONE: Send Logout 
             session.SendPacket(new SmsgLogoutResponse(LogoutResponseCode.LOGOUT_RESPONSE_ACCEPTED));
@@ -744,7 +745,8 @@ namespace RealmServer.Handlers
 
             // DONE: StandState -> Stand
             session.Entity.SetUpdateField((int) UnitFields.UNIT_FIELD_BYTES_1, StandStates.STANDSTATE_STAND);
-            session.SendPacket(new SmsgStandstateUpdate((byte) StandStates.STANDSTATE_STAND));
+            session.Entity.KnownPlayers.ForEach(
+                s => s.Session.SendPacket(new SmsgStandstateUpdate((byte) StandStates.STANDSTATE_STAND)));
 
             // DONE: Stop client logout
             session.SendPacket(new SmsgLogoutCancelAck());
@@ -763,7 +765,7 @@ namespace RealmServer.Handlers
                 //client.Character.RemoveAurasByInterruptFlag(SpellAuraInterruptFlags.AURA_INTERRUPT_FLAG_NOT_SEATED);
 
             session.Entity.SetUpdateField((int) UnitFields.UNIT_FIELD_BYTES_1, standState);
-            session.SendPacket(new SmsgStandstateUpdate(standState));
+            session.Entity.KnownPlayers.ForEach(s => s.Session.SendPacket(new SmsgStandstateUpdate(standState)));
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Common.Database.Dbc;
 using Common.Database.Tables;
+using Common.Database.Xml;
 using Common.Globals;
 using RealmServer.Helpers;
 
@@ -21,7 +22,7 @@ namespace RealmServer.Game.Entitys
 
         // Know Lists
         public List<PlayerEntity> KnownPlayers { get; set; }
-        public List<GameObjectEntity> KnownGameObjects { get; set; }
+        public List<zoneObjeto> KnownGameObjects { get; set; }
 
         // gambiarra
         public bool Caindo;
@@ -33,7 +34,7 @@ namespace RealmServer.Game.Entitys
             /* Inicializadores */
             Character = character;
             KnownPlayers = new List<PlayerEntity>();
-            KnownGameObjects = new List<GameObjectEntity>();
+            KnownGameObjects = new List<zoneObjeto>();
 
             ChrRaces chrRaces = MainForm.ChrRacesReader.GetData(character.race);
 

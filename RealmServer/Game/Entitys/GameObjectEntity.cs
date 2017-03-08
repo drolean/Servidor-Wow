@@ -1,5 +1,6 @@
 ﻿using System;
 using Common.Database.Xml;
+using Common.Globals;
 
 namespace RealmServer.Game.Entitys
 {
@@ -10,38 +11,62 @@ namespace RealmServer.Game.Entitys
 
         public zoneObjeto GameObjects { get; set; }
 
-        public GameObjectEntity(zoneObjeto zoneObjeto) : base(new ObjectGuid(zoneObjeto.id, TypeId.TypeidGameobject, HighGuid.HighguidGameobject))
+        //
+        public GameObjectLootState State = GameObjectLootState.LootUnlooted;
+        public int Faction = 0;
+
+        public static int Ababa;
+        public GameObjectEntity(zoneObjeto zoneObjeto)
+            : base(new ObjectGuid((uint)(zoneObjeto.id + Ababa), TypeId.TypeidGameobject, HighGuid.HighguidGameobject))
         {
             GameObjects = zoneObjeto;
 
-            SetUpdateField((int) ObjectFields.OBJECT_FIELD_TYPE, 0x21);
-            SetUpdateField((int) ObjectFields.OBJECT_FIELD_ENTRY, (byte) 1);
-            SetUpdateField((int) ObjectFields.OBJECT_FIELD_SCALE_X, 1);
-            SetUpdateField((int) GameObjectFields.GAMEOBJECT_DISPLAYID, 31); //zoneObjeto.entry);
+            SetUpdateField((int) ObjectFields.OBJECT_FIELD_TYPE, 33); // 33 <= aqui existe algum id que faz cachear no client
+            SetUpdateField((int) ObjectFields.OBJECT_FIELD_ENTRY, (byte) zoneObjeto.id); // 31
+            SetUpdateField((int) ObjectFields.OBJECT_FIELD_SCALE_X, 1f); // scala do objeto
 
-            SetUpdateField((int) GameObjectFields.GAMEOBJECT_FLAGS, 00); //(int)zoneObjeto.flags);
-            SetUpdateField((int) GameObjectFields.GAMEOBJECT_TYPE_ID, 2); //zoneObjeto.type);
+            SetUpdateField((int) GameObjectFields.GAMEOBJECT_DISPLAYID, (uint) zoneObjeto.model); // Modelo display do Objeto
+            SetUpdateField((int) GameObjectFields.GAMEOBJECT_TYPE_ID, (uint) zoneObjeto.type); // tipo do objeto se e clicavel correio ou mouse hoiver
+            SetUpdateField((int) GameObjectFields.GAMEOBJECT_FLAGS, (int) zoneObjeto.flags);
+            SetUpdateField((int) GameObjectFields.GAMEOBJECT_FACTION, Faction); // realmente precisa disso aqui
 
+            // Se o objeto tem alum dono ou alguem que criou tem que setar isso aqui em baixo
             SetUpdateField((int) GameObjectFields.GAMEOBJECT_POS_X, zoneObjeto.map.mapX);
             SetUpdateField((int) GameObjectFields.GAMEOBJECT_POS_Y, zoneObjeto.map.mapY);
             SetUpdateField((int) GameObjectFields.GAMEOBJECT_POS_Z, zoneObjeto.map.mapZ);
             SetUpdateField((int) GameObjectFields.GAMEOBJECT_FACING, zoneObjeto.map.mapO);
 
-            SetUpdateField((int) GameObjectFields.GAMEOBJECT_DYN_FLAGS, 2); //zoneObjeto.type);
+            // If a game object has bit 4 set in the flag it needs to be activated (used for quests)
+            // DynFlags = Activate a game object (Chest = 9, Goober = 1)
+            int DynFlags = 0;
 
-            Console.WriteLine($@"=> Adicionado Objeto [{zoneObjeto.name}] => [{(GameObjectType) zoneObjeto.type}]");
+            if (DynFlags != 0)
+                SetUpdateField((int) GameObjectFields.GAMEOBJECT_DYN_FLAGS, DynFlags);
+
+            // Estado do Objeto @GameObjectLootState
+            SetUpdateField((int) GameObjectFields.GAMEOBJECT_STATE, State);
+
+            // Level do Objeto ??? precisa disso
+            if (Level > 0)
+                SetUpdateField((int) GameObjectFields.GAMEOBJECT_LEVEL, Level);           
+
+            //Update.SetUpdateFlag(GameObjectFields.GAMEOBJECT_ROTATION, Rotations(0))
+            //Update.SetUpdateFlag(GameObjectFields.GAMEOBJECT_ROTATION + 1, Rotations(1))
+            //Update.SetUpdateFlag(GameObjectFields.GAMEOBJECT_ROTATION + 2, Rotations(2))
+            //Update.SetUpdateFlag(GameObjectFields.GAMEOBJECT_ROTATION + 3, Rotations(3))
+
+            Console.WriteLine($@"=> Adicionado Objeto [{zoneObjeto.name}] => [{(GameObjectType) zoneObjeto.type}] => {Ababa}");
+            Ababa++;
         }
     }
 
-    public enum ObjectFields
+    public enum GameObjectLootState
     {
-        OBJECT_FIELD_GUID = 0x00, // Size:2
-        OBJECT_FIELD_DATA = 0x01, // Size:2
-        OBJECT_FIELD_TYPE = 0x02, // Size:1
-        OBJECT_FIELD_ENTRY = 0x03, // Size:1
-        OBJECT_FIELD_SCALE_X = 0x04, // Size:1
-        OBJECT_FIELD_PADDING = 0x05, // Size:1
-        OBJECT_END = 0x06
+        DoorOpen = 0,
+        DoorClosed = 1,
+        LootUnaviable = 0,
+        LootUnlooted = 1,
+        LootLooted = 2
     }
 
     public enum GameObjectFields

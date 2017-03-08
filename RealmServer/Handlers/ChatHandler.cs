@@ -248,7 +248,7 @@ namespace RealmServer.Handlers
                     catch (Exception e)
                     {
                         // Envia mensagem que nao achou 
-                        Console.WriteLine("naoa chei nada");    
+                        Console.WriteLine($@"naoa chei nada {e.Message}");    
                     }
                     break;
                 default:

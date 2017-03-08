@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using Common.Database;
 using Common.Database.Tables;
 using Common.Database.Xml;
 using Common.Globals;
@@ -19,6 +21,7 @@ namespace RealmServer.Game
             blocks.ForEach(Write);
         }
 
+        // Create Character on World
         internal static UpdateObject CreateOwnCharacterUpdate(Characters character, out PlayerEntity entity)
         {
             BinaryWriter writer = new BinaryWriter(new MemoryStream());
@@ -62,6 +65,38 @@ namespace RealmServer.Game
             entity.WriteUpdateFields(writer);
 
             return new UpdateObject(new List<byte[]> {((MemoryStream) writer.BaseStream).ToArray()});
+        }
+
+        // Create Game Object on World
+        internal static UpdateObject CreateGameObject(zoneObjeto gameObject)
+        {
+            BinaryWriter writer = new BinaryWriter(new MemoryStream());
+            writer.Write((byte)ObjectUpdateType.UPDATETYPE_CREATE_OBJECT);
+
+            GameObjectEntity entity = new GameObjectEntity(gameObject);
+
+            writer.WritePackedUInt64(entity.ObjectGuid.RawGuid);
+
+            writer.Write((byte)TypeId.TypeidGameobject);
+
+            ObjectUpdateFlag updateFlags = ObjectUpdateFlag.UpdateflagTransport |
+                                           ObjectUpdateFlag.UpdateflagAll |
+                                           ObjectUpdateFlag.UpdateflagHasPosition;
+
+            writer.Write((byte)updateFlags);
+
+            writer.Write(gameObject.map.mapX);
+            writer.Write(gameObject.map.mapY);
+            writer.Write(gameObject.map.mapZ);
+
+            writer.Write((float)0);
+
+            writer.Write((uint)0x1);
+            writer.Write((uint)0);
+
+            entity.WriteUpdateFields(writer);
+
+            return new UpdateObject(new List<byte[]> { (writer.BaseStream as MemoryStream)?.ToArray() }, 1);
         }
 
         internal static PacketServer CreateCharacterUpdate(Characters character)
@@ -108,7 +143,7 @@ namespace RealmServer.Game
             return new UpdateObject(new List<byte[]> {(writer.BaseStream as MemoryStream)?.ToArray()});
         }
 
-        // Update Values Player
+        // Update Values Player on World
         internal static PacketServer UpdateValues(PlayerEntity player)
         {
             BinaryWriter writer = new BinaryWriter(new MemoryStream());
@@ -119,11 +154,63 @@ namespace RealmServer.Game
 
             player.WriteUpdateFields(writer);
 
-            return new UpdateObject(new List<byte[]> {(writer.BaseStream as MemoryStream)?.ToArray()},
-                player is PlayerEntity ? 0 : 1);
+            return new UpdateObject(new List<byte[]> {(writer.BaseStream as MemoryStream)?.ToArray()});
         }
 
-        // Out of Range Player
+        // Out of Range Object in World
+        internal static PacketServer CreateOutOfRangeUpdate(List<zoneObjeto> despawnObjeto)
+        {
+            BinaryWriter writer = new BinaryWriter(new MemoryStream());
+            writer.Write((byte) ObjectUpdateType.UPDATETYPE_OUT_OF_RANGE_OBJECTS);
+            writer.Write((uint) 1);
+
+            foreach (zoneObjeto entity in despawnObjeto)
+            {
+                writer.WritePackedUInt64(entity.id);
+            }
+
+            return new UpdateObject(new List<byte[]> { ((MemoryStream)writer.BaseStream).ToArray() });
+        }
+
+        // Create Game Object for Player in World
+        internal static UpdateObject CreateGameObject(float x, float y, float z)
+        {
+            BinaryWriter writer = new BinaryWriter(new MemoryStream());
+            writer.Write((byte) ObjectUpdateType.UPDATETYPE_CREATE_OBJECT);
+
+            var abacate = XmlReader.ObjectsAzeroth.objeto.First(a => a.id == 31000001);
+
+            Console.WriteLine(abacate.name);
+
+            GameObjectEntity entity = new GameObjectEntity(abacate);
+
+            writer.WritePackedUInt64(entity.ObjectGuid.RawGuid);
+
+            writer.Write((byte) TypeId.TypeidGameobject);
+
+            ObjectUpdateFlag updateFlags = ObjectUpdateFlag.UpdateflagTransport |
+                                           ObjectUpdateFlag.UpdateflagAll |
+                                           ObjectUpdateFlag.UpdateflagHasPosition;
+
+            writer.Write((byte) updateFlags);
+
+            // Position
+
+            writer.Write((float) x);
+            writer.Write((float) y);
+            writer.Write((float) z);
+
+            writer.Write((float) 0); // R
+
+            writer.Write((uint) 0x1); // Unkown... time?
+            writer.Write((uint) 0); // Unkown... time?
+
+            entity.WriteUpdateFields(writer);
+
+            return new UpdateObject(new List<byte[]> {(writer.BaseStream as MemoryStream)?.ToArray()}, 1);
+        }
+
+        // Out of Range Player in World
         internal static PacketServer CreateOutOfRangeUpdate(List<ObjectEntity> despawnPlayer)
         {
             BinaryWriter writer = new BinaryWriter(new MemoryStream());
@@ -138,40 +225,6 @@ namespace RealmServer.Game
             return new UpdateObject(new List<byte[]> {((MemoryStream) writer.BaseStream).ToArray()});
         }
 
-        // Create Game Object
-        internal static UpdateObject CreateGameObject(zoneObjeto gameObject)
-        {
-            BinaryWriter writer = new BinaryWriter(new MemoryStream());
-            writer.Write((byte) ObjectUpdateType.UPDATETYPE_CREATE_OBJECT);
-
-            GameObjectEntity entityEntity = new GameObjectEntity(gameObject);
-
-            Console.WriteLine(entityEntity.ObjectGuid.RawGuid);
-            byte[] guidBytes = GenerateGuidBytes(entityEntity.ObjectGuid.RawGuid);
-
-            for (int i = 0; i < guidBytes.Length; i++) writer.Write(guidBytes[i]);
-
-            writer.Write((byte) TypeId.TypeidGameobject);
-
-            ObjectUpdateFlag updateFlags = ObjectUpdateFlag.UpdateflagTransport |
-                                           ObjectUpdateFlag.UpdateflagAll |
-                                           ObjectUpdateFlag.UpdateflagHasPosition;
-
-            writer.Write((byte) updateFlags);
-
-            writer.Write(gameObject.map.mapX);
-            writer.Write(gameObject.map.mapY);
-            writer.Write(gameObject.map.mapZ);
-
-            writer.Write((float) 0);
-
-            writer.Write((uint) 0x1);
-            writer.Write((uint) 0);
-
-            entityEntity.WriteUpdateFields(writer);
-
-            return new UpdateObject(new List<byte[]> {(writer.BaseStream as MemoryStream)?.ToArray()}, 1);
-        }
 
         internal static byte[] GenerateGuidBytes(ulong id)
         {
