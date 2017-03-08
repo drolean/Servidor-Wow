@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
@@ -340,7 +341,7 @@ namespace RealmServer
         /// <returns></returns>
         internal static RealmServerSession GetSessionByPlayerName(string playerName)
         {
-            return Sessions.Find(user => user.Character.name.ToLower() == playerName.ToLower());
+            return Sessions.First(user => user.Character.name.ToLower() == playerName.ToLower());
         }
 
         /// <summary>

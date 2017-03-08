@@ -34,8 +34,8 @@ namespace RealmServer.Handlers
                 session.Target = null;
                 return;
             }
-
-            session.Target = RealmServerSession.Sessions.FirstOrDefault(s => s.Character.Id == (int) guid)?.Character;
+            
+            session.Target = session.Entity.KnownPlayers.FirstOrDefault(s => s.Character.Id == (int) guid)?.Character;
             session.Entity.SetUpdateField((int) UnitFields.UNIT_FIELD_TARGET, guid);
         }
     }

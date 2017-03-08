@@ -9,18 +9,33 @@ namespace RealmServer.Game.Managers
 {
     internal class PlayerManager
     {
-        public static List<PlayerEntity> Players { get; private set; }
+        // Internal
+        internal static List<PlayerEntity> Players { get; set; }
 
         internal static void Boot()
         {
             Players = new List<PlayerEntity>();
 
-            EntityManager.OnPlayerSpawn += OnPlayerSpawn;
-            EntityManager.OnPlayerDespawn += OnPlayerDespawn;
+            WorldManager.OnPlayerSpawn += OnPlayerSpawn;
+            WorldManager.OnPlayerDespawn += OnPlayerDespawn;
 
             new Thread(Update).Start();
 
             Log.Print(LogType.Loading, "PlayerManager Loaded ................. [OK]");
+        }
+
+        internal static bool InRangeCheck(PlayerEntity playerEntityA, PlayerEntity playerEntityB)
+        {
+            double distance = GetDistance(playerEntityA.Character.MapX, playerEntityA.Character.MapY, playerEntityB.Character.MapX, playerEntityB.Character.MapY);
+            return distance < MainForm.DistanciaFoda; // DISTANCE
+        }
+
+        internal static double GetDistance(float aX, float aY, float bX, float bY)
+        {
+            double a = aX - bX;
+            double b = bY - aY;
+
+            return Math.Sqrt(a * a + b * b);
         }
 
         private static void Update()
@@ -50,7 +65,7 @@ namespace RealmServer.Game.Managers
                     {
                         PacketServer packet = UpdateObject.UpdateValues(player);
                         player.Session.SendPacket(packet);
-                        EntityManager.SessionsWhoKnow(player).ForEach(s => s.SendPacket(packet));
+                        WorldManager.SessionsWhoKnow(player).ForEach(s => s.SendPacket(packet));
                     }
                 }
 
@@ -59,6 +74,7 @@ namespace RealmServer.Game.Managers
             }
         }
 
+        // Player
         private static void OnPlayerSpawn(PlayerEntity playerEntity)
         {
             Players.Add(playerEntity);
@@ -88,20 +104,6 @@ namespace RealmServer.Game.Managers
         {
             remote.Session.SendPacket(UpdateObject.CreateCharacterUpdate(playerEntity.Character));
             remote.KnownPlayers.Add(playerEntity);
-        }
-
-        internal static bool InRangeCheck(PlayerEntity playerEntityA, PlayerEntity playerEntityB)
-        {
-            double distance = GetDistance(playerEntityA.Character.MapX, playerEntityA.Character.MapY, playerEntityB.Character.MapX, playerEntityB.Character.MapY);
-            return distance < MainForm.DistanciaFoda; // DISTANCE
-        }
-
-        internal static double GetDistance(float aX, float aY, float bX, float bY)
-        {
-            double a = aX - bX;
-            double b = bY - aY;
-
-            return Math.Sqrt(a * a + b * b);
         }
     }
 }

@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading;
 using Common.Globals;
+using RealmServer.Game.Managers;
 using RealmServer.Handlers;
 
 namespace RealmServer.Helpers
@@ -16,6 +17,16 @@ namespace RealmServer.Helpers
 
             Console.WriteLine($@"[Comando]: {splitMessage[0].ToLower()}");
 
+            if (splitMessage[0].ToLower() == "chuva")
+            {
+                session.SendPacket(new Weather(int.Parse(splitMessage[1].ToLower()), 0.333333343F, int.Parse(splitMessage[2].ToLower())));
+            }
+
+            if (splitMessage[0].ToLower() == "sound")
+            {
+                session.SendPacket(new SmsgTriggerCinematic(int.Parse(splitMessage[1].ToLower())));
+            }
+
             if (splitMessage[0].ToLower() == "gps")
             {
                 session.SendMessageMotd(
@@ -23,7 +34,7 @@ namespace RealmServer.Helpers
                 Console.WriteLine($@"MapX: {session.Character.MapX} = MapY: {session.Character.MapY} = MapZ: {session.Character.MapZ} = MapO: {session.Character.MapO}");
                 Console.WriteLine($@"----------------------------");
                 Console.WriteLine($@"Players: {session.Entity.KnownPlayers.Count}");
-                //Console.WriteLine($@"Objects: {session.Entity.KnownGameObjects.Count} ");
+                Console.WriteLine($@"Objects: {session.Entity.KnownGameObjects.Count} ");
                 // Creatures
                 // Corpses
                 // You are seen by:

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Text;
 using Common.Globals;
 using Common.Helpers;
@@ -32,15 +33,15 @@ namespace RealmServer.Handlers
             switch (type)
             {
                 case ChatMessageType.CHAT_MSG_CHANNEL:
-                    Write(Encoding.UTF8.GetBytes(channelName + '\0'));
-                    Write((uint) 0);
-                    Write(id);
+                    Write(Encoding.UTF8.GetBytes(channelName + '\0'));// string => Channel
+                    Write((uint) 0); //32
+                    Write(id); //64 => SenderId
                     break;
                 case ChatMessageType.CHAT_MSG_YELL:
                 case ChatMessageType.CHAT_MSG_SAY:
                 case ChatMessageType.CHAT_MSG_PARTY:
-                    Write(id);
-                    Write(id);
+                    Write(id); // SenderId
+                    Write(id); // SenderId
                     break;
                 case ChatMessageType.CHAT_MSG_SYSTEM:
                 case ChatMessageType.CHAT_MSG_EMOTE:
@@ -55,7 +56,7 @@ namespace RealmServer.Handlers
                 case ChatMessageType.CHAT_MSG_DND:
                 case ChatMessageType.CHAT_MSG_RAID_LEADER:
                 case ChatMessageType.CHAT_MSG_RAID_WARNING:
-                    Write(id);
+                    Write(id); // SenderId
                     break;
                 default:
                     Log.Print(LogType.Debug, $"Unknown chat message type - {type}!");
@@ -209,28 +210,46 @@ namespace RealmServer.Handlers
             ChatMessageType msgType = (ChatMessageType) handler.ReadUInt32();
             ChatMessageLanguage msgLanguage = (ChatMessageLanguage) handler.ReadUInt32();
 
+            string toUser = null;
+            string channel = null;
+
             if (msgType ==  ChatMessageType.CHAT_MSG_CHANNEL)
-            {
-                //string channel = handler.ReadCString();
-            }
+                channel = handler.ReadCString();
 
             if (msgType == ChatMessageType.CHAT_MSG_WHISPER)
-            {
-                //var toUser = handler.ReadCString();
-            }
+                toUser = handler.ReadCString();
 
             string message = handler.ReadCString();
 
             // Call Commands
             new CommandsHelper(session, message);
 
-            switch ((ChatMsgs) msgType)
+            switch ((ChatMessageType) msgType)
             {
-                case ChatMsgs.CHAT_MSG_SAY:
-                case ChatMsgs.CHAT_MSG_YELL:
-                case ChatMsgs.CHAT_MSG_EMOTE:
+                case ChatMessageType.CHAT_MSG_SAY:
+                case ChatMessageType.CHAT_MSG_YELL:
+                case ChatMessageType.CHAT_MSG_EMOTE:
                     session.SendPacket(new SmsgMessagechat(msgType, ChatMessageLanguage.LANG_UNIVERSAL, (ulong) session.Character.Id, message));
                     session.Entity.KnownPlayers.ForEach(s => s.Session.SendPacket(new SmsgMessagechat(msgType, ChatMessageLanguage.LANG_UNIVERSAL, (ulong)session.Character.Id, message)));
+                    break;
+                case ChatMessageType.CHAT_MSG_WHISPER:
+                    try
+                    {
+                        RealmServerSession remoteSession = RealmServerSession.GetSessionByPlayerName(toUser);
+                        
+                        // Check if player is the same faction?
+
+                        // Send packet
+                        session.SendPacket(new SmsgMessagechat(ChatMessageType.CHAT_MSG_WHISPER_INFORM,
+                            ChatMessageLanguage.LANG_UNIVERSAL, (ulong) remoteSession.Character.Id, message));
+                        remoteSession.SendPacket(new SmsgMessagechat(msgType, ChatMessageLanguage.LANG_UNIVERSAL,
+                            (ulong) session.Character.Id, message));
+                    }
+                    catch (Exception e)
+                    {
+                        // Envia mensagem que nao achou 
+                        Console.WriteLine("naoa chei nada");    
+                    }
                     break;
                 default:
                     Console.WriteLine($@"veio aqui algo [{msgType}]");

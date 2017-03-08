@@ -543,7 +543,7 @@ namespace RealmServer.Handlers
                     if (DateTime.Now.Subtract(entry.Value).Seconds < sec) continue;
                     entry.Key.SendPacket(new SmsgLogoutComplete());
                     _logoutQueue.Remove(entry.Key);
-                    EntityManager.DispatchOnPlayerDespawn(entry.Key.Entity);
+                    WorldManager.DispatchOnPlayerDespawn(entry.Key.Entity);
                 }
 
                 Thread.Sleep(1000);
@@ -655,7 +655,7 @@ namespace RealmServer.Handlers
             // Nao sei
             session.Entity.Session = session;
 
-            EntityManager.DispatchOnPlayerSpawn(session.Entity);
+            WorldManager.DispatchOnPlayerSpawn(session.Entity);
 
             /*          
             // Cast talents and racial passive spells

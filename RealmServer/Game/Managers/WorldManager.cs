@@ -5,7 +5,7 @@ namespace RealmServer.Game.Managers
 {
     internal delegate void PlayerEvent(PlayerEntity playerEntity);
 
-    internal class EntityManager
+    internal class WorldManager
     {
         public static event PlayerEvent OnPlayerSpawn;
         public static event PlayerEvent OnPlayerDespawn;

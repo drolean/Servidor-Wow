@@ -21,6 +21,10 @@ namespace RealmServer.Game.Entitys
 
         // Know Lists
         public List<PlayerEntity> KnownPlayers { get; set; }
+        public List<GameObjectEntity> KnownGameObjects { get; set; }
+
+        // gambiarra
+        public bool Caindo;
 
         //
         public PlayerEntity(Characters character)
@@ -29,6 +33,7 @@ namespace RealmServer.Game.Entitys
             /* Inicializadores */
             Character = character;
             KnownPlayers = new List<PlayerEntity>();
+            KnownGameObjects = new List<GameObjectEntity>();
 
             ChrRaces chrRaces = MainForm.ChrRacesReader.GetData(character.race);
 

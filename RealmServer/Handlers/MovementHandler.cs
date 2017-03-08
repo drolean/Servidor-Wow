@@ -71,6 +71,9 @@ namespace RealmServer.Handlers
     {
         public PsMovement(RealmServerSession session, MsgMoveInfo handler, RealmCMD opcode) : base(opcode)
         {
+            if (session.Entity.Caindo)
+                return;
+
             byte[] packedGuid = UpdateObject.GenerateGuidBytes((ulong)session.Character.Id);
             UpdateObject.WriteBytes(this, packedGuid);
             UpdateObject.WriteBytes(this, (handler.BaseStream as MemoryStream)?.ToArray());
@@ -89,7 +92,7 @@ namespace RealmServer.Handlers
             session.OutOfSyncDelay = handler.OutOfSyncDelay;
         }
 
-        internal static void OnMoveFallLand(RealmServerSession session, PacketReader handler)
+        internal static void OnMoveFallLand(RealmServerSession session, MsgMoveInfo handler)
         {
             // If FallTime > 1100 and not Dead
 
@@ -100,6 +103,8 @@ namespace RealmServer.Handlers
             // Deal the damage
 
             // Initialize packet
+
+            session.Entity.Caindo = false;
         }
 
         internal static RealmServerRouter.ProcessLoginPacketCallbackTypes<MsgMoveInfo> GenerateResponse(RealmCMD code)
@@ -145,14 +150,17 @@ namespace RealmServer.Handlers
 
             // Remove auras that requires you to not turn
 
-            /* MSG_MOVE_HEARTBEAT
-                Check for out of continent - coordinates from WorldMapContinent.dbc
-                Duel check
-                Aggro range
-                Creatures that are following you will have a more smooth movement
-             */
-            RealmServerSession.Sessions.FindAll(s => s != session)
-                .ForEach(s => s.SendPacket(new PsMovement(session, handler, code)));
+            //MSG_MOVE_HEARTBEAT
+                //Check for out of continent - coordinates from WorldMapContinent.dbc
+                //Duel check
+                //Aggro range
+                //Creatures that are following you will have a more smooth movement
+               
+            session.Entity.KnownPlayers.ForEach(s => s.Session.SendPacket(new PsMovement(session, handler, code)));
+
+            // Gambi para nao mostrar o char andando sozinho para os demais
+            if (code == RealmCMD.MSG_MOVE_JUMP)
+                session.Entity.Caindo = true;
         }
 
         internal static void OnMoveHeartbeat(RealmServerSession session, PacketReader handler)

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using Common.Database.Tables;
+using Common.Database.Xml;
 using Common.Globals;
 using Common.Helpers;
 using Common.Network;
@@ -135,6 +136,41 @@ namespace RealmServer.Game
             }
 
             return new UpdateObject(new List<byte[]> {((MemoryStream) writer.BaseStream).ToArray()});
+        }
+
+        // Create Game Object
+        internal static UpdateObject CreateGameObject(zoneObjeto gameObject)
+        {
+            BinaryWriter writer = new BinaryWriter(new MemoryStream());
+            writer.Write((byte) ObjectUpdateType.UPDATETYPE_CREATE_OBJECT);
+
+            GameObjectEntity entityEntity = new GameObjectEntity(gameObject);
+
+            Console.WriteLine(entityEntity.ObjectGuid.RawGuid);
+            byte[] guidBytes = GenerateGuidBytes(entityEntity.ObjectGuid.RawGuid);
+
+            for (int i = 0; i < guidBytes.Length; i++) writer.Write(guidBytes[i]);
+
+            writer.Write((byte) TypeId.TypeidGameobject);
+
+            ObjectUpdateFlag updateFlags = ObjectUpdateFlag.UpdateflagTransport |
+                                           ObjectUpdateFlag.UpdateflagAll |
+                                           ObjectUpdateFlag.UpdateflagHasPosition;
+
+            writer.Write((byte) updateFlags);
+
+            writer.Write(gameObject.map.mapX);
+            writer.Write(gameObject.map.mapY);
+            writer.Write(gameObject.map.mapZ);
+
+            writer.Write((float) 0);
+
+            writer.Write((uint) 0x1);
+            writer.Write((uint) 0);
+
+            entityEntity.WriteUpdateFields(writer);
+
+            return new UpdateObject(new List<byte[]> {(writer.BaseStream as MemoryStream)?.ToArray()}, 1);
         }
 
         internal static byte[] GenerateGuidBytes(ulong id)
