@@ -5,7 +5,6 @@ using System.Threading;
 using Common.Helpers;
 using Common.Network;
 using RealmServer.Game.Entitys;
-using Platform;
 using Common.Database.Xml;
 
 namespace RealmServer.Game.Managers
@@ -33,12 +32,6 @@ namespace RealmServer.Game.Managers
             return distance < MainForm.DistanciaFoda; // DISTANCE
         }
 
-        private static bool InRangeCheckObjeto(PlayerEntity player, zoneObjeto knowObjects)
-        {
-            double distance = GetDistance(player.Character.MapX, player.Character.MapY, knowObjects.map.mapX, knowObjects.map.mapY);
-            return distance < MainForm.DistanciaFoda; // DISTANCE
-        }
-
         private static double GetDistance(float aX, float aY, float bX, float bY)
         {
             double a = aX - bX;
@@ -53,7 +46,7 @@ namespace RealmServer.Game.Managers
             {
                 foreach (PlayerEntity player in Players)
                 {
-                    // Checa Players
+                    #region Checa Players
                     foreach (PlayerEntity otherPlayer in Players)
                     {
                         // Ignore self
@@ -70,8 +63,9 @@ namespace RealmServer.Game.Managers
                                 DespawnPlayer(player, otherPlayer);
                         }
                     }
+                    #endregion
 
-                    // Checa Objetos para adicionar ao mapa
+                    #region Checa Objetos para adicionar ao mapa
                     var objetos = MainForm.Database.GetGameObjects(player, MainForm.DistanciaFoda);
                     if (objetos.Any())
                     {
@@ -81,12 +75,9 @@ namespace RealmServer.Game.Managers
                                 SpawnObjeto(player, objeto);
                         }
                     }
+                    #endregion 
 
-                    // Checa range dos objetos conhecidos
-                    foreach (zoneObjeto knowObjects in player.KnownGameObjects)
-                    {
-
-                    }
+                    // NPC Spawns
 
                     // Atualização de coisas do jogo
                     if (player.UpdateCount > 0)
@@ -104,12 +95,6 @@ namespace RealmServer.Game.Managers
         }
 
         // Objeto
-        private static void DespawnObjeto(PlayerEntity player, zoneObjeto knowObjects)
-        {
-            List<zoneObjeto> despawnObjeto = new List<zoneObjeto> { knowObjects };
-            player.Session.SendPacket(UpdateObject.CreateOutOfRangeUpdate(despawnObjeto));
-            player.KnownGameObjects.Remove(knowObjects);
-        }
 
         private static void SpawnObjeto(PlayerEntity player, zoneObjeto objeto)
         {

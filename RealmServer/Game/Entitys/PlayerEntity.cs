@@ -23,6 +23,7 @@ namespace RealmServer.Game.Entitys
         // Know Lists
         public List<PlayerEntity> KnownPlayers { get; set; }
         public List<zoneObjeto> KnownGameObjects { get; set; }
+        public List<UnitEntity> KnownUnitys { get; set; }
 
         // gambiarra
         public bool Caindo;
@@ -35,6 +36,7 @@ namespace RealmServer.Game.Entitys
             Character = character;
             KnownPlayers = new List<PlayerEntity>();
             KnownGameObjects = new List<zoneObjeto>();
+            KnownUnitys = new List<UnitEntity>();
 
             ChrRaces chrRaces = MainForm.ChrRacesReader.GetData(character.race);
 

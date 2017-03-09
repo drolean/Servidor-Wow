@@ -26,12 +26,7 @@ namespace RealmServer
                             Math.Sqrt((entity.Character.MapX - a.map.mapX) * (entity.Character.MapX - a.map.mapX) +
                                       (a.map.mapY - entity.Character.MapY) * (a.map.mapY - entity.Character.MapY)) <= radius)
                     .ToList();
-/*
-            foreach (var variable in result)
-            {
-                Console.WriteLine($@"GetGameObjects: [{radius} / {variable.id}] => {variable.name} ");
-            }
-*/
+
             return result;
         }
 

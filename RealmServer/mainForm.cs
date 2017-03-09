@@ -130,6 +130,8 @@ namespace RealmServer
             // Combat Handler
             RealmServerRouter.AddHandler<PacketReader>(RealmCMD.CMSG_SETSHEATHED, CombatHandler.OnSetsHeathed);
             RealmServerRouter.AddHandler<PacketReader>(RealmCMD.CMSG_SET_SELECTION, CombatHandler.OnSetSelection);
+            RealmServerRouter.AddHandler<PacketReader>(RealmCMD.CMSG_ATTACKSWING, CombatHandler.OnAttackSwing);
+            RealmServerRouter.AddHandler<PacketReader>(RealmCMD.CMSG_ATTACKSTOP, CombatHandler.OnAttackStop);
 
             // Item Handler
             RealmServerRouter.AddHandler<PacketReader>(RealmCMD.CMSG_ITEM_QUERY_SINGLE, ItemHandler.OnItemQuerySingle);

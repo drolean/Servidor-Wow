@@ -14,6 +14,7 @@ namespace Common.Database
         public static ItemsXml ItemsXml { get; private set; }
         public static RacesXml RacesXml { get; private set; }
         public static ObjectsXml ObjectsAzeroth { get; set; }
+        public static CreaturesXml CreaturesXml { get; private set; }
 
         /// <summary>
         /// 
@@ -28,7 +29,7 @@ namespace Common.Database
                 StreamReader readerItems = new StreamReader("xml/items.xml");
                 ItemsXml = serializerItems.Deserialize(readerItems) as ItemsXml;
                 if (ItemsXml != null)
-                    Log.Print(LogType.Loading, $"=_ Items Loaded: {ItemsXml.Item.Count()}");
+                    Log.Print(LogType.Loading, $"=_ Items Loaded .........: {ItemsXml.Item.Length}");
                 readerItems.Close();
 
                 // Races
@@ -36,15 +37,23 @@ namespace Common.Database
                 StreamReader readerRaces = new StreamReader("xml/races.xml");
                 RacesXml = serializerRaces.Deserialize(readerRaces) as RacesXml;
                 if (RacesXml != null)
-                    Log.Print(LogType.Loading, $"=_ Races Loaded: {RacesXml.race.Count()}");
+                    Log.Print(LogType.Loading, $"=_ Races Loaded .........: {RacesXml.race.Length}");
                 readerRaces.Close();
+
+                // Creatures
+                XmlSerializer serializerCreatures = new XmlSerializer(typeof(CreaturesXml));
+                StreamReader readerCreatures = new StreamReader("xml/creatures.xml");
+                CreaturesXml = serializerCreatures.Deserialize(readerCreatures) as CreaturesXml;
+                if (CreaturesXml != null)
+                    Log.Print(LogType.Loading, $"=_ Creatures Loaded .....: {CreaturesXml.unit.Length}");
+                readerCreatures.Close();
 
                 // Game Objects
                 XmlSerializer serializerObjects = new XmlSerializer(typeof(ObjectsXml));
                 StreamReader readerObjects = new StreamReader("xml/world/0-azeroth.xml");
                 ObjectsAzeroth = serializerObjects.Deserialize(readerObjects) as ObjectsXml;
-                //if (ObjectsAzeroth != null)
-                    //Log.Print(LogType.Loading, $"=_ Azeroth Loaded: [Spawn: {ObjectsAzeroth.creature.Length} / Objects: {ObjectsAzeroth.objeto}]");
+                if (ObjectsAzeroth != null)
+                    Log.Print(LogType.Loading, $"=_ Azeroth Loaded .......: /Objects: [{ObjectsAzeroth.objeto.Length}]/Creatures:");
                 readerObjects.Close();
             }
             catch (Exception e)

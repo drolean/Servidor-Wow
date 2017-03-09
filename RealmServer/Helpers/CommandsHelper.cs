@@ -18,10 +18,11 @@ namespace RealmServer.Helpers
             Console.WriteLine($@"[Comando]: {splitMessage[0].ToLower()}");
 
             if (splitMessage[0].ToLower() == "obj")
-            {
-                session.SendPacket(UpdateObject.CreateGameObject(session.Character.MapX, session.Character.MapY,
-                    session.Character.MapZ));
-            }
+                session.SendPacket(UpdateObject.CreateGameObject(session.Character.MapX, session.Character.MapY, session.Character.MapZ));
+
+            if (splitMessage[0].ToLower() == "unt")
+                session.SendPacket(UpdateObject.CreateUnit(session.Character.MapX, session.Character.MapY, session.Character.MapZ, session.Character.MapO));
+
 
             if (splitMessage[0].ToLower() == "gps")
             {
