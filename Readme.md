@@ -1,10 +1,13 @@
-World of Warcraft Vanilla Classic 1.12.1
+#World of Warcraft Vanilla Classic 1.12.1
 
-https://github.com/mangos/mangos-svn/blob/master/tags/0.0.1/ChangeLog
-https://github.com/mangos/mangos-svn/tree/master/tags/0.0.1
-https://github.com/emulator-archive/WoWD
-http://repo.or.cz/w/auctionmangos.git/patch/078a532fd305d04e4d6bda6f731dfb566b701735?f=contrib/vmap_extractor_v2/stormlib/bzip2/manual.ps
-https://github.com/emulator-archive/WoWD
+- https://github.com/mangos/mangos-svn/blob/master/tags/0.0.1/ChangeLog
+- https://github.com/mangos/mangos-svn/tree/master/tags/0.0.1
+- https://github.com/emulator-archive/WoWD
+- http://repo.or.cz/w/auctionmangos.git/patch/078a532fd305d04e4d6bda6f731dfb566b701735?f=contrib/vmap_extractor_v2/stormlib/bzip2/manual.ps
+- https://github.com/emulator-archive/WoWD
+- http://wow.gamepedia.com/Category:Elwynn_Forest_objects
+- http://pt.wowhead.com/elwynn-forest#objects
+- http://wow.gamepressure.com/map.asp?ID=7
 
 ## ToDo
 
@@ -14,13 +17,12 @@ https://github.com/emulator-archive/WoWD
 
 ## Outros
 
-- Change (cinematic, FactionId, Model Male, Model Female, Team, TaxiMask) from DB to DBC
 - CreateTable "CharactersSocial" (Player, PlayerFriend, PlayerIgnore)
 - CreateTable "Channel" (Name, PlayerId, Password)
 - ChannelCharacters (Channel, PlayerId)
 
 ## TODO
-- Remove player on Logout
+- Remove player on Logout *DONE
 - Limit CHAT_SAY Radius
 - Inventory 
 - Equipament * Partial implemented
@@ -53,33 +55,3 @@ https://github.com/emulator-archive/WoWD
 - http://www.lootables.com/?guide=Mining
 - http://www.nytimes.com/2007/06/17/magazine/17lootfarmers-t.html
 - http://www.wow-mania.com/armory/?spells
-
-## Objects
-
-0 - Door
-1 - Button
-2 - QuestGiver
-3 - Chest
-4 - Binder
-5 - Generic
-6 - Trap
-7 - Chair
-8 - Spell Focus
-9 - Text
-10 - Goober
-11 - Transport // elevators, subways, railcars, etc.
-12 - Area Damage
-13 - Camera
-14 - Map Object
-15 - Mo Transport // all of the boats between areas, like Ratchet to BootyBay, have this type
-16 - Duel Arbiter
-17 - Fishing Node
-18 - Ritual
-19 - Mailbox
-20 - Auction House
-21 - Guard Post
-22 - Spell Caster
-23 - Meeting Stone
-24 - Flag Stand
-25 - Fishing Hole
-26 - Flag Drop

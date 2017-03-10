@@ -14,6 +14,14 @@ namespace RealmServer.Game
 {
     public class UpdateObject : PacketServer
     {
+        // MUDAR ISSO AQUI PARA OUTRO
+        private static readonly Random Random = new Random();
+        public static float GetRandomNumber(double minimum, double maximum)
+        {
+            return (float) (Random.NextDouble() * (maximum - minimum) + minimum);
+        }
+
+
         private UpdateObject(List<byte[]> blocks, int hasTansport = 0) : base(RealmCMD.SMSG_UPDATE_OBJECT)
         {
             Write((uint) blocks.Count);
@@ -99,8 +107,7 @@ namespace RealmServer.Game
             return new UpdateObject(new List<byte[]> { (writer.BaseStream as MemoryStream)?.ToArray() }, 1);
         }
 
-
-
+        // Update Values for Character 
         internal static PacketServer CreateCharacterUpdate(Characters character)
         {
             BinaryWriter writer = new BinaryWriter(new MemoryStream());
@@ -174,6 +181,7 @@ namespace RealmServer.Game
             return new UpdateObject(new List<byte[]> { ((MemoryStream)writer.BaseStream).ToArray() });
         }
 
+        // USO INTERNO Criando OBJETO
         internal static UpdateObject CreateGameObject(float x, float y, float z)
         {
             BinaryWriter writer = new BinaryWriter(new MemoryStream());
@@ -197,9 +205,9 @@ namespace RealmServer.Game
 
             // Position
 
-            writer.Write((float) x);
-            writer.Write((float) y);
-            writer.Write((float) z);
+            writer.Write(x);
+            writer.Write(y);
+            writer.Write(z);
 
             writer.Write((float) 0); // R
 
@@ -211,7 +219,8 @@ namespace RealmServer.Game
             return new UpdateObject(new List<byte[]> {(writer.BaseStream as MemoryStream)?.ToArray()}, 1);
         }
 
-        // Create Unit
+        public static int abab;
+        // USO INTERNO Criando Spawn NPC
         internal static UpdateObject CreateUnit(float x, float y, float z, float o)
         {
             BinaryWriter writer = new BinaryWriter(new MemoryStream());
@@ -234,24 +243,27 @@ namespace RealmServer.Game
             writer.Write((UInt32) Environment.TickCount); // Time
 
             // Position
-            writer.Write((float) x);
-            writer.Write((float) y);
-            writer.Write((float) z+1);
-            writer.Write((float) 0); // R
+            writer.Write(x);
+            writer.Write(y);
+            writer.Write(z);
+            // Check if spawn have a Orientation if not random
+            writer.Write(GetRandomNumber(0, 12)); // R
 
             // Movement speeds
             writer.Write((float) 0); // ????
 
-            writer.Write((float) 2.5f); // MOVE_WALK
-            writer.Write((float) 7); // MOVE_RUN
-            writer.Write((float) 4.5f); // MOVE_RUN_BACK
-            writer.Write((float) 4.72f * 20); // MOVE_SWIM
-            writer.Write((float) 2.5f); // MOVE_SWIM_BACK
-            writer.Write((float) 3.14f); // MOVE_TURN_RATE
+            writer.Write(2.5f);  // MOVE_WALK
+            writer.Write(7f);    // MOVE_RUN
+            writer.Write(4.5f);  // MOVE_RUN_BACK
+            writer.Write(4.72f); // MOVE_SWIM
+            writer.Write(2.5f);  // MOVE_SWIM_BACK
+            writer.Write(3.14f); // MOVE_TURN_RATE
 
-            writer.Write(0x1); // Unkown...
+            writer.Write(abab);   // Unkown...
 
             entity.WriteUpdateFields(writer);
+            Console.WriteLine($@"Vem aqui cao => {abab}");
+            abab++;
 
             return new UpdateObject(new List<byte[]> {(writer.BaseStream as MemoryStream)?.ToArray()}, 1);
         }

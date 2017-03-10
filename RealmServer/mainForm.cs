@@ -9,6 +9,7 @@ using Common.Helpers;
 using RealmServer.Handlers;
 using Common.Database.Dbc;
 using Common.Network;
+using RealmServer.Game.Entitys;
 using RealmServer.Game.Managers;
 using RealmServer.Scripting;
 
@@ -56,6 +57,9 @@ namespace RealmServer
             // [WORLD] PlayerManager / ObjectManager
             PlayerManager.Boot();
             //GameObjectComponent = new GameObjectComponent();
+
+            // Inteligencia
+            AiBrain.Boot();
 
             // 
             RealmServerRouter.AddHandler<CmsgAuthSession>(RealmCMD.CMSG_AUTH_SESSION, RealmServerHandler.OnAuthSession);
