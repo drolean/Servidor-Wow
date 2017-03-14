@@ -14,17 +14,33 @@ namespace RealmServer.Game.Entitys
         public ItemEntity(ItemsItem item)
             : base(new ObjectGuid((uint) item.id, TypeId.TypeidItem, HighGuid.HighguidItem))
         {
+            Console.WriteLine($@" => {ObjectGuid.RawGuid}");
             SetUpdateField((int) ObjectFields.OBJECT_FIELD_ENTRY, (byte) item.id);
             SetUpdateField((int) ObjectFields.OBJECT_FIELD_SCALE_X, 1f);
-            SetUpdateField((int) ObjectFields.OBJECT_FIELD_TYPE, 3);
+            SetUpdateField((int) ObjectFields.OBJECT_FIELD_TYPE, 2);
+            SetUpdateField((int) ObjectFields.OBJECT_FIELD_PADDING, 0);
 
+            //
             SetUpdateField((int) ItemFields.ITEM_FIELD_STACK_COUNT, item.stackable);
             SetUpdateField((int) ItemFields.ITEM_FIELD_DURABILITY, 25);
+
+            //
+            SetUpdateField((int) ItemFields.ITEM_FIELD_OWNER, ObjectGuid.RawGuid);
+            SetUpdateField((int) ItemFields.ITEM_FIELD_CREATOR, ObjectGuid.RawGuid);
 
             Console.WriteLine($@"ItemEntity: [ID {item.id}] / [{item.name}] => aba {aba}");
             aba++;
         }
     }
+
+
+    public enum ContainerFields
+    {
+        CONTAINER_FIELD_NUM_SLOTS = 0x0, //0
+        CONTAINER_ALIGN_PAD = 0x1, //1
+        CONTAINER_FIELD_SLOT_1 = 0x2, //2 - 41 (Total : 40)
+        CONTAINER_END = 0x2A //42
+    };
 
     public enum ItemFields
     {
