@@ -59,6 +59,7 @@
   <ItemGroup>
     <Compile Include="Game\Entitys\BaseEntity.cs" />
     <Compile Include="Game\Entitys\GameObjectEntity.cs" />
+    <Compile Include="Game\Entitys\ItemEntity.cs" />
     <Compile Include="Game\Entitys\ObjectEntity.cs" />
     <Compile Include="Game\Entitys\UnitEntity.cs" />
     <Compile Include="Game\Managers\WeatherManager.cs" />

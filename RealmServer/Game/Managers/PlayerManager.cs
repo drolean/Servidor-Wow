@@ -79,7 +79,7 @@ namespace RealmServer.Game.Managers
 
                     // NPC Spawns
 
-                    // Atualização de coisas do jogo
+                    // Update Packet
                     if (player.UpdateCount > 0)
                     {
                         PacketServer packet = UpdateObject.UpdateValues(player);

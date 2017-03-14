@@ -652,7 +652,7 @@ namespace RealmServer.Handlers
             session.SendPacket(new SmsgInitWorldStates(session.Character));
             session.SendPacket(UpdateObject.CreateOwnCharacterUpdate(session.Character, out session.Entity));
 
-            // Nao sei
+            // Set Sesstion Player
             session.Entity.Session = session;
 
             WorldManager.DispatchOnPlayerSpawn(session.Entity);
@@ -730,7 +730,11 @@ namespace RealmServer.Handlers
 
             // If the player is resting, then it's instant logout
             _logoutQueue.Add(session, DateTime.Now);
+#if DEBUG
+            Thread thread = new Thread(() => Update(1));
+#else
             Thread thread = new Thread(() => Update(20));
+#endif
             thread.Start();
         }
 

@@ -21,7 +21,7 @@ namespace RealmServer.Game
             return (float) (Random.NextDouble() * (maximum - minimum) + minimum);
         }
 
-
+        //
         private UpdateObject(List<byte[]> blocks, int hasTansport = 0) : base(RealmCMD.SMSG_UPDATE_OBJECT)
         {
             Write((uint) blocks.Count);
@@ -283,6 +283,7 @@ namespace RealmServer.Game
             return new UpdateObject(new List<byte[]> {((MemoryStream) writer.BaseStream).ToArray()});
         }
 
+        //
         internal static byte[] GenerateGuidBytes(ulong id)
         {
             byte[] packedGuid = new byte[9];
@@ -306,12 +307,34 @@ namespace RealmServer.Game
             return clippedArray;
         }
 
+        //
         internal static void WriteBytes(BinaryWriter writer, byte[] data, int count = 0)
         {
             if (count == 0)
                 writer.Write(data);
             else
                 writer.Write(data, 0, count);
+        }
+
+        //
+        internal static PacketServer CreateItem(int parse)
+        {
+            BinaryWriter writer = new BinaryWriter(new MemoryStream());
+            writer.Write((byte) ObjectUpdateType.UPDATETYPE_CREATE_OBJECT);
+
+            var abacate = XmlReader.ItemsXml.Item.First(a => a.id == parse);
+
+            ItemEntity entity = new ItemEntity(abacate);
+            Console.WriteLine(entity.ObjectGuid.RawGuid);
+
+            writer.WritePackedUInt64(entity.ObjectGuid.RawGuid);
+            writer.Write((byte) TypeId.TypeidItem);
+            writer.Write((byte) 0x18);
+            //writer.Write((long) entity.ObjectGuid.RawGuid);
+
+            entity.WriteUpdateFields(writer);
+
+            return new UpdateObject(new List<byte[]> {(writer.BaseStream as MemoryStream)?.ToArray()}, 1);
         }
     }
 

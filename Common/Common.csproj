@@ -81,6 +81,7 @@
     <Compile Include="Database\Tables\CharactersSkills.cs" />
     <Compile Include="Database\Tables\CharactersSocials.cs" />
     <Compile Include="Database\Tables\CharactersSpells.cs" />
+    <Compile Include="Database\Tables\LogsChat.cs" />
     <Compile Include="Database\Tables\Realms.cs" />
     <Compile Include="Database\Tables\Users.cs" />
     <Compile Include="Database\XmlReader.cs" />

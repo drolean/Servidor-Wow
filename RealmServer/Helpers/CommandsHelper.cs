@@ -23,6 +23,8 @@ namespace RealmServer.Helpers
             if (splitMessage[0].ToLower() == "unt")
                 session.SendPacket(UpdateObject.CreateUnit(session.Character.MapX, session.Character.MapY, session.Character.MapZ, session.Character.MapO));
 
+            if (splitMessage[0].ToLower() == "item")
+                session.SendPacket(UpdateObject.CreateItem(int.Parse(splitMessage[1].ToLower())));
 
             if (splitMessage[0].ToLower() == "gps")
             {

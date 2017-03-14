@@ -58,6 +58,9 @@ namespace Common.Database
 
         [DataAccessObjects]
         public abstract DataAccessObjects<CharactersSocials> CharactersSocials { get; }
+
+        [DataAccessObjects]
+        public abstract DataAccessObjects<LogsChat> LogsChat { get; }
     }
 
     public class DatabaseManager : DatabaseModel<Models>
@@ -103,14 +106,6 @@ namespace Common.Database
                 realmPvp.name       = "Firetree";
                 realmPvp.address    = "127.0.0.1:1001";
                 realmPvp.created_at = DateTime.Now;
-
-                var realmPve = Model.Realms.Create();
-                realmPve.flag       = RealmFlag.NewPlayers;
-                realmPve.timezone   = RealmTimezone.AnyLocale;
-                realmPve.type       = RealmType.Normal;
-                realmPve.name       = "Quel'Thalas";
-                realmPve.address    = "127.0.0.1:1001";
-                realmPve.created_at = DateTime.Now;
 
                 scope.Complete();
             }
