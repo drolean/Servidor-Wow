@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Linq;
 using System.Threading;
-using Common.Database;
 using Common.Globals;
 using RealmServer.Game;
-using RealmServer.Game.Entitys;
 using RealmServer.Handlers;
 
 namespace RealmServer.Helpers
@@ -25,8 +23,8 @@ namespace RealmServer.Helpers
             if (splitMessage[0].ToLower() == "unt")
                 session.SendPacket(UpdateObject.CreateUnit(session.Character.MapX, session.Character.MapY, session.Character.MapZ, session.Character.MapO));
 
-            if (splitMessage[0].ToLower() == "item")
-                session.SendPacket(UpdateObject.CreateItem(int.Parse(splitMessage[1].ToLower())));
+            //if (splitMessage[0].ToLower() == "item")
+                //session.SendPacket(UpdateObject.CreateItem(int.Parse(splitMessage[1].ToLower())));
 
             if (splitMessage[0].ToLower() == "gps")
             {

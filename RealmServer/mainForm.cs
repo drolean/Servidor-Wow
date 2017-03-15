@@ -139,6 +139,11 @@ namespace RealmServer
 
             // Item Handler
             RealmServerRouter.AddHandler<PacketReader>(RealmCMD.CMSG_ITEM_QUERY_SINGLE, ItemHandler.OnItemQuerySingle);
+            RealmServerRouter.AddHandler<PacketReader>(RealmCMD.CMSG_SWAP_INV_ITEM, ItemHandler.OnSwapInvItem);
+            RealmServerRouter.AddHandler<PacketReader>(RealmCMD.CMSG_DESTROYITEM, ItemHandler.OnDestroyItem);
+            RealmServerRouter.AddHandler<PacketReader>(RealmCMD.CMSG_USE_ITEM, ItemHandler.OnUseItem);
+            RealmServerRouter.AddHandler<PacketReader>(RealmCMD.CMSG_AUTOEQUIP_ITEM, ItemHandler.OnAutoEquipItem);
+            RealmServerRouter.AddHandler<PacketReader>(RealmCMD.CMSG_SPLIT_ITEM, ItemHandler.OnSplitItem);
 
             // Social Handler
             RealmServerRouter.AddHandler<PacketReader>(RealmCMD.CMSG_FRIEND_LIST, SocialHandler.OnFriendList);

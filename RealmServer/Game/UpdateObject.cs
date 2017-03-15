@@ -107,92 +107,15 @@ namespace RealmServer.Game
             return new UpdateObject(new List<byte[]> { (writer.BaseStream as MemoryStream)?.ToArray() }, 1);
         }
 
-        // Update Values for Character 
-        internal static PacketServer CreateCharacterUpdate(Characters character)
+        internal static UpdateObject CreateItem(CharactersInventorys inventory, Characters sessionCharacter)
         {
-            BinaryWriter writer = new BinaryWriter(new MemoryStream());
-            writer.Write((byte) ObjectUpdateType.UPDATETYPE_CREATE_OBJECT_SELF);
-
-            byte[] guidBytes = GenerateGuidBytes((ulong) character.Id);
-            WriteBytes(writer, guidBytes, guidBytes.Length);
-
-            writer.Write((byte) TypeId.TypeidPlayer);
-
-            ObjectUpdateFlag updateFlags = ObjectUpdateFlag.UpdateflagAll |
-                                           ObjectUpdateFlag.UpdateflagHasPosition |
-                                           ObjectUpdateFlag.UpdateflagLiving;
-
-            writer.Write((byte) updateFlags);
-
-            writer.Write((uint) MovementFlags.MoveflagNone);
-            writer.Write((uint) Environment.TickCount); // Time?
-
-            // Position
-            writer.Write(character.MapX);
-            writer.Write(character.MapY);
-            writer.Write(character.MapZ);
-            writer.Write(character.MapO); // R
-
-            // Movement speeds
-            writer.Write((float) 0); // ????
-
-            writer.Write(2.5f); // MOVE_WALK
-            writer.Write(7f); // MOVE_RUN
-            writer.Write(4.5f); // MOVE_RUN_BACK
-            writer.Write(4.72f * 20); // MOVE_SWIM
-            writer.Write(2.5f); // MOVE_SWIM_BACK
-            writer.Write(3.14f); // MOVE_TURN_RATE
-
-            writer.Write(0x1); // Unkown...
-
-            PlayerEntity playerEntity = new PlayerEntity(character) {Guid = (uint) character.Id};
-
-            playerEntity.WriteUpdateFields(writer);
-
-            return new UpdateObject(new List<byte[]> {(writer.BaseStream as MemoryStream)?.ToArray()});
-        }
-
-        // Update Values Player on World
-        internal static PacketServer UpdateValues(PlayerEntity player)
-        {
-            BinaryWriter writer = new BinaryWriter(new MemoryStream());
-            writer.Write((byte) ObjectUpdateType.UPDATETYPE_VALUES);
-
-            byte[] guidBytes = GenerateGuidBytes(player.ObjectGuid.RawGuid);
-            WriteBytes(writer, guidBytes, guidBytes.Length);
-
-            player.WriteUpdateFields(writer);
-
-            return new UpdateObject(new List<byte[]> {(writer.BaseStream as MemoryStream)?.ToArray()});
-        }
-
-        // Out of Range Object in World
-        internal static PacketServer CreateOutOfRangeUpdate(List<zoneObjeto> despawnObjeto)
-        {
-            BinaryWriter writer = new BinaryWriter(new MemoryStream());
-            writer.Write((byte) ObjectUpdateType.UPDATETYPE_OUT_OF_RANGE_OBJECTS);
-            writer.Write((uint) 1);
-
-            foreach (zoneObjeto entity in despawnObjeto)
-            {
-                writer.WritePackedUInt64(entity.id);
-            }
-
-            return new UpdateObject(new List<byte[]> { ((MemoryStream)writer.BaseStream).ToArray() });
-        }
-
-        //
-        internal static UpdateObject CreateItem(int parse)
-        {
-            var abacate = XmlReader.ItemsXml.Item.First(a => a.id == parse);
-
             BinaryWriter writer = new BinaryWriter(new MemoryStream());
             writer.Write((byte) ObjectUpdateType.UPDATETYPE_CREATE_OBJECT);
 
-            ItemEntity entity = new ItemEntity(abacate)
+            ItemEntity entity = new ItemEntity(inventory, sessionCharacter)
             {
-                ObjectGuid = new ObjectGuid((ulong) abacate.id),
-                Guid = (ulong) abacate.id
+                ObjectGuid = new ObjectGuid(inventory.item),
+                Guid = inventory.item
             };
 
             writer.WritePackedUInt64(entity.ObjectGuid.RawGuid);
@@ -204,12 +127,9 @@ namespace RealmServer.Game
 
             writer.Write((byte) updateFlags);
 
-            //writer.Write(entity.ObjectGuid.RawGuid);
-
             writer.Write(0f);
             writer.Write(0f);
             writer.Write(0f);
-            //writer.Write(0f);
 
             writer.Write((float) 0);
 
@@ -321,6 +241,80 @@ namespace RealmServer.Game
             }
 
             return new UpdateObject(new List<byte[]> {((MemoryStream) writer.BaseStream).ToArray()});
+        }
+
+        // Update Values for Character 
+        internal static PacketServer CreateCharacterUpdate(Characters character)
+        {
+            BinaryWriter writer = new BinaryWriter(new MemoryStream());
+            writer.Write((byte)ObjectUpdateType.UPDATETYPE_CREATE_OBJECT_SELF);
+
+            byte[] guidBytes = GenerateGuidBytes((ulong)character.Id);
+            WriteBytes(writer, guidBytes, guidBytes.Length);
+
+            writer.Write((byte)TypeId.TypeidPlayer);
+
+            ObjectUpdateFlag updateFlags = ObjectUpdateFlag.UpdateflagAll |
+                                           ObjectUpdateFlag.UpdateflagHasPosition |
+                                           ObjectUpdateFlag.UpdateflagLiving;
+
+            writer.Write((byte)updateFlags);
+
+            writer.Write((uint)MovementFlags.MoveflagNone);
+            writer.Write((uint)Environment.TickCount); // Time?
+
+            // Position
+            writer.Write(character.MapX);
+            writer.Write(character.MapY);
+            writer.Write(character.MapZ);
+            writer.Write(character.MapO); // R
+
+            // Movement speeds
+            writer.Write((float)0); // ????
+
+            writer.Write(2.5f); // MOVE_WALK
+            writer.Write(7f); // MOVE_RUN
+            writer.Write(4.5f); // MOVE_RUN_BACK
+            writer.Write(4.72f * 20); // MOVE_SWIM
+            writer.Write(2.5f); // MOVE_SWIM_BACK
+            writer.Write(3.14f); // MOVE_TURN_RATE
+
+            writer.Write(0x1); // Unkown...
+
+            PlayerEntity playerEntity = new PlayerEntity(character) { Guid = (uint)character.Id };
+
+            playerEntity.WriteUpdateFields(writer);
+
+            return new UpdateObject(new List<byte[]> { (writer.BaseStream as MemoryStream)?.ToArray() });
+        }
+
+        // Update Values Player on World
+        internal static PacketServer UpdateValues(PlayerEntity player)
+        {
+            BinaryWriter writer = new BinaryWriter(new MemoryStream());
+            writer.Write((byte)ObjectUpdateType.UPDATETYPE_VALUES);
+
+            byte[] guidBytes = GenerateGuidBytes(player.ObjectGuid.RawGuid);
+            WriteBytes(writer, guidBytes, guidBytes.Length);
+
+            player.WriteUpdateFields(writer);
+
+            return new UpdateObject(new List<byte[]> { (writer.BaseStream as MemoryStream)?.ToArray() });
+        }
+
+        // Out of Range Object in World
+        internal static PacketServer CreateOutOfRangeUpdate(List<zoneObjeto> despawnObjeto)
+        {
+            BinaryWriter writer = new BinaryWriter(new MemoryStream());
+            writer.Write((byte)ObjectUpdateType.UPDATETYPE_OUT_OF_RANGE_OBJECTS);
+            writer.Write((uint)1);
+
+            foreach (zoneObjeto entity in despawnObjeto)
+            {
+                writer.WritePackedUInt64(entity.id);
+            }
+
+            return new UpdateObject(new List<byte[]> { ((MemoryStream)writer.BaseStream).ToArray() });
         }
 
         //

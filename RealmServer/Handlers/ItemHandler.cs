@@ -1,4 +1,5 @@
-﻿using Common.Globals;
+﻿using System;
+using Common.Globals;
 using Common.Helpers;
 using Common.Network;
 
@@ -128,6 +129,56 @@ namespace RealmServer.Handlers
             Log.Print(LogType.Debug, $"Checando item de id [{itemId}]");
 
             session.SendPacket(new SmsgItemQuerySingleResponse());
+        }
+
+        internal static void OnSwapInvItem(RealmServerSession session, PacketReader handler)
+        {
+            byte srcSlot = handler.ReadByte();
+            byte dstSlot = handler.ReadByte();
+
+            Log.Print(LogType.Debug, $"Trocando item de Slot [{srcSlot}] para ===> [{dstSlot}]");
+        }
+
+        internal static void OnDestroyItem(RealmServerSession session, PacketReader handler)
+        {
+            byte srcBag = handler.ReadByte();
+            byte srcSlot = handler.ReadByte();
+            byte count = handler.ReadByte();
+
+            Log.Print(LogType.Debug, $"Destruindo item de Bag [{srcBag}] Slot: [{srcSlot}] Count: [{count}]");
+        }
+
+        internal static void OnUseItem(RealmServerSession session, PacketReader handler)
+        {
+            byte bag = handler.ReadByte();
+            if (bag == 255) bag = 0;
+            byte slot = handler.ReadByte();
+            byte tmp = handler.ReadByte();
+
+            Log.Print(LogType.Debug, $"Usando item [{bag}] Slot: [{slot}] Tmp: [{tmp}]");
+        }
+
+        internal static void OnAutoEquipItem(RealmServerSession session, PacketReader handler)
+        {
+            byte srcSlot = handler.ReadByte();
+            byte dstSlot = handler.ReadByte();
+
+            Log.Print(LogType.Debug, $"Auto Equipe item de Slot [{srcSlot}] para ===> [{dstSlot}]");
+        }
+
+        internal static void OnSplitItem(RealmServerSession session, PacketReader handler)
+        {
+            byte srcBag = handler.ReadByte();
+            byte srcSlot = handler.ReadByte();
+            byte dstBag = handler.ReadByte();
+            byte dstSlot = handler.ReadByte();
+            byte count = handler.ReadByte();
+            if (dstBag == 255)
+                dstBag = 0;
+            if (srcBag == 255)
+                srcBag = 0;
+
+            Log.Print(LogType.Debug, $"Split Item srcSlot: [{srcSlot} => {dstSlot}] dstbag [{srcBag} => {dstBag}] count: {count}");
         }
     }
 }

@@ -657,6 +657,13 @@ namespace RealmServer.Handlers
 
             WorldManager.DispatchOnPlayerSpawn(session.Entity);
 
+            // Generate Inventory
+            foreach (var inventory in MainForm.Database.GetInventory(session.Character))
+            {
+                session.SendPacket(UpdateObject.CreateItem(inventory, session.Character));
+            }
+            
+
             /*          
             // Cast talents and racial passive spells
 

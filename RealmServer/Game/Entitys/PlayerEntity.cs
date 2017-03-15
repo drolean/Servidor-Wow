@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Common.Database.Dbc;
 using Common.Database.Tables;
 using Common.Database.Xml;
@@ -121,18 +122,22 @@ namespace RealmServer.Game.Entitys
                 {
                     if (j < 19)
                     {
-                        SetUpdateField((int)PlayerFields.PLAYER_VISIBLE_ITEM_1_0 + (int)inventory.Find(item => item.slot == j).slot * 12, inventory.Find(item => item.slot == j).item);
-                        SetUpdateField((int)PlayerFields.PLAYER_VISIBLE_ITEM_1_PROPERTIES + j * 12, 0);
+                        Console.WriteLine($"Veio aqui algo besta => {inventory.Find(item => item.slot == j).slot} em => {inventory.Find(item => item.slot == j).item}");
+                        SetUpdateField((int) PlayerFields.PLAYER_VISIBLE_ITEM_1_0 + (int)inventory.Find(item => item.slot == j).slot * 12, inventory.Find(item => item.slot == j).item);
+                        SetUpdateField((int) PlayerFields.PLAYER_VISIBLE_ITEM_1_PROPERTIES + j * 12, 0);
                     }
 
-                    SetUpdateField((int)PlayerFields.PLAYER_FIELD_INV_SLOT_HEAD + j * 2, inventory.Find(item => item.slot == j).item);
+                    SetUpdateField((int) PlayerFields.PLAYER_FIELD_INV_SLOT_HEAD + j * 2, inventory.Find(item => item.slot == j).item);
                 }
                 else
                 {
                     if (j < 19)
-                        SetUpdateField((int)PlayerFields.PLAYER_VISIBLE_ITEM_1_0 + j * 12, 0);
+                    {
+                        SetUpdateField((int) PlayerFields.PLAYER_VISIBLE_ITEM_1_0 + j * 12, 0);
+                        SetUpdateField((int) PlayerFields.PLAYER_VISIBLE_ITEM_1_PROPERTIES + j * 12, 0);
+                    }
 
-                    SetUpdateField((int)PlayerFields.PLAYER_FIELD_INV_SLOT_HEAD + j * 2, 0);
+                    SetUpdateField((int) PlayerFields.PLAYER_FIELD_INV_SLOT_HEAD + j * 2, 0);
                 }
             }
         }

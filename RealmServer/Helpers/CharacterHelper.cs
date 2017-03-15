@@ -258,13 +258,20 @@ namespace RealmServer.Helpers
                 if (item.@class == 0)
                     stack = 5;
 
+                if (item.id == 6948)
+                    stack = 1;
+
                 using (var scope = new DataAccessScope())
                 {
                     var inventory = Model.CharactersInventorys.Create();
-                        inventory.character  = character;
-                        inventory.item       = (ulong)item.id;
-                        inventory.stack      = (uint) stack;
-                        inventory.slot       = PrefInvSlot(item) == 23 ? 23 + countBag : PrefInvSlot(item);
+                        inventory.item = (ulong) item.id;
+                        inventory.bag = character.Id;
+                        inventory.slot = PrefInvSlot(item) == 23 ? 23 + countBag : PrefInvSlot(item);
+                        inventory.stack = (uint) stack;
+                        //inventory.durability = item.
+                        inventory.flags = 1;
+
+                        inventory.character  = character;                       
                         inventory.created_at = DateTime.Now;
 
                     scope.Complete();

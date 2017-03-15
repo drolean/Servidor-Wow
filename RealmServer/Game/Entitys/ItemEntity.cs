@@ -1,5 +1,5 @@
 ﻿using System;
-using Common.Database.Xml;
+using Common.Database.Tables;
 using Common.Globals;
 
 namespace RealmServer.Game.Entitys
@@ -9,26 +9,21 @@ namespace RealmServer.Game.Entitys
         public TypeId TypeId => TypeId.TypeidItem;
         public override int DataLength => (int) ItemFields.ITEM_END;
 
-        public static int aba;
-
-        public ItemEntity(ItemsItem item)
-            : base(new ObjectGuid((uint) item.id, TypeId.TypeidItem, HighGuid.HighguidItem))
+        public ItemEntity(CharactersInventorys inventory, Characters sessionCharacter)
+            : base(new ObjectGuid((uint) inventory.item, TypeId.TypeidItem, HighGuid.HighguidItem))
         {
-            Console.WriteLine($@" => {ObjectGuid.RawGuid}");
-            SetUpdateField((int) ObjectFields.OBJECT_FIELD_TYPE, 3); //
-            SetUpdateField((int) ObjectFields.OBJECT_FIELD_ENTRY, (int) item.id);
-            SetUpdateField((int) ObjectFields.OBJECT_FIELD_SCALE_X, 1f);
+            SetUpdateField((int) ObjectFields.OBJECT_FIELD_TYPE, 3); // 3 na BAG / 2 naosei / 7 e uma bag
+            SetUpdateField((int) ObjectFields.OBJECT_FIELD_ENTRY, (byte) inventory.item);
+            SetUpdateField((int) ObjectFields.OBJECT_FIELD_SCALE_X, 1.0f);
 
             //
-            //SetUpdateField((int) ItemFields.ITEM_FIELD_STACK_COUNT, 1);
-            //SetUpdateField((int) ItemFields.ITEM_FIELD_DURABILITY, 25);
+            SetUpdateField((int) ItemFields.ITEM_FIELD_OWNER, (ulong) sessionCharacter.Id); // ID do char
+            SetUpdateField((int) ItemFields.ITEM_FIELD_CONTAINED, (ulong) sessionCharacter.Id); // ID do char
 
             //
-            //SetUpdateField((int) ItemFields.ITEM_FIELD_OWNER, ObjectGuid.RawGuid);
-            //SetUpdateField((int) ItemFields.ITEM_FIELD_CREATOR, ObjectGuid.RawGuid);
+            SetUpdateField((int) ItemFields.ITEM_FIELD_STACK_COUNT, inventory.stack);
 
-            Console.WriteLine($@"ItemEntity: [ID {item.id}] / [{item.name}] => aba {aba}");
-            aba++;
+            Console.WriteLine($@"ItemEntity: [ID {inventory.Id}] / [{inventory.item}]");
         }
     }
 
