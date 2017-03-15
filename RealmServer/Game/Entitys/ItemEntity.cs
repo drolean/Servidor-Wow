@@ -4,7 +4,7 @@ using Common.Globals;
 
 namespace RealmServer.Game.Entitys
 {
-    class ItemEntity : ObjectEntity
+    public class ItemEntity : ObjectEntity
     {
         public TypeId TypeId => TypeId.TypeidItem;
         public override int DataLength => (int) ItemFields.ITEM_END;
@@ -15,24 +15,22 @@ namespace RealmServer.Game.Entitys
             : base(new ObjectGuid((uint) item.id, TypeId.TypeidItem, HighGuid.HighguidItem))
         {
             Console.WriteLine($@" => {ObjectGuid.RawGuid}");
-            SetUpdateField((int) ObjectFields.OBJECT_FIELD_ENTRY, (byte) item.id);
+            SetUpdateField((int) ObjectFields.OBJECT_FIELD_TYPE, 3); //
+            SetUpdateField((int) ObjectFields.OBJECT_FIELD_ENTRY, (int) item.id);
             SetUpdateField((int) ObjectFields.OBJECT_FIELD_SCALE_X, 1f);
-            SetUpdateField((int) ObjectFields.OBJECT_FIELD_TYPE, 2);
-            SetUpdateField((int) ObjectFields.OBJECT_FIELD_PADDING, 0);
 
             //
-            SetUpdateField((int) ItemFields.ITEM_FIELD_STACK_COUNT, item.stackable);
-            SetUpdateField((int) ItemFields.ITEM_FIELD_DURABILITY, 25);
+            //SetUpdateField((int) ItemFields.ITEM_FIELD_STACK_COUNT, 1);
+            //SetUpdateField((int) ItemFields.ITEM_FIELD_DURABILITY, 25);
 
             //
-            SetUpdateField((int) ItemFields.ITEM_FIELD_OWNER, ObjectGuid.RawGuid);
-            SetUpdateField((int) ItemFields.ITEM_FIELD_CREATOR, ObjectGuid.RawGuid);
+            //SetUpdateField((int) ItemFields.ITEM_FIELD_OWNER, ObjectGuid.RawGuid);
+            //SetUpdateField((int) ItemFields.ITEM_FIELD_CREATOR, ObjectGuid.RawGuid);
 
             Console.WriteLine($@"ItemEntity: [ID {item.id}] / [{item.name}] => aba {aba}");
             aba++;
         }
     }
-
 
     public enum ContainerFields
     {

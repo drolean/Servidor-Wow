@@ -189,18 +189,35 @@ namespace RealmServer.Game
             BinaryWriter writer = new BinaryWriter(new MemoryStream());
             writer.Write((byte) ObjectUpdateType.UPDATETYPE_CREATE_OBJECT);
 
-            ItemEntity entity = new ItemEntity(abacate);
+            ItemEntity entity = new ItemEntity(abacate)
+            {
+                ObjectGuid = new ObjectGuid((ulong) abacate.id),
+                Guid = (ulong) abacate.id
+            };
 
             writer.WritePackedUInt64(entity.ObjectGuid.RawGuid);
             writer.Write((byte) TypeId.TypeidItem);
 
-            ObjectUpdateFlag updateFlags = ObjectUpdateFlag.UpdateflagHighguid |
-                                           ObjectUpdateFlag.UpdateflagAll;
+            ObjectUpdateFlag updateFlags = ObjectUpdateFlag.UpdateflagTransport |
+                                           ObjectUpdateFlag.UpdateflagAll |
+                                           ObjectUpdateFlag.UpdateflagHasPosition;
 
             writer.Write((byte) updateFlags);
-            writer.Write(entity.ObjectGuid.RawGuid);
+
+            //writer.Write(entity.ObjectGuid.RawGuid);
+
+            writer.Write(0f);
+            writer.Write(0f);
+            writer.Write(0f);
+            //writer.Write(0f);
+
+            writer.Write((float) 0);
+
+            writer.Write((uint) 0x1);
+            writer.Write((uint) 0);
 
             entity.WriteUpdateFields(writer);
+
             return new UpdateObject(new List<byte[]> {(writer.BaseStream as MemoryStream)?.ToArray()});
         }
 
