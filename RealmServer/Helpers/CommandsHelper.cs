@@ -9,7 +9,7 @@ namespace RealmServer.Helpers
 {
     internal class CommandsHelper
     {
-        public static int Aba;
+        public static int Aba = 17;
         public static UnitFlags Value = UnitFlags.UNIT_FLAG_NONE;
         public CommandsHelper(RealmServerSession session, string message)
         {
@@ -23,8 +23,41 @@ namespace RealmServer.Helpers
             if (splitMessage[0].ToLower() == "unt")
                 session.SendPacket(UpdateObject.CreateUnit(session.Character.MapX, session.Character.MapY, session.Character.MapZ, session.Character.MapO));
 
-            //if (splitMessage[0].ToLower() == "item")
-                //session.SendPacket(UpdateObject.CreateItem(int.Parse(splitMessage[1].ToLower())));
+            if (splitMessage[0].ToLower() == "item")
+            {
+                Console.WriteLine($@"Veio item aqui {Aba} => {int.Parse(splitMessage[1].ToLower())}");
+                MainForm.Database.ItemUpdate(int.Parse(splitMessage[1].ToLower()));
+
+                Thread.Sleep(1500);
+
+                var inventory = MainForm.Database.GetInventory(session.Character);
+                for (int j = 0; j < 112; j++)
+                {
+                    if (inventory.Find(item => item.slot == j) != null)
+                    {
+                        if (j < 19)
+                        {
+                            session.Entity.SetUpdateField((int)PlayerFields.PLAYER_VISIBLE_ITEM_1_0 + (int)inventory.Find(item => item.slot == j).slot * 12, inventory.Find(item => item.slot == j).item);
+                            session.Entity.SetUpdateField((int)PlayerFields.PLAYER_VISIBLE_ITEM_1_PROPERTIES + j * 12, 0);
+                        }
+
+                        session.Entity.SetUpdateField((int)PlayerFields.PLAYER_FIELD_INV_SLOT_HEAD + j * 2, inventory.Find(item => item.slot == j).item);
+
+                        session.SendPacket(UpdateObject.CreateItem(inventory.Find(item => item.slot == j), session.Character));
+                    }
+                    else
+                    {
+                        if (j < 19)
+                        {
+                            session.Entity.SetUpdateField((int)PlayerFields.PLAYER_VISIBLE_ITEM_1_0 + j * 12, 0);
+                            session.Entity.SetUpdateField((int)PlayerFields.PLAYER_VISIBLE_ITEM_1_PROPERTIES + j * 12, 0);
+                        }
+
+                        session.Entity.SetUpdateField((int)PlayerFields.PLAYER_FIELD_INV_SLOT_HEAD + j * 2, 0);
+                    }
+                }
+                Aba++;
+            }
 
             if (splitMessage[0].ToLower() == "gps")
             {

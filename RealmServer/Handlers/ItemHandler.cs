@@ -124,7 +124,11 @@ namespace RealmServer.Handlers
         internal static void OnItemQuerySingle(RealmServerSession session, PacketReader handler)
         {
             // check packet size[length
-            uint itemId = handler.ReadUInt32();
+
+            // Int32
+            int itemId = handler.ReadInt32();
+            //short algo = handler.ReadSByte();
+            //int itemId = handler.ReadInt32();
 
             Log.Print(LogType.Debug, $"Checando item de id [{itemId}]");
 

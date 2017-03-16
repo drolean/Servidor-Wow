@@ -285,5 +285,17 @@ namespace RealmServer
                 await scope.CompleteAsync();
             }
         }
+
+        ///
+        internal async void ItemUpdate(int itemId)
+        {
+            using (var scope = new DataAccessScope())
+            {
+                var character = Model.CharactersInventorys.First(a => a.Id == 8);
+                    character.item = (ulong) itemId;
+
+                await scope.CompleteAsync();
+            }
+        }
     }
 }
