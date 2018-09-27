@@ -92,14 +92,14 @@ namespace AuthServer
 
             foreach (var realm in realms)
             {
-                Write((uint) realm.type);         // Type
-                Write((byte) realm.flag);         // Flag
-                WriteCString(realm.name);    // Name World
-                WriteCString(realm.address); // IP World
-                Write(0.5f);                      // Pop
-                Write((byte) 0x00);               // Chars
-                Write((byte) realm.timezone);     // time
-                Write((byte) 0x01);               // ?????  
+                Write((uint) realm.type);     // Type
+                Write((byte) realm.flag);     // Flag
+                WriteCString(realm.name);     // Name World
+                WriteCString(realm.address);  // IP World
+                Write(0.5f);                  // Pop
+                Write((byte) 0x00);           // Chars
+                Write((byte) realm.timezone); // time
+                Write((byte) 0x01);           // ?????  
             }
 
             Write((UInt16)0x0002);

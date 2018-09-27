@@ -8,10 +8,10 @@ namespace AuthServer
 {
     public class AuthServerDatabase : DatabaseModel<Models>
     {
-        // Pega conta do usuario baseado no login
+        // Get user account based on login
         public Users GetAccount(string username) => !Model.Users.Any() ? null : Model.Users.FirstOrDefault(a => a.username.ToLower() == username.ToLower());
 
-        // Define a sessionkey do usuario autenticado
+        // Sets the authenticated user's sessionkey
         public async void SetSessionKey(string username, byte[] key)
         {
             Users account = GetAccount(username);
@@ -23,7 +23,7 @@ namespace AuthServer
             }
         }
 
-        // Pega lista de Realms
+        // Get Realms list
         internal List<Realms> GetRealms() => Model.Realms.Select(row => row).ToList();
     }
 }
