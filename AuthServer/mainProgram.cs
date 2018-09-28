@@ -7,11 +7,11 @@ using Common.Helpers;
 
 namespace AuthServer
 {
-    class MainProgram
+    internal class MainProgram
     {
         public static AuthServerDatabase Database { get; set; }
 
-        static void Main()
+        private static void Main()
         {
             var time = Time.GetMsTime();
             var authPoint = new IPEndPoint(IPAddress.Any, 3724);

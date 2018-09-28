@@ -13,12 +13,6 @@ namespace RealmServer
         /// </summary>
         [DllImport("kernel32.dll")]
         public static extern Boolean AllocConsole();
-
-        /// <summary>
-        /// Frees the console.
-        /// </summary>
-        [DllImport("kernel32.dll")]
-        public static extern Boolean FreeConsole();
     }
 
     static class MainProgram

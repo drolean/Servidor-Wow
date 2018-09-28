@@ -30,7 +30,7 @@ namespace RealmServer
             var realmPoint = new IPEndPoint(IPAddress.Any, 1001);
 
             InitializeComponent();
-            Win32.AllocConsole();
+//            Win32.AllocConsole();
             Text = $@"{Assembly.GetExecutingAssembly().GetName().Name} v{Assembly.GetExecutingAssembly().GetName().Version}";
 
             // Add columns
@@ -175,8 +175,8 @@ namespace RealmServer
 
         public sealed override string Text
         {
-            get { return base.Text; }
-            set { base.Text = value; }
+            get => base.Text;
+            set => base.Text = value;
         }
 
         private static readonly List<RealmCMD> MovementOpcodes = new List<RealmCMD>()

@@ -2,7 +2,6 @@
 
 namespace Common.Database.Xml
 {
-
     /// <remarks/>
     [XmlType(AnonymousType = true)]
     [XmlRoot(IsNullable = false, ElementName = "units")]

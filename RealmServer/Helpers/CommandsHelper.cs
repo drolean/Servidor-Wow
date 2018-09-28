@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Threading;
+using Common.Database;
 using Common.Globals;
 using RealmServer.Game;
 using RealmServer.Handlers;
@@ -16,6 +17,9 @@ namespace RealmServer.Helpers
             string[] splitMessage = message.Split(' ');
 
             Console.WriteLine($@"[Comando]: {splitMessage[0].ToLower()}");
+
+            if(splitMessage[0].ToLower() == "db")
+                XmlReader.Boot();
 
             if (splitMessage[0].ToLower() == "obj")
                 session.SendPacket(UpdateObject.CreateGameObject(session.Character.MapX, session.Character.MapY, session.Character.MapZ));
