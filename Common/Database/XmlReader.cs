@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -41,20 +42,27 @@ namespace Common.Database
                 readerRaces.Close();
 
                 // Creatures
+                /*
                 XmlSerializer serializerCreatures = new XmlSerializer(typeof(CreaturesXml));
                 StreamReader readerCreatures = new StreamReader("xml/creatures.xml");
                 CreaturesXml = serializerCreatures.Deserialize(readerCreatures) as CreaturesXml;
                 if (CreaturesXml != null)
                     Log.Print(LogType.Loading, $"=_ Creatures Loaded .....: {CreaturesXml.unit.Length}");
                 readerCreatures.Close();
+                */
 
                 // Game Objects
-                XmlSerializer serializerObjects = new XmlSerializer(typeof(ObjectsXml));
-                StreamReader readerObjects = new StreamReader("xml/world/0-azeroth.xml");
-                ObjectsAzeroth = serializerObjects.Deserialize(readerObjects) as ObjectsXml;
-                if (ObjectsAzeroth != null)
-                    Log.Print(LogType.Loading, $"=_ Azeroth Loaded .......: /Objects: [{ObjectsAzeroth.objeto.Length}]/Creatures:");
-                readerObjects.Close();
+                foreach (var file in Directory.EnumerateFiles("xml\\world\\"))
+                {
+                    XmlSerializer mySerializer = new XmlSerializer(typeof(ObjectsXml));
+                    StreamReader streamReader = new StreamReader(file);
+
+                    ObjectsAzeroth = mySerializer.Deserialize(streamReader) as ObjectsXml;
+                    streamReader.Close();
+
+                    if (ObjectsAzeroth != null)
+                        Log.Print(LogType.Loading, $"=_ {file} .......: Objects ({ObjectsAzeroth.objeto.Length})");
+                }
             }
             catch (Exception e)
             {

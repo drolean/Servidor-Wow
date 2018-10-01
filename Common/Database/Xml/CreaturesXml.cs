@@ -7,406 +7,114 @@ namespace Common.Database.Xml
     [XmlRoot(IsNullable = false, ElementName = "units")]
     public class CreaturesXml
     {
-
-        private unitsUnit[] unitField;
-
         /// <remarks/>
         [XmlElement("unit")]
-        public unitsUnit[] unit
-        {
-            get
-            {
-                return unitField;
-            }
-            set
-            {
-                unitField = value;
-            }
-        }
+        public unitsUnit[] unit { get; set; }
     }
 
     /// <remarks/>
     [XmlType(AnonymousType = true)]
     public class unitsUnit
     {
-
-        private unitsUnitConfig configField;
-
-        private unitsUnitBase baseField;
-
-        private byte idField;
-
-        private string nameField;
+        /// <remarks/>
+        public unitsUnitConfig config { get; set; }
 
         /// <remarks/>
-        public unitsUnitConfig config
-        {
-            get
-            {
-                return configField;
-            }
-            set
-            {
-                configField = value;
-            }
-        }
-
-        /// <remarks/>
-        public unitsUnitBase @base
-        {
-            get
-            {
-                return baseField;
-            }
-            set
-            {
-                baseField = value;
-            }
-        }
+        public unitsUnitBase @base { get; set; }
 
         /// <remarks/>
         [XmlAttribute]
-        public byte id
-        {
-            get
-            {
-                return idField;
-            }
-            set
-            {
-                idField = value;
-            }
-        }
+        public byte id { get; set; }
 
         /// <remarks/>
         [XmlAttribute]
-        public string name
-        {
-            get
-            {
-                return nameField;
-            }
-            set
-            {
-                nameField = value;
-            }
-        }
+        public string name { get; set; }
     }
 
     /// <remarks/>
     [XmlType(AnonymousType = true)]
     public class unitsUnitConfig
     {
-
-        private byte npcFlagField;
-
-        private byte dynamicFlagField;
-
-        private byte unitFlagField;
-
-        private byte factionField;
-
-        private byte maxHealthField;
-
-        private byte maxLevelField;
+        /// <remarks/>
+        [XmlAttribute]
+        public byte npcFlag { get; set; }
 
         /// <remarks/>
         [XmlAttribute]
-        public byte npcFlag
-        {
-            get
-            {
-                return npcFlagField;
-            }
-            set
-            {
-                npcFlagField = value;
-            }
-        }
+        public byte dynamicFlag { get; set; }
 
         /// <remarks/>
         [XmlAttribute]
-        public byte dynamicFlag
-        {
-            get
-            {
-                return dynamicFlagField;
-            }
-            set
-            {
-                dynamicFlagField = value;
-            }
-        }
+        public byte unitFlag { get; set; }
 
         /// <remarks/>
         [XmlAttribute]
-        public byte unitFlag
-        {
-            get
-            {
-                return unitFlagField;
-            }
-            set
-            {
-                unitFlagField = value;
-            }
-        }
+        public byte faction { get; set; }
 
         /// <remarks/>
         [XmlAttribute]
-        public byte faction
-        {
-            get
-            {
-                return factionField;
-            }
-            set
-            {
-                factionField = value;
-            }
-        }
+        public byte maxHealth { get; set; }
 
         /// <remarks/>
         [XmlAttribute]
-        public byte maxHealth
-        {
-            get
-            {
-                return maxHealthField;
-            }
-            set
-            {
-                maxHealthField = value;
-            }
-        }
-
-        /// <remarks/>
-        [XmlAttribute]
-        public byte maxLevel
-        {
-            get
-            {
-                return maxLevelField;
-            }
-            set
-            {
-                maxLevelField = value;
-            }
-        }
+        public byte maxLevel { get; set; }
     }
 
     /// <remarks/>
     [XmlType(AnonymousType = true)]
     public class unitsUnitBase
     {
-
-        private ushort attackField;
-
-        private decimal attackRadiusField;
-
-        private byte civilianField;
-
-        private decimal combatField;
-
-        private string damageField;
-
-        private uint flagsField;
-
-        private byte levelField;
-
-        private byte maxHealthField;
-
-        private ushort modelField;
-
-        private string moneyField;
-
-        private decimal sizeField;
-
-        private decimal speedField;
-
-        private byte typeField;
+        /// <remarks/>
+        [XmlAttribute]
+        public ushort attack { get; set; }
 
         /// <remarks/>
         [XmlAttribute]
-        public ushort attack
-        {
-            get
-            {
-                return attackField;
-            }
-            set
-            {
-                attackField = value;
-            }
-        }
+        public decimal attackRadius { get; set; }
 
         /// <remarks/>
         [XmlAttribute]
-        public decimal attackRadius
-        {
-            get
-            {
-                return attackRadiusField;
-            }
-            set
-            {
-                attackRadiusField = value;
-            }
-        }
+        public byte civilian { get; set; }
 
         /// <remarks/>
         [XmlAttribute]
-        public byte civilian
-        {
-            get
-            {
-                return civilianField;
-            }
-            set
-            {
-                civilianField = value;
-            }
-        }
+        public decimal combat { get; set; }
 
         /// <remarks/>
         [XmlAttribute]
-        public decimal combat
-        {
-            get
-            {
-                return combatField;
-            }
-            set
-            {
-                combatField = value;
-            }
-        }
+        public string damage { get; set; }
 
         /// <remarks/>
         [XmlAttribute]
-        public string damage
-        {
-            get
-            {
-                return damageField;
-            }
-            set
-            {
-                damageField = value;
-            }
-        }
+        public uint flags { get; set; }
 
         /// <remarks/>
         [XmlAttribute]
-        public uint flags
-        {
-            get
-            {
-                return flagsField;
-            }
-            set
-            {
-                flagsField = value;
-            }
-        }
+        public byte level { get; set; }
 
         /// <remarks/>
         [XmlAttribute]
-        public byte level
-        {
-            get
-            {
-                return levelField;
-            }
-            set
-            {
-                levelField = value;
-            }
-        }
+        public byte maxHealth { get; set; }
 
         /// <remarks/>
         [XmlAttribute]
-        public byte maxHealth
-        {
-            get
-            {
-                return maxHealthField;
-            }
-            set
-            {
-                maxHealthField = value;
-            }
-        }
+        public ushort model { get; set; }
 
         /// <remarks/>
         [XmlAttribute]
-        public ushort model
-        {
-            get
-            {
-                return modelField;
-            }
-            set
-            {
-                modelField = value;
-            }
-        }
+        public string money { get; set; }
 
         /// <remarks/>
         [XmlAttribute]
-        public string money
-        {
-            get
-            {
-                return moneyField;
-            }
-            set
-            {
-                moneyField = value;
-            }
-        }
+        public decimal size { get; set; }
 
         /// <remarks/>
         [XmlAttribute]
-        public decimal size
-        {
-            get
-            {
-                return sizeField;
-            }
-            set
-            {
-                sizeField = value;
-            }
-        }
+        public decimal speed { get; set; }
 
         /// <remarks/>
         [XmlAttribute]
-        public decimal speed
-        {
-            get
-            {
-                return speedField;
-            }
-            set
-            {
-                speedField = value;
-            }
-        }
-
-        /// <remarks/>
-        [XmlAttribute]
-        public byte type
-        {
-            get
-            {
-                return typeField;
-            }
-            set
-            {
-                typeField = value;
-            }
-        }
+        public byte type { get; set; }
     }
 
 

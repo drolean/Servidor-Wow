@@ -6,7 +6,7 @@ namespace Common.Database.Tables
     [DataAccessObject]
     public abstract class CharactersFactions : DataAccessObject<int>
     {
-        [AutoIncrement] 
+        [AutoIncrement]
         [PersistedMember]
         public override int Id { get; set; }
 

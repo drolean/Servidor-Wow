@@ -19,7 +19,6 @@ namespace Common.Database.Xml
         /// <remarks/>
         [XmlAttribute]
         public int id { get; set; }
-
         public string name { get; set; }
         public string description { get; set; }
         public int displayId { get; set; }
@@ -39,14 +38,12 @@ namespace Common.Database.Xml
         public int pageText { get; set; }
         public int languageId { get; set; }
         public int inventoryType { get; set; }
-
         public int ammoType { get; set; }
         public int containerSlot { get; set; }
         public int flags { get; set; }
         public int @lock { get; set; }
         public int material { get; set; }
         public int pageMaterial { get; set; }
-
         public int sheath { get; set; }
         public string startQuest { get; set; }
         public int subClass { get; set; }

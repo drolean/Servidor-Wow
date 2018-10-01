@@ -309,7 +309,7 @@ namespace RealmServer.Helpers
 
         public int Current
         {
-            get { return (int)(_current * Modifier); }
+            get => (int)(_current * Modifier);
             set
             {
                 _current = value <= Maximum ? value : Maximum;
@@ -328,7 +328,7 @@ namespace RealmServer.Helpers
         public float Modifier = 1;
         public int RealBase
         {
-            get { return Base - PositiveBonus + NegativeBonus; }
+            get => Base - PositiveBonus + NegativeBonus;
             set
             {
                 Base = Base - PositiveBonus + NegativeBonus;

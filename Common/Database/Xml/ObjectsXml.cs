@@ -25,7 +25,7 @@ namespace Common.Database.Xml
 
         /// <remarks/>
         [XmlAttribute]
-        public byte entry { get; set; }
+        public int entry { get; set; }
 
         /// <remarks/>
         [XmlAttribute]
@@ -37,7 +37,7 @@ namespace Common.Database.Xml
 
         /// <remarks/>
         [XmlAttribute]
-        public byte model { get; set; }
+        public int model { get; set; }
 
         /// <remarks/>
         [XmlAttribute]

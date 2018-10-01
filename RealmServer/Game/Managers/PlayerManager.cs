@@ -95,7 +95,6 @@ namespace RealmServer.Game.Managers
         }
 
         // Objeto
-
         private static void SpawnObjeto(PlayerEntity player, zoneObjeto objeto)
         {
             player.Session.SendPacket(UpdateObject.CreateGameObject(objeto));
