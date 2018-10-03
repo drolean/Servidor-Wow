@@ -4,6 +4,13 @@ namespace Common.Helpers
 {
     public static class Utils
     {
+        private static string Int32ToBigEndianHexByteString(int i)
+        {
+            byte[] bytes = BitConverter.GetBytes(i);
+            string format = BitConverter.IsLittleEndian ? "0x{0:X2}" : "c0x{0:X2}";
+            return String.Format(format, bytes[0]);
+        }
+
         // Capitalize the first character and add a space before
         // each capitalized letter (except the first character).
         public static string ToProperCase(this string source)
@@ -18,7 +25,7 @@ namespace Common.Helpers
             // Add the remaining characters.
             for (int i = 1; i < source.Length; i++)
             {
-                if (char.IsUpper(source[i])) result += " ";
+                if (Char.IsUpper(source[i])) result += " ";
                 result += source[i];
             }
 

@@ -50,7 +50,7 @@ namespace Common.Helpers
         {
             Console.WriteLine($"{DateTime.Now:hh:mm:ss.fff} [FRAMEWORK] {obj}");
             //
-            WriteLog($"{DateTime.Now:hh:mm:ss.fff} [FRAMEWOR] {obj}");
+            WriteLog($"{DateTime.Now:hh:mm:ss.fff} [FRAMEWORK] {obj}");
         }
 
         public static void WriteLog(string strLog)

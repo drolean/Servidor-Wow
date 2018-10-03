@@ -5,7 +5,6 @@ using Common.Globals;
 using Common.Helpers;
 using Shaolinq;
 using Shaolinq.MySql;
-using Shaolinq.Sqlite;
 
 namespace Common.Database
 {

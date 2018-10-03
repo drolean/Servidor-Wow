@@ -22,12 +22,12 @@
 
     public enum AuthCMD : byte
     {
-        CMD_AUTH_LOGON_CHALLENGE        = 0x00,
-        CMD_AUTH_LOGON_PROOF            = 0x01,
+        CMD_AUTH_LOGON_CHALLENGE        = 0x00, // Initial authentication step, the client sent a challenge.
+        CMD_AUTH_LOGON_PROOF            = 0x01, // Second authentication step, the client is sending his proof.
         CMD_AUTH_RECONNECT_CHALLENGE    = 0x02,
         CMD_AUTH_RECONNECT_PROOF        = 0x03,
         CMD_AUTH_AUTHENTIFICATOR        = 0x04, // ???CMD_AUTH_UPDATESRV 
-        CMD_AUTH_REALMLIST              = 0x10,
+        CMD_AUTH_REALMLIST              = 0x10, // Third authentication step, the client is requesting the realm list.
         CMD_XFER_INITIATE               = 0x30,
         CMD_XFER_DATA                   = 0x31,
         CMD_XFER_ACCEPT                 = 0x32,
@@ -38,7 +38,7 @@
 
     public enum AccountState : byte
     {
-        OK                              = 0x00,
+        OK                              = 0x00, 
         /// <summary>Unable to connect</summary>
         FAILED                          = 0x01,
         /// <summary>This World of Warcraft account has been closed and is no longer in service -- Please check the registered email address of this account for further information.</summary>
@@ -272,8 +272,8 @@
         CMSG_AUTH_SRP6_BEGIN = 0x033,
         CMSG_AUTH_SRP6_PROOF = 0x034,
         CMSG_AUTH_SRP6_RECODE = 0x035,
-        CMSG_CHAR_CREATE = 0x036,
-        CMSG_CHAR_ENUM = 0x037,
+        CMSG_CHAR_CREATE = 0x036,     // Create Character Request.
+        CMSG_CHAR_ENUM = 0x037,       // Server makes a list of character list for logged account and send.
         CMSG_CHAR_DELETE = 0x038,
         SMSG_AUTH_SRP6_RESPONSE = 0x039,
         SMSG_CHAR_CREATE = 0x03A,
