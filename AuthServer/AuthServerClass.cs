@@ -12,8 +12,6 @@ namespace AuthServer
         private readonly Socket _socketHandler;
         public Dictionary<int, AuthServerSession> ActiveConnections { get; protected set; }
 
-        //private int ConnectionsCount => ActiveConnections.Count;
-
         public AuthServerClass(IPEndPoint authPoint)
         {
             ActiveConnections = new Dictionary<int, AuthServerSession>();
@@ -40,13 +38,18 @@ namespace AuthServer
         {
             Socket connectionSocket = ((Socket)asyncResult.AsyncState).EndAccept(asyncResult);
             int connectionId = GetFreeId();
+
+            Log.Print(LogType.AuthServer, $"[{ connectionSocket.RemoteEndPoint}] Checking for banned IP.");
+
+            // TODO: implement logic to check banned IP
+
             ActiveConnections.Add(connectionId, new AuthServerSession(connectionId, connectionSocket));
             _socketHandler.BeginAccept(ConnectionRequest, _socketHandler);
         }
 
         private int GetFreeId()
         {
-            for (int i = 0; i < 3500; i++)
+            for (int i = 0; i < 150; i++)
             {
                 if (!ActiveConnections.ContainsKey(i))
                     return i;

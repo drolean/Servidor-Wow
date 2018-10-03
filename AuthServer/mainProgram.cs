@@ -13,6 +13,10 @@ namespace AuthServer
 
         private static void Main()
         {
+            Console.SetWindowSize(
+                Math.Min(110, Console.LargestWindowWidth),
+                Math.Min(20, Console.LargestWindowHeight));
+
             var time = Time.GetMsTime();
             var authPoint = new IPEndPoint(IPAddress.Any, 3724);
 
@@ -32,8 +36,9 @@ namespace AuthServer
             AuthServerRouter.AddHandler<AuthLogonProof>(AuthCMD.CMD_AUTH_LOGON_PROOF, AuthServerHandler.OnAuthLogonProof);
             AuthServerRouter.AddHandler(AuthCMD.CMD_AUTH_REALMLIST, AuthServerHandler.OnAuthRealmList);
 
-            Log.Print(LogType.AuthServer,
-                $"Successfully started in {Time.GetMsTimeDiff(time, Time.GetMsTime()) / 1000}s");
+
+            Log.Print(LogType.AuthServer, $"Running from: {AppDomain.CurrentDomain.BaseDirectory}");
+            Log.Print(LogType.AuthServer, $"Successfully started in {Time.GetMsTimeDiff(time, Time.GetMsTime()) / 100}ms");
 
             // Commands
             while (!quitNow)
@@ -77,12 +82,13 @@ namespace AuthServer
         private static void PrintHelp()
         {
             Console.Clear();
-            Console.WriteLine("AuthServer help\n");
-            Console.WriteLine("Commands: \n");
-            Console.WriteLine("\t/db\t\t\tRecreate database.");
-            Console.WriteLine("\t/gc\t\t\tShow garbage collection.");
-            Console.WriteLine("\t/q\t\t\tExit application.");
-            Console.WriteLine("\t/help\t\t\tShow this help.");
+            Console.WriteLine(@"AuthServer help
+Commands:
+  /db    Recreate database.
+  /gc    Show garbage collection.
+  /q     Exit application.
+  /help  Show this help.
+");
         }
     }
 }
