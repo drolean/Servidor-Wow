@@ -25,5 +25,11 @@ namespace AuthServer
 
         // Get Realms list
         internal List<Realms> GetRealms() => Model.Realms.Select(row => row).ToList();
+
+        // Get Characters by Realm
+        public int GetCharactersUsers(int realmId, string accountName)
+        {
+            return Model.Characters.Where(a => a.realm.Id == realmId && a.name == accountName).ToList().Count;
+        }
     }
 }

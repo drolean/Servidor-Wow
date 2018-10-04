@@ -95,19 +95,22 @@ namespace AuthServer
 
     internal sealed class PsAuthRealmList : PacketServer
     {
-        public PsAuthRealmList(List<Realms> realms) : base(AuthCMD.CMD_AUTH_REALMLIST)
+        public PsAuthRealmList(List<Realms> realms, string accountName) : base(AuthCMD.CMD_AUTH_REALMLIST)
         {
             Write((uint) 0x0000);
             Write((byte) realms.Count);
 
             foreach (var realm in realms)
             {
+                int count = MainProgram.Database.GetCharactersUsers(realm.Id, accountName);
+
                 Write((uint) realm.type);     // Type
                 Write((byte) realm.flag);     // Flag
                 WriteCString(realm.name);     // Name World
                 WriteCString(realm.address);  // IP World
-                Write(0.5f);                  // Pop {400F -> Full; 5F -> Medium; 1.6F -> Low; 200F -> New; 2F -> High}
-                Write((byte) 0x05);           // Chars
+                // TODO: Count Population of Realm
+                Write(1.6f);                  // Pop {400F -> Full; 5F -> Medium; 1.6F -> Low; 200F -> New; 2F -> High}
+                Write((byte) count);          // Chars
                 Write((byte) realm.timezone); // time
                 Write((byte) 0x01);           // ?????  
             }
@@ -244,7 +247,7 @@ namespace AuthServer
 
             // Get Realms
             var realms = MainProgram.Database.GetRealms();
-            session.SendPacket(new PsAuthRealmList(realms));
+            session.SendPacket(new PsAuthRealmList(realms, session.AccountName));
         }
     }
 }

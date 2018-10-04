@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Globalization;
 using System.Net;
 using System.Reflection;
+using System.Threading;
 using Common.Database;
 using Common.Globals;
 using Common.Helpers;
@@ -13,6 +15,10 @@ namespace AuthServer
 
         private static void Main()
         {
+            // Set Culture
+            CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("en-us");
+            Thread.CurrentThread.CurrentCulture = new CultureInfo("en-us");
+
             Console.SetWindowSize(
                 Math.Min(110, Console.LargestWindowWidth),
                 Math.Min(20, Console.LargestWindowHeight));
