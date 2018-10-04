@@ -112,7 +112,7 @@ namespace AuthServer
                 Write(1.6f);                  // Pop {400F -> Full; 5F -> Medium; 1.6F -> Low; 200F -> New; 2F -> High}
                 Write((byte) count);          // Chars
                 Write((byte) realm.timezone); // time
-                Write((byte) 0x01);           // ?????  
+                Write((byte) 0x01);           // ?????
             }
 
             Write((UInt16)0x0002);
@@ -125,7 +125,7 @@ namespace AuthServer
 
         internal static void OnAuthLogonChallenge(AuthServerSession session, AuthLogonChallenge packet)
         {
-            Log.Print(LogType.AuthServer, 
+            Log.Print(LogType.AuthServer,
                 $"[{session.ConnectionSocket.RemoteEndPoint}] CMD_AUTH_LOGON_CHALLENGE [{packet.Username}], " +
                 $"WoW Version [{packet.Version}.{packet.Build}] {packet.Language}");
 
@@ -163,51 +163,39 @@ namespace AuthServer
                             session.SendData(new PsAuthLogonChallange(session.Srp, AccountState.OK));
                             return;
                         case AccountState.UNKNOWN_ACCOUNT:
-                            Log.Print(LogType.Error, $"[{session.ConnectionSocket.RemoteEndPoint}] AccountState.UNKNOWN_ACCOUNT");
                             dataResponse[1] = (byte)AccountState.UNKNOWN_ACCOUNT;
                             break;
                         case AccountState.BANNED:
-                            Log.Print(LogType.Error, $"[{session.ConnectionSocket.RemoteEndPoint}] AccountState.BANNED");
                             dataResponse[1] = (byte)AccountState.BANNED;
                             break;
                         case AccountState.NOTIME:
-                            Log.Print(LogType.Error, $"[{session.ConnectionSocket.RemoteEndPoint}] AccountState.NOTIME");
                             dataResponse[1] = (byte) AccountState.NOTIME;
                             break;
                         case AccountState.ALREADYONLINE:
-                            Log.Print(LogType.Error, $"[{session.ConnectionSocket.RemoteEndPoint}] AccountState.ALREADYONLINE");
                             dataResponse[1] = (byte) AccountState.ALREADYONLINE;
                             break;
                         case AccountState.FAILED:
-                            Log.Print(LogType.Error, $"[{session.ConnectionSocket.RemoteEndPoint}] AccountState.FAILED");
-                            dataResponse[1] = (byte)AccountState.FAILED;
+                            dataResponse[1] = (byte) AccountState.FAILED;
                             break;
                         case AccountState.BAD_PASS:
-                            Log.Print(LogType.Error, $"[{session.ConnectionSocket.RemoteEndPoint}] AccountState.BAD_PASS");
-                            dataResponse[1] = (byte)AccountState.BAD_PASS;
+                            dataResponse[1] = (byte) AccountState.BAD_PASS;
                             break;
                         case AccountState.DBBUSY:
-                            Log.Print(LogType.Error, $"[{session.ConnectionSocket.RemoteEndPoint}] AccountState.DBBUSY");
-                            dataResponse[1] = (byte)AccountState.DBBUSY;
+                            dataResponse[1] = (byte) AccountState.DBBUSY;
                             break;
                         case AccountState.BADVERSION:
-                            Log.Print(LogType.Error, $"[{session.ConnectionSocket.RemoteEndPoint}] AccountState.BADVERSION");
                             dataResponse[1] = (byte) AccountState.BADVERSION;
                             break;
                         case AccountState.DOWNLOADFILE:
-                            Log.Print(LogType.Error, $"[{session.ConnectionSocket.RemoteEndPoint}] AccountState.DOWNLOADFILE");
-                            dataResponse[1] = (byte)AccountState.DOWNLOADFILE;
+                            dataResponse[1] = (byte) AccountState.DOWNLOADFILE;
                             break;
                         case AccountState.SUSPENDED:
-                            Log.Print(LogType.Error, $"[{session.ConnectionSocket.RemoteEndPoint}] AccountState.SUSPENDED");
-                            dataResponse[1] = (byte)AccountState.SUSPENDED;
+                            dataResponse[1] = (byte) AccountState.SUSPENDED;
                             break;
                         case AccountState.PARENTALCONTROL:
-                            Log.Print(LogType.Error, $"[{session.ConnectionSocket.RemoteEndPoint}] AccountState.PARENTALCONTROL");
-                            dataResponse[1] = (byte)AccountState.PARENTALCONTROL;
+                            dataResponse[1] = (byte) AccountState.PARENTALCONTROL;
                             break;
                         default:
-                            Log.Print(LogType.Error, $"[{session.ConnectionSocket.RemoteEndPoint}] AccountState.FAILED");
                             dataResponse[1] = (byte) AccountState.FAILED;
                             break;
                     }
@@ -215,7 +203,6 @@ namespace AuthServer
                     break;
                 }
                 default:
-                    Log.Print(LogType.Error, $"[{session.ConnectionSocket.RemoteEndPoint}] Wrong Version [{packet.Version}.{packet.Build}]");
                     dataResponse[1] = (byte)AccountState.BADVERSION;
                     break;
             }
@@ -243,8 +230,6 @@ namespace AuthServer
 
         internal static void OnAuthRealmList(AuthServerSession session, byte[] data)
         {
-            Log.Print(LogType.AuthServer, $"[{session.ConnectionSocket.RemoteEndPoint}] CMD_AUTH_REALMLIST");
-
             // Get Realms
             var realms = MainProgram.Database.GetRealms();
             session.SendPacket(new PsAuthRealmList(realms, session.AccountName));

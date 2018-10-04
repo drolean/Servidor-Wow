@@ -73,7 +73,7 @@ namespace RealmServer.Handlers
             ulong guid = handler.ReadUInt64();
 
             // Asking for player name
-            Characters target = MainForm.Database.GetCharacter((uint) guid);
+            Characters target = MainProgram.Database.GetCharacter((uint) guid);
 
             if (target != null)
                 session.SendPacket(new SmsgNameQueryResponse(target));
@@ -113,7 +113,7 @@ namespace RealmServer.Handlers
             Log.Print(LogType.Debug, $"[{session.ConnectionSocket}] CMSG_TEXT_EMOTE [TEXTENITE={textEmote} UNK={unk} GUID={guid}]");
 
             // DONE: Send Emote animation
-            var checkEmote = MainForm.EmotesTextReader.GetData((int) textEmote);
+            var checkEmote = MainProgram.EmotesTextReader.GetData((int) textEmote);
             if (checkEmote != null)
                 session.Entity.SetUpdateField((int) UnitFields.UNIT_NPC_EMOTESTATE, checkEmote.EmoteId);
 
@@ -124,7 +124,7 @@ namespace RealmServer.Handlers
         // [DONE]  After complete set movieplayed to true
         internal static void OnCompleteCinematic(RealmServerSession session, PacketReader handler)
         {
-            MainForm.Database.UpdateCharacter(session.Character.Id, "firstlogin");
+            MainProgram.Database.UpdateCharacter(session.Character.Id, "firstlogin");
         }
 
         internal static void OnTutorialClear(RealmServerSession session, PacketReader handler)
@@ -154,9 +154,9 @@ namespace RealmServer.Handlers
             byte enabled = handler.ReadByte();
 
             // [7 Enabled] --- [5 Disabled]
-            MainForm.Database.FactionInative(session.Character.Id, faction + 1, (byte) (enabled == 1 ? 7 : 5));
+            MainProgram.Database.FactionInative(session.Character.Id, faction + 1, (byte) (enabled == 1 ? 7 : 5));
 
-            var factionDb = MainForm.Database.FactionGet(session.Character, faction + 1);
+            var factionDb = MainProgram.Database.FactionGet(session.Character, faction + 1);
             
             // SmsgSetFactionStanding
             session.SendPacket(new SmsgSetFactionStanding(faction, enabled, factionDb.standing));
@@ -170,7 +170,7 @@ namespace RealmServer.Handlers
             byte enabled = handler.ReadByte();
 
             // [17 Enabled] --- [49 Disabled]
-            MainForm.Database.FactionInative(session.Character.Id, faction + 1, (byte) (enabled == 1 ? 49 : 17));
+            MainProgram.Database.FactionInative(session.Character.Id, faction + 1, (byte) (enabled == 1 ? 49 : 17));
             /*
                 7 = At War / 5 = Enable At War Button / 3 = At War / 2 = Enable At War Button / 33 = Inative / 37 = Inative com At War
                 39 = Inative At War / 49 = Inative / 51 = Inative At War[Button Disabled] / 53 = Inative
@@ -189,7 +189,7 @@ namespace RealmServer.Handlers
             if (faction < 0 || faction > 255)
                 return;
 
-            MainForm.Database.UpdateCharacter(session.Character.Id, "watchFaction", faction.ToString());
+            MainProgram.Database.UpdateCharacter(session.Character.Id, "watchFaction", faction.ToString());
             session.Entity.SetUpdateField((int) PlayerFields.PLAYER_FIELD_WATCHED_FACTION_INDEX, faction);
         }
     }

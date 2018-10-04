@@ -57,6 +57,7 @@ namespace RealmServer
             // Connection Packet
             using (PacketServer packet = new PacketServer(RealmCMD.SMSG_AUTH_CHALLENGE))
             {
+                // TODO: review this
                 packet.WriteBytes(new byte[] { 0x33, 0x18, 0x34, 0xC8 });
                 SendPacket(packet);
             }
@@ -70,7 +71,7 @@ namespace RealmServer
 
         private void SendPacket(int opcode, byte[] data)
         {
-            Log.Print(LogType.RealmServer, $"[{ConnectionSocket.RemoteEndPoint}] [SERVER] [{((RealmCMD)opcode).ToString().PadRight(25, ' ')}] = {data.Length} + 4 [header]");
+            Log.Print(LogType.RealmServer, $"[{ConnectionSocket.RemoteEndPoint}] [SERVER] [{((RealmCMD)opcode).ToString().PadRight(25, ' ')}] = {data.Length}");
             BinaryWriter writer = new BinaryWriter(new MemoryStream());
             byte[] header = Encode(data.Length, opcode);
             writer.Write(header);
@@ -78,7 +79,7 @@ namespace RealmServer
             SendData(((MemoryStream)writer.BaseStream).ToArray());
         }
 
-        private void SendData(byte[] send)
+        internal void SendData(byte[] send)
         {
             byte[] buffer = new byte[send.Length];
             Buffer.BlockCopy(send, 0, buffer, 0, send.Length);
@@ -315,9 +316,9 @@ namespace RealmServer
         }
 
         /// <summary>
-        /// 
+        /// Send World Message System
         /// </summary>
-        /// <param name="msg"></param>
+        /// <param name="msg">message</param>
         internal void SendMessageMotd(string msg)
         {
             SendPacket(new SmsgMessagechat(ChatMessageType.CHAT_MSG_SYSTEM, ChatMessageLanguage.LANG_UNIVERSAL,

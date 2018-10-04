@@ -29,7 +29,7 @@ namespace RealmServer.Game.Managers
         private static bool InRangeCheck(PlayerEntity playerEntityA, PlayerEntity playerEntityB)
         {
             double distance = GetDistance(playerEntityA.Character.MapX, playerEntityA.Character.MapY, playerEntityB.Character.MapX, playerEntityB.Character.MapY);
-            return distance < MainForm.DistanciaFoda; // DISTANCE
+            return distance < MainProgram.DistanceConfig; // DISTANCE
         }
 
         private static double GetDistance(float aX, float aY, float bX, float bY)
@@ -64,9 +64,9 @@ namespace RealmServer.Game.Managers
                         }
                     }
                     #endregion
-
+                    /*
                     #region Checa Objetos para adicionar ao mapa
-                    var objetos = MainForm.Database.GetGameObjects(player, MainForm.DistanciaFoda);
+                    var objetos = MainProgram.Database.GetGameObjects(player, MainProgram.DistanciaFoda);
                     if (objetos.Any())
                     {
                         foreach (zoneObjeto objeto in objetos)
@@ -76,7 +76,7 @@ namespace RealmServer.Game.Managers
                         }
                     }
                     #endregion 
-
+    */
                     // NPC Spawns
 
                     // Update Packet

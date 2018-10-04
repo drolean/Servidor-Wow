@@ -127,5 +127,7 @@ namespace Common.Database.Tables
 
         [PersistedMember]
         public abstract DateTime? updated_at { get; set; }
+
+        public uint Latency { get; set; }
     }
 }

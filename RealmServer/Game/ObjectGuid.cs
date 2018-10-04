@@ -2,8 +2,8 @@ namespace RealmServer.Game
 {
     public class ObjectGuid
     {
-        public TypeId TypeId { get; private set; }
-        public HighGuid HighGuid { get; private set; }
+        public TypeId TypeId { get; }
+        public HighGuid HighGuid { get; }
         public ulong RawGuid { get; }
 
         public ObjectGuid(ulong guid)

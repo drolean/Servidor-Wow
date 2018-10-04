@@ -1,9 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Threading;
 using Common.Crypt;
 using Common.Globals;
 using Common.Helpers;
 using Common.Network;
+using RealmServer.Handlers;
 
 namespace RealmServer
 {
@@ -20,32 +23,34 @@ namespace RealmServer
 
         public CmsgAuthSession(byte[] data) : base(data)
         {
-            ClientVersion   = ReadInt32();
-            ClientSessionId = ReadInt32();
-            ClientAccount   = ReadCString();
-            ClientSeed      = ReadInt32();
-            ClientHash      = ReadBytes(20);         
+            ClientVersion    = ReadInt32();
+            ClientSessionId  = ReadInt32();
+            ClientAccount    = ReadCString();
+            ClientSeed       = ReadInt32();
+            ClientHash       = ReadBytes(20);
             ClientAddOnsSize = ReadInt32();
         }
     }
     #endregion
 
     #region SMSG_AUTH_RESPONSE
-    sealed class SmsgAuthResponse : PacketServer
+    internal sealed class SmsgAuthResponse : PacketServer
     {
-        public SmsgAuthResponse() : base(RealmCMD.SMSG_AUTH_RESPONSE)
+        /// <summary>
+        /// Send Auth Response to Client
+        /// </summary>
+        /// <param name="state">LoginErroCode</param>
+        /// <param name="count">Count to queue position</param>
+        /// <returns></returns>
+        public SmsgAuthResponse(LoginErrorCode state, int count = 0) : base(RealmCMD.SMSG_AUTH_RESPONSE)
         {
-            /*
-                AUTH_OK = 0x0C,
-                AUTH_FAILED = 0x0D,
-                AUTH_WAIT_QUEUE = 0x1B,
-            */
-            Write((uint)0x0C);
-            Write((uint)0x30); // BillingTimeRemaining
-            Write((byte)0x78); // BillingPlanFlags
-            Write((uint)0);    // BillingTimeRested
-            Write((byte)0);    // Expansion Level [0 - normal, 1 - TBC]
-            Write((byte)0);    // Server Expansion
+            Write((byte) state);
+            Write((uint) count);
+            // idk
+            Write((byte) 0x78); // BillingPlanFlags
+            Write((uint) 0);    // BillingTimeRested
+            Write((byte) 0);    // Expansion Level [0 - normal, 1 - TBC]
+            Write((byte) 0);    // Server Expansion
         }
     }
     #endregion
@@ -53,8 +58,8 @@ namespace RealmServer
     #region CMSG_PING
     public sealed class CmsgPing : PacketReader
     {
-        public uint Ping { get; private set; }
-        public uint Latency { get; private set; }
+        public uint Ping { get; }
+        public uint Latency { get; }
 
         public CmsgPing(byte[] data) : base(data)
         {
@@ -69,7 +74,7 @@ namespace RealmServer
     {
         public SmsgPong(uint ping) : base(RealmCMD.SMSG_PONG)
         {
-            Write((ulong)ping);
+            Write((ulong) ping);
         }
     }
     #endregion
@@ -77,9 +82,12 @@ namespace RealmServer
     #region SMSG_ADDON_INFO
     internal sealed class SmsgAddonInfo : PacketServer
     {
+        public List<string> AddOnsNames { get; }
+
         public SmsgAddonInfo(List<string> addOnsNames) : base(RealmCMD.SMSG_ADDON_INFO)
         {
-            for (int i = 0; i <= 11/*addOnsNames.Count - 1*/; i++)
+            AddOnsNames = addOnsNames;
+            for (int i = 0; i <= addOnsNames.Count; i++)
             {
                 /*
                 if (File.Exists($"interface\\{addOnsNames[i]}.pub"))
@@ -99,13 +107,13 @@ namespace RealmServer
                     Write((short)0);
                 } else
                 {
-                    */
                     //We don't have hash data or already sent to client
                     Write((byte) 2); // AddOn Type [1-enabled, 0-banned, 2-blizzard]
                     Write((byte) 1);
                     Write((uint) 0);
-                    Write((short) 0);                   
-                //}
+                    Write((short) 0);
+                }
+                */
             }
         }
     }
@@ -115,47 +123,63 @@ namespace RealmServer
     {
         public static void OnAuthSession(RealmServerSession session, CmsgAuthSession handler)
         {
-            // Check the version of client trying to connect [5875]
+            // DONE: Check the version of client trying to connect [5875]
+            if (handler.ClientVersion < 5875 || handler.ClientVersion > 6141)
+            {
+                Log.Print(LogType.Error, $"[{session.ConnectionRemoteIp}] Invalid WOW Version {handler.ClientVersion}");
+                session.SendPacket(new SmsgAuthResponse(LoginErrorCode.AUTH_REJECT));
+                Thread.Sleep(1500);
+                session.ConnectionSocket.Disconnect(false);
+                return;
+            }
 
             // DONE: Check Account
-            session.Users = MainForm.Database.GetAccount(handler.ClientAccount);
+            session.Users = MainProgram.Database.GetAccount(handler.ClientAccount);
 
-            // Kick if existing
+            // TODO: Kick if existing
 
-            // Check if account is banned
+            // DONE: Check if account is banned
+            if (session.Users.bannet_at != null)
+            {
+                Log.Print(LogType.Error, $"[{session.ConnectionRemoteIp}] User Banner (second) Check");
+                session.SendPacket(new SmsgAuthResponse(LoginErrorCode.AUTH_REJECT));
+                Thread.Sleep(1500);
+                session.ConnectionSocket.Disconnect(false);
+                return;
+            }
 
             // DONE: Set Crypt Hash Player
             session.PacketCrypto = new VanillaCrypt();
             session.PacketCrypto.Init(session.Users.sessionkey);
 
-            // Disconnect clients trying to enter with an invalid build
-            //if (handler.Build < 5875 || handler.Build > 6141)
-
-            // Disconnect clients trying to enter with an invalid build
-
-            // If server full then queue, If GM/Admin let in
+            // TODO: If server full then queue, If GM/Admin let in
+            /*
+            Log.Print(LogType.RealmServer,
+                $"[{session.ConnectionRemoteIp}] AUTH_WAIT_QUEUE: Server player limit reached!");
+            session.SendPacket(new SmsgAuthResponse(LoginErrorCode.AUTH_WAIT_QUEUE, 10));
+            */
 
             // DONE: Addons info reading
-            #region NOT USED
             var addonData = handler.ReadBytes((int)handler.BaseStream.Length - (int)handler.BaseStream.Position);
             var decompressed = ZLib.Decompress(addonData);
-            //RealmServerSession.DumpPacket(decompressed);
             List<string> addOnsNames = new List<string>();
             using (var reader = new PacketReader(new MemoryStream(decompressed)))
             {
-                var count = reader.BaseStream.Length / sizeof(int);
-                for (var i = 0; i < count; ++i)
+                // TODO: need a size for FOR rights
+                for (var i = 0; i < 12; ++i)
                 {
-                    //var addonName = reader.ReadString();
-                    //if (addonName.Equals("")) continue;
-                    //addOnsNames.Add(addonName);
+                    var addonName = reader.ReadCString();
+                    var enabled   = reader.ReadByte();
+                    var crc       = reader.ReadUInt32();
+                    var unk7      = reader.ReadUInt32();
+                    //Console.WriteLine(@"Addon {0}: name {1}, enabled {2}, crc {3}, unk7 {4}", i, addonName, enabled, crc, unk7);
+                    addOnsNames.Add(addonName);
                 }
             }
-            #endregion
 
             // Update [IP / Build]
 
-            // Create Log 
+            // Create Log
 
             // Init Warden
 
@@ -163,7 +187,7 @@ namespace RealmServer
             session.SendPacket(new SmsgAddonInfo(addOnsNames));
 
             // DONE: Send packet
-            session.SendPacket(new SmsgAuthResponse());
+            session.SendPacket(new SmsgAuthResponse(LoginErrorCode.AUTH_OK));
         }
 
         public static void OnPingPacket(RealmServerSession session, CmsgPing handler)
@@ -171,8 +195,10 @@ namespace RealmServer
             session.SendPacket(new SmsgPong(handler.Ping));
 
             // Set latency to char
-//            if (session.Character != null)
-//                session.Character.Latency = handler.Latency;
+            //if (session.Character != null)
+                //session.Character.Latency = handler.Latency;
+
+            //Console.WriteLine(session.Character.Latency);
         }
     }
 }

@@ -142,7 +142,7 @@ namespace RealmServer.Helpers
         // DONE: Generate Factions(Reputation) for Creation Char
         internal void GenerateFactions(Characters character)
         {
-            var initiFactions = MainForm.FactionReader.GenerateFactions(character.race);
+            var initiFactions = MainProgram.FactionReader.GenerateFactions(character.race);
 
             foreach (var valFaction in initiFactions)
             {
@@ -240,7 +240,7 @@ namespace RealmServer.Helpers
         {
             var stack = 1;
             uint countBag = 0;
-            CharStartOutfit startItems = MainForm.CharacterOutfitReader.Get(character.classe, character.race, character.gender);
+            CharStartOutfit startItems = MainProgram.CharacterOutfitReader.Get(character.classe, character.race, character.gender);
             
             if (startItems == null)
                 return;

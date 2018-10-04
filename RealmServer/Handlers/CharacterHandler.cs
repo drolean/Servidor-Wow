@@ -46,7 +46,7 @@ namespace RealmServer.Handlers
 
                 Write(0); // Guild ID
                 // if DEAD or any Restriction 
-                Write((int) CharacterFlagState.CharacterFlagNone);
+                Write((int) CharacterFlagState.CharacterFlagDeclined);
                 // RestState
                 Write((byte) 0);
 
@@ -56,7 +56,7 @@ namespace RealmServer.Handlers
                 Write(0); // PetFamily = SELECT family FROM creature_template WHERE entry
 
                 // DONE: Get items
-                var inventory = MainForm.Database.GetInventory(character);
+                var inventory = MainProgram.Database.GetInventory(character);
 
                 for (int slot = 0; slot < 20; slot++)
                 {
@@ -122,7 +122,7 @@ namespace RealmServer.Handlers
 
     sealed class SmsgCharCreate : PacketServer
     {
-        public SmsgCharCreate(int code) : base(RealmCMD.SMSG_CHAR_CREATE)
+        public SmsgCharCreate(LoginErrorCode code) : base(RealmCMD.SMSG_CHAR_CREATE)
         {
             Write((byte) code);
         }
@@ -333,7 +333,7 @@ namespace RealmServer.Handlers
         public SmsgInitialSpells(Characters character) : base(RealmCMD.SMSG_INITIAL_SPELLS)
         {
             // Implement Spell Cooldowns
-            var spells = MainForm.Database.GetSpells(character);
+            var spells = MainProgram.Database.GetSpells(character);
 
             Write((byte) 0); //int8
             Write((ushort) spells.Count); //int16
@@ -358,7 +358,7 @@ namespace RealmServer.Handlers
 
         public SmsgInitializeFactions(Characters character) : base(RealmCMD.SMSG_INITIALIZE_FACTIONS)
         {
-            var factions = MainForm.Database.GetFactions(character);
+            var factions = MainProgram.Database.GetFactions(character);
 
             Write((uint) factions.Count);
             foreach (var fact in factions)
@@ -377,7 +377,7 @@ namespace RealmServer.Handlers
     {
         public SmsgActionButtons(Characters character) : base(RealmCMD.SMSG_ACTION_BUTTONS)
         {
-            List<CharactersActionBars> savedButtons = MainForm.Database.GetActionBar(character);
+            List<CharactersActionBars> savedButtons = MainProgram.Database.GetActionBar(character);
 
             for (int button = 0; button < 120; button++) //  119    'or 480 ?
             {
@@ -554,33 +554,42 @@ namespace RealmServer.Handlers
 
         internal static void OnCharEnum(RealmServerSession session, byte[] data)
         {
-            List<Characters> characters = MainForm.Database.GetCharacters(session.Users.username);
+            List<Characters> characters = MainProgram.Database.GetCharacters(session.Users.username);
             session.SendPacket(new SmsgCharEnum(characters));
         }
 
         internal static void OnCharCreate(RealmServerSession session, CmsgCharCreate handler)
         {
-            int result;
-
             // Char name Profane            result = (int) LoginErrorCode.CHAR_NAME_PROFANE;
             // Char name reserved           result = (int) LoginErrorCode.CHAR_NAME_RESERVED;
             // Char name invalid            result = (int) LoginErrorCode.CHAR_NAME_FAILURE;
             // Check Ally or Horde          result = (int) LoginErrorCode.CHAR_CREATE_PVP_TEAMS_VIOLATION;
-            // Check char limit create      result = (int) LoginErrorCode.CHAR_CREATE_SERVER_LIMIT;
 
             // Check for both horde and alliance
             // Only if it's a pvp realm
             try
             {
-                result = (int) LoginErrorCode.CHAR_CREATE_SUCCESS;
-                MainForm.Database.CreateChar(handler, session.Users);
+                // If limit character reached
+                if (MainProgram.Database.GetCharacters(session.Users.username).Count >= MainProgram.LimitCharacterPerRealm)
+                {
+                    session.SendPacket(new SmsgCharCreate(LoginErrorCode.CHAR_CREATE_SERVER_LIMIT));
+                    return;
+                }
+
+                // check if name in use
+                if (MainProgram.Database.GetCharacaterByName(handler.Name) != null)
+                {
+                    session.SendPacket(new SmsgCharCreate(LoginErrorCode.CHAR_CREATE_NAME_IN_USE));
+                    return;
+                }
+
+                session.SendPacket(new SmsgCharCreate(LoginErrorCode.CHAR_CREATE_SUCCESS));
+                MainProgram.Database.CreateChar(handler, session.Users);
             }
             catch (Exception)
             {
-                result = (int) LoginErrorCode.CHAR_CREATE_ERROR;
+                session.SendPacket(new SmsgCharCreate(LoginErrorCode.CHAR_CREATE_ERROR));
             }
-
-            session.SendPacket(new SmsgCharCreate(result));
         }
 
         internal static void OnCharRename(RealmServerSession session, CmsgCharRename handler)
@@ -593,7 +602,7 @@ namespace RealmServer.Handlers
             try
             {
                 result = (int) LoginErrorCode.RESPONSE_SUCCESS;
-                MainForm.Database.UpdateName(handler);
+                MainProgram.Database.UpdateName(handler);
             }
             catch (Exception)
             {
@@ -604,7 +613,7 @@ namespace RealmServer.Handlers
             session.SendPacket(new SmsgCharRename(result));
 
             // ????? NEED TO REVIEW THIS to update CHAR LIST ENUM
-            List<Characters> characters = MainForm.Database.GetCharacters(session.Users.username);
+            List<Characters> characters = MainProgram.Database.GetCharacters(session.Users.username);
             session.SendPacket(new SmsgCharEnum(characters));
         }
 
@@ -613,13 +622,13 @@ namespace RealmServer.Handlers
             // if failed                CHAR_DELETE_FAILED
             // if waiting for transfer  CHAR_DELETE_FAILED_LOCKED_FOR_TRANSFER
             // if guild leader          CHAR_DELETE_FAILED_GUILD_LEADER
-            MainForm.Database.DeleteCharacter(handler.Id);
+            MainProgram.Database.DeleteCharacter(handler.Id);
             session.SendPacket(new SmsgCharDelete(LoginErrorCode.CHAR_DELETE_SUCCESS));
         }
 
         internal static void OnPlayerLogin(RealmServerSession session, CmsgPlayerLogin handler)
         {
-            session.Character = MainForm.Database.GetCharacter(handler.Guid);
+            session.Character = MainProgram.Database.GetCharacter(handler.Guid);
 
             // Change Player Status Online
 
@@ -641,7 +650,7 @@ namespace RealmServer.Handlers
             // Send Cinematic if first time
             if (session.Character.is_movie_played == false)
             {
-                ChrRaces chrRaces = MainForm.ChrRacesReader.GetData(session.Character.race);
+                ChrRaces chrRaces = MainProgram.ChrRacesReader.GetData(session.Character.race);
                 session.SendPacket(new SmsgTriggerCinematic(chrRaces.CinematicId)); // DONE
             }
 
@@ -658,7 +667,7 @@ namespace RealmServer.Handlers
             WorldManager.DispatchOnPlayerSpawn(session.Entity);
 
             // Generate Inventory
-            foreach (var inventory in MainForm.Database.GetInventory(session.Character))
+            foreach (var inventory in MainProgram.Database.GetInventory(session.Character))
             {
                 session.SendPacket(UpdateObject.CreateItem(inventory, session.Character));
             }

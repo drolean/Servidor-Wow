@@ -58,6 +58,11 @@ namespace RealmServer.Game.Entitys
             Console.WriteLine($@"=> Adicionado Objeto [{zoneObjeto.name}] => [{(GameObjectType) zoneObjeto.type}] => {Ababa}");
             Ababa++;
         }
+
+        private void SetUpdateField(int oBJECT_FIELD_TYPE, int v)
+        {
+            throw new NotImplementedException();
+        }
     }
 
     public enum GameObjectLootState

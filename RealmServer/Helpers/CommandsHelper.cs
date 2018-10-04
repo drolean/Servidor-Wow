@@ -30,11 +30,11 @@ namespace RealmServer.Helpers
             if (splitMessage[0].ToLower() == "item")
             {
                 Console.WriteLine($@"Veio item aqui {Aba} => {int.Parse(splitMessage[1].ToLower())}");
-                MainForm.Database.ItemUpdate(int.Parse(splitMessage[1].ToLower()));
+                MainProgram.Database.ItemUpdate(int.Parse(splitMessage[1].ToLower()));
 
                 Thread.Sleep(1500);
 
-                var inventory = MainForm.Database.GetInventory(session.Character);
+                var inventory = MainProgram.Database.GetInventory(session.Character);
                 for (int j = 0; j < 112; j++)
                 {
                     if (inventory.Find(item => item.slot == j) != null)
@@ -68,7 +68,7 @@ namespace RealmServer.Helpers
                 session.SendMessageMotd(
                     $"MapX: {session.Character.MapX} = MapY: {session.Character.MapY} = MapZ: {session.Character.MapZ} = MapO: {session.Character.MapO}");
                 Console.WriteLine($@"MapX: {session.Character.MapX} = MapY: {session.Character.MapY} = MapZ: {session.Character.MapZ} = MapO: {session.Character.MapO}");
-                Console.WriteLine($@"----------------------------");
+                Console.WriteLine(@"----------------------------");
                 Console.WriteLine($@"Players: {session.Entity.KnownPlayers.Count}");
                 Console.WriteLine($@"Objects: {session.Entity.KnownGameObjects.Count} ");
                 // Creatures

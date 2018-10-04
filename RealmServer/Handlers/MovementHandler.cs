@@ -119,7 +119,7 @@ namespace RealmServer.Handlers
             session.Character.MapZ = handler.MapZ;
             session.Character.MapO = handler.MapR;
 
-            await MainForm.Database.UpdateMovement(session.Character);
+            await MainProgram.Database.UpdateMovement(session.Character);
 
             // If character is falling below the world
 
@@ -176,8 +176,8 @@ namespace RealmServer.Handlers
             uint zoneId = handler.ReadUInt32();
             session.Character.MapZone = (int) zoneId;
             session.SendMessageMotd(
-                $"Zone Update ID: {session.Character.MapZone} => {MainForm.AreaTableReader.GetArea(session.Character.MapZone).AreaName} " +
-                $"[{MainForm.AreaTableReader.GetArea(session.Character.MapZone).AreaName.ToCamelCase()}]");
+                $"Zone Update ID: {session.Character.MapZone} => {MainProgram.AreaTableReader.GetArea(session.Character.MapZone).AreaName} " +
+                $"[{MainProgram.AreaTableReader.GetArea(session.Character.MapZone).AreaName.ToCamelCase()}]");
 
             // CheckZone
 

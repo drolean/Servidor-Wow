@@ -40,16 +40,14 @@ namespace Common.Database
                 if (RacesXml != null)
                     Log.Print(LogType.Loading, $"=_ Races Loaded .........: {RacesXml.race.Length}");
                 readerRaces.Close();
-
-                // Creatures
                 /*
+                // Creatures
                 XmlSerializer serializerCreatures = new XmlSerializer(typeof(CreaturesXml));
                 StreamReader readerCreatures = new StreamReader("xml/creatures.xml");
                 CreaturesXml = serializerCreatures.Deserialize(readerCreatures) as CreaturesXml;
                 if (CreaturesXml != null)
                     Log.Print(LogType.Loading, $"=_ Creatures Loaded .....: {CreaturesXml.unit.Length}");
                 readerCreatures.Close();
-                */
 
                 // Game Objects
                 foreach (var file in Directory.EnumerateFiles("xml\\world\\"))
@@ -63,6 +61,7 @@ namespace Common.Database
                     if (ObjectsAzeroth != null)
                         Log.Print(LogType.Loading, $"=_ {file} .......: Objects ({ObjectsAzeroth.objeto.Length})");
                 }
+                */
             }
             catch (Exception e)
             {

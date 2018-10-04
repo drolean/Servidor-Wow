@@ -12,7 +12,7 @@ using RealmServer.Game.Entitys;
 
 namespace RealmServer.Game
 {
-    public class UpdateObject : PacketServer
+    public sealed class UpdateObject : PacketServer
     {
         // MUDAR ISSO AQUI PARA OUTRO
         private static readonly Random Random = new Random();
@@ -179,7 +179,7 @@ namespace RealmServer.Game
             return new UpdateObject(new List<byte[]> {(writer.BaseStream as MemoryStream)?.ToArray()}, 1);
         }
 
-        public static int abab;
+        public static int Abab;
         // USO INTERNO Criando Spawn NPC
         internal static UpdateObject CreateUnit(float x, float y, float z, float o)
         {
@@ -219,11 +219,11 @@ namespace RealmServer.Game
             writer.Write(2.5f);  // MOVE_SWIM_BACK
             writer.Write(3.14f); // MOVE_TURN_RATE
 
-            writer.Write(abab);   // Unkown...
+            writer.Write(Abab);   // Unkown...
 
             entity.WriteUpdateFields(writer);
-            Console.WriteLine($@"Vem aqui cao => {abab}");
-            abab++;
+            Console.WriteLine($@"Vem aqui cao => {Abab}");
+            Abab++;
 
             return new UpdateObject(new List<byte[]> {(writer.BaseStream as MemoryStream)?.ToArray()}, 1);
         }

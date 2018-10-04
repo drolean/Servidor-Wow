@@ -39,7 +39,7 @@ namespace RealmServer.Game.Entitys
             KnownGameObjects = new List<zoneObjeto>();
             KnownUnitys = new List<UnitEntity>();
 
-            ChrRaces chrRaces = MainForm.ChrRacesReader.GetData(character.race);
+            ChrRaces chrRaces = MainProgram.ChrRacesReader.GetData(character.race);
 
             /* Definindo Character */
             Model = (int) CharacterHelper.GetRaceModel(character.race, character.gender);
@@ -90,7 +90,7 @@ namespace RealmServer.Game.Entitys
         private void SkillGenerate()
         {
             int a = 0;
-            foreach (CharactersSkills skill in MainForm.Database.GetSkills(Character))
+            foreach (CharactersSkills skill in MainProgram.Database.GetSkills(Character))
             {
                 SetUpdateField((int) PlayerFields.PLAYER_SKILL_INFO_1_1 + skill.Id * 3, skill.skill);
                 SetUpdateField((int) PlayerFields.PLAYER_SKILL_INFO_1_1 + skill.Id * 3 + 1, skill.value + (skill.max << 16));
@@ -115,7 +115,7 @@ namespace RealmServer.Game.Entitys
         #region Equipamento
         public void EquipamentoGenerate()
         {
-            var inventory = MainForm.Database.GetInventory(Character);
+            var inventory = MainProgram.Database.GetInventory(Character);
             for (int j = 0; j < 112; j++)
             {
                 if (inventory.Find(item => item.slot == j) != null)

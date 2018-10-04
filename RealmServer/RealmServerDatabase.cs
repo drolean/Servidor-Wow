@@ -113,7 +113,7 @@ namespace RealmServer
                 scope.Complete();
             }
 
-            var character = MainForm.Database.GetCharacaterByName(CultureInfo.CurrentCulture.TextInfo.ToTitleCase(handler.Name));
+            var character = MainProgram.Database.GetCharacaterByName(CultureInfo.CurrentCulture.TextInfo.ToTitleCase(handler.Name));
 
             Helper.GenerateActionBar(character);      // DONE: Generate Action Bar
             Helper.GenerateFactions(character);       // DONE: Generate Reputation Factions
@@ -128,17 +128,17 @@ namespace RealmServer
             {
                 var character = Model.Characters.GetReference(charId);
 
-                // Define Online/Offline
+                // SET Online/Offline
                 if (objeto == "online" && character.is_online)
                     character.is_online = false;
                 else
                     character.is_online = true;
 
-                // Define primeiro Login
+                // SET firstLogin
                 if (objeto == "firstlogin")
                     character.is_movie_played = true;
 
-                // Define primeiro Login
+                // 
                 if (objeto == "watchFaction" && value != null)
                     character.watched_faction = int.Parse(value);
 
