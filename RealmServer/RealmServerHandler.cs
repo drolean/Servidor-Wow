@@ -5,6 +5,7 @@ using Common.Crypt;
 using Common.Globals;
 using Common.Helpers;
 using Common.Network;
+using RealmServer.Game.Managers;
 
 namespace RealmServer
 {
@@ -135,6 +136,7 @@ namespace RealmServer
             session.Users = MainProgram.Database.GetAccount(handler.ClientAccount);
 
             // TODO: Kick if existing
+            
 
             // DONE: Check if account is banned
             if (session.Users.bannet_at != null)
@@ -157,7 +159,7 @@ namespace RealmServer
             session.SendPacket(new SmsgAuthResponse(LoginErrorCode.AUTH_WAIT_QUEUE, 10));
             */
 
-            // DONE: Addons info reading
+            // DONE: Addons info reading (send addon if user dont have)
             var addonData = handler.ReadBytes((int)handler.BaseStream.Length - (int)handler.BaseStream.Position);
             var decompressed = ZLib.Decompress(addonData);
             List<string> addOnsNames = new List<string>();
@@ -175,11 +177,11 @@ namespace RealmServer
                 }
             }
 
-            // Update [IP / Build]
+            // TODO: Update [IP / Build]
 
-            // Create Log
+            // TODO: Create Log
 
-            // Init Warden
+            // TODO: Init Warden
 
             // DONE: Send Addon Packet
             session.SendPacket(new SmsgAddonInfo(addOnsNames));
@@ -188,6 +190,11 @@ namespace RealmServer
             session.SendPacket(new SmsgAuthResponse(LoginErrorCode.AUTH_OK));
         }
 
+        /// <summary>
+        /// Packet received of the client to ping the server.
+        /// </summary>
+        /// <param name="session"></param>
+        /// <param name="handler"></param>
         public static void OnPingPacket(RealmServerSession session, CmsgPing handler)
         {
             Log.Print(LogType.RealmServer, $"[{session.ConnectionRemoteIp}] Latency.: {handler.Latency}");

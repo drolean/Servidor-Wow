@@ -16,8 +16,32 @@ namespace RealmServer.Handlers
 
     #region SMSG_CHAR_ENUM
 
-    sealed class SmsgCharEnum : PacketServer
+    internal sealed class SmsgCharEnum : PacketServer
     {
+        /// <summary>
+        /// @for
+        ///   guid
+        ///   name
+        ///   race
+        ///   class
+        ///   gender
+        ///   
+        ///   charSkin
+        ///   charFace
+        ///   charHairStyle
+        ///   charHairColor
+        ///   charFacialHair
+        ///   
+        ///   charLevel
+        ///   charMapZone
+        ///   charMapId
+        ///   charMapX
+        ///   charMapY
+        ///   charMapZ
+        ///   
+        ///   charGuildId
+        /// </summary>
+        /// <param name="characters"></param>
         public SmsgCharEnum(List<Characters> characters) : base(RealmCMD.SMSG_CHAR_ENUM)
         {
             Write((byte) characters.Count);
@@ -46,7 +70,8 @@ namespace RealmServer.Handlers
 
                 Write(0); // Guild ID
                 // if DEAD or any Restriction
-                Write((int) CharacterFlagState.CharacterFlagDeclined);
+                //Write((int) CharacterFlagState.CharacterFlagDeclined);
+                Write((int) MainProgram.IsJitI);
                 // RestState
                 Write((byte) 0);
 
@@ -76,6 +101,10 @@ namespace RealmServer.Handlers
                     }
                 }
             }
+
+            Console.WriteLine(MainProgram.IsJitI);
+
+            MainProgram.IsJitI++;
         }
     }
 
@@ -585,6 +614,11 @@ namespace RealmServer.Handlers
         }
         #endregion
 
+        /// <summary>
+        /// This message is sent by the client whenever it request character list.
+        /// </summary>
+        /// <param name="session"></param>
+        /// <param name="data"></param>
         internal static void OnCharEnum(RealmServerSession session, byte[] data)
         {
             List<Characters> characters = MainProgram.Database.GetCharacters(session.Users.username);
