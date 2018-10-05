@@ -10,14 +10,14 @@ using Common.Network;
 
 namespace AuthServer
 {
-    #region CMD_AUTH_LOGON_CHALLENGE
+    #region CMD_AUTH_LOGON_CHALLENGE (DONE)
     public sealed class AuthLogonChallenge : PacketReader
     {
         public IPAddress Ip;
         public string Version;
         public ushort Build;
-        public string Username;
         public string Language;
+        public string Username;
 
         public AuthLogonChallenge(byte[] data) : base(data)
         {
@@ -31,9 +31,43 @@ namespace AuthServer
             }
         }
     }
+
+    internal sealed class PsAuthLogonChallange : PacketServer
+    {
+        /// <summary>
+        ///   Opcode          : byte;            0x00
+        ///   Error           : byte;            AccountState
+        ///   Size            : byte;            unkown1 is set to 0 by all private servers.
+        ///   =====           : array of byte;   SRP6 server public ephemeral
+        ///   =====           : byte;            generator_len is the length of the generator field following it. All servers (including ours) set this to 1.
+        ///   =====           : array of byte;   All servers (including ours) hardcode this to 7
+        ///   =====           : byte;            All servers (including ours) set this to 32.
+        ///
+        ///   =====           : array of byte;   All servers (including ours) set this to 0x894B645E89E1535BBDAD5B8B290650530801B18EBFBF5E8FAB3C82872A3E9BB7
+        ///   =====           : array of byte;   A salt is a randomly generated value used to strengthen a user's password against attacks where pre-computations are performed
+        ///
+        ///   =====           : byte;            unknown2 is set to 16 random bytes by all servers.
+        /// </summary>
+        /// <param name="srp"></param>
+        /// <param name="result"></param>
+        /// <returns></returns>
+        public PsAuthLogonChallange(Srp6 srp, AccountState result) : base(AuthCMD.CMD_AUTH_LOGON_CHALLENGE)
+        {
+            Write((byte) AuthCMD.CMD_AUTH_LOGON_CHALLENGE);
+            Write((byte) result);
+            Write((byte) 0);
+            Write(srp.ServerEphemeral.ToProperByteArray());
+            Write((byte) 1);
+            Write(srp.Generator.ToByteArray());
+            Write((byte) 32);
+            Write(srp.Modulus.ToProperByteArray().Pad(32));
+            Write(srp.Salt.ToProperByteArray().Pad(32));
+            this.WriteNullByte(17);
+        }
+    }
     #endregion
 
-    #region CMD_AUTH_LOGON_PROOF
+    #region CMD_AUTH_LOGON_PROOF (DONE)
     public sealed class AuthLogonProof : PacketReader
     {
         public byte OptCode { get; }
@@ -62,28 +96,15 @@ namespace AuthServer
             }
         }
     }
-    #endregion
-
-    internal sealed class PsAuthLogonChallange : PacketServer
-    {
-        public PsAuthLogonChallange(Srp6 srp, AccountState result) : base(AuthCMD.CMD_AUTH_LOGON_CHALLENGE)
-        {
-            Write((byte) AuthCMD.CMD_AUTH_LOGON_CHALLENGE);
-            Write((byte) result);
-            Write((byte) 0); // unkown1 is set to 0 by all private servers.
-            Write(srp.ServerEphemeral.ToProperByteArray()); // SRP6 server public ephemeral
-            Write((byte) 1); // generator_len is the length of the generator field following it. All servers (including ours) set this to 1.
-            Write(srp.Generator.ToByteArray()); // All servers (including ours) hardcode this to 7
-            Write((byte) 32); // All servers (including ours) set this to 32.
-            Write(srp.Modulus.ToProperByteArray().Pad(32)); // All servers (including ours) set this to 0x894B645E89E1535BBDAD5B8B290650530801B18EBFBF5E8FAB3C82872A3E9BB7
-            Write(srp.Salt.ToProperByteArray().Pad(32)); // A salt is a randomly generated value used to strengthen a user's password against attacks where pre-computations are performed
-
-            this.WriteNullByte(17); // unknown2 is set to 16 random bytes by all servers.
-        }
-    }
 
     internal sealed class PsAuthLogonProof : PacketServer
     {
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="srp"></param>
+        /// <param name="result"></param>
+        /// <returns></returns>
         public PsAuthLogonProof(Srp6 srp, AccountState result) : base(AuthCMD.CMD_AUTH_LOGON_PROOF)
         {
             Write((byte) AuthCMD.CMD_AUTH_LOGON_PROOF);
@@ -92,9 +113,28 @@ namespace AuthServer
             this.WriteNullByte(4);
         }
     }
+    #endregion
 
+    #region CMD_AUTH_REALMLIST (TODO)
     internal sealed class PsAuthRealmList : PacketServer
     {
+        /// <summary>
+        /// @for
+        ///   Type       : byte;
+        ///   Flag       : byte;
+        ///   Name       : byte;
+        ///   Address    : array of byte;
+        ///   Population : byte;            Pop {400F -> Full; 5F -> Medium; 1.6F -> Low; 200F -> New; 2F -> High}
+        ///   Chars      : array of byte;
+        ///   Time       : byte;
+        ///   ?????      : byte;
+        /// </summary>
+        /// <param name="realms"></param>
+        /// <param name="accountName"></param>
+        /// <returns></returns>
+        /// <todo>
+        /// Count Population of Realm
+        /// </todo>
         public PsAuthRealmList(List<Realms> realms, string accountName) : base(AuthCMD.CMD_AUTH_REALMLIST)
         {
             Write((uint) 0x0000);
@@ -104,20 +144,20 @@ namespace AuthServer
             {
                 int count = MainProgram.Database.GetCharactersUsers(realm.Id, accountName);
 
-                Write((uint) realm.type);     // Type
-                Write((byte) realm.flag);     // Flag
-                WriteCString(realm.name);     // Name World
-                WriteCString(realm.address);  // IP World
-                // TODO: Count Population of Realm
-                Write(1.6f);                  // Pop {400F -> Full; 5F -> Medium; 1.6F -> Low; 200F -> New; 2F -> High}
-                Write((byte) count);          // Chars
-                Write((byte) realm.timezone); // time
-                Write((byte) 0x01);           // ?????
+                Write((uint) realm.type);
+                Write((byte) realm.flag);
+                WriteCString(realm.name);
+                WriteCString(realm.address);
+                Write(1.6f);
+                Write((byte) count);
+                Write((byte) realm.timezone);
+                Write((byte) 0x01);
             }
 
             Write((UInt16)0x0002);
         }
     }
+    #endregion
 
     internal class AuthServerHandler
     {
@@ -228,9 +268,13 @@ namespace AuthServer
             session.SendData(dataResponse, "RS_LOGON_PROOF-WRONGPASS");
         }
 
+        /// <summary>
+        /// Send packet Realm List
+        /// </summary>
+        /// <param name="session"></param>
+        /// <param name="data"></param>
         internal static void OnAuthRealmList(AuthServerSession session, byte[] data)
         {
-            // Get Realms
             var realms = MainProgram.Database.GetRealms();
             session.SendPacket(new PsAuthRealmList(realms, session.AccountName));
         }

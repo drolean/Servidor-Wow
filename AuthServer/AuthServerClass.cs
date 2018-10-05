@@ -34,19 +34,26 @@ namespace AuthServer
             }
         }
 
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="asyncResult"></param>
+        /// <todo>
+        ///   implement logic to check banned IP
+        /// </todo>
         private void ConnectionRequest(IAsyncResult asyncResult)
         {
             Socket connectionSocket = ((Socket)asyncResult.AsyncState).EndAccept(asyncResult);
             int connectionId = GetFreeId();
 
-            Log.Print(LogType.AuthServer, $"[{ connectionSocket.RemoteEndPoint}] Checking for banned IP.");
-
-            // TODO: implement logic to check banned IP
-
             ActiveConnections.Add(connectionId, new AuthServerSession(connectionId, connectionSocket));
             _socketHandler.BeginAccept(ConnectionRequest, _socketHandler);
         }
 
+        /// <summary>
+        /// Checks if there is a slot available to connect.
+        /// </summary>
+        /// <returns>int</returns>
         private int GetFreeId()
         {
             for (int i = 0; i < 150; i++)
@@ -59,6 +66,9 @@ namespace AuthServer
             return 0;
         }
 
+        /// <summary>
+        /// Dispose
+        /// </summary>
         public void Dispose()
         {
             _socketHandler.Dispose();

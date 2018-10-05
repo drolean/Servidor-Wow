@@ -12,6 +12,7 @@ namespace AuthServer
     internal class MainProgram
     {
         public static AuthServerDatabase Database { get; set; }
+        public static AuthServerClass AuthServerClass { get; set; }
 
         private static void Main()
         {
@@ -32,8 +33,7 @@ namespace AuthServer
             Log.Print(LogType.AuthServer, $"Version {Assembly.GetExecutingAssembly().GetName().Version}");
             Log.Print(LogType.AuthServer, $"Running on .NET Framework Version {Environment.Version}");
 
-            // ReSharper disable once UnusedVariable
-            var authServerClass = new AuthServerClass(authPoint);
+            AuthServerClass = new AuthServerClass(authPoint);
 
             Database = new AuthServerDatabase();
 
@@ -85,6 +85,9 @@ namespace AuthServer
             }
         }
 
+        /// <summary>
+        /// Print the console help.
+        /// </summary>
         private static void PrintHelp()
         {
             Console.Clear();
