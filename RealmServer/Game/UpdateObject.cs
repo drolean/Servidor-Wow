@@ -56,12 +56,12 @@ namespace RealmServer.Game
 
             writer.Write((float) 0);
 
-            writer.Write(2.5f);
-            writer.Write(7f * 10);
-            writer.Write(4.5f);
-            writer.Write(4.72f);
-            writer.Write(2.5f);
-            writer.Write(3.14f);
+            writer.Write(2.5f);     // WalkSpeed
+            writer.Write(7f * MainProgram.SpeedRunMultiplier); // RunSpeed
+            writer.Write(2.5f);     // Backwards WalkSpeed
+            writer.Write(4.7222f);  // SwimSpeed
+            writer.Write(2.5f);     // Backwards SwimSpeed
+            writer.Write(3.14f);    // TurnSpeed
 
             writer.Write(0x1);
 
@@ -107,12 +107,18 @@ namespace RealmServer.Game
             return new UpdateObject(new List<byte[]> { (writer.BaseStream as MemoryStream)?.ToArray() }, 1);
         }
 
-        internal static UpdateObject CreateItem(CharactersInventorys inventory, Characters sessionCharacter)
+        internal static UpdateObject CreateItem(CharactersInventorys inventory, Characters character)
         {
+            Log.Print(LogType.RealmServer, $"[{character.name}] Invetary Bag ....: {inventory.bag}");
+            Log.Print(LogType.RealmServer, $"[{character.name}] Invetary Item ...: {inventory.item}");
+            Log.Print(LogType.RealmServer, $"[{character.name}] Invetary Stack ..: {inventory.stack}");
+            Log.Print(LogType.RealmServer, $"[{character.name}] Invetary Flag ...: {inventory.flags}");
+            Log.Print(LogType.RealmServer, $"[{character.name}] Invetary Slot ...: {inventory.slot}");
+
             BinaryWriter writer = new BinaryWriter(new MemoryStream());
             writer.Write((byte) ObjectUpdateType.UPDATETYPE_CREATE_OBJECT);
 
-            ItemEntity entity = new ItemEntity(inventory, sessionCharacter)
+            ItemEntity entity = new ItemEntity(inventory, character)
             {
                 ObjectGuid = new ObjectGuid(inventory.item),
                 Guid = inventory.item

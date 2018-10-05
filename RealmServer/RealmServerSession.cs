@@ -71,7 +71,7 @@ namespace RealmServer
 
         private void SendPacket(int opcode, byte[] data)
         {
-            Log.Print(LogType.RealmServer, $"[{ConnectionSocket.RemoteEndPoint}] [SERVER] [{((RealmCMD)opcode).ToString().PadRight(25, ' ')}] = {data.Length}");
+            Log.Print(LogType.RealmServer, $"[{ConnectionSocket.RemoteEndPoint}] [SEND] [{((RealmCMD)opcode).ToString().PadRight(25, ' ')}] = {data.Length}");
             BinaryWriter writer = new BinaryWriter(new MemoryStream());
             byte[] header = Encode(data.Length, opcode);
             writer.Write(header);
@@ -179,7 +179,7 @@ namespace RealmServer
                     short opcode;
 
                     Decode(headerData, out length, out opcode);
-                    Log.Print(LogType.RealmServer, $"[{ConnectionSocket.RemoteEndPoint}] [CLIENT] [{((RealmCMD)opcode).ToString().PadRight(25, ' ')}] = {length}");
+                    Log.Print(LogType.RealmServer, $"[{ConnectionSocket.RemoteEndPoint}] [RCVD] [{((RealmCMD)opcode).ToString().PadRight(25, ' ')}] = {length}");
                     RealmCMD code = (RealmCMD)opcode;
 
                     byte[] packetDate = new byte[length];

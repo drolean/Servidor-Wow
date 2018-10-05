@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Text;
 using Common.Globals;
 using Common.Helpers;
@@ -119,7 +118,8 @@ namespace RealmServer.Handlers
             string channelName = handler.ReadCString();
             string password = handler.ReadCString();
 
-            Log.Print(LogType.Debug, $"[{session.ConnectionRemoteIp}] Channel Enter [{session.Character.name} ({channelName}) '{password}']");
+            Log.Print(LogType.Debug, $"[{session.Character.name}] Channel Enter ......: {channelName}");
+            Log.Print(LogType.Debug, $"[{session.Character.name}] Channel Password ...: {password}");
 
             // Adicionar a base de dados
             session.SendPacket(new SmsgChannelNotify(ChatChannelNotify.CHAT_YOU_JOINED_NOTICE, (ulong)session.Character.Id, channelName));
@@ -129,7 +129,7 @@ namespace RealmServer.Handlers
         {
             string channelName = handler.ReadCString();
 
-            Log.Print(LogType.Debug, $"[{session.ConnectionRemoteIp}] Channel leave [{session.Character.name} ({channelName})]");
+            Log.Print(LogType.Debug, $"[{session.Character.name}] Channel Leave ......: {channelName}");
 
             // Adicionar a base de dados
             session.SendPacket(new SmsgChannelNotify(ChatChannelNotify.CHAT_YOU_LEFT_NOTICE, (ulong)session.Character.Id, channelName));

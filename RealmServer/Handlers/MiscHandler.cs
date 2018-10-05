@@ -13,9 +13,8 @@ namespace RealmServer.Handlers
         public SmsgNameQueryResponse(Characters character) : base(RealmCMD.SMSG_NAME_QUERY_RESPONSE)
         {
             Write((ulong) character.Id);
-            //WriteCString(character.name);
             Write(Encoding.UTF8.GetBytes(character.name + '\0'));
-            Write((byte)0); // realm name for cross realm BG usage
+            Write((byte) 0); // realm name for cross realm BG usage
             Write((uint) character.race);
             Write((uint) character.gender);
             Write((uint) character.classe);
@@ -84,7 +83,8 @@ namespace RealmServer.Handlers
 
         internal static void OnSetActiveMover(RealmServerSession session, PacketReader handler)
         {
-            //ulong guid = handler.ReadUInt64();
+            handler.ReadInt16();
+            ulong guid = handler.ReadUInt64();
         }
 
         internal static void OnQueryTime(RealmServerSession session, byte[] data)
@@ -133,12 +133,13 @@ namespace RealmServer.Handlers
             Console.WriteLine(@"Tutoriais Feitos");
         }
 
+        // TODO: implement this correct
         internal static void OnTutorialFlag(RealmServerSession session, PacketReader handler)
         {
             int flag = handler.ReadInt32();
             Console.WriteLine($@"vem FLAG [{flag}] {flag / 8} [{1 << 7 - flag % 8}]");
-            //client.Character.TutorialFlags((Flag \ 8)) = client.Character.TutorialFlags((Flag \ 8)) + (1 << 7 - (Flag Mod 8))           
-            //client.Character.TutorialFlags((Flag / 8)) == client.Character.TutorialFlags((Flag / 8)) + (1 << 7 - (Flag % 8))
+            //session.Character.tutorial = ((Flag \ 8)) = session.Character.tutorial((Flag \ 8)) + (1 << 7 - (Flag Mod 8))           
+            //session.Character.tutorial = ((Flag / 8)) == session.Character.tutorial((Flag / 8)) + (1 << 7 - (Flag % 8))
         }
 
         internal static void OnTutorialReset(RealmServerSession session, PacketReader handler)

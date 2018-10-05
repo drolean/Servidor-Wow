@@ -45,7 +45,7 @@ namespace RealmServer.Handlers
                 Write(character.MapZ);
 
                 Write(0); // Guild ID
-                // if DEAD or any Restriction 
+                // if DEAD or any Restriction
                 Write((int) CharacterFlagState.CharacterFlagDeclined);
                 // RestState
                 Write((byte) 0);
@@ -186,9 +186,9 @@ namespace RealmServer.Handlers
 
     #region CMSG_PLAYER_LOGIN
 
-    sealed class CmsgPlayerLogin : PacketReader
+    internal sealed class CmsgPlayerLogin : PacketReader
     {
-        public uint Guid { get; private set; }
+        public uint Guid { get; }
 
         public CmsgPlayerLogin(byte[] data) : base(data)
         {
@@ -200,10 +200,10 @@ namespace RealmServer.Handlers
 
     #region CMSG_UPDATE_ACCOUNT_DATA
 
-    sealed class CmsgUpdateAccountData : PacketReader
+    internal sealed class CmsgUpdateAccountData : PacketReader
     {
-        public uint DataId { get; private set; }
-        public uint UncompressedSize { get; private set; }
+        public uint DataId { get; }
+        public uint UncompressedSize { get; }
 
         public CmsgUpdateAccountData(byte[] data) : base(data)
         {
@@ -230,12 +230,14 @@ namespace RealmServer.Handlers
     #endregion
 
     #region SMSG_ACCOUNT_DATA_TIMES
-
-    sealed class SmsgAccountDataTimes : PacketServer
+    /// <summary>
+    /// Current time on the server, required or client keeps frozen
+    /// </summary>
+    internal sealed class SmsgAccountDataTimes : PacketServer
     {
         public SmsgAccountDataTimes() : base(RealmCMD.SMSG_ACCOUNT_DATA_TIMES)
         {
-            this.WriteNullByte(128);
+            this.WriteBytes(new byte[80]);
         }
     }
 
@@ -243,7 +245,7 @@ namespace RealmServer.Handlers
 
     #region SMSG_TRIGGER_CINEMATIC
 
-    sealed class SmsgTriggerCinematic : PacketServer
+    internal sealed class SmsgTriggerCinematic : PacketServer
     {
         public SmsgTriggerCinematic(int cinematic) : base(RealmCMD.SMSG_TRIGGER_CINEMATIC)
         {
@@ -255,15 +257,15 @@ namespace RealmServer.Handlers
 
     #region SMSG_BINDPOINTUPDATE
 
-    sealed class SmsgBindpointupdate : PacketServer
+    internal sealed class SmsgBindPointUpdate : PacketServer
     {
-        public SmsgBindpointupdate(Characters character) : base(RealmCMD.SMSG_BINDPOINTUPDATE)
+        public SmsgBindPointUpdate(Characters character) : base(RealmCMD.SMSG_BINDPOINTUPDATE)
         {
             Write(character.MapX);
             Write(character.MapY);
             Write(character.MapZ);
             Write((uint) character.MapId);
-            Write((short) character.MapZone);
+            Write((uint) character.MapZone);
         }
     }
 
@@ -271,28 +273,37 @@ namespace RealmServer.Handlers
 
     #region SMSG_SET_REST_START
 
-    sealed class SmsgSetRestStart : PacketServer
+    internal sealed class SmsgSetRestStart : PacketServer
     {
         public SmsgSetRestStart() : base(RealmCMD.SMSG_SET_REST_START)
         {
-            Write((uint) 0);
+            Log.Print(LogType.Implement, "NEED A REVIEW");
+            Write((uint) 120);
         }
     }
 
     #endregion
 
     #region SMSG_TUTORIAL_FLAGS
-
-    sealed class SmsgTutorialFlags : PacketServer
+    /// <summary>
+    /// Send tutorial flags to client.
+    ///
+    /// VANILLA: max tutorial 8.
+    ///
+    /// Options:
+    ///   -1 = to disable all tutorial
+    ///    0 = Welcome & Questgiver
+    ///    1 = Welcome
+    /// </summary>
+    /// <todo>
+    /// Review this code to send only if user need.
+    /// </todo>
+    internal sealed class SmsgTutorialFlags : PacketServer
     {
-        //TODO Write the uint ids of 8 tutorial values
         public SmsgTutorialFlags() : base(RealmCMD.SMSG_TUTORIAL_FLAGS)
         {
-            // [8*Int32] or [32 Bytes] or [256 Bits Flags] Total!!!
             for (int i = 0; i < 8; i++)
-            {
-                Write((byte) 0);
-            }
+                Write(-1);
         }
     }
 
@@ -300,7 +311,7 @@ namespace RealmServer.Handlers
 
     #region SMSG_LOGIN_VERIFY_WORLD
 
-    sealed class SmsgLoginVerifyWorld : PacketServer
+    internal sealed class SmsgLoginVerifyWorld : PacketServer
     {
         public SmsgLoginVerifyWorld(Characters character) : base(RealmCMD.SMSG_LOGIN_VERIFY_WORLD)
         {
@@ -315,12 +326,14 @@ namespace RealmServer.Handlers
     #endregion
 
     #region SMSG_CORPSE_RECLAIM_DELAY
-
-    sealed class SmsgCorpseReclaimDelay : PacketServer
+    /// <summary>
+    /// Send a delay to ressurection.
+    /// </summary>
+    internal sealed class SmsgCorpseReclaimDelay : PacketServer
     {
         public SmsgCorpseReclaimDelay() : base(RealmCMD.SMSG_CORPSE_RECLAIM_DELAY)
         {
-            Write(30 * 1000);
+            Write(MainProgram.ReclaimCorpseTime * 1000);
         }
     }
 
@@ -328,7 +341,7 @@ namespace RealmServer.Handlers
 
     #region SMSG_INITIAL_SPELLS
 
-    sealed class SmsgInitialSpells : PacketServer
+    internal sealed class SmsgInitialSpells : PacketServer
     {
         public SmsgInitialSpells(Characters character) : base(RealmCMD.SMSG_INITIAL_SPELLS)
         {
@@ -341,6 +354,10 @@ namespace RealmServer.Handlers
             ushort slot = 1;
             foreach (CharactersSpells spell in spells)
             {
+                Log.Print(LogType.RealmServer, $"[{character.name}] Spell ....: {spell.spell}");
+                Log.Print(LogType.RealmServer, $"[{character.name}] S Active .: {spell.active}");
+                Log.Print(LogType.RealmServer, $"[{character.name}] SSlot ....: {slot}");
+
                 Write((ushort) spell.spell); //uint16
                 Write(slot++); //int16
             }
@@ -353,7 +370,7 @@ namespace RealmServer.Handlers
 
     #region SMSG_INITIALIZE_FACTIONS
 
-    sealed class SmsgInitializeFactions : PacketServer
+    internal sealed class SmsgInitializeFactions : PacketServer
     {
 
         public SmsgInitializeFactions(Characters character) : base(RealmCMD.SMSG_INITIALIZE_FACTIONS)
@@ -363,7 +380,10 @@ namespace RealmServer.Handlers
             Write((uint) factions.Count);
             foreach (var fact in factions)
             {
-                Write((byte) fact.flags); // Flag 
+                Log.Print(LogType.RealmServer, $"[{character.name}] Faction ...: {fact.faction}");
+                Log.Print(LogType.RealmServer, $"[{character.name}] Fac Flag ..: {fact.flags}");
+                Log.Print(LogType.RealmServer, $"[{character.name}] Fac Stand .: {fact.standing}");
+                Write((byte) fact.flags); // Flag
                 Write(fact.standing); // Value
             }
         }
@@ -373,7 +393,7 @@ namespace RealmServer.Handlers
 
     #region SMSG_ACTION_BUTTONS
 
-    sealed class SmsgActionButtons : PacketServer
+    internal sealed class SmsgActionButtons : PacketServer
     {
         public SmsgActionButtons(Characters character) : base(RealmCMD.SMSG_ACTION_BUTTONS)
         {
@@ -387,6 +407,10 @@ namespace RealmServer.Handlers
 
                 if (currentButton != null)
                 {
+                    Log.Print(LogType.RealmServer, $"[{character.name}] Act Action .: {currentButton.action}");
+                    Log.Print(LogType.RealmServer, $"[{character.name}] Act Button .: {currentButton.button}");
+                    Log.Print(LogType.RealmServer, $"[{character.name}] Act Type ...: {currentButton.type}");
+
                     UInt32 packedData = (UInt32) currentButton.action | (UInt32) currentButton.type << 24;
                     Write(packedData);
                     //Write((UInt16)currentButton.action);
@@ -450,7 +474,14 @@ namespace RealmServer.Handlers
     #endregion
 
     #region SMSG_INIT_WORLD_STATES
-
+    /// <summary>
+    /// set the INITIAL World State values. This needs to be used each time you're creating a new World State.
+    /// </summary>
+    /// <para>
+    /// - MapId
+    /// - ZoneId
+    /// - AreaId
+    /// </para>
     internal sealed class SmsgInitWorldStates : PacketServer
     {
         public SmsgInitWorldStates(Characters character) : base(RealmCMD.SMSG_INIT_WORLD_STATES)
@@ -469,7 +500,7 @@ namespace RealmServer.Handlers
 
             Write((ulong) character.MapId);
             Write((uint) character.MapZone);
-            Write((uint) 0); // Area ID????
+            Write((uint) 0); // Area ID
             Write(numberOfFields);
             Write((ulong) 0x8d8);
             Write((ulong) 0x0);
@@ -488,11 +519,14 @@ namespace RealmServer.Handlers
 
     #endregion
 
-    #region SMSG_LOGIN_SETTIMESPEED
 
-    public sealed class SmsgLoginSettimespeed : PacketServer
+    #region SMSG_LOGIN_SETTIMESPEED
+    /// <summary>
+    /// represents a message sent by the server to define the world timespeed.
+    /// </summary>
+    public sealed class SmsgLoginSetTimeSpeed : PacketServer
     {
-        public SmsgLoginSettimespeed() : base(RealmCMD.SMSG_LOGIN_SETTIMESPEED)
+        public SmsgLoginSetTimeSpeed() : base(RealmCMD.SMSG_LOGIN_SETTIMESPEED)
         {
             Write((uint) SecsToTimeBitFields(DateTime.Now)); // Time
             Write(0.01666667f); // Speed
@@ -548,7 +582,6 @@ namespace RealmServer.Handlers
 
                 Thread.Sleep(1000);
             }
-            // ReSharper disable once FunctionNeverReturns
         }
         #endregion
 
@@ -558,15 +591,20 @@ namespace RealmServer.Handlers
             session.SendPacket(new SmsgCharEnum(characters));
         }
 
+        /// <summary>
+        /// Create a Character of Player
+        /// </summary>
+        /// <param name="session"></param>
+        /// <param name="handler"></param>
+        /// <todo>
+        /// NEED A REVIEW
+        /// - Profane Name
+        /// - Reserved Name
+        /// - Check Ally or Horde
+        /// - 
+        /// </todo>
         internal static void OnCharCreate(RealmServerSession session, CmsgCharCreate handler)
         {
-            // Char name Profane            result = (int) LoginErrorCode.CHAR_NAME_PROFANE;
-            // Char name reserved           result = (int) LoginErrorCode.CHAR_NAME_RESERVED;
-            // Char name invalid            result = (int) LoginErrorCode.CHAR_NAME_FAILURE;
-            // Check Ally or Horde          result = (int) LoginErrorCode.CHAR_CREATE_PVP_TEAMS_VIOLATION;
-
-            // Check for both horde and alliance
-            // Only if it's a pvp realm
             try
             {
                 // If limit character reached
@@ -619,33 +657,37 @@ namespace RealmServer.Handlers
 
         internal static void OnCharDelete(RealmServerSession session, CmsgCharDelete handler)
         {
-            // if failed                CHAR_DELETE_FAILED
-            // if waiting for transfer  CHAR_DELETE_FAILED_LOCKED_FOR_TRANSFER
-            // if guild leader          CHAR_DELETE_FAILED_GUILD_LEADER
-            MainProgram.Database.DeleteCharacter(handler.Id);
-            session.SendPacket(new SmsgCharDelete(LoginErrorCode.CHAR_DELETE_SUCCESS));
+            // TODO: Waiting for transfer NOT DELETE
+            // TODO: Guild Leader NOT DELETE
+            try
+            {
+                MainProgram.Database.DeleteCharacter(handler.Id);
+                session.SendPacket(new SmsgCharDelete(LoginErrorCode.CHAR_DELETE_SUCCESS));
+            }
+            catch (Exception)
+            {
+                session.SendPacket(new SmsgCharDelete(LoginErrorCode.CHAR_DELETE_FAILED));
+            }
         }
 
         internal static void OnPlayerLogin(RealmServerSession session, CmsgPlayerLogin handler)
         {
             session.Character = MainProgram.Database.GetCharacter(handler.Guid);
 
-            // Change Player Status Online
-
             // Part One
-            session.SendPacket(new SmsgLoginVerifyWorld(session.Character)); // DONE 
+            session.SendPacket(new SmsgLoginVerifyWorld(session.Character)); // DONE
             session.SendPacket(new SmsgAccountDataTimes()); // DONE
-            session.SendMessageMotd("Welcome to World of Warcraft."); // DONE
-            session.SendMessageMotd("Servidor do caralho vai curintia ...."); // DONE
+            session.SendMessageMotd(MainProgram.FirstMotd); // DONE
+            session.SendMessageMotd(MainProgram.SecondMotd); // DONE
 
             // Part Two
-            session.SendPacket(new SmsgSetRestStart());
-            session.SendPacket(new SmsgBindpointupdate(session.Character)); // DONE
-            session.SendPacket(new SmsgTutorialFlags());
-            session.SendPacket(new SmsgLoginSettimespeed()); // DONE
-            session.SendPacket(new SmsgInitialSpells(session.Character));
-            session.SendPacket(new SmsgActionButtons(session.Character)); // DONE
-            session.SendPacket(new SmsgInitializeFactions(session.Character)); // DONE
+            session.SendPacket(new SmsgSetRestStart()); // TODO: review
+            session.SendPacket(new SmsgBindPointUpdate(session.Character)); // DONE
+            session.SendPacket(new SmsgTutorialFlags()); // TODO: review
+            session.SendPacket(new SmsgLoginSetTimeSpeed()); // DONE
+            //session.SendPacket(new SmsgInitialSpells(session.Character));
+            //session.SendPacket(new SmsgActionButtons(session.Character)); // DONE
+            //session.SendPacket(new SmsgInitializeFactions(session.Character)); // DONE
 
             // Send Cinematic if first time
             if (session.Character.is_movie_played == false)
@@ -658,7 +700,7 @@ namespace RealmServer.Handlers
             session.SendPacket(new SmsgCorpseReclaimDelay()); // DONE
 
             // Spawn Player
-            session.SendPacket(new SmsgInitWorldStates(session.Character));
+            session.SendPacket(new SmsgInitWorldStates(session.Character)); // TODO: review
             session.SendPacket(UpdateObject.CreateOwnCharacterUpdate(session.Character, out session.Entity));
 
             // Set Sesstion Player
@@ -669,11 +711,11 @@ namespace RealmServer.Handlers
             // Generate Inventory
             foreach (var inventory in MainProgram.Database.GetInventory(session.Character))
             {
-                session.SendPacket(UpdateObject.CreateItem(inventory, session.Character));
+                //session.SendPacket(UpdateObject.CreateItem(inventory, session.Character));
             }
-            
 
-            /*          
+
+            /*
             // Cast talents and racial passive spells
 
             /////////////////////////////// PT1
@@ -684,7 +726,7 @@ namespace RealmServer.Handlers
             // If we have changed map
 
             // Loading map cell if not loaded
-           
+
             // SMSG_SET_PROFICIENCY
 
             // SMSG_UPDATE_AURA_DURATION
@@ -700,7 +742,7 @@ namespace RealmServer.Handlers
 
             // Send update on aura durations
 
-            /////////////////////////////// PT2 
+            /////////////////////////////// PT2
             // Update character status in database
 
             // Guild Message Of The Day
@@ -713,11 +755,14 @@ namespace RealmServer.Handlers
 
             // Put back character in group if disconnected
             */
+
+            // Change Player Status Online
+            MainProgram.Database.UpdateCharacter(session.Character.Id, "online");
         }
 
         internal static void OnUpdateAccountData(RealmServerSession session, CmsgUpdateAccountData handler)
         {
-            // Nao Implementado ????
+            // TODO: idk who is this!!!?!?!?!???
         }
 
         // PARTIAL
@@ -728,7 +773,7 @@ namespace RealmServer.Handlers
 
             // Lose Invisibility
 
-            // ???? Can't log out in combat         
+            // ???? Can't log out in combat
 
             // DONE: Disable Movement
             session.Entity.SetUpdateField((int) UnitFields.UNIT_FIELD_FLAGS, UnitFlags.UNIT_FLAG_STUNTED);
@@ -738,7 +783,7 @@ namespace RealmServer.Handlers
             session.Entity.KnownPlayers.ForEach(
                 s => s.Session.SendPacket(new SmsgStandstateUpdate((byte) StandStates.STANDSTATE_SIT)));
 
-            // DONE: Send Logout 
+            // DONE: Send Logout
             session.SendPacket(new SmsgLogoutResponse(LogoutResponseCode.LOGOUT_RESPONSE_ACCEPTED));
 
             // DONE: While logout, the player can't move

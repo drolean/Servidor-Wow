@@ -13,6 +13,7 @@ namespace Common.Helpers
         Console,
         Error,
         Loading,
+        Implement
     }
 
     public class Log
@@ -25,6 +26,7 @@ namespace Common.Helpers
             { LogType.Console,     ConsoleColor.Magenta },
             { LogType.Error,       ConsoleColor.DarkRed },
             { LogType.Loading,     ConsoleColor.Cyan },
+            { LogType.Implement,   ConsoleColor.Blue },
         };
 
         public static void Print(LogType type, object obj)

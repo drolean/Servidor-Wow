@@ -44,7 +44,7 @@ namespace RealmServer.Game.Entitys
         {
             RealmServerSession session = RealmServerSession.Sessions.First();
             _unitEntity.Move(session);
-            //Console.WriteLine($@"Mapeamento andando [{_unitEntity.MapX} _ {_unitEntity.MapY} _ {_unitEntity.MapZ}]");
+            Console.WriteLine($@"Mapeamento andando [{_unitEntity.MapX} _ {_unitEntity.MapY} _ {_unitEntity.MapZ}]");
             // Definindo novo Map
             _unitEntity.MapX = session.Character.MapX;
             _unitEntity.MapY = session.Character.MapY;

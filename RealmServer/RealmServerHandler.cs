@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using Common.Crypt;
 using Common.Globals;
 using Common.Helpers;
 using Common.Network;
-using RealmServer.Handlers;
 
 namespace RealmServer
 {
@@ -192,13 +190,13 @@ namespace RealmServer
 
         public static void OnPingPacket(RealmServerSession session, CmsgPing handler)
         {
-            session.SendPacket(new SmsgPong(handler.Ping));
+            Log.Print(LogType.RealmServer, $"[{session.ConnectionRemoteIp}] Latency.: {handler.Latency}");
+            Log.Print(LogType.RealmServer, $"[{session.ConnectionRemoteIp}] Ping....: {handler.Ping}");
+            session.SendPacket(new SmsgPong(handler.Latency));
 
             // Set latency to char
-            //if (session.Character != null)
-                //session.Character.Latency = handler.Latency;
-
-            //Console.WriteLine(session.Character.Latency);
+            if (session.Character != null)
+                session.Character.Latency = handler.Latency;
         }
     }
 }
