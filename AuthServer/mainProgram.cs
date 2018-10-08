@@ -71,6 +71,7 @@ namespace AuthServer
                         PrintHelp();
                         Console.WriteLine();
                         break;
+
                     default:
                         Log.Print(LogType.Debug, $"Unknown Command: {command}");
                         break;

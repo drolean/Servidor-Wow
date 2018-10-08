@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace Common.Helpers
 {
@@ -13,16 +15,20 @@ namespace Common.Helpers
 
         // Capitalize the first character and add a space before
         // each capitalized letter (except the first character).
+
+        /// <summary>
+        ///     Capitalize the first character and add a space before
+        ///     each capitalized letter (except the first character).
+        /// </summary>
+        /// <param name="source">String to convert</param>
+        /// <returns></returns>
         public static string ToProperCase(this string source)
         {
-            // If there are 0 or 1 characters, just return the string.
             if (source == null) return null;
             if (source.Length < 2) return source.ToUpper();
 
-            // Start with the first character.
             string result = source.Substring(0, 1).ToUpper();
 
-            // Add the remaining characters.
             for (int i = 1; i < source.Length; i++)
             {
                 if (Char.IsUpper(source[i])) result += " ";
@@ -32,50 +38,34 @@ namespace Common.Helpers
             return result;
         }
 
-        // Convert the string to Pascal case.
+        /// <summary>
+        ///     Convert a string to PascalCase.
+        /// </summary>
+        /// <param name="source">String to convert</param>
+        /// <returns></returns>
         public static string ToPascalCase(this string source)
         {
-            if (source == null) return null;
-            if (source.Length < 2) return source.ToUpper();
+            string sample = string.Join("", source?.Select(c => Char.IsLetterOrDigit(c) ? c.ToString().ToLower() : "_").ToArray());
 
-            // Split the string into words.
-            string[] words = source.Split(
-                new char[] {},
-                StringSplitOptions.RemoveEmptyEntries);
+            var arr = sample?
+                .Split(new[] { '_' }, StringSplitOptions.RemoveEmptyEntries)
+                .Select(s => $"{s.Substring(0, 1).ToUpper()}{s.Substring(1)}");
 
-            // Combine the words.
-            string result = "";
-            foreach (string word in words)
-            {
-                result +=
-                    word.Substring(0, 1).ToUpper() +
-                    word.Substring(1);
-            }
+            sample = string.Join("", arr);
 
-            return result;
+            return sample;
         }
 
+        /// <summary>
+        /// Converts the given string value into camelCase.
+        /// </summary>
+        /// <param name="source">String to convert</param>
+        /// <returns>
+        /// The camel case value.
+        /// </returns>
         public static string ToCamelCase(this string source)
         {
-            // If there are 0 or 1 characters, just return the string.
-            if (source == null || source.Length < 2)
-                return source;
-
-            // Split the string into words.
-            string[] words = source.Split(
-                new char[] {},
-                StringSplitOptions.RemoveEmptyEntries);
-
-            // Combine the words.
-            string result = words[0].ToLower();
-            for (int i = 1; i < words.Length; i++)
-            {
-                result +=
-                    words[i].Substring(0, 1).ToUpper() +
-                    words[i].Substring(1);
-            }
-
-            return result;
+            return Regex.Replace(source, @"[_-](\w)", m => m.Groups[1].Value.ToUpper());
         }
     }
 }

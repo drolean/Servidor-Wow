@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.IO;
 using Common.Database.Tables;
 using Common.Globals;
 using Common.Helpers;
@@ -46,8 +47,8 @@ namespace Common.Database
     {
         public DatabaseManager()
         {
-            //if (File.Exists("database.sqlite"))
-                //return;
+            if (File.Exists("database.sqlite"))
+                return;
 
             // Recria a base inteira
             Model.Create(DatabaseCreationOptions.DeleteExistingDatabase);

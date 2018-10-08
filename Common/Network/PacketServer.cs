@@ -32,7 +32,7 @@ namespace Common.Network
         /// </summary>
         public void Write()
         {
-            Write((byte)0x0);
+            Write((byte) 0x0);
         }
     }
 }
