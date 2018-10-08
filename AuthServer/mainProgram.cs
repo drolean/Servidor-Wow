@@ -3,6 +3,7 @@ using System.Globalization;
 using System.Net;
 using System.Reflection;
 using System.Threading;
+using AuthServer.PacketReader;
 using Common.Database;
 using Common.Globals;
 using Common.Helpers;
@@ -34,15 +35,13 @@ namespace AuthServer
             Log.Print(LogType.AuthServer, $"Running on .NET Framework Version {Environment.Version}");
 
             AuthServerClass = new AuthServerClass(authPoint);
-
             Database = new AuthServerDatabase();
 
             //
             AuthServerRouter.AddHandler<AuthLogonChallenge>(AuthCMD.CMD_AUTH_LOGON_CHALLENGE, AuthServerHandler.OnAuthLogonChallenge);
             AuthServerRouter.AddHandler<AuthLogonProof>(AuthCMD.CMD_AUTH_LOGON_PROOF, AuthServerHandler.OnAuthLogonProof);
             AuthServerRouter.AddHandler(AuthCMD.CMD_AUTH_REALMLIST, AuthServerHandler.OnAuthRealmList);
-
-
+            
             Log.Print(LogType.AuthServer, $"Running from: {AppDomain.CurrentDomain.BaseDirectory}");
             Log.Print(LogType.AuthServer, $"Successfully started in {Time.GetMsTimeDiff(time, Time.GetMsTime()) / 100}ms");
 

@@ -18,6 +18,8 @@ namespace AuthServer
             _socketHandler = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             _socketHandler.SetSocketOption(SocketOptionLevel.Tcp, SocketOptionName.NoDelay, true);
             _socketHandler.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.DontLinger, true);
+            _socketHandler.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.KeepAlive, false);
+
             _socketHandler.SendTimeout = 3500;
             _socketHandler.ReceiveTimeout = 3500;
             try
@@ -38,9 +40,7 @@ namespace AuthServer
         ///
         /// </summary>
         /// <param name="asyncResult"></param>
-        /// <todo>
-        ///   implement logic to check banned IP
-        /// </todo>
+        /// <todo>implement logic to check banned IP</todo>
         private void ConnectionRequest(IAsyncResult asyncResult)
         {
             Socket connectionSocket = ((Socket)asyncResult.AsyncState).EndAccept(asyncResult);
@@ -66,6 +66,7 @@ namespace AuthServer
             return 0;
         }
 
+        /// <inheritdoc />
         /// <summary>
         /// Dispose
         /// </summary>

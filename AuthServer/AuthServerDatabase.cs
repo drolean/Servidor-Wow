@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Common.Database;
 using Common.Database.Tables;
@@ -14,7 +13,7 @@ namespace AuthServer
         /// </summary>
         /// <param name="username">string</param>
         /// <returns>Model.Users</returns>
-        public Users GetAccount(string username) => !Model.Users.Any() ? null : Model.Users.FirstOrDefault(a => string.Equals(a.username, username, StringComparison.CurrentCultureIgnoreCase));
+        public Users GetAccount(string username) => !Model.Users.Any() ? null : Model.Users.FirstOrDefault(a => a.username == username);
 
         /// <summary>
         /// Sets the authenticated user's sessionkey.

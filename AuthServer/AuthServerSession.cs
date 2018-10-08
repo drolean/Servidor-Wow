@@ -142,7 +142,7 @@ namespace AuthServer
             }
         }
 
-        public void SendData(PacketServer packet)
+        public void SendData(Common.Network.PacketServer packet)
         {
             SendData(packet.Packet, packet.Opcode.ToString());
         }
@@ -194,7 +194,7 @@ namespace AuthServer
             }
         }
 
-        internal void SendPacket(PacketServer packet)
+        internal void SendPacket(Common.Network.PacketServer packet)
         {
             SendPacket((byte)packet.Opcode, packet.Packet);
         }

@@ -56,6 +56,8 @@
     <Reference Include="System.Numerics" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="PacketReader\AuthLogonChallenge.cs" />
+    <Compile Include="PacketReader\AuthLogonProof.cs" />
     <Compile Include="AuthServerClass.cs" />
     <Compile Include="AuthServerDatabase.cs" />
     <Compile Include="AuthServerHandler.cs" />
@@ -63,9 +65,11 @@
     <Compile Include="AuthServerSession.cs" />
     <Compile Include="mainProgram.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="PacketServer\PsAuthLogonChallange.cs" />
+    <Compile Include="PacketServer\PsAuthLogonProof.cs" />
+    <Compile Include="PacketServer\PsAuthRealmList.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

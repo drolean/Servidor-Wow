@@ -15,8 +15,6 @@ namespace Common.Network
 
         public PacketServer(AuthCMD authOpcode) : this((byte)authOpcode) { }
 
-        public PacketServer(RealmCMD realmOpcode) : this((int)realmOpcode) { }
-
         public byte[] Packet => (BaseStream as MemoryStream)?.ToArray();
 
         /// <summary>

@@ -25,6 +25,12 @@ namespace AuthServer
             });
         }
 
+        /// <summary>
+        /// Calls the handler.
+        /// </summary>
+        /// <param name="authServerSession"></param>
+        /// <param name="opcode">The event handler.</param>
+        /// <param name="data"></param>
         internal static void CallHandler(AuthServerSession authServerSession, AuthCMD opcode, byte[] data)
         {
             if (MCallbacks.ContainsKey(opcode))
