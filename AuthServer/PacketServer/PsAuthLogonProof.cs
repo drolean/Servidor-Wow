@@ -7,7 +7,6 @@ namespace AuthServer.PacketServer
     internal sealed class PsAuthLogonProof : Common.Network.PacketServer
     {
         /// <summary>
-        ///
         /// </summary>
         /// <param name="srp"></param>
         /// <param name="result"></param>

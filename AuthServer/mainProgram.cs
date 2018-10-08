@@ -12,41 +12,36 @@ namespace AuthServer
 {
     internal class MainProgram
     {
+        private static bool _keepGoing = true;
+        private static readonly uint Time = Common.Helpers.Time.GetMsTime();
+        private static readonly IPEndPoint AuthPoint = new IPEndPoint(IPAddress.Any, 3724);
         public static AuthServerDatabase Database { get; set; }
         public static AuthServerClass AuthServerClass { get; set; }
 
         private static void Main()
         {
             // Set Culture
-            CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("en-us");
-            Thread.CurrentThread.CurrentCulture = new CultureInfo("en-us");
+            CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("en-US");
+            Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
 
             Console.SetWindowSize(
                 Math.Min(110, Console.LargestWindowWidth),
-                Math.Min(20, Console.LargestWindowHeight));
-
-            var time = Time.GetMsTime();
-            var authPoint = new IPEndPoint(IPAddress.Any, 3724);
-
-            bool quitNow = false;
-            Console.Title = $"{Assembly.GetExecutingAssembly().GetName().Name} v{Assembly.GetExecutingAssembly().GetName().Version}";
+                Math.Min(20, Console.LargestWindowHeight)
+            );
+            Console.Title =
+                $"{Assembly.GetExecutingAssembly().GetName().Name} v{Assembly.GetExecutingAssembly().GetName().Version}";
 
             Log.Print(LogType.AuthServer, $"Version {Assembly.GetExecutingAssembly().GetName().Version}");
             Log.Print(LogType.AuthServer, $"Running on .NET Framework Version {Environment.Version}");
-
-            AuthServerClass = new AuthServerClass(authPoint);
-            Database = new AuthServerDatabase();
-
             //
-            AuthServerRouter.AddHandler<AuthLogonChallenge>(AuthCMD.CMD_AUTH_LOGON_CHALLENGE, AuthServerHandler.OnAuthLogonChallenge);
-            AuthServerRouter.AddHandler<AuthLogonProof>(AuthCMD.CMD_AUTH_LOGON_PROOF, AuthServerHandler.OnAuthLogonProof);
-            AuthServerRouter.AddHandler(AuthCMD.CMD_AUTH_REALMLIST, AuthServerHandler.OnAuthRealmList);
-            
+            Initalizing();
+
             Log.Print(LogType.AuthServer, $"Running from: {AppDomain.CurrentDomain.BaseDirectory}");
-            Log.Print(LogType.AuthServer, $"Successfully started in {Time.GetMsTimeDiff(time, Time.GetMsTime()) / 100}ms");
+            Log.Print(LogType.AuthServer,
+                $"Successfully started in {Common.Helpers.Time.GetMsTimeDiff(Time, Common.Helpers.Time.GetMsTime()) / 100}ms");
 
             // Commands
-            while (!quitNow)
+            while (_keepGoing)
             {
                 var command = Console.ReadLine();
                 switch (command)
@@ -67,9 +62,8 @@ namespace AuthServer
 
                     case "/q":
                     case "q":
-                        quitNow = true;
+                        _keepGoing = false;
                         break;
-
                     case "/help":
                     case "help":
                     case "/?":
@@ -84,8 +78,21 @@ namespace AuthServer
             }
         }
 
+        private static void Initalizing()
+        {
+            AuthServerClass = new AuthServerClass(AuthPoint);
+            Database = new AuthServerDatabase();
+
+            //
+            AuthServerRouter.AddHandler<AuthLogonChallenge>(AuthCMD.CMD_AUTH_LOGON_CHALLENGE,
+                AuthServerHandler.OnAuthLogonChallenge);
+            AuthServerRouter.AddHandler<AuthLogonProof>(AuthCMD.CMD_AUTH_LOGON_PROOF,
+                AuthServerHandler.OnAuthLogonProof);
+            AuthServerRouter.AddHandler(AuthCMD.CMD_AUTH_REALMLIST, AuthServerHandler.OnAuthRealmList);
+        }
+
         /// <summary>
-        /// Print the console help.
+        ///     Print the console help.
         /// </summary>
         private static void PrintHelp()
         {
@@ -95,8 +102,7 @@ Commands:
   /db    Recreate database.
   /gc    Show garbage collection.
   /q     Exit application.
-  /help  Show this help.
-");
+  /help  Show this help.");
         }
     }
 }

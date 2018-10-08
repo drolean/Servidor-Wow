@@ -8,7 +8,7 @@ using Common.Globals;
 using Common.Helpers;
 
 namespace AuthServer
-{ 
+{
     internal class AuthServerHandler
     {
         private static Users _user;
@@ -34,7 +34,7 @@ namespace AuthServer
                         // Get Account info
                         _user = MainProgram.Database.GetAccount(packet.Username);
 
-                        if(_user != null)
+                        if (_user != null)
                             accState = _user.bannet_at != null ? AccountState.BANNED : AccountState.OK;
                         else
                             accState = AccountState.UNKNOWN_ACCOUNT;
@@ -43,15 +43,18 @@ namespace AuthServer
                     {
                         accState = AccountState.DBBUSY;
                         var trace = new StackTrace(e, true);
-                        Log.Print(LogType.Error, $"{e.Message}: {e.Source}\n{trace.GetFrame(trace.FrameCount - 1).GetFileName()}:{trace.GetFrame(trace.FrameCount - 1).GetFileLineNumber()}");
+                        Log.Print(LogType.Error,
+                            $"{e.Message}: {e.Source}\n{trace.GetFrame(trace.FrameCount - 1).GetFileName()}:{trace.GetFrame(trace.FrameCount - 1).GetFileLineNumber()}");
                     }
 
                     switch (accState)
                     {
                         case AccountState.OK:
-                            Log.Print(LogType.AuthServer, $"[{session.ConnectionSocket.RemoteEndPoint}] Account found [{packet.Username}]");
+                            Log.Print(LogType.AuthServer,
+                                $"[{session.ConnectionSocket.RemoteEndPoint}] Account found [{packet.Username}]");
                             session.AccountName = _user?.username;
-                            if (_user != null) session.Srp = new Srp6(_user.username.ToUpper(), _user.password.ToUpper());
+                            if (_user != null)
+                                session.Srp = new Srp6(_user.username.ToUpper(), _user.password.ToUpper());
                             session.SendData(new PsAuthLogonChallange(session.Srp, AccountState.OK));
                             return;
                         case AccountState.UNKNOWN_ACCOUNT:
@@ -99,15 +102,15 @@ namespace AuthServer
                     break;
             }
 
-            session.SendData(dataResponse, $"CMD_AUTH_LOGON_CHALLENGE");
+            session.SendData(dataResponse, "CMD_AUTH_LOGON_CHALLENGE");
         }
 
         internal static void OnAuthLogonProof(AuthServerSession session, AuthLogonProof handler)
         {
             session.Srp.ClientEphemeral = handler.A.ToPositiveBigInteger();
-            session.Srp.ClientProof     = handler.M1.ToPositiveBigInteger();
+            session.Srp.ClientProof = handler.M1.ToPositiveBigInteger();
 
-            if(session.Srp.ClientProof == session.Srp.GenerateClientProof())
+            if (session.Srp.ClientProof == session.Srp.GenerateClientProof())
             {
                 MainProgram.Database.SetSessionKey(session.AccountName, session.Srp.SessionKey.ToProperByteArray());
                 session.SendData(new PsAuthLogonProof(session.Srp, AccountState.OK));
@@ -121,7 +124,7 @@ namespace AuthServer
         }
 
         /// <summary>
-        /// Send packet Realm List
+        ///     Send packet Realm List
         /// </summary>
         /// <param name="session"></param>
         /// <param name="data"></param>

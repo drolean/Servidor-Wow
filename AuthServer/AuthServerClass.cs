@@ -10,7 +10,6 @@ namespace AuthServer
     internal class AuthServerClass : IDisposable
     {
         private readonly Socket _socketHandler;
-        public Dictionary<int, AuthServerSession> ActiveConnections { get; protected set; }
 
         public AuthServerClass(IPEndPoint authPoint)
         {
@@ -32,48 +31,48 @@ namespace AuthServer
             catch (Exception e)
             {
                 var trace = new StackTrace(e, true);
-                Log.Print(LogType.Error, $"{e.Message}: {e.Source}\n{trace.GetFrame(trace.FrameCount - 1).GetFileName()}:{trace.GetFrame(trace.FrameCount - 1).GetFileLineNumber()}");
+                Log.Print(LogType.Error,
+                    $"{e.Message}: {e.Source}\n{trace.GetFrame(trace.FrameCount - 1).GetFileName()}:{trace.GetFrame(trace.FrameCount - 1).GetFileLineNumber()}");
             }
         }
 
+        public Dictionary<int, AuthServerSession> ActiveConnections { get; protected set; }
+
+        /// <inheritdoc />
         /// <summary>
-        ///
+        ///     Dispose
+        /// </summary>
+        public void Dispose()
+        {
+            _socketHandler.Dispose();
+            GC.SuppressFinalize(this);
+        }
+
+        /// <summary>
         /// </summary>
         /// <param name="asyncResult"></param>
         /// <todo>implement logic to check banned IP</todo>
         private void ConnectionRequest(IAsyncResult asyncResult)
         {
-            Socket connectionSocket = ((Socket)asyncResult.AsyncState).EndAccept(asyncResult);
-            int connectionId = GetFreeId();
+            var connectionSocket = ((Socket) asyncResult.AsyncState).EndAccept(asyncResult);
+            var connectionId = GetFreeId();
 
             ActiveConnections.Add(connectionId, new AuthServerSession(connectionId, connectionSocket));
             _socketHandler.BeginAccept(ConnectionRequest, _socketHandler);
         }
 
         /// <summary>
-        /// Checks if there is a slot available to connect.
+        ///     Checks if there is a slot available to connect.
         /// </summary>
         /// <returns>int</returns>
         private int GetFreeId()
         {
-            for (int i = 0; i < 150; i++)
-            {
+            for (var i = 0; i < 150; i++)
                 if (!ActiveConnections.ContainsKey(i))
                     return i;
-            }
 
             Log.Print(LogType.Error, "Couldn't find free ID");
             return 0;
-        }
-
-        /// <inheritdoc />
-        /// <summary>
-        /// Dispose
-        /// </summary>
-        public void Dispose()
-        {
-            _socketHandler.Dispose();
-            GC.SuppressFinalize(this);
         }
     }
 }

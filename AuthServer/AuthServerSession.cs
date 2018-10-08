@@ -6,20 +6,13 @@ using System.Text;
 using Common.Crypt;
 using Common.Globals;
 using Common.Helpers;
-using Common.Network;
 
 namespace AuthServer
 {
     internal class AuthServerSession
     {
-        public Srp6 Srp;
-        public string AccountName { get; set; }
-
         public const int BufferSize = 2048 * 2;
-
-        public int ConnectionId { get; }
-        public Socket ConnectionSocket { get; }
-        public byte[] DataBuffer { get; }
+        public Srp6 Srp;
 
         public AuthServerSession(int connectionId, Socket connectionSocket)
         {
@@ -34,29 +27,36 @@ namespace AuthServer
             catch (SocketException e)
             {
                 var trace = new StackTrace(e, true);
-                Log.Print(LogType.Error, $"{e.Message}: {e.Source}\n{trace.GetFrame(trace.FrameCount - 1).GetFileName()}:{trace.GetFrame(trace.FrameCount - 1).GetFileLineNumber()}");
+                Log.Print(LogType.Error,
+                    $"{e.Message}: {e.Source}\n{trace.GetFrame(trace.FrameCount - 1).GetFileName()}:{trace.GetFrame(trace.FrameCount - 1).GetFileLineNumber()}");
                 Disconnect();
             }
         }
+
+        public string AccountName { get; set; }
+
+        public int ConnectionId { get; }
+        public Socket ConnectionSocket { get; }
+        public byte[] DataBuffer { get; }
 
         private void Disconnect()
         {
             try
             {
-                Log.Print(LogType.AuthServer, "User Disconnected");
                 ConnectionSocket.Shutdown(SocketShutdown.Both);
                 ConnectionSocket.Close();
             }
             catch (Exception e)
             {
                 var trace = new StackTrace(e, true);
-                Log.Print(LogType.Error, $"{e.Message}: {e.Source}\n{trace.GetFrame(trace.FrameCount - 1).GetFileName()}:{trace.GetFrame(trace.FrameCount - 1).GetFileLineNumber()}");
+                Log.Print(LogType.Error,
+                    $"{e.Message}: {e.Source}\n{trace.GetFrame(trace.FrameCount - 1).GetFileName()}:{trace.GetFrame(trace.FrameCount - 1).GetFileLineNumber()}");
             }
         }
 
         public virtual void DataArrival(IAsyncResult asyncResult)
         {
-            int bytesRecived = 0;
+            var bytesRecived = 0;
 
             try
             {
@@ -65,30 +65,34 @@ namespace AuthServer
             catch (Exception e)
             {
                 var trace = new StackTrace(e, true);
-                Log.Print(LogType.Error, $"{e.Message}: {e.Source}\n{trace.GetFrame(trace.FrameCount - 1).GetFileName()}:{trace.GetFrame(trace.FrameCount - 1).GetFileLineNumber()}");
+                Log.Print(LogType.Error,
+                    $"{e.Message}: {e.Source}\n{trace.GetFrame(trace.FrameCount - 1).GetFileName()}:{trace.GetFrame(trace.FrameCount - 1).GetFileLineNumber()}");
             }
 
             if (bytesRecived != 0)
             {
-                byte[] data = new byte[bytesRecived];
+                var data = new byte[bytesRecived];
                 Array.Copy(DataBuffer, data, bytesRecived);
 
                 OnPacket(data);
 
                 try
                 {
-                    ConnectionSocket.BeginReceive(DataBuffer, 0, DataBuffer.Length, SocketFlags.None, DataArrival, null);
+                    ConnectionSocket.BeginReceive(DataBuffer, 0, DataBuffer.Length, SocketFlags.None, DataArrival,
+                        null);
                 }
                 catch (SocketException e)
                 {
                     var trace = new StackTrace(e, true);
-                    Log.Print(LogType.Error, $"{e.Message}: {e.Source}\n{trace.GetFrame(trace.FrameCount - 1).GetFileName()}:{trace.GetFrame(trace.FrameCount - 1).GetFileLineNumber()}");
+                    Log.Print(LogType.Error,
+                        $"{e.Message}: {e.Source}\n{trace.GetFrame(trace.FrameCount - 1).GetFileName()}:{trace.GetFrame(trace.FrameCount - 1).GetFileLineNumber()}");
                     ConnectionSocket.Close();
                 }
                 catch (Exception e)
                 {
                     var trace = new StackTrace(e, true);
-                    Log.Print(LogType.Error, $"{e.Message}: {e.Source}\n{trace.GetFrame(trace.FrameCount - 1).GetFileName()}:{trace.GetFrame(trace.FrameCount - 1).GetFileLineNumber()}");
+                    Log.Print(LogType.Error,
+                        $"{e.Message}: {e.Source}\n{trace.GetFrame(trace.FrameCount - 1).GetFileName()}:{trace.GetFrame(trace.FrameCount - 1).GetFileLineNumber()}");
                 }
             }
             else
@@ -99,24 +103,25 @@ namespace AuthServer
 
         private void OnPacket(byte[] data)
         {
-            short opcode = BitConverter.ToInt16(data, 0);
+            var opcode = BitConverter.ToInt16(data, 0);
 
             try
             {
-                AuthCMD code = (AuthCMD)opcode;
+                var code = (AuthCMD) opcode;
                 AuthServerRouter.CallHandler(this, code, data);
             }
             catch (Exception e)
             {
                 var trace = new StackTrace(e, true);
-                Log.Print(LogType.Error, $"{e.Message}: {e.Source}\n{trace.GetFrame(trace.FrameCount - 1).GetFileName()}:{trace.GetFrame(trace.FrameCount - 1).GetFileLineNumber()}");
+                Log.Print(LogType.Error,
+                    $"{e.Message}: {e.Source}\n{trace.GetFrame(trace.FrameCount - 1).GetFileName()}:{trace.GetFrame(trace.FrameCount - 1).GetFileLineNumber()}");
                 DumpPacket(data, this);
             }
         }
 
         internal void SendData(byte[] send, string v)
         {
-            byte[] buffer = new byte[send.Length];
+            var buffer = new byte[send.Length];
             Buffer.BlockCopy(send, 0, buffer, 0, send.Length);
 
             try
@@ -126,13 +131,15 @@ namespace AuthServer
             catch (SocketException e)
             {
                 var trace = new StackTrace(e, true);
-                Log.Print(LogType.Error, $"{e.Message}: {e.Source}\n{trace.GetFrame(trace.FrameCount - 1).GetFileName()}:{trace.GetFrame(trace.FrameCount - 1).GetFileLineNumber()}");
+                Log.Print(LogType.Error,
+                    $"{e.Message}: {e.Source}\n{trace.GetFrame(trace.FrameCount - 1).GetFileName()}:{trace.GetFrame(trace.FrameCount - 1).GetFileLineNumber()}");
                 Disconnect();
             }
             catch (NullReferenceException e)
             {
                 var trace = new StackTrace(e, true);
-                Log.Print(LogType.Error, $"{e.Message}: {e.Source}\n{trace.GetFrame(trace.FrameCount - 1).GetFileName()}:{trace.GetFrame(trace.FrameCount - 1).GetFileLineNumber()}");
+                Log.Print(LogType.Error,
+                    $"{e.Message}: {e.Source}\n{trace.GetFrame(trace.FrameCount - 1).GetFileName()}:{trace.GetFrame(trace.FrameCount - 1).GetFileLineNumber()}");
                 Disconnect();
             }
             catch (ObjectDisposedException e)
@@ -159,7 +166,6 @@ namespace AuthServer
             if (data.Length % 16 == 0)
             {
                 for (j = 0; j <= data.Length - 1; j += 16)
-                {
                     Log.Print($"| {BitConverter.ToString(data, j, 16).Replace("-", " ")} | " +
                               Encoding.ASCII.GetString(data, j, 16)
                                   .Replace("\t", "?")
@@ -167,12 +173,10 @@ namespace AuthServer
                                   .Replace("\r", "?")
                                   .Replace("\f", "?")
                                   .Replace("\n", "?") + " |");
-                }
             }
             else
             {
                 for (j = 0; j <= data.Length - 1 - 16; j += 16)
-                {
                     Log.Print($"| {BitConverter.ToString(data, j, 16).Replace("-", " ")} | " +
                               Encoding.ASCII.GetString(data, j, 16)
                                   .Replace("\t", "?")
@@ -180,7 +184,6 @@ namespace AuthServer
                                   .Replace("\r", "?")
                                   .Replace("\f", "?")
                                   .Replace("\n", "?") + " |");
-                }
 
                 Log.Print($"| {BitConverter.ToString(data, j, data.Length % 16).Replace("-", " ")} " +
                           $"{buffer.PadLeft((16 - data.Length % 16) * 3, ' ')}" +
@@ -196,16 +199,16 @@ namespace AuthServer
 
         internal void SendPacket(Common.Network.PacketServer packet)
         {
-            SendPacket((byte)packet.Opcode, packet.Packet);
+            SendPacket((byte) packet.Opcode, packet.Packet);
         }
 
         internal void SendPacket(byte opcode, byte[] data)
         {
-            BinaryWriter writer = new BinaryWriter(new MemoryStream());
+            var writer = new BinaryWriter(new MemoryStream());
             writer.Write(opcode);
-            writer.Write((ushort)data.Length);
+            writer.Write((ushort) data.Length);
             writer.Write(data);
-            SendData(((MemoryStream)writer.BaseStream).ToArray(), opcode.ToString());
+            SendData(((MemoryStream) writer.BaseStream).ToArray(), opcode.ToString());
         }
     }
 }

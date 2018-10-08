@@ -1,42 +1,41 @@
-﻿using System;
-using System.Net;
+﻿using System.Net;
 
 namespace AuthServer.PacketReader
 {
     public sealed class AuthLogonChallenge : Common.Network.PacketReader
     {
-        public byte OptCode;
+        public ushort Build;
+        public string Country;
         public byte Error;
-        public UInt16 Size;
 
         public string GameName;
-        public string Version;
-        public UInt16 Build;
+        public IPAddress Ip;
+        public byte OptCode;
+        public string OS;
 
         public string Platform;
-        public string OS;
-        public string Country;
+        public ushort Size;
 
-        public UInt32 TimeZone;
-        public IPAddress Ip;
+        public uint TimeZone;
         public string Username;
+        public string Version;
 
         public AuthLogonChallenge(byte[] data) : base(data)
         {
-            OptCode  = ReadByte();
-            Error    = ReadByte();
-            Size     = ReadUInt16();
+            OptCode = ReadByte();
+            Error = ReadByte();
+            Size = ReadUInt16();
 
             GameName = ReadStringReversed(4);
-            Version  = ReadByte().ToString() + '.' + ReadByte().ToString() + '.' + ReadByte().ToString();
+            Version = ReadByte().ToString() + '.' + ReadByte() + '.' + ReadByte();
 
-            Build    = ReadUInt16();
+            Build = ReadUInt16();
             Platform = ReadStringReversed(4);
-            OS       = ReadStringReversed(4);
-            Country  = ReadStringReversed(4);
+            OS = ReadStringReversed(4);
+            Country = ReadStringReversed(4);
 
             TimeZone = ReadUInt32();
-            Ip       = ReadIpAddress();
+            Ip = ReadIpAddress();
             Username = ReadPascalString(1);
         }
     }

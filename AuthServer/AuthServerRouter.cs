@@ -8,8 +8,11 @@ namespace AuthServer
     internal class AuthServerRouter
     {
         public delegate void ProcessLoginPacketCallback(AuthServerSession session, byte[] data);
+
         public delegate void ProcessLoginPacketCallbackTypes<in T>(AuthServerSession session, T handler);
-        public static readonly Dictionary<AuthCMD, ProcessLoginPacketCallback> MCallbacks = new Dictionary<AuthCMD, ProcessLoginPacketCallback>();
+
+        public static readonly Dictionary<AuthCMD, ProcessLoginPacketCallback> MCallbacks =
+            new Dictionary<AuthCMD, ProcessLoginPacketCallback>();
 
         public static void AddHandler(AuthCMD opcode, ProcessLoginPacketCallback handler)
         {
@@ -20,13 +23,13 @@ namespace AuthServer
         {
             AddHandler(opcode, (session, data) =>
             {
-                T generatedHandler = (T)Activator.CreateInstance(typeof(T), data);
+                var generatedHandler = (T) Activator.CreateInstance(typeof(T), data);
                 callback(session, generatedHandler);
             });
         }
 
         /// <summary>
-        /// Calls the handler.
+        ///     Calls the handler.
         /// </summary>
         /// <param name="authServerSession"></param>
         /// <param name="opcode">The event handler.</param>

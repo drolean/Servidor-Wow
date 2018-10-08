@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Common.Database.Tables;
 using Common.Globals;
 
@@ -8,15 +7,15 @@ namespace AuthServer.PacketServer
     internal sealed class PsAuthRealmList : Common.Network.PacketServer
     {
         /// <summary>
-        /// @for
-        ///   Type       : byte;
-        ///   Flag       : byte;
-        ///   Name       : byte;
-        ///   Address    : array of byte;
-        ///   Population : byte;            Pop {400F -> Full; 5F -> Medium; 1.6F -> Low; 200F -> New; 2F -> High}
-        ///   Chars      : array of byte;
-        ///   Time       : byte;
-        ///   ?????      : byte;
+        ///     @for
+        ///     Type       : byte;
+        ///     Flag       : byte;
+        ///     Name       : byte;
+        ///     Address    : array of byte;
+        ///     Population : byte;            Pop {400F -> Full; 5F -> Medium; 1.6F -> Low; 200F -> New; 2F -> High}
+        ///     Chars      : array of byte;
+        ///     Time       : byte;
+        ///     ?????      : byte;
         /// </summary>
         /// <param name="realms"></param>
         /// <param name="accountName"></param>
@@ -29,7 +28,7 @@ namespace AuthServer.PacketServer
 
             foreach (var realm in realms)
             {
-                int count = MainProgram.Database.GetCharactersUsers(realm.Id, accountName);
+                var count = MainProgram.Database.GetCharactersUsers(realm.Id, accountName);
 
                 Write((uint) realm.type);
                 Write((byte) realm.flag);
@@ -41,7 +40,7 @@ namespace AuthServer.PacketServer
                 Write((byte) 0x01);
             }
 
-            Write((UInt16)0x0002);
+            Write((ushort) 0x0002);
         }
     }
 }
