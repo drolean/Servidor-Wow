@@ -10,7 +10,7 @@ namespace RealmServer.PacketServer
         /// <param name="state">LoginErroCode</param>
         /// <param name="count">Count to queue position</param>
         /// <returns></returns>
-        public SMSG_AUTH_RESPONSE(int state, int count = 0) : base(RealmEnums.SMSG_AUTH_RESPONSE)
+        public SMSG_AUTH_RESPONSE(LoginErrorCode state, int count = 0) : base(RealmEnums.SMSG_AUTH_RESPONSE)
         {
             Write((byte) state);
             Write((uint) 0); // BillingTimeRemaining
