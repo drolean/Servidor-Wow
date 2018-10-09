@@ -36,6 +36,8 @@ namespace RealmServer
 
             Log.Print(LogType.RealmServer, $"Version {Assembly.GetExecutingAssembly().GetName().Version}");
             Log.Print(LogType.RealmServer, $"Running on .NET Framework Version {Environment.Version}");
+
+            ConfigFile();
             //
             Initalizing();
 
@@ -43,12 +45,17 @@ namespace RealmServer
             Log.Print(LogType.RealmServer,
                 $"Successfully started in {Common.Helpers.Time.GetMsTimeDiff(Time, Common.Helpers.Time.GetMsTime()) / 100}ms");
 
+
             // Commands
             while (_keepGoing)
             {
                 var command = Console.ReadLine();
                 switch (command)
                 {
+                    case "/config":
+                    case "config":
+                        ConfigFile(true);
+                        break;
                     case "/up":
                     case "up":
                         Log.Print(LogType.Console,
@@ -98,6 +105,25 @@ namespace RealmServer
 
             // Handlers
             RealmServerRouter.AddHandler<CMSG_AUTH_SESSION>(RealmEnums.CMSG_AUTH_SESSION, OnAuthSession.Handler);
+            RealmServerRouter.AddHandler<CMSG_PING>(RealmEnums.CMSG_PING, OnPing.Handler);
+            RealmServerRouter.AddHandler<CMSG_CHAR_CREATE>(RealmEnums.CMSG_CHAR_CREATE, OnCharCreate.Handler);
+        }
+
+        private static void ConfigFile(bool reload = false)
+        {
+            Log.Print(LogType.RealmServer, reload ? "Reloading settings..." : "Loading settings...");
+
+            try
+            {
+                Config.Load();
+            }
+            catch (Exception)
+            {
+                Log.Print(LogType.RealmServer, "Failed to load config from file. Loading default config.");
+                Config.Default();
+                Log.Print(LogType.RealmServer, "Saving config...");
+                Config.Instance.Save();
+            }
         }
 
         private static void PrintHelp()
@@ -105,6 +131,7 @@ namespace RealmServer
             Console.Clear();
             Console.WriteLine(@"AuthServer help
 Commands:
+  /config   Reload configuration file.
   /c 'msg'  Send Global message to players.
   /db       Reload XML.
   /gc       Show garbage collection.

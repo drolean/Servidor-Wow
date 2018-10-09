@@ -18,7 +18,7 @@ namespace RealmServer.Handlers
 
             session.PacketCrypto = new VanillaCrypt();
             session.PacketCrypto.Init(session.Users.sessionkey);
-            
+
             CheckAddons(handler);
 
             session.SendPacket(new SMSG_AUTH_RESPONSE(LoginErrorCode.AUTH_OK));

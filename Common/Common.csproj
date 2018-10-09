@@ -74,6 +74,7 @@
     <Compile Include="Database\Tables\Realms.cs" />
     <Compile Include="Database\Tables\Users.cs" />
     <Compile Include="Helpers\BinaryWriterExtension.cs" />
+    <Compile Include="Helpers\Config.cs" />
     <Compile Include="Helpers\Log.cs" />
     <Compile Include="Helpers\Time.cs" />
     <Compile Include="Helpers\Utils.cs" />
