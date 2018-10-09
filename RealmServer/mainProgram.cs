@@ -4,7 +4,10 @@ using System.Globalization;
 using System.Net;
 using System.Reflection;
 using System.Threading;
+using Common.Globals;
 using Common.Helpers;
+using RealmServer.Handlers;
+using RealmServer.PacketReader;
 
 namespace RealmServer
 {
@@ -14,6 +17,7 @@ namespace RealmServer
         private static readonly uint Time = Common.Helpers.Time.GetMsTime();
         private static readonly IPEndPoint RealmPoint = new IPEndPoint(IPAddress.Any, 1001);
         public static RealmServerClass RealmServerClass { get; set; }
+        public static RealmServerDatabase RealmServerDatabase { get; set; }
 
         private static void Main()
         {
@@ -90,6 +94,10 @@ namespace RealmServer
         private static void Initalizing()
         {
             RealmServerClass = new RealmServerClass(RealmPoint);
+            RealmServerDatabase = new RealmServerDatabase();
+
+            // Handlers
+            RealmServerRouter.AddHandler<CMSG_AUTH_SESSION>(RealmEnums.CMSG_AUTH_SESSION, OnAuthSession.Handler);
         }
 
         private static void PrintHelp()

@@ -1,49 +1,60 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
-using Common.Crypt;
 
 namespace Common.Helpers
 {
     public static class Utils
     {
-        public static VanillaCrypt PacketCrypto { get; set; }
-
-        public static byte[] Encode(int size, int opcode)
+        public static void DumpPacket(byte[] data)
         {
-            int index = 0;
-            int newSize = size + 2;
-            byte[] header = new byte[4];
-            if (newSize > 0x7FFF)
-                header[index++] = (byte)(0x80 | (0xFF & (newSize >> 16)));
+            int j;
+            const string buffer = "";
 
-            header[index++] = (byte)(0xFF & (newSize >> 8));
-            header[index++] = (byte)(0xFF & (newSize >> 0));
-            header[index++] = (byte)(0xFF & opcode);
-            header[index] = (byte)(0xFF & (opcode >> 8));
+            Log.Print("DEBUG: Packet Dump");
 
-            if (PacketCrypto != null) header = PacketCrypto.Encrypt(header);
-
-            return header;
-        }
-
-        public static void Decode(byte[] header, out ushort length, out short opcode)
-        {
-            PacketCrypto?.Decrypt(header, 6);
-
-            if (PacketCrypto == null)
+            if (data.Length % 16 == 0)
             {
-                length = BitConverter.ToUInt16(new[] { header[1], header[0] }, 0);
-                opcode = BitConverter.ToInt16(header, 2);
+                for (j = 0; j <= data.Length - 1; j += 16)
+                    Log.Print($"| {BitConverter.ToString(data, j, 16).Replace("-", " ")} | " +
+                              Encoding.ASCII.GetString(data, j, 16)
+                                  .Replace("\t", "?")
+                                  .Replace("\b", "?")
+                                  .Replace("\r", "?")
+                                  .Replace("\f", "?")
+                                  .Replace("\n", "?") + " |");
             }
             else
             {
-                length = BitConverter.ToUInt16(new[] { header[1], header[0] }, 0);
-                opcode = BitConverter.ToInt16(new[] { header[2], header[3] }, 0);
+                for (j = 0; j <= data.Length - 1 - 16; j += 16)
+                    Log.Print($"| {BitConverter.ToString(data, j, 16).Replace("-", " ")} | " +
+                              Encoding.ASCII.GetString(data, j, 16)
+                                  .Replace("\t", "?")
+                                  .Replace("\b", "?")
+                                  .Replace("\r", "?")
+                                  .Replace("\f", "?")
+                                  .Replace("\n", "?") + " |");
+
+                Log.Print($"| {BitConverter.ToString(data, j, data.Length % 16).Replace("-", " ")} " +
+                          $"{buffer.PadLeft((16 - data.Length % 16) * 3, ' ')}" +
+                          "| " + Encoding.ASCII.GetString(data, j, data.Length % 16)
+                              .Replace("\t", "?")
+                              .Replace("\b", "?")
+                              .Replace("\r", "?")
+                              .Replace("\f", "?")
+                              .Replace("\n", "?") +
+                          $"{buffer.PadLeft(16 - data.Length % 16, ' ')}|");
             }
         }
 
+
+        /// <summary>
+        ///     Gets the hex representation of the byte array. The length is 2xdata.Length
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
         public static string ByteArrayToHex(IReadOnlyCollection<byte> data)
         {
             string packetOutput = string.Empty;
@@ -55,16 +66,6 @@ namespace Common.Helpers
 
             return packetOutput;
         }
-
-        private static string Int32ToBigEndianHexByteString(int i)
-        {
-            byte[] bytes = BitConverter.GetBytes(i);
-            string format = BitConverter.IsLittleEndian ? "0x{0:X2}" : "c0x{0:X2}";
-            return String.Format(format, bytes[0]);
-        }
-
-        // Capitalize the first character and add a space before
-        // each capitalized letter (except the first character).
 
         /// <summary>
         ///     Capitalize the first character and add a space before

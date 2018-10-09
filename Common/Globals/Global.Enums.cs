@@ -107,9 +107,19 @@
         CSTATUS_NEGOTIATION_COMPLETE    = 0x09, // Negotiating security complete
         CSTATUS_NEGOTIATION_FAILED      = 0x0A, // Negotiating security failed	
 
-        AUTH_FAILED                     = 0x0B, // Authentication failed
-        AUTH_OK                         = 0x0C, // Authentication successful
-        AUTH_REJECT                     = 0x0E, // Login unavailable - Please contact Tech Support
+        AUTH_REJECT                      = 0x0B, // Login unavailable - Please contact Tech Support
+
+        /// <summary>
+        /// Authentication successful
+        /// - Used on SMSG_AUTH_RESPONSE
+        /// </summary>
+        AUTH_OK = 0x0C,
+        /// <summary>
+        /// Authentication failed
+        /// - Used on SMSG_AUTH_RESPONSE
+        /// </summary>
+        AUTH_FAILED = 0x0E,
+
         AUTH_BAD_SERVER_PROOF           = 0x0F, // Server is not valid
         AUTH_UNAVAILABLE                = 0x10, // System unavailable 
         AUTH_SYSTEM_ERROR               = 0x11, // System error
@@ -122,7 +132,13 @@
         AUTH_SERVER_SHUTTING_DOWN       = 0x18, // Server Shutting Down
         AUTH_ALREADY_LOGGING_IN         = 0x19, // Already logged in
         AUTH_LOGIN_SERVER_NOT_FOUND     = 0x1A, // Invalid login server
-        AUTH_WAIT_QUEUE                 = 0x1B, // Position in Queue: 0
+
+        /// <summary>
+        /// Position in Queue
+        /// - Used on SMSG_AUTH_RESPONSE
+        /// </summary>
+        AUTH_WAIT_QUEUE = 0x1B,
+
         AUTH_BANNED                     = 0x1C, // This account has been banned
         AUTH_ALREADY_ONLINE             = 0x1D, // This character is still logged on
         AUTH_NO_TIME                    = 0x1E, // Your WoW subscription has expired

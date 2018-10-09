@@ -4,6 +4,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.4] - 2018-10-09
+### Added
+- RealmEnums.CMSG_AUTH_SESSION wow send this packet to handle session.
+- RealmEnums.SMSG_AUTH_RESPONSE server return this with OK or error.
+- Doc for Common.Utils.ByteArrayToHex
+- RealmServer Session to handler sessions between players
+- RealmServer Database
+  - GetAccount
+- Common.Utils.DumpPacket
+
+### Removed
+- Common.Utils.Int32ToBigEndianHexByteString
+
+### Moved
+- Common.Utils.Decode moved to RealmServerSession.Decode
+- Common.Utils.Encode moved to RealmServerSession.Encode
+
 ## [0.0.3] - 2018-10-08
 ### Added
 - RealmServer Enums.

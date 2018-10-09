@@ -1,20 +1,21 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Net.Sockets;
-using System.Text;
-using System.Threading;
+using Common.Crypt;
+using Common.Database.Tables;
 using Common.Globals;
 using Common.Helpers;
-using Common.Network;
 
 namespace RealmServer
 {
     public class RealmServerSession
     {
         public const int BufferSize = 2048 * 2;
+        public static List<RealmServerSession> Sessions = new List<RealmServerSession>();
 
-        public RealmServerSession(int connectionId, Socket connectionSocket)
+        internal RealmServerSession(int connectionId, Socket connectionSocket)
         {
             ConnectionId = connectionId;
             ConnectionSocket = connectionSocket;
@@ -33,10 +34,8 @@ namespace RealmServer
                 Disconnect();
             }
 
-            Thread.Sleep(500);
-
             // Connection Packet
-            using (var packet = new PacketServer(RealmEnums.SMSG_AUTH_CHALLENGE))
+            using (var packet = new Common.Network.PacketServer(RealmEnums.SMSG_AUTH_CHALLENGE))
             {
                 //packet.WriteBytes(new byte[] {0x33, 0x18, 0x34, 0xC8});
                 packet.WriteBytes(new byte[] {1, 2, 3, 4});
@@ -44,11 +43,14 @@ namespace RealmServer
             }
         }
 
+        public Socket ConnectionSocket { get; }
+        public VanillaCrypt PacketCrypto { get; set; }
+        public int ConnectionId { get; }
+        public byte[] DataBuffer { get; }
         public string ConnectionRemoteIp => ConnectionSocket.RemoteEndPoint.ToString();
 
-        public int ConnectionId { get; }
-        public Socket ConnectionSocket { get; }
-        public byte[] DataBuffer { get; }
+        //
+        public Users Users { get; set; }
 
         private void Disconnect()
         {
@@ -65,7 +67,7 @@ namespace RealmServer
             }
         }
 
-        public virtual void DataArrival(IAsyncResult asyncResult)
+        internal virtual void DataArrival(IAsyncResult asyncResult)
         {
             var bytesRecived = 0;
 
@@ -121,10 +123,11 @@ namespace RealmServer
                     var headerData = new byte[6];
                     Array.Copy(data, index, headerData, 0, 6);
 
-                    Utils.Decode(headerData, out var length, out var opcode);
-                    Log.Print(LogType.RealmServer,
-                        $"[{ConnectionSocket.RemoteEndPoint}] [RCVD] [{((RealmEnums) opcode).ToString().PadRight(25, ' ')}] = {length}");
+                    Decode(headerData, out var length, out var opcode);
                     var code = (RealmEnums) opcode;
+
+                    Log.Print(LogType.RealmServer,
+                        $"[{ConnectionSocket.RemoteEndPoint}] [RCVD] [{code.ToString().PadRight(25, ' ')}] = {length}");
 
                     var packetDate = new byte[length];
                     Array.Copy(data, index + 6, packetDate, 0, length - 4);
@@ -138,65 +141,22 @@ namespace RealmServer
                 var trace = new StackTrace(e, true);
                 Log.Print(LogType.Error,
                     $"{e.Message}: {e.Source}\n{trace.GetFrame(trace.FrameCount - 1).GetFileName()}:{trace.GetFrame(trace.FrameCount - 1).GetFileLineNumber()}");
-                DumpPacket(data, this);
+                Utils.DumpPacket(data);
             }
         }
 
-        public static void DumpPacket(byte[] data, RealmServerSession client)
-        {
-            int j;
-            const string buffer = "";
-
-            Log.Print(client == null
-                ? "DEBUG: Packet Dump"
-                : $"[{client.ConnectionSocket.RemoteEndPoint}] DEBUG: Packet Dump");
-
-            if (data.Length % 16 == 0)
-            {
-                for (j = 0; j <= data.Length - 1; j += 16)
-                    Log.Print($"| {BitConverter.ToString(data, j, 16).Replace("-", " ")} | " +
-                              Encoding.ASCII.GetString(data, j, 16)
-                                  .Replace("\t", "?")
-                                  .Replace("\b", "?")
-                                  .Replace("\r", "?")
-                                  .Replace("\f", "?")
-                                  .Replace("\n", "?") + " |");
-            }
-            else
-            {
-                for (j = 0; j <= data.Length - 1 - 16; j += 16)
-                    Log.Print($"| {BitConverter.ToString(data, j, 16).Replace("-", " ")} | " +
-                              Encoding.ASCII.GetString(data, j, 16)
-                                  .Replace("\t", "?")
-                                  .Replace("\b", "?")
-                                  .Replace("\r", "?")
-                                  .Replace("\f", "?")
-                                  .Replace("\n", "?") + " |");
-
-                Log.Print($"| {BitConverter.ToString(data, j, data.Length % 16).Replace("-", " ")} " +
-                          $"{buffer.PadLeft((16 - data.Length % 16) * 3, ' ')}" +
-                          "| " + Encoding.ASCII.GetString(data, j, data.Length % 16)
-                              .Replace("\t", "?")
-                              .Replace("\b", "?")
-                              .Replace("\r", "?")
-                              .Replace("\f", "?")
-                              .Replace("\n", "?") +
-                          $"{buffer.PadLeft(16 - data.Length % 16, ' ')}|");
-            }
-        }
-
-        internal void SendPacket(PacketServer packet)
+        internal void SendPacket(Common.Network.PacketServer packet)
         {
             Log.LogPacket(LogPacket.Sending, packet);
             SendPacket(packet.Opcode, packet.Packet);
         }
 
-        internal void SendPacket(int opcode, byte[] data)
+        private void SendPacket(int opcode, byte[] data)
         {
             Log.Print(LogType.RealmServer,
                 $"[{ConnectionSocket.RemoteEndPoint}] [SEND] [{((RealmEnums) opcode).ToString().PadRight(25, ' ')}] = {data.Length}");
             var writer = new BinaryWriter(new MemoryStream());
-            var header = Utils.Encode(data.Length, opcode);
+            var header = Encode(data.Length, opcode);
             writer.Write(header);
             writer.Write(data);
             SendData(((MemoryStream) writer.BaseStream).ToArray());
@@ -231,6 +191,40 @@ namespace RealmServer
                 Log.Print(LogType.Error,
                     $"{e.Message}: {e.Source}\n{trace.GetFrame(trace.FrameCount - 1).GetFileName()}:{trace.GetFrame(trace.FrameCount - 1).GetFileLineNumber()}");
                 Disconnect();
+            }
+        }
+
+        private byte[] Encode(int size, int opcode)
+        {
+            var index = 0;
+            var newSize = size + 2;
+            var header = new byte[4];
+            if (newSize > 0x7FFF)
+                header[index++] = (byte) (0x80 | (0xFF & (newSize >> 16)));
+
+            header[index++] = (byte) (0xFF & (newSize >> 8));
+            header[index++] = (byte) (0xFF & (newSize >> 0));
+            header[index++] = (byte) (0xFF & opcode);
+            header[index] = (byte) (0xFF & (opcode >> 8));
+
+            if (PacketCrypto != null) header = PacketCrypto.Encrypt(header);
+
+            return header;
+        }
+
+        private void Decode(byte[] header, out ushort length, out short opcode)
+        {
+            PacketCrypto?.Decrypt(header, 6);
+
+            if (PacketCrypto == null)
+            {
+                length = BitConverter.ToUInt16(new[] {header[1], header[0]}, 0);
+                opcode = BitConverter.ToInt16(header, 2);
+            }
+            else
+            {
+                length = BitConverter.ToUInt16(new[] {header[1], header[0]}, 0);
+                opcode = BitConverter.ToInt16(new[] {header[2], header[3]}, 0);
             }
         }
     }
