@@ -85,6 +85,7 @@
   <ItemGroup>
     <None Include="App.config" />
     <Compile Include="Globals\Global.Enums.cs" />
+    <Compile Include="Globals\Realm.Enums.cs" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup />

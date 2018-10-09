@@ -59,6 +59,9 @@
   <ItemGroup>
     <Compile Include="mainProgram.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RealmServerClass.cs" />
+    <Compile Include="RealmServerRouter.cs" />
+    <Compile Include="RealmServerSession.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -92,7 +95,10 @@
   <ItemGroup>
     <Content Include="server-wow.ico" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="PacketReader\" />
+    <Folder Include="PacketServer\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

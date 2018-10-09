@@ -1,11 +1,61 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using Common.Crypt;
 
 namespace Common.Helpers
 {
     public static class Utils
     {
+        public static VanillaCrypt PacketCrypto { get; set; }
+
+        public static byte[] Encode(int size, int opcode)
+        {
+            int index = 0;
+            int newSize = size + 2;
+            byte[] header = new byte[4];
+            if (newSize > 0x7FFF)
+                header[index++] = (byte)(0x80 | (0xFF & (newSize >> 16)));
+
+            header[index++] = (byte)(0xFF & (newSize >> 8));
+            header[index++] = (byte)(0xFF & (newSize >> 0));
+            header[index++] = (byte)(0xFF & opcode);
+            header[index] = (byte)(0xFF & (opcode >> 8));
+
+            if (PacketCrypto != null) header = PacketCrypto.Encrypt(header);
+
+            return header;
+        }
+
+        public static void Decode(byte[] header, out ushort length, out short opcode)
+        {
+            PacketCrypto?.Decrypt(header, 6);
+
+            if (PacketCrypto == null)
+            {
+                length = BitConverter.ToUInt16(new[] { header[1], header[0] }, 0);
+                opcode = BitConverter.ToInt16(header, 2);
+            }
+            else
+            {
+                length = BitConverter.ToUInt16(new[] { header[1], header[0] }, 0);
+                opcode = BitConverter.ToInt16(new[] { header[2], header[3] }, 0);
+            }
+        }
+
+        public static string ByteArrayToHex(IReadOnlyCollection<byte> data)
+        {
+            string packetOutput = string.Empty;
+
+            for (int i = 0; i < data.Count; i++)
+            {
+                packetOutput += i.ToString("X2") + " ";
+            }
+
+            return packetOutput;
+        }
+
         private static string Int32ToBigEndianHexByteString(int i)
         {
             byte[] bytes = BitConverter.GetBytes(i);

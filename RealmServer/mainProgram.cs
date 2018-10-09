@@ -13,6 +13,7 @@ namespace RealmServer
         private static bool _keepGoing = true;
         private static readonly uint Time = Common.Helpers.Time.GetMsTime();
         private static readonly IPEndPoint RealmPoint = new IPEndPoint(IPAddress.Any, 1001);
+        public static RealmServerClass RealmServerClass { get; set; }
 
         private static void Main()
         {
@@ -25,15 +26,17 @@ namespace RealmServer
                 Math.Min(20, Console.LargestWindowHeight)
             );
             Console.Title =
-                $@"{Assembly.GetExecutingAssembly().GetName().Name} v{Assembly.GetExecutingAssembly().GetName().Version}";
+                $@"{Assembly.GetExecutingAssembly().GetName().Name} v{
+                        Assembly.GetExecutingAssembly().GetName().Version
+                    }";
 
-            Log.Print(LogType.AuthServer, $"Version {Assembly.GetExecutingAssembly().GetName().Version}");
-            Log.Print(LogType.AuthServer, $"Running on .NET Framework Version {Environment.Version}");
+            Log.Print(LogType.RealmServer, $"Version {Assembly.GetExecutingAssembly().GetName().Version}");
+            Log.Print(LogType.RealmServer, $"Running on .NET Framework Version {Environment.Version}");
             //
             Initalizing();
 
-            Log.Print(LogType.AuthServer, $"Running from: {AppDomain.CurrentDomain.BaseDirectory}");
-            Log.Print(LogType.AuthServer,
+            Log.Print(LogType.RealmServer, $"Running from: {AppDomain.CurrentDomain.BaseDirectory}");
+            Log.Print(LogType.RealmServer,
                 $"Successfully started in {Common.Helpers.Time.GetMsTimeDiff(Time, Common.Helpers.Time.GetMsTime()) / 100}ms");
 
             // Commands
@@ -42,29 +45,37 @@ namespace RealmServer
                 var command = Console.ReadLine();
                 switch (command)
                 {
-                    case "/up": case "up":
-                        Log.Print(LogType.Console, $"Uptime {DateTime.UtcNow - Process.GetCurrentProcess().StartTime.ToUniversalTime()}");
+                    case "/up":
+                    case "up":
+                        Log.Print(LogType.Console,
+                            $"Uptime {DateTime.UtcNow - Process.GetCurrentProcess().StartTime.ToUniversalTime()}");
                         break;
 
-                    case "/db": case "db":
+                    case "/db":
+                    case "db":
                         Log.Print(LogType.Console, "XML reloaded.");
                         break;
 
-                    case "/gc": case "gc":
+                    case "/gc":
+                    case "gc":
                         Console.Clear();
                         GC.Collect();
                         Log.Print(LogType.Console,
                             $"Total Memory: {Convert.ToSingle(GC.GetTotalMemory(false) / 1024 / 1024)}MB");
                         break;
 
-                    case "/q": case "q":
+                    case "/q":
+                    case "q":
                         Log.Print(LogType.Console, "Halting process...");
                         Thread.Sleep(500);
                         _keepGoing = false;
                         Environment.Exit(-1);
                         return;
 
-                    case "/help": case "help": case "/?": case "?":
+                    case "/help":
+                    case "help":
+                    case "/?":
+                    case "?":
                         PrintHelp();
                         Console.WriteLine();
                         break;
@@ -78,6 +89,7 @@ namespace RealmServer
 
         private static void Initalizing()
         {
+            RealmServerClass = new RealmServerClass(RealmPoint);
         }
 
         private static void PrintHelp()

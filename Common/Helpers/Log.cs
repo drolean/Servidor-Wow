@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
+using Common.Globals;
+using Common.Network;
 
 namespace Common.Helpers
 {
@@ -13,6 +16,12 @@ namespace Common.Helpers
         Error,
         Loading,
         Implement
+    }
+
+    public enum LogPacket
+    {
+        Sending,
+        Receive
     }
 
     public class Log
@@ -38,15 +47,6 @@ namespace Common.Helpers
             WriteLog($"{DateTime.Now:hh:mm:ss.fff} [{type}] {obj}");
         }
 
-        public static void Print(string subject, object obj, ConsoleColor colour)
-        {
-            Console.Write($"{DateTime.Now:hh:mm:ss.fff} [{subject}] ");
-            Console.ForegroundColor = colour;
-            Console.WriteLine(obj.ToString());
-            //
-            WriteLog($"{DateTime.Now:hh:mm:ss.fff} [{subject}] {obj}");
-        }
-
         public static void Print(object obj)
         {
             Console.WriteLine($"{DateTime.Now:hh:mm:ss.fff} [FRAMEWORK] {obj}");
@@ -69,6 +69,36 @@ namespace Common.Helpers
                 {
                     log.WriteLine(strLog);
                 }
+            }
+        }
+
+        public static void LogPacket(LogPacket type, PacketServer packet)
+        {
+            try
+            {
+                var logFilePath = $"logs/{type}_log-{DateTime.Now:yyyy-M-d}.txt";
+                FileInfo logFileInfo = new FileInfo(logFilePath);
+                DirectoryInfo logDirInfo = new DirectoryInfo(logFileInfo.DirectoryName ?? throw new InvalidOperationException());
+
+                if (!logDirInfo.Exists)
+                    logDirInfo.Create();
+
+                using (FileStream fileStream = new FileStream(logFilePath, FileMode.Append))
+                {
+                    using (StreamWriter log = new StreamWriter(fileStream))
+                    {
+                        log.WriteLine($"[{DateTime.Now:yyyy-M-d H:mm:ss}] OPCode: {(RealmEnums) packet.Opcode} " + // (RealmCMD)
+                                    $"[Length: {packet.Packet.Length}]");
+                        log.Write(Utils.ByteArrayToHex(packet.Packet));
+                        log.WriteLine();
+                        log.WriteLine();
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                var trace = new StackTrace(e, true);
+                Print(LogType.Error, $"{e.Message}: {e.Source}\n{trace.GetFrame(trace.FrameCount - 1).GetFileName()}:{trace.GetFrame(trace.FrameCount - 1).GetFileLineNumber()}");
             }
         }
     }
