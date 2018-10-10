@@ -59,13 +59,16 @@
   <ItemGroup>
     <Compile Include="Handlers\OnAuthSession.cs" />
     <Compile Include="Handlers\OnCharCreate.cs" />
+    <Compile Include="Handlers\OnCharEnum.cs" />
     <Compile Include="Handlers\OnPing.cs" />
     <Compile Include="mainProgram.cs" />
     <Compile Include="PacketReader\CMSG_AUTH_SESSION.cs" />
     <Compile Include="PacketReader\CMSG_CHAR_CREATE.cs" />
     <Compile Include="PacketReader\CMSG_PING.cs" />
+    <Compile Include="PacketServer\SMSG_ADDON_INFO.cs" />
     <Compile Include="PacketServer\SMSG_AUTH_RESPONSE.cs" />
     <Compile Include="PacketServer\SMSG_CHAR_CREATE.cs" />
+    <Compile Include="PacketServer\SMSG_CHAR_ENUM.cs" />
     <Compile Include="PacketServer\SMSG_PONG.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RealmServerClass.cs" />

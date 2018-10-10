@@ -106,6 +106,7 @@ namespace RealmServer
             // Handlers
             RealmServerRouter.AddHandler<CMSG_AUTH_SESSION>(RealmEnums.CMSG_AUTH_SESSION, OnAuthSession.Handler);
             RealmServerRouter.AddHandler<CMSG_PING>(RealmEnums.CMSG_PING, OnPing.Handler);
+            RealmServerRouter.AddHandler(RealmEnums.CMSG_CHAR_ENUM, OnCharEnum.Handler);
             RealmServerRouter.AddHandler<CMSG_CHAR_CREATE>(RealmEnums.CMSG_CHAR_CREATE, OnCharCreate.Handler);
         }
 

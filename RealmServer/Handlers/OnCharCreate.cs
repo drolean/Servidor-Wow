@@ -10,9 +10,10 @@ namespace RealmServer.Handlers
     {
         internal static void Handler(RealmServerSession session, CMSG_CHAR_CREATE handler)
         {
+            session.SendPacket(new SMSG_CHAR_CREATE(LoginErrorCode.CHAR_CREATE_SUCCESS));
+
             try
             {
-                /*
                 // If limit character reached
                 if (MainProgram.RealmServerDatabase.GetCharacters(session.Users.username).Count >= Config.Instance.LimitCharacterRealm)
                 {
@@ -21,14 +22,14 @@ namespace RealmServer.Handlers
                 }
 
                 // check if name in use
-                if (MainProgram.RealmServerDatabase.GetCharacaterByName(handler.Name) != null)
+                if (MainProgram.RealmServerDatabase.FindCharacaterByName(handler.Name) != null)
                 {
                     session.SendPacket(new SMSG_CHAR_CREATE(LoginErrorCode.CHAR_CREATE_NAME_IN_USE));
                     return;
                 }
 
-                MainProgram.RealmServerDatabase.CreateChar(handler, session.Users);
-                */
+                //MainProgram.RealmServerDatabase.CreateChar(handler, session.Users);
+
                 session.SendPacket(new SMSG_CHAR_CREATE(LoginErrorCode.CHAR_CREATE_SUCCESS));
             }
             catch (Exception)
