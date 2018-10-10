@@ -2,6 +2,7 @@
 using System.Linq;
 using Common.Database;
 using Common.Database.Tables;
+using Common.Globals;
 using Shaolinq;
 
 namespace AuthServer
@@ -36,7 +37,7 @@ namespace AuthServer
         }
 
         /// <summary>
-        ///     Get Realms list
+        ///     Get Realms list.
         /// </summary>
         /// <returns>Model.Realms</returns>
         internal List<Realms> GetRealms()
@@ -45,7 +46,7 @@ namespace AuthServer
         }
 
         /// <summary>
-        ///     Get Characters by Realm
+        ///     Get Characters by Realm.
         /// </summary>
         /// <param name="realmId">Set a realm ID (int)</param>
         /// <param name="accountName">Account Name (string)</param>
@@ -53,6 +54,22 @@ namespace AuthServer
         public int GetCharactersUsers(int realmId, string accountName)
         {
             return Model.Characters.Where(a => a.realm.Id == realmId && a.name == accountName).ToList().Count;
+        }
+
+        /// <summary>
+        ///     Update realm flag status.
+        /// </summary>
+        /// <param name="realm">Realms model</param>
+        /// <param name="flag">RealmFlag status</param>
+        public void UpdateRealmStatus(Realms realm, RealmFlag flag)
+        {
+            using (var scope = new DataAccessScope())
+            {
+                var model = Model.Realms.GetReference(realm);
+                    model.flag = flag;
+
+                scope.CompleteAsync();
+            }
         }
     }
 }

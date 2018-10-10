@@ -7,6 +7,7 @@ using Common.Crypt;
 using Common.Database.Tables;
 using Common.Globals;
 using Common.Helpers;
+using RealmServer.PacketServer;
 
 namespace RealmServer
 {
@@ -34,13 +35,8 @@ namespace RealmServer
                 Disconnect();
             }
 
-            // Connection Packet
-            using (var packet = new Common.Network.PacketServer(RealmEnums.SMSG_AUTH_CHALLENGE))
-            {
-                //packet.WriteBytes(new byte[] {0x33, 0x18, 0x34, 0xC8});
-                packet.WriteBytes(new byte[] {1, 2, 3, 4});
-                SendPacket(packet);
-            }
+            // First Packet?
+            SendPacket(new SMSG_AUTH_CHALLENGE());
         }
 
         public Socket ConnectionSocket { get; }
@@ -56,6 +52,7 @@ namespace RealmServer
         {
             try
             {
+                // TODO: Cannot access a disposed object.
                 ConnectionSocket.Shutdown(SocketShutdown.Both);
                 ConnectionSocket.Close();
             }
@@ -73,6 +70,7 @@ namespace RealmServer
 
             try
             {
+                // TODO: Foi Forçado o cancelamento de uma conexão pelo host remoto.
                 bytesRecived = ConnectionSocket.EndReceive(asyncResult);
             }
             catch (Exception e)
@@ -91,6 +89,7 @@ namespace RealmServer
 
                 try
                 {
+                    // TODO: Cannot access a disposed object.
                     ConnectionSocket.BeginReceive(DataBuffer, 0, DataBuffer.Length, SocketFlags.None, DataArrival,
                         null);
                 }
@@ -130,6 +129,7 @@ namespace RealmServer
                         $"[{ConnectionSocket.RemoteEndPoint}] [RCVD] [{code.ToString().PadRight(25, ' ')}] = {length}");
 
                     var packetDate = new byte[length];
+                    // TODO: Source array was to not long enough. Check srcIndex and length, and the array's lower bound
                     Array.Copy(data, index + 6, packetDate, 0, length - 4);
                     RealmServerRouter.CallHandler(this, code, packetDate);
 
@@ -142,6 +142,7 @@ namespace RealmServer
                 Log.Print(LogType.Error,
                     $"{e.Message}: {e.Source}\n{trace.GetFrame(trace.FrameCount - 1).GetFileName()}:{trace.GetFrame(trace.FrameCount - 1).GetFileLineNumber()}");
                 Utils.DumpPacket(data);
+                Disconnect();
             }
         }
 
@@ -153,13 +154,26 @@ namespace RealmServer
 
         private void SendPacket(int opcode, byte[] data)
         {
-            Log.Print(LogType.RealmServer,
-                $"[{ConnectionSocket.RemoteEndPoint}] [SEND] [{((RealmEnums) opcode).ToString().PadRight(25, ' ')}] = {data.Length}");
-            var writer = new BinaryWriter(new MemoryStream());
-            var header = Encode(data.Length, opcode);
-            writer.Write(header);
-            writer.Write(data);
-            SendData(((MemoryStream) writer.BaseStream).ToArray());
+            if (!ConnectionSocket.Connected)
+                return;
+
+            try
+            {
+                Log.Print(LogType.RealmServer,
+                    $"[{ConnectionSocket.RemoteEndPoint}] [SEND] [{((RealmEnums) opcode).ToString().PadRight(25, ' ')}] = {data.Length}");
+                var writer = new BinaryWriter(new MemoryStream());
+                var header = Encode(data.Length, opcode);
+                writer.Write(header);
+                writer.Write(data);
+                SendData(((MemoryStream) writer.BaseStream).ToArray());
+            }
+            catch (Exception e)
+            {
+                var trace = new StackTrace(e, true);
+                Log.Print(LogType.Error,
+                    $"{e.Message}: {e.Source}\n{trace.GetFrame(trace.FrameCount - 1).GetFileName()}:{trace.GetFrame(trace.FrameCount - 1).GetFileLineNumber()}");
+                Disconnect();
+            }
         }
 
         internal void SendData(byte[] send)
@@ -169,6 +183,7 @@ namespace RealmServer
 
             try
             {
+                // TODO: Cannot access a disposed object.
                 ConnectionSocket.BeginSend(buffer, 0, buffer.Length, SocketFlags.None, delegate { }, null);
             }
             catch (SocketException e)

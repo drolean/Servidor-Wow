@@ -33,15 +33,15 @@ namespace RealmServer.PacketServer
                 Write(character.MapZ);
 
                 Write(0); // Guild ID	
-                Write((int) CharacterFlag.None);	
+                Write((int) CharacterFlag.None);
                 Write((byte) 0); // First Login or RestedState
-                
+
                 Write(0); // PetModel	
                 Write(0); // PetLevel	
                 Write(0); // PetFamily = SELECT family FROM creature_template WHERE entry
-                
+
                 //Items
-                for (int j = 0; j < 0x14; j++)
+                for (var j = 0; j < 0x14; j++)
                 {
                     Write(0); // DisplayId
                     Write((byte) 0); // InventoryType

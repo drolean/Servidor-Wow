@@ -58,7 +58,8 @@ namespace RealmServer.Handlers
                     var unk7 = reader.ReadUInt32();
                     AddOnsNames.Add(addonName);
 
-                    Console.WriteLine(@"Addon {0}: name {1}, enabled {2}, crc {3}, unk7 {4}", i, addonName, enabled, crc, unk7);
+                    Console.WriteLine(@"Addon {0}: name {1}, enabled {2}, crc {3}, unk7 {4}", i, addonName, enabled,
+                        crc, unk7);
                 }
             }
         }

@@ -5,12 +5,10 @@ namespace RealmServer.PacketServer
 {
     internal sealed class SMSG_ADDON_INFO : Common.Network.PacketServer
     {
-        public List<string> AddOnsNames { get; }
-
         public SMSG_ADDON_INFO(List<string> addOnsNames) : base(RealmEnums.SMSG_ADDON_INFO)
         {
             AddOnsNames = addOnsNames;
-            for (int i = 0; i <= addOnsNames.Count; i++)
+            for (var i = 0; i <= addOnsNames.Count; i++)
             {
                 /*	
                 if (File.Exists($"interface\\{addOnsNames[i]}.pub"))	
@@ -33,5 +31,7 @@ namespace RealmServer.PacketServer
                 Write((short) 0);
             }
         }
+
+        public List<string> AddOnsNames { get; }
     }
 }

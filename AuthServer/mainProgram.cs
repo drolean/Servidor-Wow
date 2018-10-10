@@ -17,12 +17,14 @@ namespace AuthServer
         private static readonly IPEndPoint AuthPoint = new IPEndPoint(IPAddress.Any, 3724);
         public static AuthServerDatabase Database { get; set; }
         public static AuthServerClass AuthServerClass { get; set; }
+        public static Timer TimerRealm { get; private set; }
 
         private static void Main()
         {
             // Set Culture
-            CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("en-US");
-            Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
+            CultureInfo.DefaultThreadCurrentCulture = CultureInfo.InvariantCulture;
+            Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
+            Thread.CurrentThread.CurrentUICulture = CultureInfo.InvariantCulture;
 
             Console.SetWindowSize(
                 Math.Min(110, Console.LargestWindowWidth),
@@ -35,6 +37,9 @@ namespace AuthServer
             Log.Print(LogType.AuthServer, $"Running on .NET Framework Version {Environment.Version}");
             //
             Initalizing();
+
+            // Timer to check realm Status
+            TimerRealm = new Timer(TimerRealmCallback, null, 0, 10000);
 
             Log.Print(LogType.AuthServer, $"Running from: {AppDomain.CurrentDomain.BaseDirectory}");
             Log.Print(LogType.AuthServer,
@@ -50,7 +55,7 @@ namespace AuthServer
                     case "db":
                         // ReSharper disable once ObjectCreationAsStatement
                         new DatabaseManager();
-                        Log.Print(LogType.Console, "Database recreated.");
+                        Log.Print(LogType.Console, "Database recreated ".PadRight(40, '.') + " [OK] ");
                         break;
 
                     case "/gc":
@@ -90,6 +95,18 @@ namespace AuthServer
             AuthServerRouter.AddHandler<AuthLogonProof>(AuthCMD.CMD_AUTH_LOGON_PROOF,
                 AuthServerHandler.OnAuthLogonProof);
             AuthServerRouter.AddHandler(AuthCMD.CMD_AUTH_REALMLIST, AuthServerHandler.OnAuthRealmList);
+        }
+
+        private static void TimerRealmCallback(object o)
+        {
+            Log.Print(LogType.AuthServer, "Checking Realm Status ".PadRight(40, '.'));
+            
+            var realms = Database.GetRealms();
+            foreach (var realm in realms)
+            {
+                AuthServerHelper.CheckRealmStatus(realm);
+            }
+            GC.Collect();
         }
 
         /// <summary>

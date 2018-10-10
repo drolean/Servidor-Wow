@@ -15,7 +15,6 @@ namespace Common.Database
 
         public DatabaseModel()
         {
-            //var configuration = SqliteConfiguration.Create("database.sqlite", null);
             var configuration = MySqlConfiguration.Create("wow", "127.0.0.1", "homestead", "secret");
             
             try
@@ -47,9 +46,6 @@ namespace Common.Database
     {
         public DatabaseManager()
         {
-            if (File.Exists("database.sqlite"))
-                return;
-
             // Recria a base inteira
             Model.Create(DatabaseCreationOptions.DeleteExistingDatabase);
 
@@ -82,7 +78,7 @@ namespace Common.Database
                 var realmPvp = Model.Realms.Create();
                 realmPvp.flag       = RealmFlag.NewPlayers;
                 realmPvp.timezone   = RealmTimezone.AnyLocale;
-                realmPvp.type       = RealmType.PVP;
+                realmPvp.type       = RealmType.Normal;
                 realmPvp.name       = "Firetree";
                 realmPvp.address    = "127.0.0.1:1001";
                 realmPvp.created_at = DateTime.Now;

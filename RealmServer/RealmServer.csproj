@@ -66,6 +66,7 @@
     <Compile Include="PacketReader\CMSG_CHAR_CREATE.cs" />
     <Compile Include="PacketReader\CMSG_PING.cs" />
     <Compile Include="PacketServer\SMSG_ADDON_INFO.cs" />
+    <Compile Include="PacketServer\SMSG_AUTH_CHALLENGE.cs" />
     <Compile Include="PacketServer\SMSG_AUTH_RESPONSE.cs" />
     <Compile Include="PacketServer\SMSG_CHAR_CREATE.cs" />
     <Compile Include="PacketServer\SMSG_CHAR_ENUM.cs" />

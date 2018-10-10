@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Net;
 using System.Reflection;
 using System.Threading;
+using Common.Database.Dbc;
 using Common.Globals;
 using Common.Helpers;
 using RealmServer.Handlers;
@@ -16,14 +17,22 @@ namespace RealmServer
         private static bool _keepGoing = true;
         private static readonly uint Time = Common.Helpers.Time.GetMsTime();
         private static readonly IPEndPoint RealmPoint = new IPEndPoint(IPAddress.Any, 1001);
+
+        public static readonly AreaTableReader AreaTableReader = new AreaTableReader();
+        public static readonly CharStartOutfitReader CharacterOutfitReader = new CharStartOutfitReader();
+        public static readonly ChrRacesReader ChrRacesReader = new ChrRacesReader();
+        public static readonly EmotesTextReader EmotesTextReader = new EmotesTextReader();
+        public static readonly FactionReader FactionReader = new FactionReader();
+        public static readonly MapReader MapReader = new MapReader();
         public static RealmServerClass RealmServerClass { get; set; }
         public static RealmServerDatabase RealmServerDatabase { get; set; }
 
         private static void Main()
         {
             // Set Culture
-            CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("en-US");
-            Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
+            CultureInfo.DefaultThreadCurrentCulture = CultureInfo.InvariantCulture;
+            Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
+            Thread.CurrentThread.CurrentUICulture = CultureInfo.InvariantCulture;
 
             Console.SetWindowSize(
                 Math.Min(110, Console.LargestWindowWidth),
@@ -38,6 +47,8 @@ namespace RealmServer
             Log.Print(LogType.RealmServer, $"Running on .NET Framework Version {Environment.Version}");
 
             ConfigFile();
+            //
+            DbcInit();
             //
             Initalizing();
 
@@ -62,8 +73,8 @@ namespace RealmServer
                             $"Uptime {DateTime.UtcNow - Process.GetCurrentProcess().StartTime.ToUniversalTime()}");
                         break;
 
-                    case "/db":
-                    case "db":
+                    case "/reload":
+                    case "reload":
                         Log.Print(LogType.Console, "XML reloaded.");
                         break;
 
@@ -77,7 +88,7 @@ namespace RealmServer
 
                     case "/q":
                     case "q":
-                        Log.Print(LogType.Console, "Halting process...");
+                        Log.Print(LogType.Console, "Halting process ".PadRight(40, '.'));
                         Thread.Sleep(500);
                         _keepGoing = false;
                         Environment.Exit(-1);
@@ -110,9 +121,20 @@ namespace RealmServer
             RealmServerRouter.AddHandler<CMSG_CHAR_CREATE>(RealmEnums.CMSG_CHAR_CREATE, OnCharCreate.Handler);
         }
 
+        private static async void DbcInit()
+        {
+            Log.Print(LogType.RealmServer, "Loading DBCs ".PadRight(40, '.') + " [OK] ");
+            await AreaTableReader.Load("AreaTable.dbc");
+            await CharacterOutfitReader.Load("CharStartOutfit.dbc");
+            await ChrRacesReader.Load("ChrRaces.dbc");
+            await EmotesTextReader.Load("EmotesText.dbc");
+            await FactionReader.Load("Faction.dbc");
+            await MapReader.Load("Map.dbc");
+        }
+
         private static void ConfigFile(bool reload = false)
         {
-            Log.Print(LogType.RealmServer, reload ? "Reloading settings..." : "Loading settings...");
+            Log.Print(LogType.RealmServer, reload ? "Reloading settings ".PadRight(40, '.') + " [OK]" : "Loading settings ".PadRight(40, '.') + " [OK] ");
 
             try
             {
@@ -122,7 +144,7 @@ namespace RealmServer
             {
                 Log.Print(LogType.RealmServer, "Failed to load config from file. Loading default config.");
                 Config.Default();
-                Log.Print(LogType.RealmServer, "Saving config...");
+                Log.Print(LogType.RealmServer, "Saving config ".PadRight(40, '.') + " [OK] ");
                 Config.Instance.Save();
             }
         }
@@ -130,11 +152,11 @@ namespace RealmServer
         private static void PrintHelp()
         {
             Console.Clear();
-            Console.WriteLine(@"AuthServer help
+            Console.WriteLine(@"RealmServer help
 Commands:
   /config   Reload configuration file.
-  /c 'msg'  Send Global message to players.
-  /db       Reload XML.
+  /g 'msg'  Send Global message to players.
+  /reload   Reload XML.
   /gc       Show garbage collection.
   /up       Show uptime.
   /q 900    Shutdown server in 900sec = 15min. *Debug exit now!

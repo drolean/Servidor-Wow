@@ -15,7 +15,8 @@ namespace RealmServer.Handlers
             try
             {
                 // If limit character reached
-                if (MainProgram.RealmServerDatabase.GetCharacters(session.Users.username).Count >= Config.Instance.LimitCharacterRealm)
+                if (MainProgram.RealmServerDatabase.GetCharacters(session.Users.username).Count >=
+                    Config.Instance.LimitCharacterRealm)
                 {
                     session.SendPacket(new SMSG_CHAR_CREATE(LoginErrorCode.CHAR_CREATE_SERVER_LIMIT));
                     return;

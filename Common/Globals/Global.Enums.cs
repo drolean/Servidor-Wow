@@ -21,75 +21,105 @@
     };
 
     /// <summary>
-    /// Enumeration of all authentication operations.
+    ///     Enumeration of all authentication operations.
     /// </summary>
     public enum AuthCMD : byte
     {
         /// <summary>
-        /// Initial authentication step, the client sent a challenge.
-        /// - Authentication Logon Challenge
+        ///     Initial authentication step, the client sent a challenge.
+        ///     - Authentication Logon Challenge
         /// </summary>
         CMD_AUTH_LOGON_CHALLENGE = 0x00,
         /// <summary>
-        /// Second authentication step, the client is sending his proof.
-        /// - Authentication Logon Proof
+        ///     Second authentication step, the client is sending his proof.
+        ///     - Authentication Logon Proof
         /// </summary>
         CMD_AUTH_LOGON_PROOF = 0x01,
         CMD_AUTH_RECONNECT_CHALLENGE    = 0x02,
         CMD_AUTH_RECONNECT_PROOF        = 0x03,
         CMD_AUTH_AUTHENTIFICATOR        = 0x04, // ???CMD_AUTH_UPDATESRV 
         /// <summary>
-        /// Third authentication step, the client is requesting the realm list.
-        /// - Realm List
+        ///     Third authentication step, the client is requesting the realm list.
+        ///     - Realm List
         /// </summary>
         CMD_AUTH_REALMLIST = 0x10,
         /// <summary>
-        /// Transfer Initiate.
+        ///     Transfer Initiate.
         /// </summary>
         CMD_XFER_INITIATE = 0x30,
         /// <summary>
-        /// Transfer Data.
+        ///     Transfer Data.
         /// </summary>
         CMD_XFER_DATA = 0x31,
         /// <summary>
-        /// Transfer Accept.
+        ///     Transfer Accept.
         /// </summary>
         CMD_XFER_ACCEPT = 0x32,
         /// <summary>
-        /// Transfer Resume.
+        ///     Transfer Resume.
         /// </summary>
         CMD_XFER_RESUME = 0x33,
         /// <summary>
-        /// Transfer Cancel.
+        ///     Transfer Cancel.
         /// </summary>
         CMD_XFER_CANCEL = 0x34,
-        UNKNOW                          = byte.MaxValue
+        UNKNOW = byte.MaxValue
     }
 
     public enum AccountState : byte
     {
-        OK                              = 0x00, 
-        /// <summary>Unable to connect</summary>
-        FAILED                          = 0x01,
-        /// <summary>This World of Warcraft account has been closed and is no longer in service -- Please check the registered email address of this account for further information.</summary>
-        BANNED                          = 0x03,
-        /// <summary>The information you have entered is not valid.  Please check the spelling of the account name and password.  If you need help in retrieving a lost or stolen password and account, see www.worldofwarcraft.com for more information.</summary>
-        UNKNOWN_ACCOUNT                 = 0x04,
-        /// <summary>The information you have entered is not valid.  Please check the spelling of the account name and password.  If you need help in retrieving a lost or stolen password and account, see www.worldofwarcraft.com for more information.</summary>
-        BAD_PASS                        = 0x05,
-        /// <summary>This account is already logged into World of Warcraft.  Please check the spelling and try again.</summary>
-        ALREADYONLINE                   = 0x06,
-        /// <summary>You have used up your prepaid time for this account. Please purchase more to continue playing.</summary>
-        NOTIME                          = 0x07,
-        /// <summary>Could not log in to World of Warcraft at this time.  Please try again later.</summary>
-        DBBUSY                          = 0x08,
-        /// <summary>Unable to validate game version.  This may be caused by file corruption or the interference of another program.  Please visit www.blizzard.com/support/wow/ for more information and possible solutions to this issue.</summary>
-        BADVERSION                      = 0x09,
+        OK = 0x00, 
+        /// <summary>
+        ///     Unable to connect
+        /// </summary>
+        FAILED = 0x01,
+
+        /// <summary>
+        ///     This World of Warcraft account has been closed and is no longer in service -- Please check the registered email address of this account for further information.
+        /// </summary>
+        BANNED = 0x03,
+
+        /// <summary>
+        ///     The information you have entered is not valid.  Please check the spelling of the account name and password.  If you need help in retrieving a lost or stolen password and account, see www.worldofwarcraft.com for more information.
+        /// </summary>
+        UNKNOWN_ACCOUNT = 0x04,
+
+        /// <summary>
+        ///     The information you have entered is not valid.  Please check the spelling of the account name and password.  If you need help in retrieving a lost or stolen password and account, see www.worldofwarcraft.com for more information.
+        /// </summary>
+        BAD_PASS = 0x05,
+
+        /// <summary>
+        ///     This account is already logged into World of Warcraft.  Please check the spelling and try again.
+        /// </summary>
+        ALREADYONLINE = 0x06,
+
+        /// <summary>
+        ///     You have used up your prepaid time for this account. Please purchase more to continue playing.
+        /// </summary>
+        NOTIME = 0x07,
+
+        /// <summary>
+        ///     Could not log in to World of Warcraft at this time.  Please try again later.
+        /// </summary>
+        DBBUSY = 0x08,
+
+        /// <summary>
+        ///     Unable to validate game version.  This may be caused by file corruption or the interference of another program.  Please visit www.blizzard.com/support/wow/ for more information and possible solutions to this issue.
+        /// </summary>
+        BADVERSION = 0x09,
+
         DOWNLOADFILE                    = 0x0A,
-        /// <summary>This World Of Warcraft account has been temporarily suspended. Please go to http://www.wow-europe.com/en/misc/banned.html for further information.</summary>
-        SUSPENDED                       = 0x0C,
-        /// <summary>Access to this account has been blocked by parental controls.  Your settings may be changed in your account preferences at http://www.worldofwarcraft.com.</summary>
-        PARENTALCONTROL                 = 0x0F,
+
+        /// <summary>
+        ///     This World Of Warcraft account has been temporarily suspended. Please go to https://worldofwarcraft.com/en/misc/banned.html for further information.
+        /// </summary>
+        SUSPENDED = 0x0C,
+
+        /// <summary>
+        ///     Access to this account has been blocked by parental controls.  Your settings may be changed in your account preferences at http://www.worldofwarcraft.com.
+        /// </summary>
+        PARENTALCONTROL = 0x0F,
     }
 
     public enum LoginErrorCode : byte
@@ -110,13 +140,13 @@
         AUTH_REJECT                      = 0x0B, // Login unavailable - Please contact Tech Support
 
         /// <summary>
-        /// Authentication successful
-        /// - Used on SMSG_AUTH_RESPONSE
+        ///     Authentication successful
+        ///     - Used on SMSG_AUTH_RESPONSE
         /// </summary>
         AUTH_OK = 0x0C,
         /// <summary>
-        /// Authentication failed
-        /// - Used on SMSG_AUTH_RESPONSE
+        ///     Authentication failed
+        ///     - Used on SMSG_AUTH_RESPONSE
         /// </summary>
         AUTH_FAILED = 0x0E,
 
@@ -134,8 +164,8 @@
         AUTH_LOGIN_SERVER_NOT_FOUND     = 0x1A, // Invalid login server
 
         /// <summary>
-        /// Position in Queue
-        /// - Used on SMSG_AUTH_RESPONSE
+        ///     Position in Queue
+        ///     - Used on SMSG_AUTH_RESPONSE
         /// </summary>
         AUTH_WAIT_QUEUE = 0x1B,
 
@@ -211,12 +241,11 @@
 
     public enum RealmFlag : byte
     {
-        None         = 0x00,
-        Invalid      = 0x01,
-        Offline      = 0x02,
-        SpecifyBuild = 0x04,
-        NewPlayers   = 0x20,
-        Recommended  = 0x40,
+        Low          = 0x00,
+        Invalid      = 0x01, // Red
+        Offline      = 0x02, // Red
+        Recommended  = 0x20,
+        NewPlayers   = 0x40,
         Full         = 0x80
     }
 
@@ -233,40 +262,40 @@
 
     public enum Genders
     {
-        GENDER_MALE = 0,
-        GENDER_FEMALE = 1
+        Male = 0,
+        Female = 1
     }
 
     public enum Classes
     {
-        CLASS_WARRIOR = 1,
-        CLASS_PALADIN = 2,
-        CLASS_HUNTER = 3,
-        CLASS_ROGUE = 4,
-        CLASS_PRIEST = 5,
-        CLASS_SHAMAN = 7,
-        CLASS_MAGE = 8,
-        CLASS_WARLOCK = 9,
-        CLASS_DRUID = 11
+        Warrior = 1,
+        Paladin = 2,
+        Hunter = 3,
+        Rogue = 4,
+        Priest = 5,
+        Shaman = 7,
+        Mage = 8,
+        Warlock = 9,
+        Druid = 11
     }
 
     public enum Races
     {
-        RACE_HUMAN = 1,
-        RACE_ORC   = 2,
-        RACE_DWARF = 3,
-        RACE_NIGHT_ELF = 4,
-        RACE_UNDEAD = 5,
-        RACE_TAUREN = 6,
-        RACE_GNOME = 7,
-        RACE_TROLL = 8
+        Human = 1,
+        Orc   = 2,
+        Dwarf = 3,
+        NightElf = 4,
+        Undead = 5,
+        Tauren = 6,
+        Gnome = 7,
+        Troll = 8
     }
 
     public enum CharacterFlag
     {
         None = 0x0,
         /// <summary>
-        /// Character Locked for Paid Character Transfer
+        ///     Character Locked for Paid Character Transfer
         /// </summary>
         LockedForTransfer = 0x4,
 
@@ -274,11 +303,11 @@
 
         HideCloak = 0x800,
         /// <summary>
-        /// Player is ghost in char selection screen
+        ///     Player is ghost in char selection screen
         /// </summary>
         Ghost = 0x2000,
         /// <summary>
-        /// On login player will be asked to change name
+        ///     On login player will be asked to change name
         /// </summary>
         Rename = 0x4000,
 

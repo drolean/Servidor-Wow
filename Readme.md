@@ -9,27 +9,6 @@
 - http://pt.wowhead.com/elwynn-forest#objects
 - http://wow.gamepressure.com/map.asp?ID=7
 
-## ToDo
-
-## Changelog
-
-## Version
-
-## Outros
-
-- CreateTable "CharactersSocial" (Player, PlayerFriend, PlayerIgnore)
-- CreateTable "Channel" (Name, PlayerId, Password)
-- ChannelCharacters (Channel, PlayerId)
-
-## TODO
-- Remove player on Logout *DONE
-- Limit CHAT_SAY Radius
-- Inventory 
-- Equipament * Partial implemented
-- Spells
-- Change ItemsList from DB to XML
-- Limit CHAT_CHANNEL to only players in the channel
-
 ## Thanks to:
 
 - https://github.com/andrewmunro/Vanilla
