@@ -54,7 +54,7 @@ namespace AuthServer
                     case "/db":
                     case "db":
                         // ReSharper disable once ObjectCreationAsStatement
-                        new DatabaseManager();
+                        new DatabaseModel();
                         Log.Print(LogType.Console, "Database recreated ".PadRight(40, '.') + " [OK] ");
                         break;
 
@@ -100,10 +100,11 @@ namespace AuthServer
         private static void TimerRealmCallback(object o)
         {
             Log.Print(LogType.AuthServer, "Checking Realm Status ".PadRight(40, '.'));
-
+            /*
             var realms = Database.GetRealms();
             foreach (var realm in realms) AuthServerHelper.CheckRealmStatus(realm);
             GC.Collect();
+            */
         }
 
         /// <summary>

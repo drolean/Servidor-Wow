@@ -10,6 +10,8 @@ namespace AuthServer
     {
         public static bool CheckRealmStatus(Realms realm)
         {
+            return true;
+            /*
             var spliIp = realm.address.Split(':');
             int.TryParse(spliIp[1], out var port);
 
@@ -29,6 +31,7 @@ namespace AuthServer
                     return false;
                 }
             }
+            */
         }
     }
 }

@@ -1,87 +1,66 @@
 ﻿using System;
-using System.Diagnostics;
 using Common.Database.Tables;
 using Common.Globals;
-using Common.Helpers;
-using Shaolinq;
-using Shaolinq.MySql;
+using MongoDB.Driver;
 
 namespace Common.Database
 {
-    public class DatabaseModel<T> where T : DataAccessModel
+    public class DatabaseModel
     {
-        protected static T Model;
+        public static MongoClient Client = new MongoClient();
+        public static IMongoDatabase Database = Client.GetDatabase("wow-vanilla");
+
+        public static IMongoCollection<Users> UserCollection = Database.GetCollection<Users>("Users");
+        public static IMongoCollection<Realms> RealmCollection = Database.GetCollection<Realms>("Realms");
 
         public DatabaseModel()
         {
-            var configuration = MySqlConfiguration.Create("wow", "127.0.0.1", "homestead", "secret");
+            // Drop Database
+            Client.DropDatabase("wow-vanilla");
 
-            try
+            // Create Unique Index
+            UserCollection.Indexes.CreateOneAsync(
+                Builders<Users>.IndexKeys.Ascending(i => i.Email), 
+                new CreateIndexOptions<Users> {
+                    Unique = true
+                });
+
+            // Create Unique Index
+            UserCollection.Indexes.CreateOneAsync(
+                Builders<Users>.IndexKeys.Ascending(i => i.Username),
+                new CreateIndexOptions<Users>
+                {
+                    Unique = true
+                });
+
+            Users userJohn = new Users("John Doe", "john@doe.com", "john", "doe");
+            Users userJoao = new Users("Joao Doe", "joao@doe.com", "joao", "doe");
+            Users userBan = new Users("Ban Doe", "ban@doe.com", "ban", "doe");
+
+            Users userTest = new Users
             {
-                Model = DataAccessModel.BuildDataAccessModel<T>(configuration);
-            }
-            catch (Exception e)
+                Name = "Test Doe",
+                Username = "test",
+                Password = "doe",
+                Email = "test1@doe.com",
+            };
+
+            UserCollection.InsertOne(userTest);
+            UserCollection.InsertMany(new [] { userJohn, userJoao, userBan });
+
+
+            Realms realmTest = new Realms
             {
-                var trace = new StackTrace(e, true);
-                Log.Print(LogType.Error,
-                    $"{e.Message}: {e.Source}\n{trace.GetFrame(trace.FrameCount - 1).GetFileName()}:{trace.GetFrame(trace.FrameCount - 1).GetFileLineNumber()}");
-            }
-        }
-    }
+                Name = "Firetree",
+                Address = "127.0.0.1:1001",
+                Type = RealmType.Normal,
+                Flag = RealmFlag.Recommended,
+                Timezone = RealmTimezone.AnyLocale,
+                CreatedAt = DateTime.Now,
+                UpdatedAt = DateTime.Now
+            };
 
-    [DataAccessModel]
-    public abstract class Models : DataAccessModel
-    {
-        [DataAccessObjects] public abstract DataAccessObjects<Users> Users { get; }
-
-        [DataAccessObjects] public abstract DataAccessObjects<Realms> Realms { get; }
-
-        [DataAccessObjects] public abstract DataAccessObjects<Characters> Characters { get; }
-    }
-
-    public class DatabaseManager : DatabaseModel<Models>
-    {
-        public DatabaseManager()
-        {
-            // Recria a base inteira
-            Model.Create(DatabaseCreationOptions.DeleteExistingDatabase);
-
-            using (var scope = new DataAccessScope())
-            {
-                // Inserindo Usuarios
-                var user = Model.Users.Create();
-                user.name = "John Doe";
-                user.username = "john";
-                user.email = "john@doe.com";
-                user.password = "doe";
-                user.created_at = DateTime.Now;
-
-                var user2 = Model.Users.Create();
-                user2.name = "Dabal Doe";
-                user2.username = "doe";
-                user2.email = "dabal@doe.com";
-                user2.password = "doe";
-                user2.created_at = DateTime.Now;
-
-                var user3 = Model.Users.Create();
-                user3.name = "John Doe";
-                user3.username = "ban";
-                user3.email = "john@doe.com";
-                user3.password = "doe";
-                user3.created_at = DateTime.Now;
-                user3.bannet_at = DateTime.Now;
-
-                // Inserindo Realm
-                var realmPvp = Model.Realms.Create();
-                realmPvp.flag = RealmFlag.NewPlayers;
-                realmPvp.timezone = RealmTimezone.AnyLocale;
-                realmPvp.type = RealmType.Normal;
-                realmPvp.name = "Firetree";
-                realmPvp.address = "127.0.0.1:1001";
-                realmPvp.created_at = DateTime.Now;
-
-                scope.Complete();
-            }
+            RealmCollection.InsertOne(realmTest);
         }
     }
 }

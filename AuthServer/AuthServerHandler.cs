@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using AuthServer.PacketReader;
 using AuthServer.PacketServer;
 using Common.Crypt;
@@ -18,7 +19,7 @@ namespace AuthServer
             Log.Print(LogType.AuthServer,
                 $"[{session.ConnectionSocket.RemoteEndPoint}] CMD_AUTH_LOGON_CHALLENGE [{packet.Username}], " +
                 $"WoW Version [{packet.Version}.{packet.Build}] {packet.Country}");
-
+            
             var dataResponse = new byte[2];
             dataResponse[0] = (byte) LoginErrorCode.RESPONSE_FAILURE;
 
@@ -32,10 +33,10 @@ namespace AuthServer
                     try
                     {
                         // Get Account info
-                        _user = MainProgram.Database.GetAccount(packet.Username);
+                        _user = MainProgram.Database.GetAccount(packet.Username).Result;
 
                         if (_user != null)
-                            accState = _user.bannet_at != null ? AccountState.BANNED : AccountState.OK;
+                            accState = _user.BannetAt != null ? AccountState.BANNED : AccountState.OK;
                         else
                             accState = AccountState.UNKNOWN_ACCOUNT;
                     }
@@ -53,9 +54,9 @@ namespace AuthServer
                         case AccountState.OK:
                             Log.Print(LogType.AuthServer,
                                 $"[{session.ConnectionSocket.RemoteEndPoint}] Account found [{packet.Username}]");
-                            session.AccountName = _user?.username;
+                            session.AccountName = _user?.Username;
                             if (_user != null)
-                                session.Srp = new Srp6(_user.username.ToUpper(), _user.password.ToUpper());
+                                session.Srp = new Srp6(_user.Username.ToUpper(), _user.Username.ToUpper());
                             session.SendData(new PsAuthLogonChallange(session.Srp, AccountState.OK));
                             return;
                         case AccountState.UNKNOWN_ACCOUNT:
@@ -108,6 +109,7 @@ namespace AuthServer
 
         internal static void OnAuthLogonProof(AuthServerSession session, AuthLogonProof handler)
         {
+            /*
             session.Srp.ClientEphemeral = handler.A.ToPositiveBigInteger();
             session.Srp.ClientProof = handler.M1.ToPositiveBigInteger();
 
@@ -122,6 +124,7 @@ namespace AuthServer
             dataResponse[0] = (byte) AuthCMD.CMD_AUTH_LOGON_PROOF;
             dataResponse[1] = (byte) AccountState.UNKNOWN_ACCOUNT;
             session.SendData(dataResponse, "RS_LOGON_PROOF-WRONGPASS");
+            */
         }
 
         /// <summary>
@@ -131,8 +134,10 @@ namespace AuthServer
         /// <param name="data"></param>
         internal static void OnAuthRealmList(AuthServerSession session, byte[] data)
         {
+            /*
             var realms = MainProgram.Database.GetRealms();
             session.SendPacket(new PsAuthRealmList(realms, session.AccountName));
+            */
         }
     }
 }

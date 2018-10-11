@@ -1,12 +1,21 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using Common.Database;
 using Common.Database.Tables;
-using Common.Globals;
-using Shaolinq;
+using MongoDB.Driver;
 
 namespace AuthServer
 {
+    public class AuthServerDatabase
+    {
+        public async Task<Users> GetAccount(string username)
+        {
+            var results = await DatabaseModel.UserCollection.Find(x => x.Username == username).Limit(1).ToListAsync();
+            return results.FirstOrDefault();
+        }
+    }
+
+    /*
     public class AuthServerDatabase : DatabaseModel<Models>
     {
         /// <summary>
@@ -72,4 +81,5 @@ namespace AuthServer
             }
         }
     }
+    */
 }

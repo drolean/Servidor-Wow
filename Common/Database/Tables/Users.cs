@@ -1,27 +1,34 @@
 ﻿using System;
-using Shaolinq;
+using MongoDB.Bson;
 
 namespace Common.Database.Tables
 {
-    [DataAccessObject]
-    public abstract class Users : DataAccessObject<int>
+    public class Users
     {
-        [AutoIncrement] [PersistedMember] public override int Id { get; set; }
+        public ObjectId Id { get; set; }
 
-        [PersistedMember] public abstract string name { get; set; }
+        public Users(string name, string email, string username, string password)
+        {
+            Name = name;
+            Email = email;
+            Username = username;
+            Password = password;
+            CreatedAt = DateTime.Now;
+            UpdatedAt = DateTime.Now;
+        }
 
-        [PersistedMember] public abstract string email { get; set; }
+        public Users()
+        {
+        }
 
-        [PersistedMember] public abstract string username { get; set; }
+        public string Name { get; set; }
+        public string Email { get; set; }
+        public string Username { get; set; }
+        public string Password { get; set; }
+        public byte[] SessionKey { get; set; }
+        public DateTime? BannetAt { get; set; }
+        public DateTime CreatedAt { get; set; }
+        public DateTime UpdatedAt { get; set; }
 
-        [PersistedMember] public abstract string password { get; set; }
-
-        [PersistedMember] public abstract byte[] sessionkey { get; set; }
-
-        [PersistedMember] public abstract DateTime? bannet_at { get; set; }
-
-        [PersistedMember] public abstract DateTime? created_at { get; set; }
-
-        [PersistedMember] public abstract DateTime? updated_at { get; set; }
     }
 }

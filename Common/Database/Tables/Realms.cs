@@ -1,26 +1,18 @@
 ﻿using System;
 using Common.Globals;
-using Shaolinq;
+using MongoDB.Bson;
 
 namespace Common.Database.Tables
 {
-    [DataAccessObject]
-    public abstract class Realms : DataAccessObject<int>
+    public class Realms
     {
-        [AutoIncrement] [PersistedMember] public override int Id { get; set; }
-
-        [PersistedMember] public abstract RealmType type { get; set; }
-
-        [PersistedMember] public abstract RealmFlag flag { get; set; }
-
-        [PersistedMember] public abstract RealmTimezone timezone { get; set; }
-
-        [PersistedMember] public abstract string name { get; set; }
-
-        [PersistedMember] public abstract string address { get; set; }
-
-        [PersistedMember] public abstract DateTime? created_at { get; set; }
-
-        [PersistedMember] public abstract DateTime? updated_at { get; set; }
+        public ObjectId Id { get; set; }
+        public string Name { get; set; }
+        public string Address { get; set; }
+        public RealmType Type { get; set; }
+        public RealmFlag Flag { get; set; }
+        public RealmTimezone Timezone { get; set; }
+        public DateTime CreatedAt { get; set; }
+        public DateTime UpdatedAt { get; set; }
     }
 }

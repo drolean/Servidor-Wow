@@ -25,7 +25,7 @@ namespace AuthServer.PacketServer
         {
             Write((uint) 0x0000);
             Write((byte) realms.Count);
-
+            /*
             foreach (var realm in realms)
             {
                 var count = MainProgram.Database.GetCharactersUsers(realm.Id, accountName);
@@ -39,7 +39,7 @@ namespace AuthServer.PacketServer
                 Write((byte) realm.timezone);
                 Write((byte) 0x01);
             }
-
+            */
             Write((ushort) 0x0002);
         }
     }
