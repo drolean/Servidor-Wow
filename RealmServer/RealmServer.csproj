@@ -62,6 +62,7 @@
     <Compile Include="Handlers\OnCharEnum.cs" />
     <Compile Include="Handlers\OnPing.cs" />
     <Compile Include="mainProgram.cs" />
+    <Compile Include="Database\Characters.cs" />
     <Compile Include="PacketReader\CMSG_AUTH_SESSION.cs" />
     <Compile Include="PacketReader\CMSG_CHAR_CREATE.cs" />
     <Compile Include="PacketReader\CMSG_PING.cs" />

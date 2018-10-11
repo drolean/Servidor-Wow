@@ -9,7 +9,6 @@ namespace RealmServer
 {
     public class RealmServerClass : IDisposable
     {
-        public static List<RealmServerSession> Sessions = new List<RealmServerSession>();
         private readonly Socket _socketHandler;
 
         public RealmServerClass(IPEndPoint authPoint)

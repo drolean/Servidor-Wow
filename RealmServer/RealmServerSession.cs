@@ -126,7 +126,7 @@ namespace RealmServer
                     var code = (RealmEnums) opcode;
 
                     Log.Print(LogType.RealmServer,
-                        $"[{ConnectionSocket.RemoteEndPoint}] [RCVD] [{code.ToString().PadRight(25, ' ')}] = {length}");
+                        $"[{ConnectionSocket.RemoteEndPoint}] [<= RCVD] [{code.ToString().PadRight(25, ' ')}] = {length}");
 
                     var packetDate = new byte[length];
                     // TODO: Source array was to not long enough. Check srcIndex and length, and the array's lower bound
@@ -160,7 +160,7 @@ namespace RealmServer
             try
             {
                 Log.Print(LogType.RealmServer,
-                    $"[{ConnectionSocket.RemoteEndPoint}] [SEND] [{((RealmEnums) opcode).ToString().PadRight(25, ' ')}] = {data.Length}");
+                    $"[{ConnectionSocket.RemoteEndPoint}] [SEND =>] [{((RealmEnums) opcode).ToString().PadRight(25, ' ')}] = {data.Length}");
                 var writer = new BinaryWriter(new MemoryStream());
                 var header = Encode(data.Length, opcode);
                 writer.Write(header);

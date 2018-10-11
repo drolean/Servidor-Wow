@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Diagnostics;
-using System.IO;
 using Common.Database.Tables;
 using Common.Globals;
 using Common.Helpers;
@@ -11,7 +10,7 @@ namespace Common.Database
 {
     public class DatabaseModel<T> where T : DataAccessModel
     {
-        protected T Model;
+        protected static T Model;
 
         public DatabaseModel()
         {

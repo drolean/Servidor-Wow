@@ -11,7 +11,7 @@ namespace Common.Helpers
         private void SetDefaultValues()
         { 
             LimitCharacterRealm = 10;
-            ProfaneNames = new string[] { "A", "B", "C" };
+            ProfaneNames = new[] { "root", "Admin", "Administrator" };
         }
 
         [XmlIgnore]
@@ -22,23 +22,23 @@ namespace Common.Helpers
 
         public static void Default()
         {
-            Config.Instance = new Config();
-            Config.Instance.SetDefaultValues();
+            Instance = new Config();
+            Instance.SetDefaultValues();
         }
 
         public static void Load()
         {
             var serializer = new XmlSerializer(typeof(Config));
 
-            using (var fStream = new FileStream(Config.FileName, FileMode.Open))
-                Config.Instance = (Config)serializer.Deserialize(fStream);
+            using (var fStream = new FileStream(FileName, FileMode.Open))
+                Instance = (Config)serializer.Deserialize(fStream);
         }
 
         public void Save()
         {
             var serializer = new XmlSerializer(typeof(Config));
 
-            using (var fStream = new FileStream(Config.FileName, FileMode.Create))
+            using (var fStream = new FileStream(FileName, FileMode.Create))
                 serializer.Serialize(fStream, this);
         }
     }

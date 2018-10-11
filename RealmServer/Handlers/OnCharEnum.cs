@@ -1,4 +1,5 @@
-﻿using RealmServer.PacketServer;
+﻿using RealmServer.Database;
+using RealmServer.PacketServer;
 
 namespace RealmServer.Handlers
 {
@@ -6,7 +7,7 @@ namespace RealmServer.Handlers
     {
         public static void Handler(RealmServerSession session, byte[] data)
         {
-            var characters = MainProgram.RealmServerDatabase.GetCharacters(session.Users.username);
+            var characters = Characters.GetCharacters(session.Users.username);
 
             session.SendPacket(new SMSG_CHAR_ENUM(characters));
         }
