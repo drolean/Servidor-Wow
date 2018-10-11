@@ -66,7 +66,7 @@ namespace AuthServer
             using (var scope = new DataAccessScope())
             {
                 var model = Model.Realms.GetReference(realm);
-                    model.flag = flag;
+                model.flag = flag;
 
                 scope.CompleteAsync();
             }

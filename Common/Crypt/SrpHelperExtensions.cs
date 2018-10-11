@@ -16,7 +16,7 @@ namespace Common.Crypt
 
         public static BigInteger ToPositiveBigInteger(this byte[] bytes)
         {
-            return new BigInteger(bytes.Concat(new byte[] { 0 }).ToArray());
+            return new BigInteger(bytes.Concat(new byte[] {0}).ToArray());
         }
     }
 }

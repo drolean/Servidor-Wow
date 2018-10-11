@@ -13,23 +13,28 @@ namespace Common.Network
             Opcode = opcode;
         }
 
-        public PacketServer(AuthCMD authOpcode) : this((byte)authOpcode) { }
-        public PacketServer(RealmEnums realmOpcode) : this((int)realmOpcode) { }
+        public PacketServer(AuthCMD authOpcode) : this((byte) authOpcode)
+        {
+        }
+
+        public PacketServer(RealmEnums realmOpcode) : this((int) realmOpcode)
+        {
+        }
 
         public byte[] Packet => (BaseStream as MemoryStream)?.ToArray();
 
         /// <summary>
-        /// Writes a C-style string. (Ends with a null terminator)
+        ///     Writes a C-style string. (Ends with a null terminator)
         /// </summary>
         /// <param name="input">The input.</param>
         public void WriteCString(string input)
         {
-            byte[] data = Encoding.UTF8.GetBytes(input + '\0');
+            var data = Encoding.UTF8.GetBytes(input + '\0');
             Write(data);
         }
 
         /// <summary>
-        /// Writes a null byte to the stream.
+        ///     Writes a null byte to the stream.
         /// </summary>
         public void Write()
         {

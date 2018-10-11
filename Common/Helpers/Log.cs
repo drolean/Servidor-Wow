@@ -28,13 +28,13 @@ namespace Common.Helpers
     {
         public static readonly Dictionary<LogType, ConsoleColor> TypeColour = new Dictionary<LogType, ConsoleColor>
         {
-            { LogType.Debug,       ConsoleColor.DarkMagenta },
-            { LogType.AuthServer,  ConsoleColor.Green },
-            { LogType.RealmServer, ConsoleColor.Green },
-            { LogType.Console,     ConsoleColor.Magenta },
-            { LogType.Error,       ConsoleColor.DarkRed },
-            { LogType.Loading,     ConsoleColor.Cyan },
-            { LogType.Implement,   ConsoleColor.Blue },
+            {LogType.Debug, ConsoleColor.DarkMagenta},
+            {LogType.AuthServer, ConsoleColor.Green},
+            {LogType.RealmServer, ConsoleColor.Green},
+            {LogType.Console, ConsoleColor.Magenta},
+            {LogType.Error, ConsoleColor.DarkRed},
+            {LogType.Loading, ConsoleColor.Cyan},
+            {LogType.Implement, ConsoleColor.Blue}
         };
 
         public static void Print(LogType type, object obj)
@@ -57,15 +57,15 @@ namespace Common.Helpers
         public static void WriteLog(string strLog)
         {
             var logFilePath = $"logs/log-{DateTime.Now:yyyy-M-d}.txt";
-            FileInfo logFileInfo = new FileInfo(logFilePath);
-            DirectoryInfo logDirInfo = new DirectoryInfo(logFileInfo.DirectoryName ?? throw new InvalidOperationException());
+            var logFileInfo = new FileInfo(logFilePath);
+            var logDirInfo = new DirectoryInfo(logFileInfo.DirectoryName ?? throw new InvalidOperationException());
 
             if (!logDirInfo.Exists)
                 logDirInfo.Create();
 
-            using (FileStream fileStream = new FileStream(logFilePath, FileMode.Append))
+            using (var fileStream = new FileStream(logFilePath, FileMode.Append))
             {
-                using (StreamWriter log = new StreamWriter(fileStream))
+                using (var log = new StreamWriter(fileStream))
                 {
                     log.WriteLine(strLog);
                 }
@@ -77,18 +77,19 @@ namespace Common.Helpers
             try
             {
                 var logFilePath = $"logs/{type}_log-{DateTime.Now:yyyy-M-d}.txt";
-                FileInfo logFileInfo = new FileInfo(logFilePath);
-                DirectoryInfo logDirInfo = new DirectoryInfo(logFileInfo.DirectoryName ?? throw new InvalidOperationException());
+                var logFileInfo = new FileInfo(logFilePath);
+                var logDirInfo = new DirectoryInfo(logFileInfo.DirectoryName ?? throw new InvalidOperationException());
 
                 if (!logDirInfo.Exists)
                     logDirInfo.Create();
 
-                using (FileStream fileStream = new FileStream(logFilePath, FileMode.Append))
+                using (var fileStream = new FileStream(logFilePath, FileMode.Append))
                 {
-                    using (StreamWriter log = new StreamWriter(fileStream))
+                    using (var log = new StreamWriter(fileStream))
                     {
-                        log.WriteLine($"[{DateTime.Now:yyyy-M-d H:mm:ss}] OPCode: {(RealmEnums) packet.Opcode} " + // (RealmCMD)
-                                    $"[Length: {packet.Packet.Length}]");
+                        log.WriteLine(
+                            $"[{DateTime.Now:yyyy-M-d H:mm:ss}] OPCode: {(RealmEnums) packet.Opcode} " + // (RealmCMD)
+                            $"[Length: {packet.Packet.Length}]");
                         log.Write(Utils.ByteArrayToHex(packet.Packet));
                         log.WriteLine();
                         log.WriteLine();
@@ -98,7 +99,8 @@ namespace Common.Helpers
             catch (Exception e)
             {
                 var trace = new StackTrace(e, true);
-                Print(LogType.Error, $"{e.Message}: {e.Source}\n{trace.GetFrame(trace.FrameCount - 1).GetFileName()}:{trace.GetFrame(trace.FrameCount - 1).GetFileLineNumber()}");
+                Print(LogType.Error,
+                    $"{e.Message}: {e.Source}\n{trace.GetFrame(trace.FrameCount - 1).GetFileName()}:{trace.GetFrame(trace.FrameCount - 1).GetFileLineNumber()}");
             }
         }
     }

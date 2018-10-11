@@ -22,6 +22,7 @@ namespace Common.Crypt
             {
                 ds.Read(output, 0, output.Length);
             }
+
             return output;
         }
     }

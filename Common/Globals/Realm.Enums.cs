@@ -56,8 +56,8 @@
         CMSG_AUTH_SRP6_BEGIN = 0x033,
         CMSG_AUTH_SRP6_PROOF = 0x034,
         CMSG_AUTH_SRP6_RECODE = 0x035,
-        CMSG_CHAR_CREATE = 0x036,     // Create Character Request.	
-        CMSG_CHAR_ENUM = 0x037,       // Server makes a list of character list for logged account and send.	
+        CMSG_CHAR_CREATE = 0x036, // Create Character Request.	
+        CMSG_CHAR_ENUM = 0x037, // Server makes a list of character list for logged account and send.	
         CMSG_CHAR_DELETE = 0x038,
         SMSG_AUTH_SRP6_RESPONSE = 0x039,
         SMSG_CHAR_CREATE = 0x03A,
@@ -829,12 +829,13 @@
         SMSG_CHARACTER_PROFILE_REALM_CONNECTED = 0x339,
         SMSG_DEFENSE_MESSAGE = 0x33A,
         MSG_GM_RESETINSTANCELIMIT = 0x33C,
-        SMSG_MOTD  = 0x33D,	
+        SMSG_MOTD = 0x33D,
         SMSG_MOVE_SET_FLIGHT = 0x33E,
         SMSG_MOVE_UNSET_FLIGHT = 0x33F,
         CMSG_MOVE_FLIGHT_ACK = 0x340,
         MSG_MOVE_START_SWIM_CHEAT = 0x341,
         MSG_MOVE_STOP_SWIM_CHEAT = 0x342,
+
         // [-ZERO] Last existed in 1.12.1 opcode, maybe some renumbering from other side	
         CMSG_CANCEL_MOUNT_AURA = 0x375,
         CMSG_CANCEL_TEMP_ENCHANTMENT = 0x379,

@@ -6,20 +6,21 @@ namespace Common.Helpers
     {
         public static readonly DateTime UnixEpochStart = new DateTime(1970, 1, 1, 0, 0, 0, 0);
         public static readonly long StartTime = UnixTimeMilliseconds;
+
         /// <summary>
-        /// Gets the current Unix time.
+        ///     Gets the current Unix time.
         /// </summary>
         public static long UnixTime
         {
             get
             {
                 var ts = DateTime.UtcNow - UnixEpochStart;
-                return (long)ts.TotalSeconds;
+                return (long) ts.TotalSeconds;
             }
         }
 
         /// <summary>
-        /// Gets the current Unix time, in milliseconds.
+        ///     Gets the current Unix time, in milliseconds.
         /// </summary>
         public static long UnixTimeMilliseconds
         {
@@ -31,26 +32,26 @@ namespace Common.Helpers
         }
 
         /// <summary>
-        /// Converts a TimeSpan to its equivalent representation in milliseconds (Int64).
+        ///     Converts a TimeSpan to its equivalent representation in milliseconds (Int64).
         /// </summary>
         /// <param name="span">The time span value to convert.</param>
         public static long ToMilliseconds(this TimeSpan span)
         {
-            return (long)span.TotalMilliseconds;
+            return (long) span.TotalMilliseconds;
         }
 
         /// <summary>
-        /// Gets the system uptime.
+        ///     Gets the system uptime.
         /// </summary>
         /// <returns>the system uptime in milliseconds</returns>
         public static uint GetSystemTime()
         {
-            return (uint)Environment.TickCount;
+            return (uint) Environment.TickCount;
         }
 
         public static uint GetMsTime()
         {
-            return (uint)(UnixTimeMilliseconds - StartTime);
+            return (uint) (UnixTimeMilliseconds - StartTime);
         }
 
         public static uint GetMsTimeDiff(uint oldMsTime, uint newMsTime)
@@ -71,6 +72,8 @@ namespace Common.Helpers
 
     public class TimeTrackerSmall
     {
+        private int _iExpiryTime;
+
         public TimeTrackerSmall(int expiry = 0)
         {
             _iExpiryTime = expiry;
@@ -95,11 +98,12 @@ namespace Common.Helpers
         {
             return _iExpiryTime;
         }
-        int _iExpiryTime;
     }
 
     public class TimeTracker
     {
+        private int _iExpiryTime;
+
         public TimeTracker(int expiry)
         {
             _iExpiryTime = expiry;
@@ -124,12 +128,14 @@ namespace Common.Helpers
         {
             return _iExpiryTime;
         }
-
-        int _iExpiryTime;
     }
 
     public class IntervalTimer
     {
+        private int _current;
+
+        private int _interval;
+
         public IntervalTimer()
         {
             _interval = 0;
@@ -173,13 +179,14 @@ namespace Common.Helpers
         {
             return _current;
         }
-
-        int _interval;
-        int _current;
     }
 
     public class PeriodicTimer
     {
+        private int _iExpireTime;
+
+        private int _iPeriod;
+
         public PeriodicTimer(int period, int startTime)
         {
             _iPeriod = period;
@@ -202,10 +209,14 @@ namespace Common.Helpers
         }
 
         // Tracker interface
-        public bool Passed() { return _iExpireTime <= 0; }
-        public void Reset(int diff, int period) { _iExpireTime += period > diff ? period : diff; }
+        public bool Passed()
+        {
+            return _iExpireTime <= 0;
+        }
 
-        int _iPeriod;
-        int _iExpireTime;
+        public void Reset(int diff, int period)
+        {
+            _iExpireTime += period > diff ? period : diff;
+        }
     }
 }

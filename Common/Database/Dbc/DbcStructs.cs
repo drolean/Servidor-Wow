@@ -6,8 +6,8 @@ using Common.Globals;
 
 namespace Common.Database.Dbc
 {
-
     #region AreaTable.dbc
+
     public class AreaTableReader : DbcReader<AreaTable>
     {
         public AreaTable GetArea(int id)
@@ -18,13 +18,13 @@ namespace Common.Database.Dbc
 
     public class AreaTable : DbcRecordBase
     {
-        public int AreaId;
-        public int AreaMapId;
-        public int AreaZone;
         public int AreaExploreFlag;
-        public int AreaZoneType;
+        public int AreaId;
         public int AreaLevel;
+        public int AreaMapId;
         public string AreaName;
+        public int AreaZone;
+        public int AreaZoneType;
 
         public override int Read()
         {
@@ -45,6 +45,7 @@ namespace Common.Database.Dbc
             return AreaId;
         }
     }
+
     #endregion
 
     #region Faction.dbc
@@ -58,19 +59,16 @@ namespace Common.Database.Dbc
 
         public List<string> GenerateFactions(Races race)
         {
-            List<string> listReturn = new List<string>();
+            var listReturn = new List<string>();
 
-            for (int i = 0; i < 63; i++)
+            for (var i = 0; i < 63; i++)
             {
                 var faction = GetFaction(i);
                 if (faction != null)
-                {
-                    for (int flags = 0; flags < 4; flags++)
-                    {
+                    for (var flags = 0; flags < 4; flags++)
                         if (HaveFlag(faction.Flags[flags], race - 1))
-                            listReturn.Add($"{faction.FactionId}, {faction.ReputationFlags[flags]}, {faction.ReputationStats[flags]}");
-                    }
-                }
+                            listReturn.Add(
+                                $"{faction.FactionId}, {faction.ReputationFlags[flags]}, {faction.ReputationStats[flags]}");
                 else
                     listReturn.Add("0, 0, 0");
             }
@@ -80,7 +78,7 @@ namespace Common.Database.Dbc
 
         private static bool HaveFlag(int value, Races race)
         {
-            value = value >> (int)race;
+            value = value >> (int) race;
             value = value % 2;
 
             if (value == 1) return true;
@@ -91,12 +89,12 @@ namespace Common.Database.Dbc
 
     public class Faction : DbcRecordBase
     {
-        public int FactionId;
         public int FactionFlag;
-        public int[] Flags = new int[4];
-        public int[] ReputationStats = new int[4];
-        public int[] ReputationFlags = new int[4];
+        public int FactionId;
         public string FactionName;
+        public int[] Flags = new int[4];
+        public int[] ReputationFlags = new int[4];
+        public int[] ReputationStats = new int[4];
 
         public override int Read()
         {
@@ -128,26 +126,28 @@ namespace Common.Database.Dbc
             throw new NotImplementedException();
         }
     }
+
     #endregion
 
     #region CharStartOutfit.dbc
+
     public class CharStartOutfitReader : DbcReader<CharStartOutfit>
     {
         public CharStartOutfit Get(Classes classe, Races race, Genders gender)
         {
             return
                 RecordDataIndexed.Values.ToArray()
-                    .FirstOrDefault(c => c.Class == (int)classe && c.Race == (int)race && c.Gender == (int)gender);
+                    .FirstOrDefault(c => c.Class == (int) classe && c.Race == (int) race && c.Gender == (int) gender);
         }
     }
 
     public class CharStartOutfit : DbcRecordBase
     {
-        public int Id;
-        public uint Race;
         public uint Class;
         public uint Gender;
+        public int Id;
         public int[] Items = new int[11];
+        public uint Race;
 
         public override int Read()
         {
@@ -158,32 +158,35 @@ namespace Common.Database.Dbc
             Class = (tmp >> 8) & 0xFF;
             Gender = (tmp >> 16) & 0xFF;
 
-            for (int i = 0; i < Items.Length; ++i)
+            for (var i = 0; i < Items.Length; ++i)
                 Items[i] = GetInt32(2 + i);
 
             return Id;
         }
     }
+
     #endregion
 
     #region ChrRaces.dbc
+
     public class ChrRacesReader : DbcReader<ChrRaces>
     {
         public ChrRaces GetData(Races id)
         {
-            return RecordDataIndexed.Values.ToArray().FirstOrDefault(a => a.RaceId == (int)id);
+            return RecordDataIndexed.Values.ToArray().FirstOrDefault(a => a.RaceId == (int) id);
         }
     }
+
     public class ChrRaces : DbcRecordBase
     {
-        public int RaceId;
-        public int FactionId;
-        public int ModelM;
-        public int ModelF;
-        public int TeamId; //1 = Horde / 7 = Alliance
-        public uint TaxiMask;
         public int CinematicId;
+        public int FactionId;
+        public int ModelF;
+        public int ModelM;
         public string Name;
+        public int RaceId;
+        public uint TaxiMask;
+        public int TeamId; //1 = Horde / 7 = Alliance
 
         public override int Read()
         {
@@ -199,9 +202,11 @@ namespace Common.Database.Dbc
             return RaceId;
         }
     }
+
     #endregion
 
     #region EmotesText.dbc
+
     public class EmotesTextReader : DbcReader<EmotesText>
     {
         public EmotesText GetData(int id)
@@ -212,9 +217,9 @@ namespace Common.Database.Dbc
 
     public class EmotesText : DbcRecordBase
     {
-        public int Id;
-        public string EmoteName;
         public int EmoteId;
+        public string EmoteName;
+        public int Id;
         public int[] MEmoteText = new int[16];
 
         public override int Read()
@@ -223,15 +228,17 @@ namespace Common.Database.Dbc
             EmoteName = GetString(1);
             EmoteId = GetInt32(2);
 
-            for (int i = 0; i < MEmoteText.Length; ++i)
+            for (var i = 0; i < MEmoteText.Length; ++i)
                 MEmoteText[i] = GetInt32(2 + i);
 
             return Id;
         }
     }
+
     #endregion
 
     #region Map.dbc
+
     public class MapReader : DbcReader<Map>
     {
         public Map GetArea(int id)
@@ -255,5 +262,6 @@ namespace Common.Database.Dbc
             return MapId;
         }
     }
+
     #endregion
 }

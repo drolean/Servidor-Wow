@@ -5,20 +5,18 @@ namespace Common.Helpers
 {
     public class Config
     {
+        [XmlIgnore] public const string FileName = "config.xml";
+
         public int LimitCharacterRealm;
         public string[] ProfaneNames;
 
+        [XmlIgnore] public static Config Instance { get; private set; }
+
         private void SetDefaultValues()
-        { 
+        {
             LimitCharacterRealm = 10;
-            ProfaneNames = new[] { "root", "Admin", "Administrator" };
+            ProfaneNames = new[] {"root", "Admin", "Administrator"};
         }
-
-        [XmlIgnore]
-        public const string FileName = "config.xml";
-
-        [XmlIgnore]
-        public static Config Instance { get; private set; }
 
         public static void Default()
         {
@@ -31,7 +29,9 @@ namespace Common.Helpers
             var serializer = new XmlSerializer(typeof(Config));
 
             using (var fStream = new FileStream(FileName, FileMode.Open))
-                Instance = (Config)serializer.Deserialize(fStream);
+            {
+                Instance = (Config) serializer.Deserialize(fStream);
+            }
         }
 
         public void Save()
@@ -39,7 +39,9 @@ namespace Common.Helpers
             var serializer = new XmlSerializer(typeof(Config));
 
             using (var fStream = new FileStream(FileName, FileMode.Create))
+            {
                 serializer.Serialize(fStream, this);
+            }
         }
     }
 }

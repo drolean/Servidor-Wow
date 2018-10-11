@@ -18,13 +18,11 @@ namespace Common.Helpers
             binWriter.Write(mask);
 
             for (var i = 0; i < 8; i++)
-            {
                 if (buffer[i] != 0)
                 {
-                    mask |= (byte)(1 << i);
+                    mask |= (byte) (1 << i);
                     binWriter.Write(buffer[i]);
                 }
-            }
 
             var endPos = binWriter.BaseStream.Position;
 
@@ -32,20 +30,17 @@ namespace Common.Helpers
             binWriter.Write(mask);
             binWriter.BaseStream.Position = endPos;
 
-            return (int)(endPos - startPos);
+            return (int) (endPos - startPos);
         }
 
         public static void WriteNullByte(this BinaryWriter writer, uint count)
         {
-            for (uint i = 0; i < count; i++)
-            {
-                writer.Write((byte)0);
-            }
+            for (uint i = 0; i < count; i++) writer.Write((byte) 0);
         }
 
         public static void WriteCString(this BinaryWriter writer, string input)
         {
-            byte[] data = Encoding.UTF8.GetBytes(input + '\0');
+            var data = Encoding.UTF8.GetBytes(input + '\0');
             writer.Write(data);
         }
 
@@ -59,7 +54,7 @@ namespace Common.Helpers
 
         public static void WriteBitArray(this BinaryWriter writer, BitArray buffer, int len)
         {
-            byte[] bufferarray = new byte[Convert.ToByte((buffer.Length + 8) / 8) + 1];
+            var bufferarray = new byte[Convert.ToByte((buffer.Length + 8) / 8) + 1];
             buffer.CopyTo(bufferarray, 0);
 
             WriteBytes(writer, bufferarray.ToArray(), len);

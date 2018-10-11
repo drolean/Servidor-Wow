@@ -32,7 +32,8 @@ namespace AuthServer
             {
                 var trace = new StackTrace(e, true);
                 Log.Print(LogType.Error,
-                    $"{e.Message}: {e.Source}\n{trace.GetFrame(trace.FrameCount - 1).GetFileName()}:{trace.GetFrame(trace.FrameCount - 1).GetFileLineNumber()}");
+                    $"{e.Message}: {e.Source}" +
+                    $"{trace.GetFrame(trace.FrameCount - 1).GetFileName()}:{trace.GetFrame(trace.FrameCount - 1).GetFileLineNumber()}");
             }
         }
 

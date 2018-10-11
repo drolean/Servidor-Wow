@@ -17,14 +17,15 @@ namespace Common.Network
 
         public string ReadCString()
         {
-            string ret = string.Empty;
+            var ret = string.Empty;
 
-            char c = ReadChar();
+            var c = ReadChar();
             while (c != '\0')
             {
                 ret += c;
                 c = ReadChar();
             }
+
             return ret;
         }
 
@@ -45,11 +46,9 @@ namespace Common.Network
                 default:
                     throw new ArgumentOutOfRangeException(nameof(numBytesForLength));
             }
-            string ret = "";
-            for (int i = 0; i < readCount; i++)
-            {
-                ret += ReadChar();
-            }
+
+            var ret = "";
+            for (var i = 0; i < readCount; i++) ret += ReadChar();
             return ret;
         }
 
@@ -60,14 +59,14 @@ namespace Common.Network
 
         public string ReadStringReversed(int length)
         {
-            byte[] str = ReadBytes(length);
+            var str = ReadBytes(length);
             Array.Reverse(str);
             return Encoding.UTF8.GetString(str);
         }
 
         public byte[] ReadBytesReversed(int count)
         {
-            byte[] ret = ReadBytes(count);
+            var ret = ReadBytes(count);
             Array.Reverse(ret);
             return ret;
         }

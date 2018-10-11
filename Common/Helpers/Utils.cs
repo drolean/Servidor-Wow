@@ -57,12 +57,9 @@ namespace Common.Helpers
         /// <returns></returns>
         public static string ByteArrayToHex(IReadOnlyCollection<byte> data)
         {
-            string packetOutput = string.Empty;
+            var packetOutput = string.Empty;
 
-            for (int i = 0; i < data.Count; i++)
-            {
-                packetOutput += i.ToString("X2") + " ";
-            }
+            for (var i = 0; i < data.Count; i++) packetOutput += i.ToString("X2") + " ";
 
             return packetOutput;
         }
@@ -78,11 +75,11 @@ namespace Common.Helpers
             if (source == null) return null;
             if (source.Length < 2) return source.ToUpper();
 
-            string result = source.Substring(0, 1).ToUpper();
+            var result = source.Substring(0, 1).ToUpper();
 
-            for (int i = 1; i < source.Length; i++)
+            for (var i = 1; i < source.Length; i++)
             {
-                if (Char.IsUpper(source[i])) result += " ";
+                if (char.IsUpper(source[i])) result += " ";
                 result += source[i];
             }
 
@@ -96,10 +93,11 @@ namespace Common.Helpers
         /// <returns></returns>
         public static string ToPascalCase(this string source)
         {
-            string sample = string.Join("", source?.Select(c => Char.IsLetterOrDigit(c) ? c.ToString().ToLower() : "_").ToArray());
+            var sample = string.Join("",
+                source?.Select(c => char.IsLetterOrDigit(c) ? c.ToString().ToLower() : "_").ToArray());
 
             var arr = sample?
-                .Split(new[] { '_' }, StringSplitOptions.RemoveEmptyEntries)
+                .Split(new[] {'_'}, StringSplitOptions.RemoveEmptyEntries)
                 .Select(s => $"{s.Substring(0, 1).ToUpper()}{s.Substring(1)}");
 
             sample = string.Join("", arr);
@@ -108,11 +106,11 @@ namespace Common.Helpers
         }
 
         /// <summary>
-        /// Converts the given string value into camelCase.
+        ///     Converts the given string value into camelCase.
         /// </summary>
         /// <param name="source">String to convert</param>
         /// <returns>
-        /// The camel case value.
+        ///     The camel case value.
         /// </returns>
         public static string ToCamelCase(this string source)
         {

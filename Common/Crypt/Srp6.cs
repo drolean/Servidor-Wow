@@ -8,6 +8,11 @@ namespace Common.Crypt
 {
     public class Srp6
     {
+        private static readonly RNGCryptoServiceProvider MRng = new RNGCryptoServiceProvider();
+
+        public byte[] K;
+        public byte[] S;
+
         public Srp6(string identifier, BigInteger salt, BigInteger verifier)
         {
             Identifier = identifier;
@@ -26,14 +31,11 @@ namespace Common.Crypt
             PrivateServerEphemeral = GetRandomNumber(19) % Modulus;
         }
 
-        private static readonly RNGCryptoServiceProvider MRng = new RNGCryptoServiceProvider();
-
         public string Identifier { get; }
 
-        public BigInteger Modulus => BigInteger.Parse("0894B645E89E1535BBDAD5B8B290650530801B18EBFBF5E8FAB3C82872A3E9BB7", NumberStyles.HexNumber);
-
-        public byte[] K;
-        public byte[] S;
+        public BigInteger Modulus =>
+            BigInteger.Parse("0894B645E89E1535BBDAD5B8B290650530801B18EBFBF5E8FAB3C82872A3E9BB7",
+                NumberStyles.HexNumber);
 
         public BigInteger Generator { get; } = 7;
 
@@ -49,9 +51,11 @@ namespace Common.Crypt
 
         public BigInteger ClientEphemeral { get; set; }
 
-        public BigInteger ServerEphemeral => (Multiplier * Verifier + BigInteger.ModPow(Generator, PrivateServerEphemeral, Modulus)) % Modulus;
+        public BigInteger ServerEphemeral =>
+            (Multiplier * Verifier + BigInteger.ModPow(Generator, PrivateServerEphemeral, Modulus)) % Modulus;
 
-        public BigInteger SessionKey => GenerateSessionKey(ClientEphemeral, ServerEphemeral, PrivateServerEphemeral, Modulus, Verifier);
+        public BigInteger SessionKey =>
+            GenerateSessionKey(ClientEphemeral, ServerEphemeral, PrivateServerEphemeral, Modulus, Verifier);
 
         public BigInteger ClientProof { get; set; }
 
@@ -59,7 +63,8 @@ namespace Common.Crypt
 
         public BigInteger GenerateClientProof()
         {
-            return GenerateClientProof(Identifier, Modulus, Generator, Salt, SessionKey, ClientEphemeral, ServerEphemeral);
+            return GenerateClientProof(Identifier, Modulus, Generator, Salt, SessionKey, ClientEphemeral,
+                ServerEphemeral);
         }
 
         private BigInteger GenerateVerifier(string identifier, string password)
@@ -68,9 +73,12 @@ namespace Common.Crypt
         }
 
         #region Static members
-        private static BigInteger GenerateVerifier(string identifier, string password, BigInteger modulus, BigInteger generator, BigInteger salt)
+
+        private static BigInteger GenerateVerifier(string identifier, string password, BigInteger modulus,
+            BigInteger generator, BigInteger salt)
         {
-            var privateKey = Hash(salt.ToProperByteArray(), Hash(Encoding.ASCII.GetBytes(identifier + ":" + password)).ToProperByteArray());
+            var privateKey = Hash(salt.ToProperByteArray(),
+                Hash(Encoding.ASCII.GetBytes(identifier + ":" + password)).ToProperByteArray());
             return BigInteger.ModPow(generator, privateKey, modulus);
         }
 
@@ -79,7 +87,8 @@ namespace Common.Crypt
             return Hash(a.ToProperByteArray(), b.ToProperByteArray());
         }
 
-        private static BigInteger GenerateClientProof(string identifier, BigInteger modulus, BigInteger generator, BigInteger salt, BigInteger sessionKey, BigInteger a, BigInteger b)
+        private static BigInteger GenerateClientProof(string identifier, BigInteger modulus, BigInteger generator,
+            BigInteger salt, BigInteger sessionKey, BigInteger a, BigInteger b)
         {
             // M = H(H(N) xor H(g), H(I), s, A, B, K)
             var nHash = Sha1Hash(modulus.ToProperByteArray());
@@ -89,12 +98,17 @@ namespace Common.Crypt
             for (int i = 0, j = nHash.Length; i < j; i++)
                 nHash[i] ^= gHash[i];
 
-            return Hash(nHash, Sha1Hash(Encoding.ASCII.GetBytes(identifier)), salt.ToProperByteArray(), a.ToProperByteArray(), b.ToProperByteArray(), sessionKey.ToProperByteArray());
+            return Hash(nHash, Sha1Hash(Encoding.ASCII.GetBytes(identifier)), salt.ToProperByteArray(),
+                a.ToProperByteArray(), b.ToProperByteArray(), sessionKey.ToProperByteArray());
         }
 
-        private static BigInteger GenerateSessionKey(BigInteger clientEphemeral, BigInteger serverEphemeral, BigInteger privateServerEphemeral, BigInteger modulus, BigInteger verifier)
+        private static BigInteger GenerateSessionKey(BigInteger clientEphemeral, BigInteger serverEphemeral,
+            BigInteger privateServerEphemeral, BigInteger modulus, BigInteger verifier)
         {
-            return Interleave(BigInteger.ModPow(clientEphemeral * BigInteger.ModPow(verifier, GenerateScrambler(clientEphemeral, serverEphemeral), modulus), privateServerEphemeral, modulus));
+            return Interleave(BigInteger.ModPow(
+                clientEphemeral *
+                BigInteger.ModPow(verifier, GenerateScrambler(clientEphemeral, serverEphemeral), modulus),
+                privateServerEphemeral, modulus));
         }
 
         private static BigInteger GenerateServerProof(BigInteger a, BigInteger clientProof, BigInteger sessionKey)
@@ -125,9 +139,11 @@ namespace Common.Crypt
         {
             return Sha1Hash(args.SelectMany(b => b).ToArray()).ToPositiveBigInteger();
         }
+
         #endregion
 
         #region Helper functions
+
         private static BigInteger GetRandomNumber(uint bytes)
         {
             var data = new byte[bytes];
@@ -140,6 +156,7 @@ namespace Common.Crypt
             var sha1 = SHA1.Create();
             return sha1.ComputeHash(bytes);
         }
+
         #endregion
     }
 }

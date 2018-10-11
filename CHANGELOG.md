@@ -4,26 +4,36 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.8] - 2018-10-11
+### Added
+- RealmServer Database
+  - Added Character model
+
+### Changed
+- Moved some models character to correct class
+- Adjust StackTrace print
+- Apply Style All Code
+
 ## [0.0.7] - 2018-10-10
 ### Added
 - AuthServer Database
   - UpdateRealmStatus
-- AuthServerHelper 
+- AuthServerHelper
   - CheckRealmStatus
 - AuthServer
   - Added Timer to check realm alive.
 - RealmServer DBC Reader
-  
+
 ### Changed
 - Removed reference to sqlite
 - Fix Global.Enums Typo and Documentation
 - README
-- CultureInfo 
+- CultureInfo
 - SMSG_AUTH_CHALLENGE
-  
+
 ## [0.0.6] - 2018-10-09
 ### Added
-- Common.Globals.Enum 
+- Common.Globals.Enum
   - CharacterFlag
 - RealmEnums.SMSG_ADDON_INFO Partial
 - RealmEnums.SMSG_CHAR_ENUM

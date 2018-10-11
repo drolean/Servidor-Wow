@@ -28,7 +28,8 @@ namespace AuthServer
             {
                 var trace = new StackTrace(e, true);
                 Log.Print(LogType.Error,
-                    $"{e.Message}: {e.Source}\n{trace.GetFrame(trace.FrameCount - 1).GetFileName()}:{trace.GetFrame(trace.FrameCount - 1).GetFileLineNumber()}");
+                    $"{e.Message}: {e.Source}" +
+                    $"{trace.GetFrame(trace.FrameCount - 1).GetFileName()}:{trace.GetFrame(trace.FrameCount - 1).GetFileLineNumber()}");
                 Disconnect();
             }
         }
@@ -50,7 +51,8 @@ namespace AuthServer
             {
                 var trace = new StackTrace(e, true);
                 Log.Print(LogType.Error,
-                    $"{e.Message}: {e.Source}\n{trace.GetFrame(trace.FrameCount - 1).GetFileName()}:{trace.GetFrame(trace.FrameCount - 1).GetFileLineNumber()}");
+                    $"{e.Message}: {e.Source}" +
+                    $"{trace.GetFrame(trace.FrameCount - 1).GetFileName()}:{trace.GetFrame(trace.FrameCount - 1).GetFileLineNumber()}");
             }
         }
 
@@ -66,7 +68,8 @@ namespace AuthServer
             {
                 var trace = new StackTrace(e, true);
                 Log.Print(LogType.Error,
-                    $"{e.Message}: {e.Source}\n{trace.GetFrame(trace.FrameCount - 1).GetFileName()}:{trace.GetFrame(trace.FrameCount - 1).GetFileLineNumber()}");
+                    $"{e.Message}: {e.Source}" +
+                    $"{trace.GetFrame(trace.FrameCount - 1).GetFileName()}:{trace.GetFrame(trace.FrameCount - 1).GetFileLineNumber()}");
             }
 
             if (bytesRecived != 0)
@@ -85,14 +88,16 @@ namespace AuthServer
                 {
                     var trace = new StackTrace(e, true);
                     Log.Print(LogType.Error,
-                        $"{e.Message}: {e.Source}\n{trace.GetFrame(trace.FrameCount - 1).GetFileName()}:{trace.GetFrame(trace.FrameCount - 1).GetFileLineNumber()}");
+                        $"{e.Message}: {e.Source}" +
+                        $"{trace.GetFrame(trace.FrameCount - 1).GetFileName()}:{trace.GetFrame(trace.FrameCount - 1).GetFileLineNumber()}");
                     ConnectionSocket.Close();
                 }
                 catch (Exception e)
                 {
                     var trace = new StackTrace(e, true);
                     Log.Print(LogType.Error,
-                        $"{e.Message}: {e.Source}\n{trace.GetFrame(trace.FrameCount - 1).GetFileName()}:{trace.GetFrame(trace.FrameCount - 1).GetFileLineNumber()}");
+                        $"{e.Message}: {e.Source}" +
+                        $"{trace.GetFrame(trace.FrameCount - 1).GetFileName()}:{trace.GetFrame(trace.FrameCount - 1).GetFileLineNumber()}");
                 }
             }
             else
@@ -114,7 +119,8 @@ namespace AuthServer
             {
                 var trace = new StackTrace(e, true);
                 Log.Print(LogType.Error,
-                    $"{e.Message}: {e.Source}\n{trace.GetFrame(trace.FrameCount - 1).GetFileName()}:{trace.GetFrame(trace.FrameCount - 1).GetFileLineNumber()}");
+                    $"{e.Message}: {e.Source}" +
+                    $"{trace.GetFrame(trace.FrameCount - 1).GetFileName()}:{trace.GetFrame(trace.FrameCount - 1).GetFileLineNumber()}");
                 DumpPacket(data, this);
             }
         }
@@ -132,14 +138,16 @@ namespace AuthServer
             {
                 var trace = new StackTrace(e, true);
                 Log.Print(LogType.Error,
-                    $"{e.Message}: {e.Source}\n{trace.GetFrame(trace.FrameCount - 1).GetFileName()}:{trace.GetFrame(trace.FrameCount - 1).GetFileLineNumber()}");
+                    $"{e.Message}: {e.Source}" +
+                    $"{trace.GetFrame(trace.FrameCount - 1).GetFileName()}:{trace.GetFrame(trace.FrameCount - 1).GetFileLineNumber()}");
                 Disconnect();
             }
             catch (NullReferenceException e)
             {
                 var trace = new StackTrace(e, true);
                 Log.Print(LogType.Error,
-                    $"{e.Message}: {e.Source}\n{trace.GetFrame(trace.FrameCount - 1).GetFileName()}:{trace.GetFrame(trace.FrameCount - 1).GetFileLineNumber()}");
+                    $"{e.Message}: {e.Source}" +
+                    $"{trace.GetFrame(trace.FrameCount - 1).GetFileName()}:{trace.GetFrame(trace.FrameCount - 1).GetFileLineNumber()}");
                 Disconnect();
             }
             catch (ObjectDisposedException e)

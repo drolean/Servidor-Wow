@@ -31,7 +31,8 @@ namespace RealmServer
             {
                 var trace = new StackTrace(e, true);
                 Log.Print(LogType.Error,
-                    $"{e.Message}: {e.Source}\n{trace.GetFrame(trace.FrameCount - 1).GetFileName()}:{trace.GetFrame(trace.FrameCount - 1).GetFileLineNumber()}");
+                    $"{e.Message}: {e.Source}" +
+                    $"{trace.GetFrame(trace.FrameCount - 1).GetFileName()}:{trace.GetFrame(trace.FrameCount - 1).GetFileLineNumber()}");
                 Disconnect();
             }
 
@@ -60,7 +61,8 @@ namespace RealmServer
             {
                 var trace = new StackTrace(e, true);
                 Log.Print(LogType.Error,
-                    $"{e.Message}: {e.Source}\n{trace.GetFrame(trace.FrameCount - 1).GetFileName()}:{trace.GetFrame(trace.FrameCount - 1).GetFileLineNumber()}");
+                    $"{e.Message}: {e.Source}" +
+                    $"{trace.GetFrame(trace.FrameCount - 1).GetFileName()}:{trace.GetFrame(trace.FrameCount - 1).GetFileLineNumber()}");
             }
         }
 
@@ -77,7 +79,8 @@ namespace RealmServer
             {
                 var trace = new StackTrace(e, true);
                 Log.Print(LogType.Error,
-                    $"{e.Message}: {e.Source}\n{trace.GetFrame(trace.FrameCount - 1).GetFileName()}:{trace.GetFrame(trace.FrameCount - 1).GetFileLineNumber()}");
+                    $"{e.Message}: {e.Source}" +
+                    $"{trace.GetFrame(trace.FrameCount - 1).GetFileName()}:{trace.GetFrame(trace.FrameCount - 1).GetFileLineNumber()}");
             }
 
             if (bytesRecived != 0)
@@ -97,14 +100,16 @@ namespace RealmServer
                 {
                     var trace = new StackTrace(e, true);
                     Log.Print(LogType.Error,
-                        $"{e.Message}: {e.Source}\n{trace.GetFrame(trace.FrameCount - 1).GetFileName()}:{trace.GetFrame(trace.FrameCount - 1).GetFileLineNumber()}");
+                        $"{e.Message}: {e.Source}" +
+                        $"{trace.GetFrame(trace.FrameCount - 1).GetFileName()}:{trace.GetFrame(trace.FrameCount - 1).GetFileLineNumber()}");
                     ConnectionSocket.Close();
                 }
                 catch (Exception e)
                 {
                     var trace = new StackTrace(e, true);
                     Log.Print(LogType.Error,
-                        $"{e.Message}: {e.Source}\n{trace.GetFrame(trace.FrameCount - 1).GetFileName()}:{trace.GetFrame(trace.FrameCount - 1).GetFileLineNumber()}");
+                        $"{e.Message}: {e.Source}" +
+                        $"{trace.GetFrame(trace.FrameCount - 1).GetFileName()}:{trace.GetFrame(trace.FrameCount - 1).GetFileLineNumber()}");
                 }
             }
             else
@@ -140,7 +145,8 @@ namespace RealmServer
             {
                 var trace = new StackTrace(e, true);
                 Log.Print(LogType.Error,
-                    $"{e.Message}: {e.Source}\n{trace.GetFrame(trace.FrameCount - 1).GetFileName()}:{trace.GetFrame(trace.FrameCount - 1).GetFileLineNumber()}");
+                    $"{e.Message}: {e.Source}" +
+                    $"{trace.GetFrame(trace.FrameCount - 1).GetFileName()}:{trace.GetFrame(trace.FrameCount - 1).GetFileLineNumber()}");
                 Utils.DumpPacket(data);
                 Disconnect();
             }
@@ -171,7 +177,8 @@ namespace RealmServer
             {
                 var trace = new StackTrace(e, true);
                 Log.Print(LogType.Error,
-                    $"{e.Message}: {e.Source}\n{trace.GetFrame(trace.FrameCount - 1).GetFileName()}:{trace.GetFrame(trace.FrameCount - 1).GetFileLineNumber()}");
+                    $"{e.Message}: {e.Source}" +
+                    $"{trace.GetFrame(trace.FrameCount - 1).GetFileName()}:{trace.GetFrame(trace.FrameCount - 1).GetFileLineNumber()}");
                 Disconnect();
             }
         }
@@ -190,21 +197,24 @@ namespace RealmServer
             {
                 var trace = new StackTrace(e, true);
                 Log.Print(LogType.Error,
-                    $"{e.Message}: {e.Source}\n{trace.GetFrame(trace.FrameCount - 1).GetFileName()}:{trace.GetFrame(trace.FrameCount - 1).GetFileLineNumber()}");
+                    $"{e.Message}: {e.Source}" +
+                    $"{trace.GetFrame(trace.FrameCount - 1).GetFileName()}:{trace.GetFrame(trace.FrameCount - 1).GetFileLineNumber()}");
                 Disconnect();
             }
             catch (NullReferenceException e)
             {
                 var trace = new StackTrace(e, true);
                 Log.Print(LogType.Error,
-                    $"{e.Message}: {e.Source}\n{trace.GetFrame(trace.FrameCount - 1).GetFileName()}:{trace.GetFrame(trace.FrameCount - 1).GetFileLineNumber()}");
+                    $"{e.Message}: {e.Source}" +
+                    $"{trace.GetFrame(trace.FrameCount - 1).GetFileName()}:{trace.GetFrame(trace.FrameCount - 1).GetFileLineNumber()}");
                 Disconnect();
             }
             catch (ObjectDisposedException e)
             {
                 var trace = new StackTrace(e, true);
                 Log.Print(LogType.Error,
-                    $"{e.Message}: {e.Source}\n{trace.GetFrame(trace.FrameCount - 1).GetFileName()}:{trace.GetFrame(trace.FrameCount - 1).GetFileLineNumber()}");
+                    $"{e.Message}: {e.Source}" +
+                    $"{trace.GetFrame(trace.FrameCount - 1).GetFileName()}:{trace.GetFrame(trace.FrameCount - 1).GetFileLineNumber()}");
                 Disconnect();
             }
         }

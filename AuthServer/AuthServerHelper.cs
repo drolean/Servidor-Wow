@@ -13,7 +13,7 @@ namespace AuthServer
             var spliIp = realm.address.Split(':');
             int.TryParse(spliIp[1], out var port);
 
-            using (TcpClient tcpTestRealm = new TcpClient())
+            using (var tcpTestRealm = new TcpClient())
             {
                 try
                 {
@@ -23,7 +23,7 @@ namespace AuthServer
                 }
                 catch (Exception)
                 {
-                    string realmName = realm.name.PadRight(25, ' ');
+                    var realmName = realm.name.PadRight(25, ' ');
                     Log.Print(LogType.Error, $"{realmName} |=> Off-Line");
                     MainProgram.Database.UpdateRealmStatus(realm, RealmFlag.Offline);
                     return false;

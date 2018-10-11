@@ -10,11 +10,11 @@ namespace Common.Database
     {
         private uint _numRecords;
         private uint _recordSize;
-        private uint _stringDataSize;
         private byte[] _stringData;
+        private uint _stringDataSize;
+        public List<T> RecordData = null;
 
         public Dictionary<int, T> RecordDataIndexed;
-        public List<T> RecordData = null;
 
         public async Task Load(string path)
         {
@@ -40,17 +40,17 @@ namespace Common.Database
                     _stringDataSize = reader.ReadUInt32();
 
                     fileStream.Position = fileStream.Length - _stringDataSize;
-                    _stringData = reader.ReadBytes((int)_stringDataSize);
+                    _stringData = reader.ReadBytes((int) _stringDataSize);
                     fileStream.Position = 20;
 
-                    for (int i = 0; i < _numRecords; ++i)
+                    for (var i = 0; i < _numRecords; ++i)
                     {
                         var rec = new T();
 
-                        rec.SetRecordData(reader.ReadBytes((int)_recordSize));
+                        rec.SetRecordData(reader.ReadBytes((int) _recordSize));
                         rec.SetStringData(_stringData);
 
-                        int index = rec.Read();
+                        var index = rec.Read();
 
                         if (index == -1)
                             index = i;
@@ -70,8 +70,7 @@ namespace Common.Database
 
         public T Get(int index)
         {
-            T ret;
-            RecordDataIndexed.TryGetValue(index, out ret);
+            RecordDataIndexed.TryGetValue(index, out var ret);
             return ret;
         }
     }
@@ -81,10 +80,20 @@ namespace Common.Database
         private byte[] _recordData;
         private byte[] _stringData;
 
-        public virtual int Read() { return -1; }
+        public virtual int Read()
+        {
+            return -1;
+        }
 
-        public void SetRecordData(byte[] data) { _recordData = data; }
-        public void SetStringData(byte[] data) { _stringData = data; }
+        public void SetRecordData(byte[] data)
+        {
+            _recordData = data;
+        }
+
+        public void SetStringData(byte[] data)
+        {
+            _stringData = data;
+        }
 
         protected uint GetUInt32(int field)
         {
@@ -101,18 +110,17 @@ namespace Common.Database
             return BitConverter.ToSingle(_recordData, field * 4);
         }
 
-        protected UInt64 GetUInt64(int field)
+        protected ulong GetUInt64(int field)
         {
             return BitConverter.ToUInt64(_recordData, field * 4);
         }
 
         protected string GetString(int field)
         {
-            int index = GetInt32(field);
-            int len = 0;
+            var index = GetInt32(field);
+            var len = 0;
             while (_stringData[index + len++] != 0)
             {
-
             }
 
             return Encoding.Default.GetString(_stringData, index, len - 1);

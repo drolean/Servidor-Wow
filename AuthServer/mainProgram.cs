@@ -100,12 +100,9 @@ namespace AuthServer
         private static void TimerRealmCallback(object o)
         {
             Log.Print(LogType.AuthServer, "Checking Realm Status ".PadRight(40, '.'));
-            
+
             var realms = Database.GetRealms();
-            foreach (var realm in realms)
-            {
-                AuthServerHelper.CheckRealmStatus(realm);
-            }
+            foreach (var realm in realms) AuthServerHelper.CheckRealmStatus(realm);
             GC.Collect();
         }
 
