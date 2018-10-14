@@ -5,8 +5,6 @@ namespace Common.Database.Tables
 {
     public class Users
     {
-        public ObjectId Id { get; set; }
-
         public Users(string name, string email, string username, string password)
         {
             Name = name;
@@ -21,6 +19,8 @@ namespace Common.Database.Tables
         {
         }
 
+        public ObjectId Id { get; set; }
+
         public string Name { get; set; }
         public string Email { get; set; }
         public string Username { get; set; }
@@ -29,6 +29,5 @@ namespace Common.Database.Tables
         public DateTime? BannetAt { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
-
     }
 }

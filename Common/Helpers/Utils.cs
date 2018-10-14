@@ -12,8 +12,8 @@ namespace Common.Helpers
 
         public static ulong GenerateRandUlong()
         {
-            uint thirtyBits = (uint)Rand.Next(1 << 30);
-            uint twoBits = (uint)Rand.Next(1 << 2);
+            var thirtyBits = (uint) Rand.Next(1 << 30);
+            var twoBits = (uint) Rand.Next(1 << 2);
 
             return (thirtyBits << 2) | twoBits;
         }
@@ -106,8 +106,7 @@ namespace Common.Helpers
             var sample = string.Join("",
                 source?.Select(c => char.IsLetterOrDigit(c) ? c.ToString().ToLower() : "_").ToArray());
 
-            var arr = sample?
-                .Split(new[] {'_'}, StringSplitOptions.RemoveEmptyEntries)
+            var arr = sample.Split(new[] {'_'}, StringSplitOptions.RemoveEmptyEntries)
                 .Select(s => $"{s.Substring(0, 1).ToUpper()}{s.Substring(1)}");
 
             sample = string.Join("", arr);

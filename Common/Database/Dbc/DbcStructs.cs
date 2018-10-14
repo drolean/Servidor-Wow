@@ -69,8 +69,8 @@ namespace Common.Database.Dbc
                         if (HaveFlag(faction.Flags[flags], race - 1))
                             listReturn.Add(
                                 $"{faction.FactionId}, {faction.ReputationFlags[flags]}, {faction.ReputationStats[flags]}");
-                else
-                    listReturn.Add("0, 0, 0");
+                        else
+                            listReturn.Add("0, 0, 0");
             }
 
             return listReturn;

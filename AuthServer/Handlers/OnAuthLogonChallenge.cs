@@ -30,7 +30,7 @@ namespace AuthServer.Handlers
 
             if (user != null)
             {
-                session.AccountName = user?.Username;
+                session.AccountName = user.Username;
                 session.Srp = new Srp6(user.Username, user.Password.ToUpper());
                 session.SendData(new PsAuthLogonChallange(session.Srp, AccountState.OK));
                 return;

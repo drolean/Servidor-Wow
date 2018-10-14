@@ -12,7 +12,9 @@ namespace Common.Database
 
         public static IMongoCollection<Users> UserCollection = Database.GetCollection<Users>("Users");
         public static IMongoCollection<Realms> RealmCollection = Database.GetCollection<Realms>("Realms");
-        public static IMongoCollection<Characters> CharacterCollection = Database.GetCollection<Characters>("Characters");
+
+        public static IMongoCollection<Characters> CharacterCollection =
+            Database.GetCollection<Characters>("Characters");
 
         public DatabaseModel()
         {
@@ -21,8 +23,9 @@ namespace Common.Database
 
             // Create Unique Index
             UserCollection.Indexes.CreateOneAsync(
-                Builders<Users>.IndexKeys.Ascending(i => i.Email), 
-                new CreateIndexOptions<Users> {
+                Builders<Users>.IndexKeys.Ascending(i => i.Email),
+                new CreateIndexOptions<Users>
+                {
                     Unique = true
                 });
 
@@ -42,23 +45,23 @@ namespace Common.Database
                     Unique = true
                 });
 
-            Users userJohn = new Users("John Doe", "john@doe.com", "john", "doe");
-            Users userJoao = new Users("Joao Doe", "joao@doe.com", "joao", "doe");
-            Users userBan = new Users("Ban Doe", "ban@doe.com", "ban", "doe");
+            var userJohn = new Users("John Doe", "john@doe.com", "john", "doe");
+            var userJoao = new Users("Joao Doe", "joao@doe.com", "joao", "doe");
+            var userBan = new Users("Ban Doe", "ban@doe.com", "ban", "doe");
 
-            Users userTest = new Users
+            var userTest = new Users
             {
                 Name = "Test Doe",
                 Username = "test",
                 Password = "doe",
-                Email = "test1@doe.com",
+                Email = "test1@doe.com"
             };
 
             UserCollection.InsertOne(userTest);
-            UserCollection.InsertMany(new [] { userJohn, userJoao, userBan });
+            UserCollection.InsertMany(new[] {userJohn, userJoao, userBan});
 
 
-            Realms realmTest = new Realms
+            var realmTest = new Realms
             {
                 Name = "Firetree",
                 Address = "127.0.0.1:1001",

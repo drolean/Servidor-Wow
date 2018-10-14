@@ -6,7 +6,7 @@ namespace RealmServer.PacketServer
     {
         public SMSG_CHAR_DELETE(LoginErrorCode code) : base(RealmEnums.SMSG_CHAR_DELETE)
         {
-            Write((byte)code);
+            Write((byte) code);
         }
     }
 }

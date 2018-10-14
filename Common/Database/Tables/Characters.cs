@@ -22,10 +22,10 @@ namespace Common.Database.Tables
         public int Money { get; set; }
         public uint Xp { get; set; }
 
-        public SubMap      SubMap { get; set; }
-        public SubSkin     SubSkin { get; set; }
-        public List<SubStats>    SubStats { get; set; }
-        public List<SubTalents>  SubTalents { get; set; }
+        public SubMap SubMap { get; set; }
+        public SubSkin SubSkin { get; set; }
+        public List<SubStats> SubStats { get; set; }
+        public List<SubTalents> SubTalents { get; set; }
         public List<SubTutorial> SubTutorial { get; set; }
 
         public DateTime CreatedAt { get; set; }

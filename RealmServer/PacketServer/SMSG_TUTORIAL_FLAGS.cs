@@ -6,7 +6,7 @@ namespace RealmServer.PacketServer
     {
         public SMSG_TUTORIAL_FLAGS() : base(RealmEnums.SMSG_TUTORIAL_FLAGS)
         {
-            for (int i = 0; i < 8; i++)
+            for (var i = 0; i < 8; i++)
                 Write(-1);
         }
     }

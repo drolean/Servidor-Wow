@@ -1,7 +1,6 @@
 ﻿using System.IO;
 using System.Text;
 using Common.Globals;
-using MongoDB.Bson;
 
 namespace Common.Network
 {
