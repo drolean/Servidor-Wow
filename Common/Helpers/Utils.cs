@@ -8,6 +8,16 @@ namespace Common.Helpers
 {
     public static class Utils
     {
+        private static readonly Random Rand = new Random();
+
+        public static ulong GenerateRandUlong()
+        {
+            uint thirtyBits = (uint)Rand.Next(1 << 30);
+            uint twoBits = (uint)Rand.Next(1 << 2);
+
+            return (thirtyBits << 2) | twoBits;
+        }
+
         public static void DumpPacket(byte[] data)
         {
             int j;

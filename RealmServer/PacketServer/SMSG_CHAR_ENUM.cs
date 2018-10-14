@@ -12,25 +12,25 @@ namespace RealmServer.PacketServer
 
             foreach (var character in characters)
             {
-                Write((ulong) character.Id);
-                WriteCString(character.name);
+                Write(character.Uid);
+                WriteCString(character.Name);
 
-                Write((byte) character.race);
-                Write((byte) character.classe);
-                Write((byte) character.gender);
+                Write((byte) character.Race);
+                Write((byte) character.Classe);
+                Write((byte) character.Gender);
 
-                Write(character.char_skin);
-                Write(character.char_face);
-                Write(character.char_hairStyle);
-                Write(character.char_hairColor);
-                Write(character.char_facialHair);
+                Write(character.SubSkin.Skin);
+                Write(character.SubSkin.Face);
+                Write(character.SubSkin.HairStyle);
+                Write(character.SubSkin.HairColor);
+                Write(character.SubSkin.FacialHair);
 
-                Write(character.level); // int8	
-                Write(character.MapZone); // int32	
-                Write(character.MapId); // int32	
-                Write(character.MapX);
-                Write(character.MapY);
-                Write(character.MapZ);
+                Write(character.Level); // int8	
+                Write(character.SubMap.MapZone); // int32	
+                Write(character.SubMap.MapId); // int32	
+                Write(character.SubMap.MapX);
+                Write(character.SubMap.MapY);
+                Write(character.SubMap.MapZ);
 
                 Write(0); // Guild ID	
                 Write((int) CharacterFlag.None);

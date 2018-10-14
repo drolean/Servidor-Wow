@@ -18,5 +18,11 @@ namespace AuthServer.PacketServer
             Write(srp.ServerProof.ToByteArray().Pad(20));
             this.WriteNullByte(4);
         }
+
+        public PsAuthLogonProof(AccountState result) : base(AuthCMD.CMD_AUTH_LOGON_PROOF)
+        {
+            Write((byte) AuthCMD.CMD_AUTH_LOGON_PROOF);
+            Write((byte) result);
+        }
     }
 }

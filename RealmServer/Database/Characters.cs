@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
+using Common.Database;
 using Common.Database.Tables;
 using Common.Globals;
+using Common.Helpers;
+using MongoDB.Driver;
 using RealmServer.PacketReader;
-using Shaolinq;
 
 namespace RealmServer.Database
 {
@@ -14,71 +14,80 @@ namespace RealmServer.Database
         /// <summary>
         ///     Retrieve character by char name
         /// </summary>
-        /// <param name="username"></param>
+        /// <param name="character"></param>
         /// <returns></returns>
-        internal static Common.Database.Tables.Characters FindCharacaterByName(string username)
+        public Common.Database.Tables.Characters FindCharacaterByName(string character)
         {
-            return !Model.Characters.Any()
-                ? null
-                : Model.Characters.FirstOrDefault(a => a.name.ToLower() == username.ToLower());
+            return DatabaseModel.CharacterCollection.Find(x => x.Name == character).First();
+        }
+
+        internal static void Create(CMSG_CHAR_CREATE handler, Users user)
+        {
+            var character = new Common.Database.Tables.Characters
+            {
+                Uid = Utils.GenerateRandUlong(),
+                User = user.Id,
+                //
+                Name = handler.Name,
+                Race = (Races) handler.Race,
+                Classe = (Classes) handler.Classe,
+                Gender = (Genders) handler.Gender,
+                Level = 1,
+                Money = 10,
+                Xp = 0,
+                //
+                SubMap = new SubMap
+                {
+                    MapId = 0,
+                    MapZone = 12,
+                    MapX = -8949.95f,
+                    MapY = -132.493f,
+                    MapZ = 83.5312f,
+                    MapO = 1.0f
+                },
+                SubSkin = new SubSkin
+                {
+                    Skin = handler.Skin,
+                    Face = handler.Face,
+                    HairStyle = handler.HairStyle,
+                    HairColor = handler.HairColor,
+                    FacialHair = handler.FacialHair
+                },
+                //
+
+                //
+                CreatedAt = DateTime.Now,
+                UpdatedAt = DateTime.Now
+            };
+
+            DatabaseModel.CharacterCollection.InsertOne(character);
         }
 
         /// <summary>
-        ///     Retrieve characters by username
+        ///     Retrieve characters by user.ID
         /// </summary>
-        /// <param name="username"></param>
+        /// <param name="user"></param>
         /// <returns></returns>
-        internal static List<Common.Database.Tables.Characters> GetCharacters(string username)
+        public static List<Common.Database.Tables.Characters> GetCharacters(Users user)
         {
-            var account = MainProgram.RealmServerDatabase.GetAccount(username);
-            return Model.Characters.Where(a => a.user == account).ToList();
+            return DatabaseModel.CharacterCollection.Find(x => x.User == user.Id && x.DeletedAt == null).ToList();
         }
 
-        internal static void Create(CMSG_CHAR_CREATE handler, Users users)
+        /// <summary>
+        ///     Set flag deletedAt to character.
+        /// </summary>
+        /// <param name="handler"></param>
+        /// <returns></returns>
+        public static UpdateResult DeleteCharacter(CMSG_CHAR_DELETE handler)
         {
-            using (var scope = new DataAccessScope())
-            {
+            return DatabaseModel.CharacterCollection.UpdateOne(
+                Builders<Common.Database.Tables.Characters>.Filter.Where(x => x.Uid == handler.Id),
+                Builders<Common.Database.Tables.Characters>.Update.Set(x => x.DeletedAt, DateTime.Now));
+        }
 
-                // DONE: Save Char 
-                var Char = Model.Characters.Create();
-                Char.user = users;
-                // DONE: Make name capitalized as on official
-                Char.name = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(handler.Name);
-                Char.race = (Races)handler.Race;
-                Char.classe = (Classes)handler.Classe;
-                Char.gender = (Genders)handler.Gender;
-                Char.level = 1;
-                Char.money = 0;
-                ///
-                Char.MapId = 0;
-                Char.MapZone = 12;
-                Char.MapX = -8949.95f;
-                Char.MapY = -132.493f;
-                Char.MapZ = 83.5312f;
-                Char.MapO = 1.0f;
-                Char.char_skin = handler.Skin;
-                Char.char_face = handler.Face;
-                Char.char_hairStyle = handler.HairStyle;
-                Char.char_hairColor = handler.HairColor;
-                Char.char_facialHair = handler.FacialHair;
-                Char.created_at = DateTime.Now;
-                Char.watched_faction = 255;
-
-                // Set Another status 
-
-                // Set Taxi Zones
-
-                // tutorial Flags
-
-                // Map Explored
-
-                // Set Honor
-
-                // Query Access Level and Account ID
-                // Char.level 
-
-                scope.Complete();
-            }
+        public static Common.Database.Tables.Characters GetCharacter(CMSG_PLAYER_LOGIN handler)
+        {
+            return DatabaseModel.CharacterCollection.Find(x => x.Uid == handler.Id && x.DeletedAt == null).First();
         }
     }
 }

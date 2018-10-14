@@ -12,6 +12,7 @@ namespace Common.Database
 
         public static IMongoCollection<Users> UserCollection = Database.GetCollection<Users>("Users");
         public static IMongoCollection<Realms> RealmCollection = Database.GetCollection<Realms>("Realms");
+        public static IMongoCollection<Characters> CharacterCollection = Database.GetCollection<Characters>("Characters");
 
         public DatabaseModel()
         {
@@ -28,6 +29,14 @@ namespace Common.Database
             // Create Unique Index
             UserCollection.Indexes.CreateOneAsync(
                 Builders<Users>.IndexKeys.Ascending(i => i.Username),
+                new CreateIndexOptions<Users>
+                {
+                    Unique = true
+                });
+
+            // Create Unique Index
+            CharacterCollection.Indexes.CreateOneAsync(
+                Builders<Characters>.IndexKeys.Ascending(i => i.Name),
                 new CreateIndexOptions<Users>
                 {
                     Unique = true

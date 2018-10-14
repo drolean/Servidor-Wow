@@ -48,6 +48,7 @@ namespace RealmServer
 
         //
         public Users Users { get; set; }
+        public Characters Character { get; set; }
 
         private void Disconnect()
         {

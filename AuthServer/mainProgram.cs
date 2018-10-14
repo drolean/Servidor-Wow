@@ -3,6 +3,7 @@ using System.Globalization;
 using System.Net;
 using System.Reflection;
 using System.Threading;
+using AuthServer.Handlers;
 using AuthServer.PacketReader;
 using Common.Database;
 using Common.Globals;
@@ -35,11 +36,12 @@ namespace AuthServer
 
             Log.Print(LogType.AuthServer, $"Version {Assembly.GetExecutingAssembly().GetName().Version}");
             Log.Print(LogType.AuthServer, $"Running on .NET Framework Version {Environment.Version}");
+
             //
             Initalizing();
 
             // Timer to check realm Status
-            //TimerRealm = new Timer(TimerRealmCallback, null, 0, 10000);
+            TimerRealm = new Timer(TimerRealmCallback, null, 0, 10000);
 
             Log.Print(LogType.AuthServer, $"Running from: {AppDomain.CurrentDomain.BaseDirectory}");
             Log.Print(LogType.AuthServer,
@@ -91,20 +93,17 @@ namespace AuthServer
 
             //
             AuthServerRouter.AddHandler<AuthLogonChallenge>(AuthCMD.CMD_AUTH_LOGON_CHALLENGE,
-                AuthServerHandler.OnAuthLogonChallenge);
-            AuthServerRouter.AddHandler<AuthLogonProof>(AuthCMD.CMD_AUTH_LOGON_PROOF,
-                AuthServerHandler.OnAuthLogonProof);
-            AuthServerRouter.AddHandler(AuthCMD.CMD_AUTH_REALMLIST, AuthServerHandler.OnAuthRealmList);
+                OnAuthLogonChallenge.Handler);
+            AuthServerRouter.AddHandler<AuthLogonProof>(AuthCMD.CMD_AUTH_LOGON_PROOF, OnAuthLogonProof.Handler);
+            AuthServerRouter.AddHandler(AuthCMD.CMD_AUTH_REALMLIST, OnAuthRealmList.Handler);
         }
 
         private static void TimerRealmCallback(object o)
         {
             Log.Print(LogType.AuthServer, "Checking Realm Status ".PadRight(40, '.'));
-            /*
             var realms = Database.GetRealms();
             foreach (var realm in realms) AuthServerHelper.CheckRealmStatus(realm);
             GC.Collect();
-            */
         }
 
         /// <summary>

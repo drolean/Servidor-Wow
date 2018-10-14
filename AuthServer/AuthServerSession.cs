@@ -113,6 +113,8 @@ namespace AuthServer
             try
             {
                 var code = (AuthCMD) opcode;
+                Log.Print(LogType.AuthServer,
+                    $"[{ConnectionSocket.RemoteEndPoint}] [<= RCVD] [{code.ToString().PadRight(25, ' ')}] = {data.Length}");
                 AuthServerRouter.CallHandler(this, code, data);
             }
             catch (Exception e)
@@ -212,11 +214,27 @@ namespace AuthServer
 
         internal void SendPacket(byte opcode, byte[] data)
         {
-            var writer = new BinaryWriter(new MemoryStream());
-            writer.Write(opcode);
-            writer.Write((ushort) data.Length);
-            writer.Write(data);
-            SendData(((MemoryStream) writer.BaseStream).ToArray(), opcode.ToString());
+            if (!ConnectionSocket.Connected)
+                return;
+
+            try
+            {
+                Log.Print(LogType.AuthServer,
+                    $"[{ConnectionSocket.RemoteEndPoint}] [SEND =>] [{((AuthCMD) opcode).ToString().PadRight(25, ' ')}] = {data.Length}");
+                var writer = new BinaryWriter(new MemoryStream());
+                writer.Write(opcode);
+                writer.Write((ushort) data.Length);
+                writer.Write(data);
+                SendData(((MemoryStream) writer.BaseStream).ToArray(), opcode.ToString());
+            }
+            catch (Exception e)
+            {
+                var trace = new StackTrace(e, true);
+                Log.Print(LogType.Error,
+                    $"{e.Message}: {e.Source}" +
+                    $"{trace.GetFrame(trace.FrameCount - 1).GetFileName()}:{trace.GetFrame(trace.FrameCount - 1).GetFileLineNumber()}");
+                Disconnect();
+            }
         }
     }
 }

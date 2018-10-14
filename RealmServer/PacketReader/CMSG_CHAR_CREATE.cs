@@ -15,6 +15,7 @@
             HairStyle = ReadByte();
             HairColor = ReadByte();
             FacialHair = ReadByte();
+
             OutfitId = ReadByte();
         }
 

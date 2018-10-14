@@ -10,9 +10,7 @@ namespace AuthServer
     {
         public static bool CheckRealmStatus(Realms realm)
         {
-            return true;
-            /*
-            var spliIp = realm.address.Split(':');
+            var spliIp = realm.Address.Split(':');
             int.TryParse(spliIp[1], out var port);
 
             using (var tcpTestRealm = new TcpClient())
@@ -25,13 +23,12 @@ namespace AuthServer
                 }
                 catch (Exception)
                 {
-                    var realmName = realm.name.PadRight(25, ' ');
+                    var realmName = realm.Name.PadRight(25, ' ');
                     Log.Print(LogType.Error, $"{realmName} |=> Off-Line");
                     MainProgram.Database.UpdateRealmStatus(realm, RealmFlag.Offline);
                     return false;
                 }
             }
-            */
         }
     }
 }

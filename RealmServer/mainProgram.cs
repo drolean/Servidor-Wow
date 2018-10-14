@@ -119,6 +119,8 @@ namespace RealmServer
             RealmServerRouter.AddHandler<CMSG_PING>(RealmEnums.CMSG_PING, OnPing.Handler);
             RealmServerRouter.AddHandler(RealmEnums.CMSG_CHAR_ENUM, OnCharEnum.Handler);
             RealmServerRouter.AddHandler<CMSG_CHAR_CREATE>(RealmEnums.CMSG_CHAR_CREATE, OnCharCreate.Handler);
+            RealmServerRouter.AddHandler<CMSG_CHAR_DELETE>(RealmEnums.CMSG_CHAR_DELETE, OnCharDelete.Handler);
+            RealmServerRouter.AddHandler<CMSG_PLAYER_LOGIN>(RealmEnums.CMSG_PLAYER_LOGIN, OnPlayerLogin.Handler);
         }
 
         private static async void DbcInit()
@@ -134,7 +136,10 @@ namespace RealmServer
 
         private static void ConfigFile(bool reload = false)
         {
-            Log.Print(LogType.RealmServer, reload ? "Reloading settings ".PadRight(40, '.') + " [OK]" : "Loading settings ".PadRight(40, '.') + " [OK] ");
+            Log.Print(LogType.RealmServer,
+                reload
+                    ? "Reloading settings ".PadRight(40, '.') + " [OK]"
+                    : "Loading settings ".PadRight(40, '.') + " [OK] ");
 
             try
             {

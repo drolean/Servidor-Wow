@@ -1,85 +1,67 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Common.Database;
 using Common.Database.Tables;
+using Common.Globals;
 using MongoDB.Driver;
 
 namespace AuthServer
 {
     public class AuthServerDatabase
     {
-        public async Task<Users> GetAccount(string username)
-        {
-            var results = await DatabaseModel.UserCollection.Find(x => x.Username == username).Limit(1).ToListAsync();
-            return results.FirstOrDefault();
-        }
-    }
-
-    /*
-    public class AuthServerDatabase : DatabaseModel<Models>
-    {
         /// <summary>
         ///     Get user account based on login.
         /// </summary>
-        /// <param name="username">string</param>
-        /// <returns>Model.Users</returns>
+        /// <param name="username"></param>
+        /// <returns></returns>
         public Users GetAccount(string username)
         {
-            return !Model.Users.Any() ? null : Model.Users.FirstOrDefault(a => a.username == username);
+            return DatabaseModel.UserCollection.Find(x => x.Username == username).First();
         }
 
         /// <summary>
         ///     Sets the authenticated user's sessionkey.
         /// </summary>
-        /// <param name="username">string</param>
-        /// <param name="key">byte</param>
-        /// <returns>null</returns>
-        public async void SetSessionKey(string username, byte[] key)
+        /// <param name="username"></param>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public UpdateResult SetSessionKey(string username, byte[] key)
         {
-            var account = GetAccount(username);
-            using (var scope = new DataAccessScope())
-            {
-                var user = Model.Users.GetReference(account.Id);
-                user.sessionkey = key;
-                await scope.CompleteAsync();
-            }
+            return DatabaseModel.UserCollection.UpdateOne(
+                Builders<Users>.Filter.Eq(x => x.Username, username),
+                Builders<Users>.Update.Set(x => x.SessionKey, key));
         }
 
         /// <summary>
-        ///     Get Realms list.
+        ///     Get Realm list.
         /// </summary>
-        /// <returns>Model.Realms</returns>
-        internal List<Realms> GetRealms()
+        /// <returns></returns>
+        public List<Realms> GetRealms()
         {
-            return Model.Realms.Select(row => row).ToList();
+            return DatabaseModel.RealmCollection.Find(_ => true).ToList();
+        }
+
+        /// <summary>
+        ///     Update realm status flag.
+        /// </summary>
+        /// <param name="realm"></param>
+        /// <param name="flag"></param>
+        /// <returns></returns>
+        public UpdateResult UpdateRealmStatus(Realms realm, RealmFlag flag)
+        {
+            return DatabaseModel.RealmCollection.UpdateOne(
+                Builders<Realms>.Filter.Eq(x => x.Name, realm.Name),
+                Builders<Realms>.Update.Set(x => x.Flag, flag));
         }
 
         /// <summary>
         ///     Get Characters by Realm.
         /// </summary>
-        /// <param name="realmId">Set a realm ID (int)</param>
-        /// <param name="accountName">Account Name (string)</param>
-        /// <returns>int</returns>
-        public int GetCharactersUsers(int realmId, string accountName)
+        /// <param name="realm"></param>
+        /// <param name="username"></param>
+        /// <returns></returns>
+        public long GetCharactersByUser(Realms realm, string username)
         {
-            return Model.Characters.Where(a => a.realm.Id == realmId && a.name == accountName).ToList().Count;
-        }
-
-        /// <summary>
-        ///     Update realm flag status.
-        /// </summary>
-        /// <param name="realm">Realms model</param>
-        /// <param name="flag">RealmFlag status</param>
-        public void UpdateRealmStatus(Realms realm, RealmFlag flag)
-        {
-            using (var scope = new DataAccessScope())
-            {
-                var model = Model.Realms.GetReference(realm);
-                model.flag = flag;
-
-                scope.CompleteAsync();
-            }
+            return DatabaseModel.CharacterCollection.Find(a => a.Realm.Id == realm.Id && a.Name == username).Count();
         }
     }
-    */
 }

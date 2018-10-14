@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using System.Text;
 using Common.Globals;
+using MongoDB.Bson;
 
 namespace Common.Network
 {
@@ -31,14 +32,6 @@ namespace Common.Network
         {
             var data = Encoding.UTF8.GetBytes(input + '\0');
             Write(data);
-        }
-
-        /// <summary>
-        ///     Writes a null byte to the stream.
-        /// </summary>
-        public void Write()
-        {
-            Write((byte) 0x0);
         }
     }
 }

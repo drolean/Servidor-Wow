@@ -11,8 +11,8 @@ namespace Common.Database.Tables
         {
             Name = name;
             Email = email;
-            Username = username;
-            Password = password;
+            Username = username.ToUpper();
+            Password = password.ToUpper();
             CreatedAt = DateTime.Now;
             UpdatedAt = DateTime.Now;
         }

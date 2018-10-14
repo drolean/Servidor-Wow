@@ -37,5 +37,11 @@ namespace AuthServer.PacketServer
             Write(srp.Salt.ToProperByteArray().Pad(32));
             this.WriteNullByte(17);
         }
+
+        public PsAuthLogonChallange(AccountState result) : base(AuthCMD.CMD_AUTH_LOGON_CHALLENGE)
+        {
+            Write((byte) LoginErrorCode.RESPONSE_FAILURE);
+            Write((byte) result);
+        }
     }
 }

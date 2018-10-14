@@ -20,7 +20,7 @@ namespace RealmServer.Handlers
 
             // Initializing Crypt for user session
             session.PacketCrypto = new VanillaCrypt();
-            session.PacketCrypto.Init(session.Users.sessionkey);
+            session.PacketCrypto.Init(session.Users.SessionKey);
 
             // Check basic addons instaleds
             CheckAddons(handler);
@@ -58,7 +58,8 @@ namespace RealmServer.Handlers
                     var unk7 = reader.ReadUInt32();
                     AddOnsNames.Add(addonName);
 
-                    Console.WriteLine(@"Addon {0}: [ {1} ] enabled: {2} | crc: {3} | unk7: {4}", i.ToString().PadRight(2, ' '), addonName.PadRight(30, ' '), enabled,
+                    Console.WriteLine(@"Addon {0}: [ {1} ] enabled: {2} | crc: {3} | unk7: {4}",
+                        i.ToString().PadRight(2, ' '), addonName.PadRight(30, ' '), enabled,
                         crc, unk7);
                 }
             }

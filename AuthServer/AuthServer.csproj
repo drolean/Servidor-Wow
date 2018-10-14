@@ -57,11 +57,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AuthServerHelper.cs" />
+    <Compile Include="Handlers\OnAuthLogonChallenge.cs" />
+    <Compile Include="Handlers\OnAuthLogonProof.cs" />
+    <Compile Include="Handlers\OnAuthRealmList.cs" />
     <Compile Include="PacketReader\AuthLogonChallenge.cs" />
     <Compile Include="PacketReader\AuthLogonProof.cs" />
     <Compile Include="AuthServerClass.cs" />
     <Compile Include="AuthServerDatabase.cs" />
-    <Compile Include="AuthServerHandler.cs" />
     <Compile Include="AuthServerRouter.cs" />
     <Compile Include="AuthServerSession.cs" />
     <Compile Include="mainProgram.cs" />

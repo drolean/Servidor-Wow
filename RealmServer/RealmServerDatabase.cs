@@ -1,21 +1,19 @@
-﻿using System.Linq;
-using Common.Database;
+﻿using Common.Database;
 using Common.Database.Tables;
+using MongoDB.Driver;
 
 namespace RealmServer
 {
-    public class RealmServerDatabase : DatabaseModel<Common.Database.Models>
+    public class RealmServerDatabase
     {
         /// <summary>
-        ///     Get account based on login
+        ///     Get user account based on login.
         /// </summary>
         /// <param name="username"></param>
         /// <returns></returns>
-        internal Users GetAccount(string username)
+        public Users GetAccount(string username)
         {
-            return !Model.Users.Any()
-                ? null
-                : Model.Users.FirstOrDefault(a => a.username.ToLower() == username.ToLower());
+            return DatabaseModel.UserCollection.Find(x => x.Username == username).First();
         }
     }
 }

@@ -4,6 +4,47 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.9] - 2018-10-13
+### Added
+- AuthServer
+  - AuthServerSession added Try.Catch and Connected check.
+  - Added new method on PsAuthLogonChallenge
+  - Added new method on PsAuthLogonProof
+- Common
+  - Create unique index 'name' on Characters
+  - Add function to generate random ULONG "GenerateRandUlong".
+- RealmServer
+  - Database.Characters: Added DeleteCharacter.
+  - CMSG_CHAR_DELETE
+  - SMSG_CHAR_DELETE
+  - CMSG_PLAYER_LOGIN
+  - SMSG_ACCOUNT_DATA_TIMES
+  - SMSG_BINDPOINTUPDATE
+  - SMSG_CORPSE_RECLAIM_DELAY
+  - SMSG_INIT_WORLD_STATES
+  - SMSG_LOGIN_SETTIMESPEED
+  - SMSG_LOGIN_VERIFY_WORLD
+  - SMSG_SET_REST_START
+  - SMSG_TUTORIAL_FLAGS
+  - SMSG_UPDATE_OBJECT
+
+### Changed
+- AuthServer
+  - Moved handlers to each class.
+  - Database rewrite to support MongoDB.
+  - PsAuthRealmList correct.
+- Common
+  - Fix Character table structure
+  - Users Model 'username' & 'password' default to Upper.
+- RealmServer
+  - Database.Characters: Removed shaolinq.
+  - Database.Characters: rewrite all queries to support MongoDB.
+  - SMSG_CHAR_ENUM fixed new typo
+
+### Removed
+- AuthServerHandler
+- Common: removed Write null byte function.
+
 ## [0.0.8] - 2018-10-11
 ### Added
 - RealmServer Database

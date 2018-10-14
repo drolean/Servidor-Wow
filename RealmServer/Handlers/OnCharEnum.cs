@@ -7,7 +7,7 @@ namespace RealmServer.Handlers
     {
         public static void Handler(RealmServerSession session, byte[] data)
         {
-            var characters = Characters.GetCharacters(session.Users.username);
+            var characters = Characters.GetCharacters(session.Users);
 
             session.SendPacket(new SMSG_CHAR_ENUM(characters));
         }

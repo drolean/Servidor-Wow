@@ -5,11 +5,12 @@ using MongoDB.Bson;
 
 namespace Common.Database.Tables
 {
-    public abstract class Characters
+    public class Characters
     {
         public ObjectId Id { get; set; }
+        public ulong Uid { get; set; }
 
-        public Users User { get; set; }
+        public ObjectId User { get; set; }
         public Realms Realm { get; set; }
 
         public Races Race { get; set; }
@@ -21,15 +22,15 @@ namespace Common.Database.Tables
         public int Money { get; set; }
         public uint Xp { get; set; }
 
-        public List<SubMap>      SubMap { get; set; }
-        public List<SubSkin>     SubSkin { get; set; }
+        public SubMap      SubMap { get; set; }
+        public SubSkin     SubSkin { get; set; }
         public List<SubStats>    SubStats { get; set; }
         public List<SubTalents>  SubTalents { get; set; }
         public List<SubTutorial> SubTutorial { get; set; }
 
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
-        public DateTime DeletedAt { get; set; }
+        public DateTime? DeletedAt { get; set; }
     }
 
     public class SubTalents

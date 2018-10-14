@@ -21,25 +21,26 @@ namespace AuthServer.PacketServer
         /// <param name="accountName"></param>
         /// <returns></returns>
         /// <todo>/// Count Population of Realm/// </todo>
-        public PsAuthRealmList(List<Realms> realms, string accountName) : base(AuthCMD.CMD_AUTH_REALMLIST)
+        public PsAuthRealmList(IReadOnlyCollection<Realms> realms, string accountName) : base(
+            AuthCMD.CMD_AUTH_REALMLIST)
         {
             Write((uint) 0x0000);
             Write((byte) realms.Count);
-            /*
+
             foreach (var realm in realms)
             {
-                var count = MainProgram.Database.GetCharactersUsers(realm.Id, accountName);
+                var count = MainProgram.Database.GetCharactersByUser(realm, accountName);
 
-                Write((uint) realm.type);
-                Write((byte) realm.flag);
-                WriteCString(realm.name);
-                WriteCString(realm.address);
+                Write((uint) realm.Type);
+                Write((byte) realm.Flag);
+                WriteCString(realm.Name);
+                WriteCString(realm.Address);
                 Write(1.6f);
                 Write((byte) count);
-                Write((byte) realm.timezone);
+                Write((byte) realm.Timezone);
                 Write((byte) 0x01);
             }
-            */
+
             Write((ushort) 0x0002);
         }
     }
