@@ -121,6 +121,22 @@ namespace RealmServer
             RealmServerRouter.AddHandler<CMSG_CHAR_CREATE>(RealmEnums.CMSG_CHAR_CREATE, OnCharCreate.Handler);
             RealmServerRouter.AddHandler<CMSG_CHAR_DELETE>(RealmEnums.CMSG_CHAR_DELETE, OnCharDelete.Handler);
             RealmServerRouter.AddHandler<CMSG_PLAYER_LOGIN>(RealmEnums.CMSG_PLAYER_LOGIN, OnPlayerLogin.Handler);
+
+            RealmServerRouter.AddHandler<CMSG_UPDATE_ACCOUNT_DATA>(RealmEnums.CMSG_UPDATE_ACCOUNT_DATA, OnUpdateAccountData.Handler);
+            RealmServerRouter.AddHandler<CMSG_STANDSTATECHANGE>(RealmEnums.CMSG_STANDSTATECHANGE, OnStandStateChange.Handler);
+            RealmServerRouter.AddHandler<CMSG_NAME_QUERY>(RealmEnums.CMSG_NAME_QUERY, OnNameQuery.Handler);
+
+            RealmServerRouter.AddHandler(RealmEnums.CMSG_REQUEST_RAID_INFO, OnRequestRaidInfo.Handler);
+            RealmServerRouter.AddHandler(RealmEnums.CMSG_GMTICKET_GETTICKET, OnGmTicketGetTicket.Handler);
+            RealmServerRouter.AddHandler(RealmEnums.CMSG_QUERY_TIME, OnQueryTime.Handler);
+            RealmServerRouter.AddHandler(RealmEnums.MSG_QUERY_NEXT_MAIL_TIME, OnQueryNextMailTime.Handler);
+            RealmServerRouter.AddHandler(RealmEnums.CMSG_BATTLEFIELD_STATUS, OnBattleFieldStatus.Handler);
+            RealmServerRouter.AddHandler(RealmEnums.CMSG_MEETINGSTONE_INFO, OnMeetingStoneInfo.Handler);
+
+            RealmServerRouter.AddHandler<CMSG_ZONEUPDATE>(RealmEnums.CMSG_ZONEUPDATE, OnZoneUpdate.Handler);
+            RealmServerRouter.AddHandler<CMSG_JOIN_CHANNEL>(RealmEnums.CMSG_JOIN_CHANNEL, OnJoinChannel.Handler);
+            RealmServerRouter.AddHandler<CMSG_SET_ACTIVE_MOVER>(RealmEnums.CMSG_SET_ACTIVE_MOVER, OnSetActiveMover.Handler);
+            RealmServerRouter.AddHandler<MSG_MOVE_FALL_LAND>(RealmEnums.MSG_MOVE_FALL_LAND, OnMoveFallLand.Handler);
         }
 
         private static async void DbcInit()

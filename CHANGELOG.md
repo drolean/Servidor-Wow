@@ -4,6 +4,30 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.10] - 2018-10-14
+### Added
+- World server is ready to walk!!!
+- RealmServer
+  - Added some Enums.
+  - SMSG_UPDATE_OBJECT with CreateOwnCharacterUpdate.
+  - CMSG_UPDATE_ACCOUNT_DATA
+  - CMSG_STANDSTATECHANGE
+  - CMSG_NAME_QUERY
+  - CMSG_REQUEST_RAID_INFO
+  - CMSG_GMTICKET_GETTICKET
+  - CMSG_QUERY_TIME
+  - MSG_QUERY_NEXT_MAIL_TIME
+  - CMSG_BATTLEFIELD_STATUS
+  - CMSG_MEETINGSTONE_INFO
+  - CMSG_ZONEUPDATE
+  - CMSG_JOIN_CHANNEL
+  - CMSG_SET_ACTIVE_MOVER
+  - MSG_MOVE_FALL_LAND
+- World Entity
+  
+### Changed
+- RealmServerSession users to user.
+
 ## [0.0.9] - 2018-10-13
 ### Added
 - AuthServer

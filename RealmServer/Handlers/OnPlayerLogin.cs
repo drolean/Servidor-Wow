@@ -22,7 +22,8 @@ namespace RealmServer.Handlers
 
             session.SendPacket(new SMSG_INIT_WORLD_STATES(session.Character));
 
-            //session.SendPacket(SMSG_UPDATE_OBJECT.CreateOwnCharacterUpdate(session.Character, out session.Entity));
+            session.SendPacket(SMSG_UPDATE_OBJECT.CreateOwnCharacterUpdate(session.Character, out session.Entity));
+            //session.Entity.Session = session;
         }
     }
 }

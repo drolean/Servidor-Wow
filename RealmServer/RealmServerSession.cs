@@ -8,6 +8,7 @@ using Common.Database.Tables;
 using Common.Globals;
 using Common.Helpers;
 using RealmServer.PacketServer;
+using RealmServer.World.Enititys;
 
 namespace RealmServer
 {
@@ -47,8 +48,9 @@ namespace RealmServer
         public string ConnectionRemoteIp => ConnectionSocket.RemoteEndPoint.ToString();
 
         //
-        public Users Users { get; set; }
+        public Users User { get; set; }
         public Characters Character { get; set; }
+        public PlayerEntity Entity;
 
         private void Disconnect()
         {

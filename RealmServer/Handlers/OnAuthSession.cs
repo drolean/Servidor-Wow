@@ -15,12 +15,12 @@ namespace RealmServer.Handlers
 
         public static void Handler(RealmServerSession session, CMSG_AUTH_SESSION handler)
         {
-            // Search Account and set to session.Users
-            session.Users = MainProgram.RealmServerDatabase.GetAccount(handler.ClientAccount);
+            // Search Account and set to session.User
+            session.User = MainProgram.RealmServerDatabase.GetAccount(handler.ClientAccount);
 
             // Initializing Crypt for user session
             session.PacketCrypto = new VanillaCrypt();
-            session.PacketCrypto.Init(session.Users.SessionKey);
+            session.PacketCrypto.Init(session.User.SessionKey);
 
             // Check basic addons instaleds
             CheckAddons(handler);
