@@ -35,14 +35,14 @@ namespace RealmServer.World.Enititys
             SetUpdateField((int) UnitFields.UNIT_FIELD_POWER2, 3);
             SetUpdateField((int) UnitFields.UNIT_FIELD_POWER3, 4);
             SetUpdateField((int) UnitFields.UNIT_FIELD_POWER4, 5);
-            SetUpdateField((int)UnitFields.UNIT_FIELD_POWER5, 11);
+            SetUpdateField((int) UnitFields.UNIT_FIELD_POWER5, 11);
 
             SetUpdateField((int) UnitFields.UNIT_FIELD_MAXHEALTH, 6);
             SetUpdateField((int) UnitFields.UNIT_FIELD_MAXPOWER1, 7);
             SetUpdateField((int) UnitFields.UNIT_FIELD_MAXPOWER2, 8);
             SetUpdateField((int) UnitFields.UNIT_FIELD_MAXPOWER3, 9);
             SetUpdateField((int) UnitFields.UNIT_FIELD_MAXPOWER4, 10);
-            SetUpdateField((int)UnitFields.UNIT_FIELD_MAXPOWER5, 20);
+            SetUpdateField((int) UnitFields.UNIT_FIELD_MAXPOWER5, 20);
 
             SetUpdateField((int) UnitFields.UNIT_FIELD_LEVEL, 50); //Level);
             SetUpdateField((int) UnitFields.UNIT_FIELD_FACTIONTEMPLATE, chrRaces.FactionId);
@@ -61,13 +61,13 @@ namespace RealmServer.World.Enititys
             SetUpdateField((int) UnitFields.UNIT_FIELD_STAT3, 1); //character.SubStats.Intellect);
             SetUpdateField((int) UnitFields.UNIT_FIELD_STAT4, 1); //character.SubStats.Spirit);
 
-            SetUpdateField((int) UnitFields.UNIT_FIELD_RESISTANCES, 15);     //character.SubResistances.Armor
-            SetUpdateField((int) UnitFields.UNIT_FIELD_RESISTANCES_01, 16);  //character.SubResistances.
-            SetUpdateField((int) UnitFields.UNIT_FIELD_RESISTANCES_02, 17);  //character.SubResistances.Fire
-            SetUpdateField((int) UnitFields.UNIT_FIELD_RESISTANCES_03, 18);  //character.SubResistances.Nature
-            SetUpdateField((int) UnitFields.UNIT_FIELD_RESISTANCES_04, 19);  //character.SubResistances.Frost
-            SetUpdateField((int) UnitFields.UNIT_FIELD_RESISTANCES_05, 20);  //character.SubResistances.Shadow
-            SetUpdateField((int) UnitFields.UNIT_FIELD_RESISTANCES_06, 21);  //character.SubResistances.Arcane
+            SetUpdateField((int) UnitFields.UNIT_FIELD_RESISTANCES, 15); //character.SubResistances.Armor
+            SetUpdateField((int) UnitFields.UNIT_FIELD_RESISTANCES_01, 16); //character.SubResistances.
+            SetUpdateField((int) UnitFields.UNIT_FIELD_RESISTANCES_02, 17); //character.SubResistances.Fire
+            SetUpdateField((int) UnitFields.UNIT_FIELD_RESISTANCES_03, 18); //character.SubResistances.Nature
+            SetUpdateField((int) UnitFields.UNIT_FIELD_RESISTANCES_04, 19); //character.SubResistances.Frost
+            SetUpdateField((int) UnitFields.UNIT_FIELD_RESISTANCES_05, 20); //character.SubResistances.Shadow
+            SetUpdateField((int) UnitFields.UNIT_FIELD_RESISTANCES_06, 21); //character.SubResistances.Arcane
 
             SetUpdateField((int) UnitFields.UNIT_FIELD_FLAGS, 8);
             SetUpdateField((int) UnitFields.UNIT_FIELD_BASE_MANA, 60);

@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Common.Database;
-using Common.Database.Dbc;
 using Common.Database.Tables;
 using Common.Database.Xml;
 using Common.Globals;
@@ -103,15 +101,16 @@ namespace RealmServer.Database
         private static void CreateCharacterInventorie(Common.Database.Tables.Characters character)
         {
             uint countBag = 0;
-            CharStartOutfit startItems = MainProgram.CharacterOutfitReader.Get(character.Classe, character.Race, character.Gender);
+            var startItems = MainProgram.CharacterOutfitReader.Get(character.Classe, character.Race, character.Gender);
 
 
             var result = "";
-            for (int i = 0; i < 12; i++)
+            for (var i = 0; i < 12; i++)
             {
-                result += startItems..Items[i];
+                result += startItems.Items[i];
                 if (i != 11) result += ",";
             }
+
             Console.WriteLine(result);
             /*
             foreach (var i in startItems.Items)
@@ -131,7 +130,6 @@ namespace RealmServer.Database
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="character"></param>
         /// <param name="initRace"></param>
@@ -143,7 +141,7 @@ namespace RealmServer.Database
             foreach (var skillBase in initRace.skills)
                 DatabaseModel.CharacterCollection.UpdateOneAsync(
                     Builders<Common.Database.Tables.Characters>.Filter.Where(x => x.Uid == character.Uid),
-                    Builders<Common.Database.Tables.Characters>.Update.Push("SubSkills", new SubSkill()
+                    Builders<Common.Database.Tables.Characters>.Update.Push("SubSkills", new SubSkill
                     {
                         Skill = skillBase.id,
                         Value = skillBase.min,
@@ -167,7 +165,6 @@ namespace RealmServer.Database
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="character"></param>
         /// <param name="initRace"></param>
@@ -203,7 +200,6 @@ namespace RealmServer.Database
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="character"></param>
         /// <param name="initClas"></param>
@@ -213,7 +209,7 @@ namespace RealmServer.Database
             foreach (var actionBase in initClas.actions)
                 DatabaseModel.CharacterCollection.UpdateOneAsync(
                     Builders<Common.Database.Tables.Characters>.Filter.Where(x => x.Uid == character.Uid),
-                    Builders<Common.Database.Tables.Characters>.Update.Push("SubActionBars", new SubActionBar()
+                    Builders<Common.Database.Tables.Characters>.Update.Push("SubActionBars", new SubActionBar
                     {
                         Button = actionBase.button,
                         Action = actionBase.action,
@@ -224,7 +220,6 @@ namespace RealmServer.Database
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="character"></param>
         private static void CreateCharacterFactions(Common.Database.Tables.Characters character)
@@ -234,11 +229,11 @@ namespace RealmServer.Database
 
             foreach (var valFaction in initiFactions)
             {
-                string[] faction = valFaction.Split(',');
+                var faction = valFaction.Split(',');
 
                 DatabaseModel.CharacterCollection.UpdateOneAsync(
                     Builders<Common.Database.Tables.Characters>.Filter.Where(x => x.Uid == character.Uid),
-                    Builders<Common.Database.Tables.Characters>.Update.Push("SubFactions", new SubFaction()
+                    Builders<Common.Database.Tables.Characters>.Update.Push("SubFactions", new SubFaction
                     {
                         Faction = int.Parse(faction[0]),
                         Flags = int.Parse(faction[1]),
@@ -250,7 +245,6 @@ namespace RealmServer.Database
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="character"></param>
         /// <returns></returns>

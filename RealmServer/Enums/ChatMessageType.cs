@@ -35,8 +35,13 @@
         CHAT_MSG_BATTLEGROUND = 0x5C,
         CHAT_MSG_BATTLEGROUND_LEADER = 0x5D,
         CHAT_MSG_REPLY = 0x09,
-        CHAT_MSG_MONSTER_PARTY = 0x30, // 0x0D, just selected some free random value for avoid duplicates with really existed values
-        CHAT_MSG_MONSTER_WHISPER = 0x31, // 0x0F, just selected some free random value for avoid duplicates with really existed values
+
+        CHAT_MSG_MONSTER_PARTY =
+            0x30, // 0x0D, just selected some free random value for avoid duplicates with really existed values
+
+        CHAT_MSG_MONSTER_WHISPER =
+            0x31, // 0x0F, just selected some free random value for avoid duplicates with really existed values
+
         // CHAT_MSG_MONEY                  = 0x1C,
         // CHAT_MSG_OPENING                = 0x1D,
         // CHAT_MSG_TRADESKILLS            = 0x1E,
@@ -46,6 +51,7 @@
         // CHAT_MSG_COMBAT_HONOR_GAIN      = 0x22,
         // CHAT_MSG_COMBAT_FACTION_CHANGE  = 0x23,
         CHAT_MSG_RAID_BOSS_WHISPER = 0x29,
+
         CHAT_MSG_RAID_BOSS_EMOTE = 0x2A
         // CHAT_MSG_FILTERED               = 0x2B,
         // CHAT_MSG_RESTRICTED             = 0x2E,

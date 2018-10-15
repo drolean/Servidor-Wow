@@ -26,6 +26,31 @@ namespace RealmServer
         public static readonly EmotesTextReader EmotesTextReader = new EmotesTextReader();
         public static readonly FactionReader FactionReader = new FactionReader();
         public static readonly MapReader MapReader = new MapReader();
+
+        public static readonly List<RealmEnums> MovementOpcodes = new List<RealmEnums>
+        {
+            RealmEnums.MSG_MOVE_HEARTBEAT,
+            RealmEnums.MSG_MOVE_START_FORWARD,
+            RealmEnums.MSG_MOVE_START_BACKWARD,
+            RealmEnums.MSG_MOVE_STOP,
+            RealmEnums.MSG_MOVE_START_STRAFE_LEFT,
+            RealmEnums.MSG_MOVE_START_STRAFE_RIGHT,
+            RealmEnums.MSG_MOVE_STOP_STRAFE,
+            RealmEnums.MSG_MOVE_JUMP,
+            RealmEnums.MSG_MOVE_START_TURN_LEFT,
+            RealmEnums.MSG_MOVE_START_TURN_RIGHT,
+            RealmEnums.MSG_MOVE_STOP_TURN,
+            RealmEnums.MSG_MOVE_START_PITCH_UP,
+            RealmEnums.MSG_MOVE_START_PITCH_DOWN,
+            RealmEnums.MSG_MOVE_STOP_PITCH,
+            RealmEnums.MSG_MOVE_SET_RUN_MODE,
+            RealmEnums.MSG_MOVE_SET_WALK_MODE,
+            RealmEnums.MSG_MOVE_SET_FACING,
+            RealmEnums.MSG_MOVE_SET_PITCH,
+            RealmEnums.MSG_MOVE_START_SWIM,
+            RealmEnums.MSG_MOVE_STOP_SWIM
+        };
+
         public static RealmServerClass RealmServerClass { get; set; }
         public static RealmServerDatabase RealmServerDatabase { get; set; }
 
@@ -126,8 +151,10 @@ namespace RealmServer
             RealmServerRouter.AddHandler<CMSG_CHAR_DELETE>(RealmEnums.CMSG_CHAR_DELETE, OnCharDelete.Handler);
             RealmServerRouter.AddHandler<CMSG_PLAYER_LOGIN>(RealmEnums.CMSG_PLAYER_LOGIN, OnPlayerLogin.Handler);
 
-            RealmServerRouter.AddHandler<CMSG_UPDATE_ACCOUNT_DATA>(RealmEnums.CMSG_UPDATE_ACCOUNT_DATA, OnUpdateAccountData.Handler);
-            RealmServerRouter.AddHandler<CMSG_STANDSTATECHANGE>(RealmEnums.CMSG_STANDSTATECHANGE, OnStandStateChange.Handler);
+            RealmServerRouter.AddHandler<CMSG_UPDATE_ACCOUNT_DATA>(RealmEnums.CMSG_UPDATE_ACCOUNT_DATA,
+                OnUpdateAccountData.Handler);
+            RealmServerRouter.AddHandler<CMSG_STANDSTATECHANGE>(RealmEnums.CMSG_STANDSTATECHANGE,
+                OnStandStateChange.Handler);
             RealmServerRouter.AddHandler<CMSG_NAME_QUERY>(RealmEnums.CMSG_NAME_QUERY, OnNameQuery.Handler);
 
             RealmServerRouter.AddHandler(RealmEnums.CMSG_REQUEST_RAID_INFO, OnRequestRaidInfo.Handler);
@@ -139,35 +166,12 @@ namespace RealmServer
 
             RealmServerRouter.AddHandler<CMSG_ZONEUPDATE>(RealmEnums.CMSG_ZONEUPDATE, OnZoneUpdate.Handler);
             RealmServerRouter.AddHandler<CMSG_JOIN_CHANNEL>(RealmEnums.CMSG_JOIN_CHANNEL, OnJoinChannel.Handler);
-            RealmServerRouter.AddHandler<CMSG_SET_ACTIVE_MOVER>(RealmEnums.CMSG_SET_ACTIVE_MOVER, OnSetActiveMover.Handler);
+            RealmServerRouter.AddHandler<CMSG_SET_ACTIVE_MOVER>(RealmEnums.CMSG_SET_ACTIVE_MOVER,
+                OnSetActiveMover.Handler);
             RealmServerRouter.AddHandler<MSG_MOVE_FALL_LAND>(RealmEnums.MSG_MOVE_FALL_LAND, OnMoveFallLand.Handler);
 
             MovementOpcodes.ForEach(code => RealmServerRouter.AddHandler(code, OnMovements.Handler(code)));
         }
-
-        public static readonly List<RealmEnums> MovementOpcodes = new List<RealmEnums>()
-        {
-            RealmEnums.MSG_MOVE_HEARTBEAT,
-            RealmEnums.MSG_MOVE_START_FORWARD,
-            RealmEnums.MSG_MOVE_START_BACKWARD,
-            RealmEnums.MSG_MOVE_STOP,
-            RealmEnums.MSG_MOVE_START_STRAFE_LEFT,
-            RealmEnums.MSG_MOVE_START_STRAFE_RIGHT,
-            RealmEnums.MSG_MOVE_STOP_STRAFE,
-            RealmEnums.MSG_MOVE_JUMP,
-            RealmEnums.MSG_MOVE_START_TURN_LEFT,
-            RealmEnums.MSG_MOVE_START_TURN_RIGHT,
-            RealmEnums.MSG_MOVE_STOP_TURN,
-            RealmEnums.MSG_MOVE_START_PITCH_UP,
-            RealmEnums.MSG_MOVE_START_PITCH_DOWN,
-            RealmEnums.MSG_MOVE_STOP_PITCH,
-            RealmEnums.MSG_MOVE_SET_RUN_MODE,
-            RealmEnums.MSG_MOVE_SET_WALK_MODE,
-            RealmEnums.MSG_MOVE_SET_FACING,
-            RealmEnums.MSG_MOVE_SET_PITCH,
-            RealmEnums.MSG_MOVE_START_SWIM,
-            RealmEnums.MSG_MOVE_STOP_SWIM
-        };
 
         private static async void DbcInit()
         {

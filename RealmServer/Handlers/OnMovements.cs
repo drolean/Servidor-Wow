@@ -10,12 +10,14 @@ namespace RealmServer.Handlers
     {
         internal static RealmServerRouter.ProcessRealmPacketCallback<MSG_MOVE_FALL_LAND> Handler(RealmEnums code)
         {
-            return async delegate (RealmServerSession session, MSG_MOVE_FALL_LAND handler) {
+            return async delegate(RealmServerSession session, MSG_MOVE_FALL_LAND handler)
+            {
                 await TransmitMovement(session, handler, code);
             };
         }
 
-        private static async Task TransmitMovement(RealmServerSession session, MSG_MOVE_FALL_LAND handler, RealmEnums code)
+        private static async Task TransmitMovement(RealmServerSession session, MSG_MOVE_FALL_LAND handler,
+            RealmEnums code)
         {
             session.Character.SubMap.MapX = handler.MapX;
             session.Character.SubMap.MapY = handler.MapY;

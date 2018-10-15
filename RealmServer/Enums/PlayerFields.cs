@@ -93,5 +93,5 @@
         PLAYER_FIELD_COMBAT_RATING_1 = 0x432 + UnitFields.UNIT_END, // Size:20
 
         PLAYER_END = 0x446 + UnitFields.UNIT_END
-    };
+    }
 }

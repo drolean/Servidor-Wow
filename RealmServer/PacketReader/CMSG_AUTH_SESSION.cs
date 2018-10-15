@@ -1,5 +1,8 @@
 ﻿namespace RealmServer.PacketReader
 {
+    /// <summary>
+    ///     CMSG_AUTH_SESSION represents a packet sent by the client after the server has sent the challenge.
+    /// </summary>
     public sealed class CMSG_AUTH_SESSION : Common.Network.PacketReader
     {
         public int ClientAddOnsSize;

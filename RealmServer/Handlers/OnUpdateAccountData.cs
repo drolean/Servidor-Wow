@@ -14,19 +14,16 @@ namespace RealmServer.Handlers
             // User Macro
             if (handler.Type == 4)
             {
-
             }
 
             // Character Macro
             if (handler.Type == 5)
             {
-                
             }
 
             // User ? Character Data
             if (handler.Type == 7)
             {
-
             }
         }
     }

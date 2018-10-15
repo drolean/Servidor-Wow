@@ -1,6 +1,6 @@
 ﻿namespace RealmServer.Enums
 {
-    public enum StandStates : int
+    public enum StandStates
     {
         STANDSTATE_STAND = 0,
         STANDSTATE_SIT = 1,

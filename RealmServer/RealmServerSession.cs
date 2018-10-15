@@ -17,6 +17,7 @@ namespace RealmServer
     {
         public const int BufferSize = 2048 * 2;
         public static List<RealmServerSession> Sessions = new List<RealmServerSession>();
+        public PlayerEntity Entity;
 
         internal RealmServerSession(int connectionId, Socket connectionSocket)
         {
@@ -51,7 +52,6 @@ namespace RealmServer
         //
         public Users User { get; set; }
         public Characters Character { get; set; }
-        public PlayerEntity Entity;
 
         private void Disconnect()
         {
@@ -258,7 +258,7 @@ namespace RealmServer
         }
 
         /// <summary>
-        /// Send World Message System
+        ///     Send World Message System
         /// </summary>
         /// <param name="msg">message</param>
         internal void SendMessageMotd(string msg)

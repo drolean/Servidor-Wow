@@ -4,8 +4,15 @@ using Common.Globals;
 
 namespace RealmServer.PacketServer
 {
+    /// <summary>
+    ///     SMSG_CHAR_ENUM represents list response of characters.
+    /// </summary>
     internal sealed class SMSG_CHAR_ENUM : Common.Network.PacketServer
     {
+        /// <summary>
+        ///     Sends the character list to the client.
+        /// </summary>
+        /// <param name="characters"></param>
         public SMSG_CHAR_ENUM(List<Characters> characters) : base(RealmEnums.SMSG_CHAR_ENUM)
         {
             Write((byte) characters.Count);

@@ -110,6 +110,6 @@
         UNIT_FIELD_POWER_COST_MULTIPLIER_05 = 0xb3 + ObjectFields.OBJECT_END,
         UNIT_FIELD_POWER_COST_MULTIPLIER_06 = 0xb4 + ObjectFields.OBJECT_END,
         UNIT_FIELD_PADDING = 0xb5 + ObjectFields.OBJECT_END,
-        UNIT_END = 0xb6 + ObjectFields.OBJECT_END,
+        UNIT_END = 0xb6 + ObjectFields.OBJECT_END
     }
 }

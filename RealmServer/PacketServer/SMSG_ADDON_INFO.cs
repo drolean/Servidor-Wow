@@ -3,8 +3,14 @@ using Common.Globals;
 
 namespace RealmServer.PacketServer
 {
+    /// <summary>
+    ///     SMSG_ADDON_INFO represents a server packet with the addon info.
+    /// </summary>
     internal sealed class SMSG_ADDON_INFO : Common.Network.PacketServer
     {
+        /// <summary>
+        /// </summary>
+        /// <param name="addOnsNames"></param>
         public SMSG_ADDON_INFO(List<string> addOnsNames) : base(RealmEnums.SMSG_ADDON_INFO)
         {
             AddOnsNames = addOnsNames;
@@ -32,6 +38,8 @@ namespace RealmServer.PacketServer
             }
         }
 
+        /// <summary>
+        /// </summary>
         public List<string> AddOnsNames { get; }
     }
 }

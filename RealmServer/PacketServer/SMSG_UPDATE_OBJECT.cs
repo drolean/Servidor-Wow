@@ -14,15 +14,15 @@ namespace RealmServer.PacketServer
     {
         private SMSG_UPDATE_OBJECT(List<byte[]> blocks, int hasTansport = 0) : base(RealmEnums.SMSG_UPDATE_OBJECT)
         {
-            Write((uint)blocks.Count);
-            Write((byte)hasTansport);
+            Write((uint) blocks.Count);
+            Write((byte) hasTansport);
             blocks.ForEach(Write);
         }
 
         public static SMSG_UPDATE_OBJECT CreateOwnCharacterUpdate(Characters character, out PlayerEntity entity)
         {
-            BinaryWriter writer = new BinaryWriter(new MemoryStream());
-            writer.Write((byte)ObjectUpdateType.UPDATETYPE_CREATE_OBJECT_SELF);
+            var writer = new BinaryWriter(new MemoryStream());
+            writer.Write((byte) ObjectUpdateType.UPDATETYPE_CREATE_OBJECT_SELF);
 
             writer.WritePackedUInt64(character.Uid);
 
@@ -45,12 +45,12 @@ namespace RealmServer.PacketServer
 
             writer.Write((float) 0);
 
-            writer.Write(2.5f);    // WalkSpeed
-            writer.Write(7f * 1);  // RunSpeed
-            writer.Write(2.5f);    // Backwards WalkSpeed
+            writer.Write(2.5f); // WalkSpeed
+            writer.Write(7f * 1); // RunSpeed
+            writer.Write(2.5f); // Backwards WalkSpeed
             writer.Write(4.7222f); // SwimSpeed
-            writer.Write(2.5f);    // Backwards SwimSpeed
-            writer.Write(3.14f);   // TurnSpeed
+            writer.Write(2.5f); // Backwards SwimSpeed
+            writer.Write(3.14f); // TurnSpeed
 
             writer.Write(0x1);
 
@@ -62,7 +62,7 @@ namespace RealmServer.PacketServer
 
             entity.WriteUpdateFields(writer);
 
-            return new SMSG_UPDATE_OBJECT(new List<byte[]> { ((MemoryStream)writer.BaseStream).ToArray() });
+            return new SMSG_UPDATE_OBJECT(new List<byte[]> {((MemoryStream) writer.BaseStream).ToArray()});
         }
     }
 }

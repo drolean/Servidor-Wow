@@ -12,6 +12,6 @@
         HighguidPet = 0xF140,
         HighguidVehicle = 0xF150,
         HighguidCorpse = 0xF500,
-        HighguidMoTransport = 0x1FC0,
+        HighguidMoTransport = 0x1FC0
     }
 }

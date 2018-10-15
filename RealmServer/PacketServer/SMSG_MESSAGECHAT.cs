@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using Common.Globals;
@@ -18,14 +17,14 @@ namespace RealmServer.PacketServer
         public SMSG_MESSAGECHAT(ChatMessageType type, ChatMessageLanguage language, ulong id, string message,
             string channelName = null) : base(RealmEnums.SMSG_MESSAGECHAT)
         {
-            Write((byte)type);
-            Write((uint)language);
+            Write((byte) type);
+            Write((uint) language);
 
             switch (type)
             {
                 case ChatMessageType.CHAT_MSG_CHANNEL:
-                    Write(Encoding.UTF8.GetBytes(channelName + '\0'));// string => Channel
-                    Write((uint)0); //32
+                    Write(Encoding.UTF8.GetBytes(channelName + '\0')); // string => Channel
+                    Write((uint) 0); //32
                     Write(id); //64 => SenderId
                     break;
                 case ChatMessageType.CHAT_MSG_YELL:
@@ -49,29 +48,67 @@ namespace RealmServer.PacketServer
                 case ChatMessageType.CHAT_MSG_RAID_WARNING:
                     Write(id); // SenderId
                     break;
+                case ChatMessageType.CHAT_MSG_TEXT_EMOTE:
+                    break;
+                case ChatMessageType.CHAT_MSG_MONSTER_SAY:
+                    break;
+                case ChatMessageType.CHAT_MSG_MONSTER_YELL:
+                    break;
+                case ChatMessageType.CHAT_MSG_MONSTER_EMOTE:
+                    break;
+                case ChatMessageType.CHAT_MSG_CHANNEL_JOIN:
+                    break;
+                case ChatMessageType.CHAT_MSG_CHANNEL_LEAVE:
+                    break;
+                case ChatMessageType.CHAT_MSG_CHANNEL_LIST:
+                    break;
+                case ChatMessageType.CHAT_MSG_CHANNEL_NOTICE:
+                    break;
+                case ChatMessageType.CHAT_MSG_CHANNEL_NOTICE_USER:
+                    break;
+                case ChatMessageType.CHAT_MSG_LOOT:
+                    break;
+                case ChatMessageType.CHAT_MSG_BG_SYSTEM_NEUTRAL:
+                    break;
+                case ChatMessageType.CHAT_MSG_BG_SYSTEM_ALLIANCE:
+                    break;
+                case ChatMessageType.CHAT_MSG_BG_SYSTEM_HORDE:
+                    break;
+                case ChatMessageType.CHAT_MSG_BATTLEGROUND:
+                    break;
+                case ChatMessageType.CHAT_MSG_BATTLEGROUND_LEADER:
+                    break;
+                case ChatMessageType.CHAT_MSG_MONSTER_PARTY:
+                    break;
+                case ChatMessageType.CHAT_MSG_MONSTER_WHISPER:
+                    break;
+                case ChatMessageType.CHAT_MSG_RAID_BOSS_WHISPER:
+                    break;
+                case ChatMessageType.CHAT_MSG_RAID_BOSS_EMOTE:
+                    break;
                 default:
                     Log.Print(LogType.Debug, $"Unknown chat message type - {type}!");
                     break;
             }
 
-            Write((uint)message.Length + 1);
+            Write((uint) message.Length + 1);
             Write(Encoding.UTF8.GetBytes(message + '\0'));
             // check flag of CHAR [0 = normal] [1 = AFK] [2 = DND] [3 = GM]
-            Write((byte)0); // Flag????
+            Write((byte) 0); // Flag????
         }
 
         public static SMSG_MESSAGECHAT SendMotd(ulong id, string message)
         {
-            BinaryWriter writer = new BinaryWriter(new MemoryStream());
+            var writer = new BinaryWriter(new MemoryStream());
 
             writer.Write((byte) ChatMessageType.CHAT_MSG_SYSTEM);
             writer.Write((uint) ChatMessageLanguage.LANG_UNIVERSAL);
             writer.Write(id);
-            writer.Write((uint)message.Length + 1);
+            writer.Write((uint) message.Length + 1);
             writer.Write(Encoding.UTF8.GetBytes(message + '\0'));
-            writer.Write((byte)0);
+            writer.Write((byte) 0);
 
-            return new SMSG_MESSAGECHAT(new List<byte[]> { ((MemoryStream)writer.BaseStream).ToArray() });
+            return new SMSG_MESSAGECHAT(new List<byte[]> {((MemoryStream) writer.BaseStream).ToArray()});
         }
     }
 }

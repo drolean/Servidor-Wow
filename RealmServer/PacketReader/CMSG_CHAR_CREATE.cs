@@ -1,5 +1,8 @@
 ﻿namespace RealmServer.PacketReader
 {
+    /// <summary>
+    ///     CMSG_CHAR_CREATE represents a packet sent by the client whenever it tries to create a character.
+    /// </summary>
     public sealed class CMSG_CHAR_CREATE : Common.Network.PacketReader
     {
         public CMSG_CHAR_CREATE(byte[] data) : base(data)

@@ -2,6 +2,9 @@
 
 namespace RealmServer.PacketServer
 {
+    /// <summary>
+    ///     SMSG_AUTH_RESPONSE represents a message sent by the server whenever a CMSG_AUTH_SESSION message is sent.
+    /// </summary>
     internal sealed class SMSG_AUTH_RESPONSE : Common.Network.PacketServer
     {
         /// <summary>
@@ -9,7 +12,6 @@ namespace RealmServer.PacketServer
         /// </summary>
         /// <param name="state">LoginErroCode</param>
         /// <param name="count">Count to queue position</param>
-        /// <returns></returns>
         public SMSG_AUTH_RESPONSE(LoginErrorCode state, int count = 0) : base(RealmEnums.SMSG_AUTH_RESPONSE)
         {
             Write((byte) state);

@@ -1,6 +1,4 @@
-﻿using System;
-using RealmServer.PacketReader;
-using RealmServer.PacketServer;
+﻿using RealmServer.PacketReader;
 
 namespace RealmServer.Handlers
 {
@@ -8,7 +6,6 @@ namespace RealmServer.Handlers
     {
         public static void Handler(RealmServerSession session, CMSG_NAME_QUERY handler)
         {
-            
         }
     }
 }

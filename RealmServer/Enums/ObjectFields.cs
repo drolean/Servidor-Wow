@@ -7,6 +7,6 @@
         OBJECT_FIELD_ENTRY = 0x3, // 0x003 - Size: 1 - Type: INT   - Flags: PUBLIC
         OBJECT_FIELD_SCALE_X = 0x4, // 0x004 - Size: 1 - Type: FLOAT - Flags: PUBLIC
         OBJECT_FIELD_PADDING = 0x5, // 0x005 - Size: 1 - Type: INT   - Flags: NONE
-        OBJECT_END = 0x6,
+        OBJECT_END = 0x6
     }
 }

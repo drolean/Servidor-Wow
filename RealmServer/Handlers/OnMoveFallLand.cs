@@ -1,5 +1,4 @@
-﻿using System;
-using RealmServer.PacketReader;
+﻿using RealmServer.PacketReader;
 
 namespace RealmServer.Handlers
 {
@@ -7,7 +6,6 @@ namespace RealmServer.Handlers
     {
         public static void Handler(RealmServerSession session, MSG_MOVE_FALL_LAND handler)
         {
-            
         }
     }
 }

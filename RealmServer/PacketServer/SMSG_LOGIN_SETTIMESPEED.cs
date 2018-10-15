@@ -3,8 +3,16 @@ using Common.Globals;
 
 namespace RealmServer.PacketServer
 {
+    /// <summary>
+    ///     SMSG_LOGIN_SETTIMESPEED represents a message sent by the server to define the world timespeed.
+    /// </summary>
     public sealed class SMSG_LOGIN_SETTIMESPEED : Common.Network.PacketServer
     {
+        /// <summary>
+        ///     Sends the world time speed to the client.
+        /// </summary>
+        /// <remarks>This packet tells the client about the "speed" of time in the game world.</remarks>
+        /// <remarks>Usually, this speed is equivalent to real-life.</remarks>
         public SMSG_LOGIN_SETTIMESPEED() : base(RealmEnums.SMSG_LOGIN_SETTIMESPEED)
         {
             Write((uint) SecsToTimeBitFields(DateTime.Now)); // Time

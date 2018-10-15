@@ -1,7 +1,4 @@
-﻿using RealmServer.Database;
-using RealmServer.PacketServer;
-
-namespace RealmServer.Handlers
+﻿namespace RealmServer.Handlers
 {
     internal class OnRequestRaidInfo
     {
