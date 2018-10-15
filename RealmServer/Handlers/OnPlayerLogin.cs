@@ -15,24 +15,20 @@ namespace RealmServer.Handlers
 
             // SMSG_UPDATE_ACCOUNT_DATA
 
-            session.SendPacket(SMSG_MESSAGECHAT.SendMotd(session.Character.Uid, "Welcome"));
-
             session.SendPacket(new SMSG_SET_REST_START(1000));
             session.SendPacket(new SMSG_BINDPOINTUPDATE(session.Character));
             session.SendPacket(new SMSG_TUTORIAL_FLAGS());
-
-            session.SendPacket(SMSG_MESSAGECHAT.SendMotd(session.Character.Uid, "Welcome 111222"));
-
             session.SendPacket(new SMSG_LOGIN_SETTIMESPEED());
             session.SendPacket(new SMSG_CORPSE_RECLAIM_DELAY());
 
-            session.SendPacket(SMSG_MESSAGECHAT.SendMotd(session.Character.Uid, "Welcome2222"));
+            if (session.Character.Cinematic == false)
+            {
+                var chrRaces = MainProgram.ChrRacesReader.GetData(session.Character.Race);
+                session.SendPacket(new SMSG_TRIGGER_CINEMATIC(chrRaces.CinematicId));
+            }
 
             session.SendPacket(new SMSG_INIT_WORLD_STATES(session.Character));
-
             session.SendPacket(SMSG_UPDATE_OBJECT.CreateOwnCharacterUpdate(session.Character, out session.Entity));
-
-            session.SendPacket(SMSG_MESSAGECHAT.SendMotd(session.Character.Uid, "Welcome3333"));
         }
     }
 }

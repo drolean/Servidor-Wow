@@ -1,4 +1,6 @@
-﻿using RealmServer.PacketReader;
+﻿using RealmServer.Database;
+using RealmServer.PacketReader;
+using RealmServer.PacketServer;
 
 namespace RealmServer.Handlers
 {
@@ -6,6 +8,10 @@ namespace RealmServer.Handlers
     {
         public static void Handler(RealmServerSession session, CMSG_NAME_QUERY handler)
         {
+            var target = Characters.FindCharacaterByUid(handler.Guid);
+
+            if (target != null)
+                session.SendPacket(new SMSG_NAME_QUERY_RESPONSE(target));
         }
     }
 }

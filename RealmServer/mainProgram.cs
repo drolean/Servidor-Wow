@@ -151,10 +151,8 @@ namespace RealmServer
             RealmServerRouter.AddHandler<CMSG_CHAR_DELETE>(RealmEnums.CMSG_CHAR_DELETE, OnCharDelete.Handler);
             RealmServerRouter.AddHandler<CMSG_PLAYER_LOGIN>(RealmEnums.CMSG_PLAYER_LOGIN, OnPlayerLogin.Handler);
 
-            RealmServerRouter.AddHandler<CMSG_UPDATE_ACCOUNT_DATA>(RealmEnums.CMSG_UPDATE_ACCOUNT_DATA,
-                OnUpdateAccountData.Handler);
-            RealmServerRouter.AddHandler<CMSG_STANDSTATECHANGE>(RealmEnums.CMSG_STANDSTATECHANGE,
-                OnStandStateChange.Handler);
+            RealmServerRouter.AddHandler<CMSG_UPDATE_ACCOUNT_DATA>(RealmEnums.CMSG_UPDATE_ACCOUNT_DATA, OnUpdateAccountData.Handler);
+            RealmServerRouter.AddHandler<CMSG_STANDSTATECHANGE>(RealmEnums.CMSG_STANDSTATECHANGE, OnStandStateChange.Handler);
             RealmServerRouter.AddHandler<CMSG_NAME_QUERY>(RealmEnums.CMSG_NAME_QUERY, OnNameQuery.Handler);
 
             RealmServerRouter.AddHandler(RealmEnums.CMSG_REQUEST_RAID_INFO, OnRequestRaidInfo.Handler);
@@ -166,9 +164,16 @@ namespace RealmServer
 
             RealmServerRouter.AddHandler<CMSG_ZONEUPDATE>(RealmEnums.CMSG_ZONEUPDATE, OnZoneUpdate.Handler);
             RealmServerRouter.AddHandler<CMSG_JOIN_CHANNEL>(RealmEnums.CMSG_JOIN_CHANNEL, OnJoinChannel.Handler);
-            RealmServerRouter.AddHandler<CMSG_SET_ACTIVE_MOVER>(RealmEnums.CMSG_SET_ACTIVE_MOVER,
-                OnSetActiveMover.Handler);
+            RealmServerRouter.AddHandler<CMSG_SET_ACTIVE_MOVER>(RealmEnums.CMSG_SET_ACTIVE_MOVER, OnSetActiveMover.Handler);
             RealmServerRouter.AddHandler<MSG_MOVE_FALL_LAND>(RealmEnums.MSG_MOVE_FALL_LAND, OnMoveFallLand.Handler);
+
+            RealmServerRouter.AddHandler(RealmEnums.CMSG_COMPLETE_CINEMATIC, OnCompleteCinematic.Handler);
+            RealmServerRouter.AddHandler<CMSG_TUTORIAL_FLAG>(RealmEnums.CMSG_TUTORIAL_FLAG, OnTutorialFlag.Handler);
+
+            RealmServerRouter.AddHandler(RealmEnums.CMSG_TUTORIAL_CLEAR, OnTutorialClear.Handler);
+            RealmServerRouter.AddHandler(RealmEnums.CMSG_TUTORIAL_RESET, OnTutorialReset.Handler);
+
+            RealmServerRouter.AddHandler<CMSG_SET_FACTION_ATWAR>(RealmEnums.CMSG_SET_FACTION_ATWAR, OnSetFactionAtWar.Handler);
 
             MovementOpcodes.ForEach(code => RealmServerRouter.AddHandler(code, OnMovements.Handler(code)));
         }

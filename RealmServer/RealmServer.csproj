@@ -73,6 +73,7 @@
     <Compile Include="Handlers\OnCharCreate.cs" />
     <Compile Include="Handlers\OnCharDelete.cs" />
     <Compile Include="Handlers\OnCharEnum.cs" />
+    <Compile Include="Handlers\OnCompleteCinematic.cs" />
     <Compile Include="Handlers\OnJoinChannel.cs" />
     <Compile Include="Handlers\OnMoveFallLand.cs" />
     <Compile Include="Handlers\OnMovements.cs" />
@@ -80,7 +81,11 @@
     <Compile Include="Handlers\OnPing.cs" />
     <Compile Include="Handlers\OnPlayerLogin.cs" />
     <Compile Include="Handlers\OnSetActiveMover.cs" />
+    <Compile Include="Handlers\OnSetFactionAtWar.cs" />
     <Compile Include="Handlers\OnStandStateChange.cs" />
+    <Compile Include="Handlers\OnTutorialClear.cs" />
+    <Compile Include="Handlers\OnTutorialFlag.cs" />
+    <Compile Include="Handlers\OnTutorialReset.cs" />
     <Compile Include="Handlers\OnUpdateAccountData.cs" />
     <Compile Include="Handlers\OnZoneUpdate.cs" />
     <Compile Include="mainProgram.cs" />
@@ -99,7 +104,9 @@
     <Compile Include="PacketReader\CMSG_PING.cs" />
     <Compile Include="PacketReader\CMSG_PLAYER_LOGIN.cs" />
     <Compile Include="PacketReader\CMSG_SET_ACTIVE_MOVER.cs" />
+    <Compile Include="PacketReader\CMSG_SET_FACTION_ATWAR.cs" />
     <Compile Include="PacketReader\CMSG_STANDSTATECHANGE.cs" />
+    <Compile Include="PacketReader\CMSG_TUTORIAL_FLAG.cs" />
     <Compile Include="PacketReader\CMSG_UPDATE_ACCOUNT_DATA.cs" />
     <Compile Include="PacketReader\CMSG_ZONEUPDATE.cs" />
     <Compile Include="PacketReader\MSG_MOVE_FALL_LAND.cs" />
@@ -116,9 +123,12 @@
     <Compile Include="PacketServer\SMSG_LOGIN_SETTIMESPEED.cs" />
     <Compile Include="PacketServer\SMSG_LOGIN_VERIFY_WORLD.cs" />
     <Compile Include="PacketServer\SMSG_MESSAGECHAT.cs" />
+    <Compile Include="PacketServer\SMSG_NAME_QUERY_RESPONSE.cs" />
     <Compile Include="PacketServer\SMSG_PONG.cs" />
+    <Compile Include="PacketServer\SMSG_SET_FACTION_STANDING.cs" />
     <Compile Include="PacketServer\SMSG_SET_REST_START.cs" />
     <Compile Include="PacketServer\SMSG_STANDSTATE_UPDATE.cs" />
+    <Compile Include="PacketServer\SMSG_TRIGGER_CINEMATIC.cs" />
     <Compile Include="PacketServer\SMSG_TUTORIAL_FLAGS.cs" />
     <Compile Include="PacketServer\SMSG_UPDATE_ACCOUNT_DATA.cs" />
     <Compile Include="PacketServer\SMSG_UPDATE_OBJECT.cs" />

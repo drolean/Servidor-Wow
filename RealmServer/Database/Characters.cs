@@ -14,12 +14,17 @@ namespace RealmServer.Database
 {
     public class Characters : RealmServerDatabase
     {
+
+        internal static Common.Database.Tables.Characters FindCharacaterByUid(ulong uid)
+        {
+            return DatabaseModel.CharacterCollection.Find(x => x.Uid == uid).First();
+        }
         /// <summary>
-        ///     Retrieve character by name.
+        /// Retrieve character by name.
         /// </summary>
         /// <param name="character"></param>
         /// <returns></returns>
-        public Common.Database.Tables.Characters FindCharacaterByName(string character)
+        internal static Common.Database.Tables.Characters FindCharacaterByName(string character)
         {
             return DatabaseModel.CharacterCollection.Find(x => x.Name == character).First();
         }

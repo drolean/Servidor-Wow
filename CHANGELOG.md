@@ -4,6 +4,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.13] - 2018-10-15
+### Added
+- Added FindCharacaterByUid RealmServer Character Model
+- Added SMSG_TRIGGER_CINEMATIC
+- Added CMSG_COMPLETE_CINEMATIC OnCompleteCinematic
+- Added CMSG_TUTORIAL_FLAG OnTutorialFlag
+- Added CMSG_TUTORIAL_CLEAR OnTutorialClear
+- Added CMSG_TUTORIAL_RESET OnTutorialReset
+- Added CMSG_SET_FACTION_ATWAR OnSetFactionAtWar
+- Added SMSG_SET_FACTION_STANDING
+- Added SMSG_NAME_QUERY_RESPONSE
+
+### Changed
+- OnNameQuery correct way.
+
 ## [0.0.12] - 2018-10-15
 ### Added
 - Character Table
