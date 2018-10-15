@@ -4,6 +4,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.11] - 2018-10-15
+### Added
+- RealmServer
+  - Characters Spells (SubDocument Database)
+  - Characters ActionBar (SubDocument Database)
+  - Characters Factions (SubDocument Database)
+  - Characters Skill (SubDocument Database)
+  - Characters Inventory (SubDocument Database)
+  - Some ENUMs (ChatMessageLanguage, ChatMessageType)
+  - Movement partial Added
+  - SMSG_MESSAGECHAT *partial
+- Common
+  - RaceXML Added with start attributes
+
 ## [0.0.10] - 2018-10-14
 ### Added
 - World server is ready to walk!!!

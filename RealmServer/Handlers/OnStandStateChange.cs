@@ -9,7 +9,6 @@ namespace RealmServer.Handlers
     {
         public static void Handler(RealmServerSession session, CMSG_STANDSTATECHANGE handler)
         {
-            Console.WriteLine(handler.StandState);
             //session.Character.standState = handler.StandState;
             
             //session.Entity.SetUpdateField((int)UnitFields.UNIT_FIELD_BYTES_1, handler.StandState);

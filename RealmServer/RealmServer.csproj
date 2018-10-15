@@ -57,6 +57,8 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Enums\ChatMessageLanguage.cs" />
+    <Compile Include="Enums\ChatMessageType.cs" />
     <Compile Include="Enums\UnitFields.cs" />
     <Compile Include="Enums\ObjectFields.cs" />
     <Compile Include="Enums\HighGuid.cs" />
@@ -72,6 +74,7 @@
     <Compile Include="Handlers\OnCharEnum.cs" />
     <Compile Include="Handlers\OnJoinChannel.cs" />
     <Compile Include="Handlers\OnMoveFallLand.cs" />
+    <Compile Include="Handlers\OnMovements.cs" />
     <Compile Include="Handlers\OnNameQuery.cs" />
     <Compile Include="Handlers\OnPing.cs" />
     <Compile Include="Handlers\OnPlayerLogin.cs" />
@@ -111,6 +114,7 @@
     <Compile Include="PacketServer\SMSG_INIT_WORLD_STATES.cs" />
     <Compile Include="PacketServer\SMSG_LOGIN_SETTIMESPEED.cs" />
     <Compile Include="PacketServer\SMSG_LOGIN_VERIFY_WORLD.cs" />
+    <Compile Include="PacketServer\SMSG_MESSAGECHAT.cs" />
     <Compile Include="PacketServer\SMSG_PONG.cs" />
     <Compile Include="PacketServer\SMSG_SET_REST_START.cs" />
     <Compile Include="PacketServer\SMSG_STANDSTATE_UPDATE.cs" />

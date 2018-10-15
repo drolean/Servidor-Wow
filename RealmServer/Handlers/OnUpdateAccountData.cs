@@ -5,13 +5,29 @@ namespace RealmServer.Handlers
     public class OnUpdateAccountData
     {
         /// <summary>
-        ///     Packet received of the client to ping the server.
+        ///     Received Data from user (macro, settings)
         /// </summary>
         /// <param name="session"></param>
         /// <param name="handler"></param>
         public static void Handler(RealmServerSession session, CMSG_UPDATE_ACCOUNT_DATA handler)
         {
-            //session.SendPacket(new SMSG_PONG(handler.Latency));
+            // User Macro
+            if (handler.Type == 4)
+            {
+
+            }
+
+            // Character Macro
+            if (handler.Type == 5)
+            {
+                
+            }
+
+            // User ? Character Data
+            if (handler.Type == 7)
+            {
+
+            }
         }
     }
 }

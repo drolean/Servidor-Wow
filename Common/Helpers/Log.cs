@@ -88,7 +88,7 @@ namespace Common.Helpers
                     using (var log = new StreamWriter(fileStream))
                     {
                         log.WriteLine(
-                            $"[{DateTime.Now:yyyy-M-d H:mm:ss}] OPCode: {(RealmEnums) packet.Opcode} " + // (RealmCMD)
+                            $"[{DateTime.Now:yyyy-M-d H:mm:ss}] OPCode: {(RealmEnums) packet.Opcode} " + // (RealmEnums)
                             $"[Length: {packet.Packet.Length}]");
                         log.Write(Utils.ByteArrayToHex(packet.Packet));
                         log.WriteLine();

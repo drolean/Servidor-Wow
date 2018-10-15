@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.Net;
 using System.Reflection;
 using System.Threading;
+using Common.Database;
 using Common.Database.Dbc;
 using Common.Globals;
 using Common.Helpers;
@@ -47,6 +49,8 @@ namespace RealmServer
             Log.Print(LogType.RealmServer, $"Running on .NET Framework Version {Environment.Version}");
 
             ConfigFile();
+
+            XmlReader.Boot();
             //
             DbcInit();
             //
@@ -137,7 +141,33 @@ namespace RealmServer
             RealmServerRouter.AddHandler<CMSG_JOIN_CHANNEL>(RealmEnums.CMSG_JOIN_CHANNEL, OnJoinChannel.Handler);
             RealmServerRouter.AddHandler<CMSG_SET_ACTIVE_MOVER>(RealmEnums.CMSG_SET_ACTIVE_MOVER, OnSetActiveMover.Handler);
             RealmServerRouter.AddHandler<MSG_MOVE_FALL_LAND>(RealmEnums.MSG_MOVE_FALL_LAND, OnMoveFallLand.Handler);
+
+            MovementOpcodes.ForEach(code => RealmServerRouter.AddHandler(code, OnMovements.Handler(code)));
         }
+
+        public static readonly List<RealmEnums> MovementOpcodes = new List<RealmEnums>()
+        {
+            RealmEnums.MSG_MOVE_HEARTBEAT,
+            RealmEnums.MSG_MOVE_START_FORWARD,
+            RealmEnums.MSG_MOVE_START_BACKWARD,
+            RealmEnums.MSG_MOVE_STOP,
+            RealmEnums.MSG_MOVE_START_STRAFE_LEFT,
+            RealmEnums.MSG_MOVE_START_STRAFE_RIGHT,
+            RealmEnums.MSG_MOVE_STOP_STRAFE,
+            RealmEnums.MSG_MOVE_JUMP,
+            RealmEnums.MSG_MOVE_START_TURN_LEFT,
+            RealmEnums.MSG_MOVE_START_TURN_RIGHT,
+            RealmEnums.MSG_MOVE_STOP_TURN,
+            RealmEnums.MSG_MOVE_START_PITCH_UP,
+            RealmEnums.MSG_MOVE_START_PITCH_DOWN,
+            RealmEnums.MSG_MOVE_STOP_PITCH,
+            RealmEnums.MSG_MOVE_SET_RUN_MODE,
+            RealmEnums.MSG_MOVE_SET_WALK_MODE,
+            RealmEnums.MSG_MOVE_SET_FACING,
+            RealmEnums.MSG_MOVE_SET_PITCH,
+            RealmEnums.MSG_MOVE_START_SWIM,
+            RealmEnums.MSG_MOVE_STOP_SWIM
+        };
 
         private static async void DbcInit()
         {

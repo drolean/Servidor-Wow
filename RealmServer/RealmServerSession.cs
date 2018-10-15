@@ -7,6 +7,7 @@ using Common.Crypt;
 using Common.Database.Tables;
 using Common.Globals;
 using Common.Helpers;
+using RealmServer.Enums;
 using RealmServer.PacketServer;
 using RealmServer.World.Enititys;
 
@@ -254,6 +255,16 @@ namespace RealmServer
                 length = BitConverter.ToUInt16(new[] {header[1], header[0]}, 0);
                 opcode = BitConverter.ToInt16(new[] {header[2], header[3]}, 0);
             }
+        }
+
+        /// <summary>
+        /// Send World Message System
+        /// </summary>
+        /// <param name="msg">message</param>
+        internal void SendMessageMotd(string msg)
+        {
+            SendPacket(new SMSG_MESSAGECHAT(ChatMessageType.CHAT_MSG_SYSTEM, ChatMessageLanguage.LANG_UNIVERSAL,
+                Character.Uid, msg));
         }
     }
 }

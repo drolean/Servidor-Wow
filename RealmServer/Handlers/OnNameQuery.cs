@@ -8,7 +8,7 @@ namespace RealmServer.Handlers
     {
         public static void Handler(RealmServerSession session, CMSG_NAME_QUERY handler)
         {
-            Console.WriteLine(handler.Guid);
+            
         }
     }
 }

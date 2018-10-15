@@ -22,15 +22,97 @@ namespace Common.Database.Tables
         public int Money { get; set; }
         public uint Xp { get; set; }
 
+        public int WatchFaction { get; set; }
+        //Online
+        //Cinematic
+        //TotalTime
+        //LevelTime
+
         public SubMap SubMap { get; set; }
         public SubSkin SubSkin { get; set; }
-        public List<SubStats> SubStats { get; set; }
+        public SubStats SubStats { get; set; }
+
+        public List<SubSpell> SubSpells { get; set; }
+        public List<SubActionBar> SubActionBars { get; set; }
+        public List<SubFaction> SubFactions { get; set; }
+        public List<SubSkill> SubSkills { get; set; }
+        public List<SubInventory> SubInventorie { get; set; }
+
+        public SubResistances SubResistances { get; set; }
+        public SubAccountData SubAccountData { get; set; }
         public List<SubTalents> SubTalents { get; set; }
         public List<SubTutorial> SubTutorial { get; set; }
 
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
         public DateTime? DeletedAt { get; set; }
+    }
+
+    public class SubInventory
+    {
+        public int Item { get; set; }
+        public int Slot { get; set; }
+        public int Bag { get; set; }
+        public int Owner { get; set; }
+        public int Creator { get; set; }
+        public int GiftCreator { get; set; }
+        public int StackCount { get; set; }
+        public int Durability { get; set; }
+        public int Flags { get; set; }
+        public int ChargesLeft { get; set; }
+        public int TextId { get; set; }
+        public int Enchantment { get; set; }
+        public int RandomProperties { get; set; }
+        public DateTime CreatedAt { get; set; }
+        public DateTime? DeletedAt { get; set; }
+    }
+
+    public class SubSkill
+    {
+        public int Skill { get; set; }
+        public int Value { get; set; }
+        public int Max { get; set; }
+        public DateTime CreatedAt { get; set; }
+    }
+
+    public class SubFaction
+    {
+        public int Faction { get; set; }
+        public int Flags { get; set; }
+        public int Standing{ get; set; }
+        public DateTime CreatedAt { get; set; }
+    }
+
+    public class SubActionBar
+    {
+        public int Button { get; set; }
+        public int Action { get; set; }
+        public int Type { get; set; }
+        public DateTime CreatedAt { get; set; }
+    }
+
+    public class SubSpell
+    {
+        public int Spell { get; set; }
+        public int Active { get; set; }
+        public int Cooldown { get; set; }
+        public DateTime CreatedAt { get; set; }
+    }
+
+    public class SubAccountData
+    {
+        public string Macros { get; set; }
+    }
+
+    public class SubResistances
+    {
+        public uint Armor { get; set; }
+
+        public uint Fire { get; set; }
+        public uint Nature { get; set; }
+        public uint Frost { get; set; }
+        public uint Shadow { get; set; }
+        public uint Arcane { get; set; }
     }
 
     public class SubTalents

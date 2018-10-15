@@ -7,7 +7,7 @@ namespace RealmServer.Handlers
     {
         public static void Handler(RealmServerSession session, CMSG_SET_ACTIVE_MOVER handler)
         {
-            Console.WriteLine(handler.Guid);
+            
         }
     }
 }

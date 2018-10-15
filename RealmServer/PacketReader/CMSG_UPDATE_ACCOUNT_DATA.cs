@@ -7,19 +7,19 @@ namespace RealmServer.PacketReader
     {
         public CMSG_UPDATE_ACCOUNT_DATA(byte[] data) : base(data)
         {
-            Data = ReadUInt32();
+            Type = ReadUInt32();
             Size = ReadUInt32();
-            Console.WriteLine(Data);
-
+            
             if (Size <= 0) return;
 
             var accountData = ReadBytes((int)BaseStream.Length - (int)BaseStream.Position);
             var decompressed = ZLib.Decompress(accountData);
 
-            Console.WriteLine(System.Text.Encoding.ASCII.GetString(decompressed));
+            Data = System.Text.Encoding.ASCII.GetString(decompressed);
         }
 
-        public uint Data { get; }
+        public uint Type { get; }
         public uint Size { get; }
+        public string Data { get;  }
     }
 }

@@ -7,7 +7,7 @@ namespace RealmServer.Handlers
     {
         public static void Handler(RealmServerSession session, MSG_MOVE_FALL_LAND handler)
         {
-            Console.WriteLine(handler.MoveFlags);
+            
         }
     }
 }
