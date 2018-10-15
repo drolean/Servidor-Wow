@@ -16,20 +16,21 @@ namespace Common.Database
             Log.Print(LogType.RealmServer, "Loading XML ".PadRight(40, '.') + " [OK] ");
 
             // Races
-            XmlSerializer serializerRaces = new XmlSerializer(typeof(RacesXml));
-            StreamReader readerRaces = new StreamReader("xml/races.xml");
+            var serializerRaces = new XmlSerializer(typeof(RacesXml));
+            var readerRaces = new StreamReader("xml/races.xml");
             RacesXml = serializerRaces.Deserialize(readerRaces) as RacesXml;
             readerRaces.Close();
         }
 
         public static racesRace GetRace(Races race)
         {
-            return RacesXml?.race.FirstOrDefault(a => a.id == (int)race);
+            return RacesXml?.race.FirstOrDefault(a => a.id == (int) race);
         }
 
         public static racesRaceClass GetRaceClass(Races race, Classes classe)
         {
-            return RacesXml?.race.FirstOrDefault(a => a.id == (int)race)?.classes.First(ba => ba.id == classe.ToString());
+            return RacesXml?.race.FirstOrDefault(a => a.id == (int) race)?.classes
+                .First(ba => ba.id == classe.ToString());
         }
     }
 }

@@ -1,6 +1,9 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
+using Common.Database;
 using Common.Database.Tables;
 using Common.Globals;
+using MongoDB.Driver;
 
 namespace RealmServer.PacketServer
 {
@@ -40,18 +43,29 @@ namespace RealmServer.PacketServer
                 Write(character.SubMap.MapZ);
 
                 Write(0); // Guild ID	
-                Write((int) CharacterFlag.None);
+                Write((int) character.Flag);
                 Write((byte) 0); // First Login or RestedState
 
                 Write(0); // PetModel	
                 Write(0); // PetLevel	
                 Write(0); // PetFamily = SELECT family FROM creature_template WHERE entry
 
-                //Items
-                for (var j = 0; j < 0x14; j++)
+                // TODO: create a lookup
+                for (byte i = 0; i < 20; i++)
                 {
-                    Write(0); // DisplayId
-                    Write((byte) 0); // InventoryType
+                    var inventory = character.SubInventorie.FirstOrDefault(x => x.Slot == i);
+
+                    if (inventory != null)
+                    {
+                        var item = DatabaseModel.ItemsCollection.Find(x => x.Entry == inventory.Item).FirstOrDefault();
+                        Write(item.DisplayId);
+                        Write((byte) item.InventoryType);
+                    }
+                    else
+                    {
+                        Write(0);
+                        Write((byte) 0);
+                    }
                 }
             }
         }

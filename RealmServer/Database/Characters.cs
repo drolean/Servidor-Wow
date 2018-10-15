@@ -7,6 +7,7 @@ using Common.Database.Xml;
 using Common.Globals;
 using Common.Helpers;
 using MongoDB.Driver;
+using RealmServer.Enums;
 using RealmServer.PacketReader;
 
 namespace RealmServer.Database
@@ -14,7 +15,7 @@ namespace RealmServer.Database
     public class Characters : RealmServerDatabase
     {
         /// <summary>
-        ///     Retrieve character by char name
+        ///     Retrieve character by name.
         /// </summary>
         /// <param name="character"></param>
         /// <returns></returns>
@@ -45,7 +46,9 @@ namespace RealmServer.Database
                 Money = 10,
                 Xp = 0,
                 //
-                WatchFaction = 255,
+                WatchFaction = -1, // 255??
+                Cinematic = false,
+                Flag = CharacterFlag.None,
                 //
                 SubMap = new SubMap
                 {
@@ -98,35 +101,78 @@ namespace RealmServer.Database
             CreateCharacterInventorie(character);
         }
 
+        /// <summary>
+        /// </summary>
+        /// <param name="character"></param>
         private static void CreateCharacterInventorie(Common.Database.Tables.Characters character)
         {
-            uint countBag = 0;
-            var startItems = MainProgram.CharacterOutfitReader.Get(character.Classe, character.Race, character.Gender);
-
-
-            var result = "";
-            for (var i = 0; i < 12; i++)
+            try
             {
-                result += startItems.Items[i];
-                if (i != 11) result += ",";
-            }
+                var startItems =
+                    MainProgram.CharacterOutfitReader.Get(character.Classe, character.Race, character.Gender);
 
-            Console.WriteLine(result);
-            /*
-            foreach (var i in startItems.Items)
-            {
-                if (i <= 0)
+                for (var i = 0; i < 12; i++)
                 {
-                    continue;
+                    if (startItems.Items[i] <= 0)
+                        continue;
+
+                    var item = DatabaseModel.ItemsCollection.Find(x => x.Entry == startItems.Items[i]).First();
+
+                    if (item == null)
+                        continue;
+
+                    DatabaseModel.CharacterCollection.UpdateOneAsync(
+                        Builders<Common.Database.Tables.Characters>.Filter.Where(x => x.Uid == character.Uid),
+                        Builders<Common.Database.Tables.Characters>.Update.Push("SubInventorie", new SubInventory
+                        {
+                            Item = item.Entry,
+                            Slot = PrefInvSlot(item.InventoryType) == 23 ? 23 : PrefInvSlot(item.InventoryType),
+                            CreatedAt = DateTime.Now
+                        })
+                    );
                 }
-
-                var item = XmlReader.GetItem(i);
-
-
-                if (PrefInvSlot(item) == 23)
-                    countBag++;
             }
-            */
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+        }
+
+        // TODO: move to Helper
+        internal static int PrefInvSlot(int item)
+        {
+            int[] slotTypes =
+            {
+                (int) InventorySlots.SLOT_INBACKPACK, // NONE EQUIP
+                (int) InventorySlots.SLOT_HEAD,
+                (int) InventorySlots.SLOT_NECK,
+                (int) InventorySlots.SLOT_SHOULDERS,
+                (int) InventorySlots.SLOT_SHIRT,
+                (int) InventorySlots.SLOT_CHEST,
+                (int) InventorySlots.SLOT_WAIST,
+                (int) InventorySlots.SLOT_LEGS,
+                (int) InventorySlots.SLOT_FEET,
+                (int) InventorySlots.SLOT_WRISTS,
+                (int) InventorySlots.SLOT_HANDS,
+                (int) InventorySlots.SLOT_FINGERL,
+                (int) InventorySlots.SLOT_TRINKETL,
+                (int) InventorySlots.SLOT_MAINHAND, // 1h
+                (int) InventorySlots.SLOT_OFFHAND, // shield
+                (int) InventorySlots.SLOT_RANGED,
+                (int) InventorySlots.SLOT_BACK,
+                (int) InventorySlots.SLOT_MAINHAND, // 2h
+                (int) InventorySlots.SLOT_BAG1,
+                (int) InventorySlots.SLOT_TABARD,
+                (int) InventorySlots.SLOT_CHEST, // robe
+                (int) InventorySlots.SLOT_MAINHAND, // mainhand
+                (int) InventorySlots.SLOT_OFFHAND, // offhand
+                (int) InventorySlots.SLOT_MAINHAND, // held
+                (int) InventorySlots.SLOT_INBACKPACK, // ammo
+                (int) InventorySlots.SLOT_RANGED, // thrown
+                (int) InventorySlots.SLOT_RANGED // rangedright
+            };
+
+            return slotTypes[item];
         }
 
         /// <summary>
@@ -263,7 +309,7 @@ namespace RealmServer.Database
         /// <returns></returns>
         public static List<Common.Database.Tables.Characters> GetCharacters(Users user)
         {
-            return DatabaseModel.CharacterCollection.FindSync(x => x.User == user.Id && x.DeletedAt == null).ToList();
+            return DatabaseModel.CharacterCollection.Find(x => x.User == user.Id && x.DeletedAt == null).ToList();
         }
 
         /// <summary>

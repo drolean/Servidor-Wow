@@ -16,6 +16,7 @@ namespace Common.Database.Tables
         public Races Race { get; set; }
         public Classes Classe { get; set; }
         public Genders Gender { get; set; }
+        public CharacterFlag Flag { get; set; }
 
         public string Name { get; set; }
         public byte Level { get; set; }
@@ -23,6 +24,8 @@ namespace Common.Database.Tables
         public uint Xp { get; set; }
 
         public int WatchFaction { get; set; }
+
+        public bool Cinematic { get; set; }
         //Online
         //Cinematic
         //TotalTime
@@ -79,7 +82,7 @@ namespace Common.Database.Tables
     {
         public int Faction { get; set; }
         public int Flags { get; set; }
-        public int Standing{ get; set; }
+        public int Standing { get; set; }
         public DateTime CreatedAt { get; set; }
     }
 

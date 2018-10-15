@@ -59,6 +59,7 @@
   <ItemGroup>
     <Compile Include="Enums\ChatMessageLanguage.cs" />
     <Compile Include="Enums\ChatMessageType.cs" />
+    <Compile Include="Enums\InventorySlots.cs" />
     <Compile Include="Enums\UnitFields.cs" />
     <Compile Include="Enums\ObjectFields.cs" />
     <Compile Include="Enums\HighGuid.cs" />
