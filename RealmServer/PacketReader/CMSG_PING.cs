@@ -1,4 +1,6 @@
-﻿namespace RealmServer.PacketReader
+﻿using Common.Helpers;
+
+namespace RealmServer.PacketReader
 {
     /// <summary>
     ///     CMSG_PING represents a packet sent by the client to ping the server.
@@ -15,6 +17,10 @@
         {
             Ping = ReadUInt32();
             Latency = ReadUInt32();
+
+#if DEBUG
+            Log.Print(LogType.Debug, $"[CMSG_PING] Ping: {Ping} Latency: {Latency}");
+#endif
         }
 
         public uint Ping { get; }

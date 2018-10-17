@@ -16,6 +16,10 @@ namespace RealmServer.PacketReader
             var decompressed = ZLib.Decompress(accountData);
 
             Data = Encoding.ASCII.GetString(decompressed);
+
+#if DEBUG
+            Log.Print(LogType.Debug, $"[CMSG_UPDATE_ACCOUNT_DATA] Type: {Type} Size: {Size} Data: {Data}");
+#endif
         }
 
         public uint Type { get; }

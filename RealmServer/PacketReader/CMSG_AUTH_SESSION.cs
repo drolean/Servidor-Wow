@@ -1,4 +1,6 @@
-﻿namespace RealmServer.PacketReader
+﻿using Common.Helpers;
+
+namespace RealmServer.PacketReader
 {
     /// <summary>
     ///     CMSG_AUTH_SESSION represents a packet sent by the client after the server has sent the challenge.
@@ -16,6 +18,12 @@
             ClientSeed = ReadInt32();
             ClientHash = ReadBytes(20);
             ClientAddOnsSize = ReadInt32();
+
+#if DEBUG
+            Log.Print(LogType.Debug, $"[CMSG_AUTH_SESSION] ClientVersion: {ClientVersion} " +
+                                     $"ClientSessionId: {ClientSessionId}: ClientAccount: {ClientAccount} " +
+                                     $"ClientSeed: {ClientSeed} ClientHash: {ClientHash} ClientAddOnsSize: {ClientAddOnsSize}");
+#endif
         }
 
         public int ClientVersion { get; }

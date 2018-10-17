@@ -1,4 +1,6 @@
-﻿namespace RealmServer.PacketReader
+﻿using Common.Helpers;
+
+namespace RealmServer.PacketReader
 {
     /// <summary>
     ///     CMSG_CHAR_DELETE represents a packet sent by the client whenever it tries to delete a character.
@@ -8,6 +10,10 @@
         public CMSG_CHAR_DELETE(byte[] data) : base(data)
         {
             Id = ReadUInt64();
+
+#if DEBUG
+            Log.Print(LogType.Debug, $"[CMSG_CHAR_DELETE] Id: {Id}");
+#endif
         }
 
         public ulong Id { get; }

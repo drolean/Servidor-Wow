@@ -1,4 +1,6 @@
-﻿namespace RealmServer.PacketReader
+﻿using Common.Helpers;
+
+namespace RealmServer.PacketReader
 {
     /// <summary>
     ///     CMSG_CHAR_CREATE represents a packet sent by the client whenever it tries to create a character.
@@ -20,6 +22,11 @@
             FacialHair = ReadByte();
 
             OutfitId = ReadByte();
+
+#if DEBUG
+            Log.Print(LogType.Debug, $"[CMSG_CHAR_CREATE] Name: {Name} Race: {Race} Classe: {Classe} Gender: {Gender} " +
+                                     $"Skin: {Skin} Face: {Face} HairStyle: {HairStyle} HairColor: {HairColor} OutfitId: {OutfitId}");
+#endif
         }
 
         public string Name { get; }

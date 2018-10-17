@@ -56,8 +56,8 @@
         CMSG_AUTH_SRP6_BEGIN = 0x033,
         CMSG_AUTH_SRP6_PROOF = 0x034,
         CMSG_AUTH_SRP6_RECODE = 0x035,
-        CMSG_CHAR_CREATE = 0x036, // Create Character Request.	
-        CMSG_CHAR_ENUM = 0x037, // Server makes a list of character list for logged account and send.	
+        CMSG_CHAR_CREATE = 0x036, // Create Character Request.
+        CMSG_CHAR_ENUM = 0x037, // Server makes a list of character list for logged account and send.
         CMSG_CHAR_DELETE = 0x038,
         SMSG_AUTH_SRP6_RESPONSE = 0x039,
         SMSG_CHAR_CREATE = 0x03A,
@@ -438,7 +438,7 @@
         SMSG_TRAINER_LIST = 0x1B1,
         CMSG_TRAINER_BUY_SPELL = 0x1B2,
         SMSG_TRAINER_BUY_SUCCEEDED = 0x1B3,
-        SMSG_TRAINER_BUY_FAILED = 0x1B4, // uint64, uint32, uint32 (0...2)	
+        SMSG_TRAINER_BUY_FAILED = 0x1B4, // uint64, uint32, uint32 (0...2)
         CMSG_BINDER_ACTIVATE = 0x1B5,
         SMSG_PLAYERBINDERROR = 0x1B6,
         CMSG_BANKER_ACTIVATE = 0x1B7,
@@ -660,7 +660,7 @@
         CMSG_GROUP_ASSISTANT_LEADER = 0x28F,
         CMSG_BUYBACK_ITEM = 0x290,
         SMSG_SERVER_MESSAGE = 0x291,
-        CMSG_MEETINGSTONE_JOIN = 0x292, // lua: SetSavedInstanceExtend	
+        CMSG_MEETINGSTONE_JOIN = 0x292, // lua: SetSavedInstanceExtend
         CMSG_MEETINGSTONE_LEAVE = 0x293,
         CMSG_MEETINGSTONE_CHEAT = 0x294,
         SMSG_MEETINGSTONE_SETQUEUE = 0x295,
@@ -836,7 +836,7 @@
         MSG_MOVE_START_SWIM_CHEAT = 0x341,
         MSG_MOVE_STOP_SWIM_CHEAT = 0x342,
 
-        // [-ZERO] Last existed in 1.12.1 opcode, maybe some renumbering from other side	
+        // [-ZERO] Last existed in 1.12.1 opcode, maybe some renumbering from other side
         CMSG_CANCEL_MOUNT_AURA = 0x375,
         CMSG_CANCEL_TEMP_ENCHANTMENT = 0x379,
         CMSG_MAELSTROM_INVALIDATE_CACHE = 0x387,

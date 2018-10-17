@@ -1,4 +1,6 @@
-﻿namespace RealmServer.PacketReader
+﻿using Common.Helpers;
+
+namespace RealmServer.PacketReader
 {
     /// <summary>
     ///     Used to set active mover from client side.
@@ -7,9 +9,13 @@
     {
         public CMSG_SET_ACTIVE_MOVER(byte[] data) : base(data)
         {
-            Guid = ReadUInt64();
+            Uid = ReadUInt64();
+
+#if DEBUG
+            Log.Print(LogType.Debug, $"[CMSG_SET_ACTIVE_MOVER] Uid: {Uid}");
+#endif
         }
 
-        public ulong Guid { get; }
+        public ulong Uid { get; }
     }
 }
