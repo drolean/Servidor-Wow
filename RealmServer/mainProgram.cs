@@ -309,6 +309,57 @@ namespace RealmServer
             RealmServerRouter.AddHandler<CMSG_PUSHQUESTTOPARTY>(RealmEnums.CMSG_PUSHQUESTTOPARTY, Future); 
             */
 
+            RealmServerRouter.AddHandler<CMSG_LIST_INVENTORY>(RealmEnums.CMSG_LIST_INVENTORY, Future);
+            RealmServerRouter.AddHandler<CMSG_SELL_ITEM>(RealmEnums.CMSG_SELL_ITEM, Future);
+            RealmServerRouter.AddHandler<CMSG_BUY_ITEM>(RealmEnums.CMSG_BUY_ITEM, Future);
+            RealmServerRouter.AddHandler<CMSG_BUY_ITEM_IN_SLOT>(RealmEnums.CMSG_BUY_ITEM_IN_SLOT, Future);
+
+            RealmServerRouter.AddHandler<CMSG_TAXINODE_STATUS_QUERY>(RealmEnums.CMSG_TAXINODE_STATUS_QUERY, Future);
+            RealmServerRouter.AddHandler<CMSG_TAXIQUERYAVAILABLENODES>(RealmEnums.CMSG_TAXIQUERYAVAILABLENODES, Future);
+            RealmServerRouter.AddHandler<CMSG_ACTIVATETAXI>(RealmEnums.CMSG_ACTIVATETAXI, Future);
+
+            RealmServerRouter.AddHandler<CMSG_TRAINER_LIST>(RealmEnums.CMSG_TRAINER_LIST, Future);
+            RealmServerRouter.AddHandler<CMSG_TRAINER_BUY_SPELL>(RealmEnums.CMSG_TRAINER_BUY_SPELL, Future);
+            RealmServerRouter.AddHandler<CMSG_BINDER_ACTIVATE>(RealmEnums.CMSG_BINDER_ACTIVATE, Future);
+            RealmServerRouter.AddHandler<CMSG_BANKER_ACTIVATE>(RealmEnums.CMSG_BANKER_ACTIVATE, Future);
+            RealmServerRouter.AddHandler(RealmEnums.CMSG_BUY_BANK_SLOT, Future);
+
+            RealmServerRouter.AddHandler<CMSG_PETITION_SHOWLIST>(RealmEnums.CMSG_PETITION_SHOWLIST, Future);
+            RealmServerRouter.AddHandler<CMSG_PETITION_BUY>(RealmEnums.CMSG_PETITION_BUY, Future);
+            RealmServerRouter.AddHandler<CMSG_PETITION_SHOW_SIGNATURES>(RealmEnums.CMSG_PETITION_SHOW_SIGNATURES,
+                Future);
+            RealmServerRouter.AddHandler<CMSG_PETITION_SIGN>(RealmEnums.CMSG_PETITION_SIGN, Future);
+            RealmServerRouter.AddHandler<MSG_PETITION_DECLINE>(RealmEnums.MSG_PETITION_DECLINE, Future);
+            RealmServerRouter.AddHandler<CMSG_OFFER_PETITION>(RealmEnums.CMSG_OFFER_PETITION, Future);
+            RealmServerRouter.AddHandler<CMSG_TURN_IN_PETITION>(RealmEnums.CMSG_TURN_IN_PETITION, Future);
+            RealmServerRouter.AddHandler<CMSG_PETITION_QUERY>(RealmEnums.CMSG_PETITION_QUERY, Future);
+
+            RealmServerRouter.AddHandler<CMSG_BUG>(RealmEnums.CMSG_BUG, Future);
+            RealmServerRouter.AddHandler(RealmEnums.CMSG_PLAYED_TIME, Future);
+
+            RealmServerRouter.AddHandler<CMSG_RECLAIM_CORPSE>(RealmEnums.CMSG_RECLAIM_CORPSE, Future);
+            RealmServerRouter.AddHandler<CMSG_WRAP_ITEM>(RealmEnums.CMSG_WRAP_ITEM, Future);
+            RealmServerRouter.AddHandler<MSG_MINIMAP_PING>(RealmEnums.MSG_MINIMAP_PING, Future);
+            RealmServerRouter.AddHandler<CMSG_SETSHEATHED>(RealmEnums.CMSG_SETSHEATHED, Future);
+            RealmServerRouter.AddHandler<CMSG_QUEST_POI_QUERY>(RealmEnums.CMSG_QUEST_POI_QUERY, Future);
+            RealmServerRouter.AddHandler<CMSG_PET_CAST_SPELL>(RealmEnums.CMSG_PET_CAST_SPELL, Future);
+            RealmServerRouter.AddHandler<MSG_SAVE_GUILD_EMBLEM>(RealmEnums.MSG_SAVE_GUILD_EMBLEM, Future);
+            RealmServerRouter.AddHandler<MSG_TABARDVENDOR_ACTIVATE>(RealmEnums.MSG_TABARDVENDOR_ACTIVATE, Future);
+            RealmServerRouter.AddHandler<MSG_RANDOM_ROLL>(RealmEnums.MSG_RANDOM_ROLL, Future);
+
+            RealmServerRouter.AddHandler<CMSG_UNLEARN_SKILL>(RealmEnums.CMSG_UNLEARN_SKILL, Future); 
+            RealmServerRouter.AddHandler<CMSG_GMTICKET_UPDATETEXT>(RealmEnums.CMSG_GMTICKET_UPDATETEXT, Future); 
+            RealmServerRouter.AddHandler<CMSG_REQUEST_ACCOUNT_DATA>(RealmEnums.CMSG_REQUEST_ACCOUNT_DATA, Future); 
+            RealmServerRouter.AddHandler(RealmEnums.MSG_CORPSE_QUERY, Future);
+            RealmServerRouter.AddHandler(RealmEnums.CMSG_GMTICKET_DELETETICKET, Future);
+
+            RealmServerRouter.AddHandler<CMSG_SPIRIT_HEALER_ACTIVATE>(RealmEnums.CMSG_SPIRIT_HEALER_ACTIVATE, Future); 
+            RealmServerRouter.AddHandler<CMSG_CHAT_IGNORED>(RealmEnums.CMSG_CHAT_IGNORED, Future); 
+            RealmServerRouter.AddHandler<CMSG_GUILD_RANK>(RealmEnums.CMSG_GUILD_RANK, Future); 
+            RealmServerRouter.AddHandler<CMSG_GUILD_ADD_RANK>(RealmEnums.CMSG_GUILD_ADD_RANK, Future); 
+            RealmServerRouter.AddHandler(RealmEnums.CMSG_GUILD_DEL_RANK, Future);
+            RealmServerRouter.AddHandler<CMSG_GUILD_SET_PUBLIC_NOTE>(RealmEnums.CMSG_GUILD_SET_PUBLIC_NOTE, Future); 
+            RealmServerRouter.AddHandler<CMSG_GUILD_SET_OFFICER_NOTE>(RealmEnums.CMSG_GUILD_SET_OFFICER_NOTE, Future); 
         }
 
         private static void Future(RealmServerSession session, byte[] data)
