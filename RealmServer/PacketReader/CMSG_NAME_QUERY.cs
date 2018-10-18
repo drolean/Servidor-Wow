@@ -1,5 +1,4 @@
 ﻿using Common.Helpers;
-using RealmServer.Enums;
 
 namespace RealmServer.PacketReader
 {
