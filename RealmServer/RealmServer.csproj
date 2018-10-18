@@ -317,9 +317,11 @@
     <Compile Include="PacketServer\SMSG_CORPSE_RECLAIM_DELAY.cs" />
     <Compile Include="PacketServer\SMSG_FORCE_MOVE_ROOT.cs" />
     <Compile Include="PacketServer\SMSG_FORCE_MOVE_UNROOT.cs" />
+    <Compile Include="PacketServer\SMSG_FRIEND_LIST.cs" />
     <Compile Include="PacketServer\SMSG_GMTICKET_CREATE.cs" />
     <Compile Include="PacketServer\SMSG_GMTICKET_GETTICKET.cs" />
     <Compile Include="PacketServer\SMSG_GMTICKET_SYSTEMSTATUS.cs" />
+    <Compile Include="PacketServer\SMSG_IGNORE_LIST.cs" />
     <Compile Include="PacketServer\SMSG_INITIAL_SPELLS.cs" />
     <Compile Include="PacketServer\SMSG_INIT_WORLD_STATES.cs" />
     <Compile Include="PacketServer\SMSG_LOGIN_SETTIMESPEED.cs" />
