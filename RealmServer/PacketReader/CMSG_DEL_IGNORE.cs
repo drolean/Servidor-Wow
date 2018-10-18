@@ -1,11 +1,10 @@
-﻿using System;
-using Common.Helpers;
+﻿using Common.Helpers;
 
 namespace RealmServer.PacketReader
 {
     public sealed class CMSG_DEL_IGNORE : Common.Network.PacketReader
     {
-        public UInt64 PlayerUid;
+        public ulong PlayerUid;
 
         public CMSG_DEL_IGNORE(byte[] data) : base(data)
         {

@@ -1,11 +1,10 @@
-﻿using System;
-using Common.Helpers;
+﻿using Common.Helpers;
 
 namespace RealmServer.PacketReader
 {
     public sealed class CMSG_AUCTION_PLACE_BID : Common.Network.PacketReader
     {
-        public UInt64 AuctioneerId;
+        public ulong AuctioneerId;
         public uint AuctionId;
         public uint Bid;
 
@@ -16,7 +15,8 @@ namespace RealmServer.PacketReader
             Bid = ReadUInt32();
 
 #if DEBUG
-            Log.Print(LogType.Debug, $"[CMSG_AUCTION_PLACE_BID] AuctioneerId: {AuctioneerId} AuctionId: {AuctionId} Bid {Bid}");
+            Log.Print(LogType.Debug,
+                $"[CMSG_AUCTION_PLACE_BID] AuctioneerId: {AuctioneerId} AuctionId: {AuctionId} Bid {Bid}");
 #endif
         }
     }

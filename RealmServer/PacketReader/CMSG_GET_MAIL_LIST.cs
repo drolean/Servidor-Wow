@@ -1,11 +1,10 @@
-﻿using System;
-using Common.Helpers;
+﻿using Common.Helpers;
 
 namespace RealmServer.PacketReader
 {
     public sealed class CMSG_GET_MAIL_LIST : Common.Network.PacketReader
     {
-        public UInt64 MailListUid;
+        public ulong MailListUid;
 
         public CMSG_GET_MAIL_LIST(byte[] data) : base(data)
         {

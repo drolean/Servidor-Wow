@@ -5,8 +5,8 @@ namespace RealmServer.PacketReader
     public sealed class CMSG_TEXT_EMOTE : Common.Network.PacketReader
     {
         public int Emote;
-        public int Unk;
         public ulong Uid;
+        public int Unk;
 
         public CMSG_TEXT_EMOTE(byte[] data) : base(data)
         {

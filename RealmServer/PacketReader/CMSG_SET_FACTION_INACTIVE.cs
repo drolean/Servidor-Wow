@@ -4,8 +4,8 @@ namespace RealmServer.PacketReader
 {
     public sealed class CMSG_SET_FACTION_INACTIVE : Common.Network.PacketReader
     {
-        public uint ReplistId;
         public byte Inactive;
+        public uint ReplistId;
 
         public CMSG_SET_FACTION_INACTIVE(byte[] data) : base(data)
         {

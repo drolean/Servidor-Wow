@@ -4,12 +4,12 @@ namespace RealmServer.PacketReader
 {
     public sealed class CMSG_GMTICKET_CREATE : Common.Network.PacketReader
     {
+        public string Future;
         public uint MapId;
         public float MapX;
         public float MapY;
         public float MapZ;
         public string Text;
-        public string Future;
 
         public CMSG_GMTICKET_CREATE(byte[] data) : base(data)
         {

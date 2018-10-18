@@ -13,7 +13,8 @@ namespace RealmServer.PacketReader
             ChannelPassword = ReadCString();
 
 #if DEBUG
-            Log.Print(LogType.Debug, $"[CMSG_CHANNEL_PASSWORD] ChannelName: {ChannelName} ChannelPassword: {ChannelPassword}");
+            Log.Print(LogType.Debug,
+                $"[CMSG_CHANNEL_PASSWORD] ChannelName: {ChannelName} ChannelPassword: {ChannelPassword}");
 #endif
         }
     }

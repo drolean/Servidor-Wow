@@ -1,11 +1,10 @@
-﻿using System;
-using Common.Helpers;
+﻿using Common.Helpers;
 
 namespace RealmServer.PacketReader
 {
     public sealed class CMSG_AUCTION_LIST_BIDDER_ITEMS : Common.Network.PacketReader
     {
-        public UInt64 AuctioneerId;
+        public ulong AuctioneerId;
         public uint OutbiddedCount;
 
         public CMSG_AUCTION_LIST_BIDDER_ITEMS(byte[] data) : base(data)
@@ -18,7 +17,8 @@ namespace RealmServer.PacketReader
                 //ReadUInt32(); //auction id
             }
 #if DEBUG
-            Log.Print(LogType.Debug, $"[CMSG_AUCTION_LIST_BIDDER_ITEMS] AuctioneerId: {AuctioneerId} OutbiddedCount: {OutbiddedCount}");
+            Log.Print(LogType.Debug,
+                $"[CMSG_AUCTION_LIST_BIDDER_ITEMS] AuctioneerId: {AuctioneerId} OutbiddedCount: {OutbiddedCount}");
 #endif
         }
     }

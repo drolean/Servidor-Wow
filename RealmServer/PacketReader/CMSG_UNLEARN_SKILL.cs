@@ -4,8 +4,8 @@ namespace RealmServer.PacketReader
 {
     public sealed class CMSG_UNLEARN_SKILL : Common.Network.PacketReader
     {
-        public uint SkillId;
         public int Max;
+        public uint SkillId;
 
         public CMSG_UNLEARN_SKILL(byte[] data) : base(data)
         {

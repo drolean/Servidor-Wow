@@ -1,5 +1,4 @@
-﻿using System;
-using Common.Database.Tables;
+﻿using Common.Database.Tables;
 using Common.Globals;
 
 namespace RealmServer.PacketServer
@@ -10,10 +9,7 @@ namespace RealmServer.PacketServer
         {
             Write((byte) character.SubIgnoreds.Count);
 
-            foreach (var ignored in character.SubIgnoreds)
-            {
-                Write((UInt64) ignored.Uid);
-            }
+            foreach (var ignored in character.SubIgnoreds) Write(ignored.Uid);
         }
     }
 }

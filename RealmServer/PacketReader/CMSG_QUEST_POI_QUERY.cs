@@ -18,7 +18,8 @@ namespace RealmServer.PacketReader
                 questIds.Add(ReadUInt32());
 
 #if DEBUG
-            Log.Print(LogType.Debug, $"[CMSG_QUEST_POI_QUERY] Count: {Count} questIds: {string.Join("\t", questIds.Cast<string>().ToArray())}");
+            Log.Print(LogType.Debug,
+                $"[CMSG_QUEST_POI_QUERY] Count: {Count} questIds: {string.Join("\t", questIds.Cast<string>().ToArray())}");
 #endif
         }
     }

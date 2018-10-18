@@ -1,5 +1,4 @@
 ﻿using System;
-using Common.Database.Dbc;
 using Common.Database.Tables;
 using RealmServer.Enums;
 using RealmServer.Helpers;
@@ -16,15 +15,16 @@ namespace RealmServer.World.Enititys
         {
             Character = character;
 
-            ChrRaces chrRaces = MainProgram.ChrRacesReader.GetData(character.Race);
+            var chrRaces = MainProgram.ChrRacesReader.GetData(character.Race);
 
-            Model = (int) CharacterHelper.GetRaceModel(character.Race, character.Gender); ;
+            Model = (int) CharacterHelper.GetRaceModel(character.Race, character.Gender);
+            ;
             ModelNative = (int) CharacterHelper.GetRaceModel(character.Race, character.Gender);
             Scale = CharacterHelper.GetScale(character.Race, character.Gender);
 
-            SetUpdateField((int) ObjectFields.OBJECT_FIELD_TYPE, (uint) 0x19); // 25
-            SetUpdateField((int) ObjectFields.OBJECT_FIELD_SCALE_X, Size);
-            SetUpdateField((int) ObjectFields.OBJECT_FIELD_PADDING, 0);
+            SetUpdateField((int) ObjectFields.Type, (uint) 0x19); // 25
+            SetUpdateField((int) ObjectFields.ScaleX, Size);
+            SetUpdateField((int) ObjectFields.Padding, 0);
 
             SetUpdateField((int) UnitFields.UNIT_FIELD_TARGET, (ulong) 0);
 
@@ -77,7 +77,7 @@ namespace RealmServer.World.Enititys
 
             SetUpdateField((int) UnitFields.UNIT_FIELD_BYTES_1, BitConverter.ToUInt32(new byte[]
             {
-                (byte) StandStates.STANDSTATE_STAND,
+                (byte) StandStates.Stand,
                 0,
                 0,
                 0
@@ -165,21 +165,21 @@ namespace RealmServer.World.Enititys
             */
         }
 
-        private void SkillGenerate()
-        {
-            int a = 0;
-            foreach (var skill in Character.SubSkills)
-            {
-                SetUpdateField((int)PlayerFields.PLAYER_SKILL_INFO_1_1 + a * 3, skill.Skill);
-                SetUpdateField((int)PlayerFields.PLAYER_SKILL_INFO_1_1 + a * 3 + 1, skill.Value + (skill.Max << 16));
-                a++;
-            }
-        }
-
         public override int DataLength => (int) PlayerFields.PLAYER_END - 0x4;
 
         public Characters Character { get; }
         public override string Name => Character.Name;
         public RealmServerSession Session { get; set; }
+
+        private void SkillGenerate()
+        {
+            var a = 0;
+            foreach (var skill in Character.SubSkills)
+            {
+                SetUpdateField((int) PlayerFields.PLAYER_SKILL_INFO_1_1 + a * 3, skill.Skill);
+                SetUpdateField((int) PlayerFields.PLAYER_SKILL_INFO_1_1 + a * 3 + 1, skill.Value + (skill.Max << 16));
+                a++;
+            }
+        }
     }
 }

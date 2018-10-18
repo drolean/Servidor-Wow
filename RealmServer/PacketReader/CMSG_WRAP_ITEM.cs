@@ -17,7 +17,8 @@ namespace RealmServer.PacketReader
             ItemSlot = ReadByte();
 
 #if DEBUG
-            Log.Print(LogType.Debug, $"[CMSG_WRAP_ITEM] GiftBag: {GiftBag} GiftSlot: {GiftSlot} ItemBag: {ItemBag} ItemSlot: {ItemSlot}");
+            Log.Print(LogType.Debug,
+                $"[CMSG_WRAP_ITEM] GiftBag: {GiftBag} GiftSlot: {GiftSlot} ItemBag: {ItemBag} ItemSlot: {ItemSlot}");
 #endif
         }
     }

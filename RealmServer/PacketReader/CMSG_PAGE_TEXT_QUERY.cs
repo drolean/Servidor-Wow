@@ -3,12 +3,12 @@
 namespace RealmServer.PacketReader
 {
     /// <summary>
-    /// CMSG_PAGE_TEXT_QUERY represents a packet sent by the client when it wants to retrieve multiple item information.
+    ///     CMSG_PAGE_TEXT_QUERY represents a packet sent by the client when it wants to retrieve multiple item information.
     /// </summary>
     public sealed class CMSG_PAGE_TEXT_QUERY : Common.Network.PacketReader
     {
-        public int PageId;
         public ulong ItemUid;
+        public int PageId;
 
         public CMSG_PAGE_TEXT_QUERY(byte[] data) : base(data)
         {

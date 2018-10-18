@@ -1,11 +1,10 @@
-﻿using System;
-using Common.Helpers;
+﻿using Common.Helpers;
 
 namespace RealmServer.PacketReader
 {
     public sealed class MSG_TABARDVENDOR_ACTIVATE : Common.Network.PacketReader
     {
-        public UInt64 TabardUid;
+        public ulong TabardUid;
 
         public MSG_TABARDVENDOR_ACTIVATE(byte[] data) : base(data)
         {

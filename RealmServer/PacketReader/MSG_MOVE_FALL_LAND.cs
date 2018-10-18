@@ -16,59 +16,15 @@ namespace RealmServer.PacketReader
 
             switch (MoveFlags)
             {
-                case MovementFlags.MoveflagOntransport:
+                case MovementFlags.Ontransport:
                     TransportIdk = ReadUInt64();
                     TransportMapX = ReadSingle();
                     TransportMapY = ReadSingle();
                     TransportMapZ = ReadSingle();
                     TransportMapR = ReadSingle();
                     break;
-                case MovementFlags.MoveflagSwimming:
+                case MovementFlags.Swimming:
                     Swimming = ReadSingle();
-                    break;
-                case MovementFlags.MoveflagNone:
-                    break;
-                case MovementFlags.MoveflagForward:
-                    break;
-                case MovementFlags.MoveflagBackward:
-                    break;
-                case MovementFlags.MoveflagStrafeLeft:
-                    break;
-                case MovementFlags.MoveflagStrafeRight:
-                    break;
-                case MovementFlags.MoveflagTurnLeft:
-                    break;
-                case MovementFlags.MoveflagTurnRight:
-                    break;
-                case MovementFlags.MoveflagPitchUp:
-                    break;
-                case MovementFlags.MoveflagPitchDown:
-                    break;
-                case MovementFlags.MoveflagWalkMode:
-                    break;
-                case MovementFlags.MoveflagLevitating:
-                    break;
-                case MovementFlags.MoveflagRoot:
-                    break;
-                case MovementFlags.MoveflagFalling:
-                    break;
-                case MovementFlags.MoveflagFallingfar:
-                    break;
-                case MovementFlags.MoveflagAscending:
-                    break;
-                case MovementFlags.MoveflagCanFly:
-                    break;
-                case MovementFlags.MoveflagFlying:
-                    break;
-                case MovementFlags.MoveflagSplineElevation:
-                    break;
-                case MovementFlags.MoveflagSplineEnabled:
-                    break;
-                case MovementFlags.MoveflagWaterwalking:
-                    break;
-                case MovementFlags.MoveflagSafeFall:
-                    break;
-                case MovementFlags.MoveflagHover:
                     break;
                 default:
                     Console.WriteLine(MoveFlags);

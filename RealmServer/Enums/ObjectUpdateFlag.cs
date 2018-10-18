@@ -5,13 +5,13 @@ namespace RealmServer.Enums
     [Flags]
     public enum ObjectUpdateFlag : byte
     {
-        UpdateflagNone = 0x0000,
-        UpdateflagSelf = 0x0001,
-        UpdateflagTransport = 0x0002,
-        UpdateflagFullguid = 0x0004,
-        UpdateflagHighguid = 0x0008,
-        UpdateflagAll = 0x0010,
-        UpdateflagLiving = 0x0020,
-        UpdateflagHasPosition = 0x0040
+        None = 0x0000,
+        Self = 0x0001,
+        Transport = 0x0002,
+        Fullguid = 0x0004,
+        Highguid = 0x0008,
+        All = 0x0010,
+        Living = 0x0020,
+        HasPosition = 0x0040
     }
 }

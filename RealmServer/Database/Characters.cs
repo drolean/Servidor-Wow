@@ -15,7 +15,7 @@ namespace RealmServer.Database
     public class Characters : RealmServerDatabase
     {
         /// <summary>
-        /// Find character by UID.
+        ///     Find character by UID.
         /// </summary>
         /// <param name="uid"></param>
         /// <returns></returns>
@@ -25,7 +25,7 @@ namespace RealmServer.Database
         }
 
         /// <summary>
-        /// Retrieve character by name.
+        ///     Retrieve character by name.
         /// </summary>
         /// <param name="character"></param>
         /// <returns></returns>

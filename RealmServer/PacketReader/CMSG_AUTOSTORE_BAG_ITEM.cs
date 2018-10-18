@@ -5,8 +5,8 @@ namespace RealmServer.PacketReader
     public sealed class CMSG_AUTOSTORE_BAG_ITEM : Common.Network.PacketReader
     {
         public byte Bag;
-        public byte Slot;
         public byte Dest;
+        public byte Slot;
 
         public CMSG_AUTOSTORE_BAG_ITEM(byte[] data) : base(data)
         {

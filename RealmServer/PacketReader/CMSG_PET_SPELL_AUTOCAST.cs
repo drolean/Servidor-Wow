@@ -1,13 +1,12 @@
-﻿using System;
-using Common.Helpers;
+﻿using Common.Helpers;
 
 namespace RealmServer.PacketReader
 {
     public sealed class CMSG_PET_SPELL_AUTOCAST : Common.Network.PacketReader
     {
-        public UInt64 Uid;
         public uint SpellId;
         public byte State;
+        public ulong Uid;
 
         public CMSG_PET_SPELL_AUTOCAST(byte[] data) : base(data)
         {

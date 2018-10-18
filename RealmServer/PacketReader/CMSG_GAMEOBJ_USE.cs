@@ -1,11 +1,10 @@
-﻿using System;
-using Common.Helpers;
+﻿using Common.Helpers;
 
 namespace RealmServer.PacketReader
 {
     public sealed class CMSG_GAMEOBJ_USE : Common.Network.PacketReader
     {
-        public UInt64 GameObjectUid;
+        public ulong GameObjectUid;
 
         public CMSG_GAMEOBJ_USE(byte[] data) : base(data)
         {

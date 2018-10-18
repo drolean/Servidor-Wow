@@ -1,12 +1,11 @@
-﻿using System;
-using Common.Helpers;
+﻿using Common.Helpers;
 
 namespace RealmServer.PacketReader
 {
     public sealed class CMSG_MOVE_TIME_SKIPPED : Common.Network.PacketReader
     {
-        public UInt64 Uid;
         public uint Lag;
+        public ulong Uid;
 
         public CMSG_MOVE_TIME_SKIPPED(byte[] data) : base(data)
         {

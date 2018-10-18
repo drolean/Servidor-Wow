@@ -3,16 +3,16 @@
 namespace RealmServer.PacketReader
 {
     /// <summary>
-    /// CMSG_WHO represents a packet sent by the client when it wants to retrieve who information.
+    ///     CMSG_WHO represents a packet sent by the client when it wants to retrieve who information.
     /// </summary>
     public sealed class CMSG_WHO : Common.Network.PacketReader
     {
-        public uint LevelMin;
         public uint LevelMax;
-        public string NamePlayer;
-        public string NameGuild;
-        public uint MaskRace;
+        public uint LevelMin;
         public uint MaskClass;
+        public uint MaskRace;
+        public string NameGuild;
+        public string NamePlayer;
         public uint ZonesCount;
 
         public CMSG_WHO(byte[] data) : base(data)
@@ -45,7 +45,6 @@ namespace RealmServer.PacketReader
             strings.Add(UCase(EscapeString(packet.GetString())))
             Next
                 */
-
         }
     }
 }

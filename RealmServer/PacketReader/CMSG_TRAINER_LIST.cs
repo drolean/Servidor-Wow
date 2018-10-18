@@ -1,11 +1,10 @@
-﻿using System;
-using Common.Helpers;
+﻿using Common.Helpers;
 
 namespace RealmServer.PacketReader
 {
     public sealed class CMSG_TRAINER_LIST : Common.Network.PacketReader
     {
-        public UInt64 VendorUid;
+        public ulong VendorUid;
 
         public CMSG_TRAINER_LIST(byte[] data) : base(data)
         {

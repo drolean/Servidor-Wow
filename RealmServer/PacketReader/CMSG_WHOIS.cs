@@ -3,7 +3,7 @@
 namespace RealmServer.PacketReader
 {
     /// <summary>
-    /// CMSG_WHOIS represents a packet sent by the client when it wants to retrieve other players information.
+    ///     CMSG_WHOIS represents a packet sent by the client when it wants to retrieve other players information.
     /// </summary>
     public sealed class CMSG_WHOIS : Common.Network.PacketReader
     {

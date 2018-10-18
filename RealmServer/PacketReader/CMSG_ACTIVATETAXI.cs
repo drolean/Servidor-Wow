@@ -1,13 +1,12 @@
-﻿using System;
-using Common.Helpers;
+﻿using Common.Helpers;
 
 namespace RealmServer.PacketReader
 {
     public sealed class CMSG_ACTIVATETAXI : Common.Network.PacketReader
     {
-        public UInt64 Uid;
-        public int SrcNode;
         public int DstNode;
+        public int SrcNode;
+        public ulong Uid;
 
         public CMSG_ACTIVATETAXI(byte[] data) : base(data)
         {

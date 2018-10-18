@@ -1,11 +1,10 @@
-﻿using System;
-using Common.Helpers;
+﻿using Common.Helpers;
 
 namespace RealmServer.PacketReader
 {
     public sealed class MSG_AUCTION_HELLO : Common.Network.PacketReader
     {
-        public UInt64 AuctioneerId;
+        public ulong AuctioneerId;
 
         public MSG_AUCTION_HELLO(byte[] data) : base(data)
         {

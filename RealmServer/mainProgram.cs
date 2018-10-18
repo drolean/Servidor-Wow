@@ -7,13 +7,10 @@ using System.Reflection;
 using System.Threading;
 using Common.Database;
 using Common.Database.Dbc;
-using Common.Database.Tables;
 using Common.Globals;
 using Common.Helpers;
-using RealmServer.Enums;
 using RealmServer.Handlers;
 using RealmServer.PacketReader;
-using RealmServer.PacketServer;
 
 namespace RealmServer
 {
@@ -184,17 +181,19 @@ namespace RealmServer
 
             MovementOpcodes.ForEach(code => RealmServerRouter.AddHandler(code, OnMovements.Handler(code)));
 
-            RealmServerRouter.AddHandler<CMSG_MOVE_TIME_SKIPPED>(RealmEnums.CMSG_MOVE_TIME_SKIPPED, Handler);
+            RealmServerRouter.AddHandler<CMSG_MOVE_TIME_SKIPPED>(RealmEnums.CMSG_MOVE_TIME_SKIPPED,
+                OnMoveTimeSkipped.Handler);
 
             RealmServerRouter.AddHandler(RealmEnums.CMSG_NEXT_CINEMATIC_CAMERA, Future);
-            RealmServerRouter.AddHandler<CMSG_SET_ACTIONBAR_TOGGLES>(RealmEnums.CMSG_SET_ACTIONBAR_TOGGLES, Handler);
+            RealmServerRouter.AddHandler<CMSG_SET_ACTIONBAR_TOGGLES>(RealmEnums.CMSG_SET_ACTIONBAR_TOGGLES,
+                OnSetActionbarToggles.Handler);
             RealmServerRouter.AddHandler(RealmEnums.CMSG_LOGOUT_REQUEST, OnLogout.Request);
             RealmServerRouter.AddHandler(RealmEnums.CMSG_LOGOUT_CANCEL, OnLogout.Cancel);
-            RealmServerRouter.AddHandler(RealmEnums.CMSG_CANCEL_TRADE, OnCancelTrade);
+            RealmServerRouter.AddHandler(RealmEnums.CMSG_CANCEL_TRADE, OnCancelTrade.Handler);
 
-            RealmServerRouter.AddHandler<CMSG_MESSAGECHAT>(RealmEnums.CMSG_MESSAGECHAT, OnMessageChat);
-            RealmServerRouter.AddHandler(RealmEnums.CMSG_FRIEND_LIST, OnFriendList);
-            RealmServerRouter.AddHandler<CMSG_ADD_FRIEND>(RealmEnums.CMSG_ADD_FRIEND, OnFriendAdd);
+            RealmServerRouter.AddHandler<CMSG_MESSAGECHAT>(RealmEnums.CMSG_MESSAGECHAT, OnMessageChat.Handler);
+            RealmServerRouter.AddHandler(RealmEnums.CMSG_FRIEND_LIST, OnFriendList.Handler);
+            RealmServerRouter.AddHandler<CMSG_ADD_FRIEND>(RealmEnums.CMSG_ADD_FRIEND, OnFriendAdd.Handler);
 
             #region OPCODES
 
@@ -469,62 +468,9 @@ namespace RealmServer
             #endregion
         }
 
-        private static void OnFriendAdd(RealmServerSession session, CMSG_ADD_FRIEND handler)
-        {
-            var Friend = Database.Characters.FindCharacaterByName(handler.NamePlayer);
-        }
-
-        private static void OnFriendList(RealmServerSession session, byte[] data)
-        {
-            // Send Friend List
-            session.SendPacket(new SMSG_FRIEND_LIST(session.Character));
-
-            // Send Friend Ignored List
-            session.SendPacket(new SMSG_IGNORE_LIST(session.Character));
-        }
-
-        private static void OnMessageChat(RealmServerSession session, CMSG_MESSAGECHAT handler)
-        {
-            ChatMessageType msgType = (ChatMessageType) handler.Type;
-            ChatMessageLanguage msgLanguage = (ChatMessageLanguage) handler.ReadUInt32();
-
-            switch (msgType)
-            {
-                case ChatMessageType.CHAT_MSG_SAY:
-                case ChatMessageType.CHAT_MSG_YELL:
-                case ChatMessageType.CHAT_MSG_EMOTE:
-                    session.SendPacket(new SMSG_MESSAGECHAT(msgType, msgLanguage, session.Character.Uid,
-                        handler.Message));
-                    break;
-                case ChatMessageType.CHAT_MSG_CHANNEL:
-                    session.SendPacket(new SMSG_MESSAGECHAT(msgType, msgLanguage, session.Character.Uid,
-                        handler.Message, handler.Channel));
-                    break;
-                default:
-                    Log.Print(LogType.Debug, $"Not Implemented {msgType}");
-                    break;
-            }
-        }
-
-        private static void OnCancelTrade(RealmServerSession session, byte[] data)
-        {
-            // Send to another player
-            //session.SendPacket(new SMSG_TRADE_STATUS(TradeStatus.TRADE_STATUS_CANCELED));
-        }
-
-        private static void Handler(RealmServerSession session, CMSG_SET_ACTIONBAR_TOGGLES handler)
-        {
-            session.Entity.SetUpdateField((int) PlayerFields.PLAYER_FIELD_BYTES, 2, handler.ActionBar);
-        }
-
-        private static void Handler(RealmServerSession session, CMSG_MOVE_TIME_SKIPPED handler)
-        {
-            session.SendPacket(new MSG_MOVE_TIME_SKIPPED(handler));
-        }
-
         private static void Future(RealmServerSession session, byte[] data)
         {
-            Console.WriteLine("FUTURE");
+            Console.WriteLine(@"FUTURE");
         }
 
         private static async void DbcInit()

@@ -4,10 +4,10 @@ namespace RealmServer.PacketReader
 {
     public sealed class CMSG_SET_ACTION_BUTTON : Common.Network.PacketReader
     {
-        public byte Button;
         public ushort Action;
         public byte ActionMisc;
         public byte ActionType;
+        public byte Button;
 
         public CMSG_SET_ACTION_BUTTON(byte[] data) : base(data)
         {
@@ -17,7 +17,8 @@ namespace RealmServer.PacketReader
             ActionType = ReadByte();
 
 #if DEBUG
-            Log.Print(LogType.Debug, $"[CMSG_SET_ACTION_BUTTON] Button: {Button} Action: {Action} ActionMisc: {ActionMisc} ActionType: {ActionType}");
+            Log.Print(LogType.Debug,
+                $"[CMSG_SET_ACTION_BUTTON] Button: {Button} Action: {Action} ActionMisc: {ActionMisc} ActionType: {ActionType}");
 #endif
         }
     }

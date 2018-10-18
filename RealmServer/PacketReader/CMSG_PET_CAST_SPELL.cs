@@ -1,12 +1,11 @@
-﻿using System;
-using Common.Helpers;
+﻿using Common.Helpers;
 
 namespace RealmServer.PacketReader
 {
     public sealed class CMSG_PET_CAST_SPELL : Common.Network.PacketReader
     {
-        public UInt64 PetUid;
         public byte CastCount;
+        public ulong PetUid;
         public uint SpellId;
         public byte Unk;
 
@@ -18,7 +17,8 @@ namespace RealmServer.PacketReader
             Unk = ReadByte();
 
 #if DEBUG
-            Log.Print(LogType.Debug, $"[CMSG_PET_CAST_SPELL] PetUid: {PetUid} CastCount: {CastCount} SpellId: {SpellId} Unk: {Unk}");
+            Log.Print(LogType.Debug,
+                $"[CMSG_PET_CAST_SPELL] PetUid: {PetUid} CastCount: {CastCount} SpellId: {SpellId} Unk: {Unk}");
 #endif
         }
     }

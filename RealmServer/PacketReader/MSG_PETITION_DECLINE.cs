@@ -1,11 +1,10 @@
-﻿using System;
-using Common.Helpers;
+﻿using Common.Helpers;
 
 namespace RealmServer.PacketReader
 {
     public sealed class MSG_PETITION_DECLINE : Common.Network.PacketReader
     {
-        public UInt64 PetitionUid;
+        public ulong PetitionUid;
 
         public MSG_PETITION_DECLINE(byte[] data) : base(data)
         {

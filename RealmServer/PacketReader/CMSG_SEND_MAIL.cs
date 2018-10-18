@@ -1,20 +1,19 @@
-﻿using System;
-using Common.Helpers;
+﻿using Common.Helpers;
 
 namespace RealmServer.PacketReader
 {
     public sealed class CMSG_SEND_MAIL : Common.Network.PacketReader
     {
-        public UInt64 MailboxUid;
-        public string RecipientName;
-        public string Subject;
-        public string Message;
-        public uint Stationary;
-        public uint Unk1;
+        public uint Cod;
         public byte ItemCount;
+        public ulong MailboxUid;
+        public string Message;
 
         public uint Money;
-        public uint Cod;
+        public string RecipientName;
+        public uint Stationary;
+        public string Subject;
+        public uint Unk1;
 
         public CMSG_SEND_MAIL(byte[] data) : base(data)
         {

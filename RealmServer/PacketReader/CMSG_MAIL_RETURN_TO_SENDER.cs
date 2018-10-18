@@ -1,11 +1,10 @@
-﻿using System;
-using Common.Helpers;
+﻿using Common.Helpers;
 
 namespace RealmServer.PacketReader
 {
     public sealed class CMSG_MAIL_RETURN_TO_SENDER : Common.Network.PacketReader
     {
-        public UInt64 MailboxUid;
+        public ulong MailboxUid;
         public int Mailid;
 
         public CMSG_MAIL_RETURN_TO_SENDER(byte[] data) : base(data)

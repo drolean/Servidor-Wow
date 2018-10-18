@@ -1,15 +1,14 @@
-﻿using System;
-using Common.Helpers;
+﻿using Common.Helpers;
 
 namespace RealmServer.PacketReader
 {
     public sealed class CMSG_BUG : Common.Network.PacketReader
     {
-        public UInt32 Suggestion;
-        public UInt32 ContentLen;
         public string Content;
-        public UInt32 TypeLen;
+        public uint ContentLen;
+        public uint Suggestion;
         public string Type;
+        public uint TypeLen;
 
         public CMSG_BUG(byte[] data) : base(data)
         {

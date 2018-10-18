@@ -6,10 +6,10 @@ namespace RealmServer.PacketReader
 {
     public sealed class CMSG_MESSAGECHAT : Common.Network.PacketReader
     {
-        public int Type;
-        public int Language;
         public string Channel;
+        public int Language;
         public string Message;
+        public int Type;
 
         public CMSG_MESSAGECHAT(byte[] data) : base(data)
         {
@@ -20,12 +20,12 @@ namespace RealmServer.PacketReader
 
             switch ((ChatMessageType) Type)
             {
-                case ChatMessageType.CHAT_MSG_SAY:
-                case ChatMessageType.CHAT_MSG_EMOTE:
-                case ChatMessageType.CHAT_MSG_YELL:
+                case ChatMessageType.Say:
+                case ChatMessageType.Emote:
+                case ChatMessageType.Yell:
                     Message = ReadCString();
                     break;
-                case ChatMessageType.CHAT_MSG_CHANNEL:
+                case ChatMessageType.Channel:
                     Channel = ReadCString();
                     Message = ReadCString();
                     break;

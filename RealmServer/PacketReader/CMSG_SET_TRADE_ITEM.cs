@@ -4,9 +4,9 @@ namespace RealmServer.PacketReader
 {
     public sealed class CMSG_SET_TRADE_ITEM : Common.Network.PacketReader
     {
-        public byte Slot;
         public byte MyBag;
         public byte MySlot;
+        public byte Slot;
 
         public CMSG_SET_TRADE_ITEM(byte[] data) : base(data)
         {

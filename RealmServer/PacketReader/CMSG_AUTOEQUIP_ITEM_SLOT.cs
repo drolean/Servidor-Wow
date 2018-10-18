@@ -1,12 +1,11 @@
-﻿using System;
-using Common.Helpers;
+﻿using Common.Helpers;
 
 namespace RealmServer.PacketReader
 {
     public sealed class CMSG_AUTOEQUIP_ITEM_SLOT : Common.Network.PacketReader
     {
-        public UInt64 ObjectUid;
         public byte DestSlot;
+        public ulong ObjectUid;
 
         public CMSG_AUTOEQUIP_ITEM_SLOT(byte[] data) : base(data)
         {

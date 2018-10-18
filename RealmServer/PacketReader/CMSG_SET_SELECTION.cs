@@ -1,11 +1,10 @@
-﻿using System;
-using Common.Helpers;
+﻿using Common.Helpers;
 
 namespace RealmServer.PacketReader
 {
     public sealed class CMSG_SET_SELECTION : Common.Network.PacketReader
     {
-        public UInt64 Uid;
+        public ulong Uid;
 
         public CMSG_SET_SELECTION(byte[] data) : base(data)
         {

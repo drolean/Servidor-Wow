@@ -1,11 +1,10 @@
-﻿using System;
-using Common.Helpers;
+﻿using Common.Helpers;
 
 namespace RealmServer.PacketReader
 {
     public sealed class CMSG_UNSTABLE_PET : Common.Network.PacketReader
     {
-        public UInt64 NpcUid;
+        public ulong NpcUid;
         public uint PetNumber;
 
         public CMSG_UNSTABLE_PET(byte[] data) : base(data)

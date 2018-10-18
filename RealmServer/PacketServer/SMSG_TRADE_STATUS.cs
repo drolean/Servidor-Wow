@@ -6,7 +6,7 @@ namespace RealmServer.PacketServer
     {
         public SMSG_TRADE_STATUS(object status) : base(RealmEnums.SMSG_TRADE_STATUS)
         {
-            Write((uint)status);
+            Write((uint) status);
         }
     }
 }

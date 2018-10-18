@@ -4,8 +4,8 @@ namespace RealmServer.PacketReader
 {
     public sealed class CMSG_SWAP_INV_ITEM : Common.Network.PacketReader
     {
-        public byte SrcSlot;
         public byte DstSlot;
+        public byte SrcSlot;
 
         public CMSG_SWAP_INV_ITEM(byte[] data) : base(data)
         {

@@ -1,12 +1,11 @@
-﻿using System;
-using Common.Helpers;
+﻿using Common.Helpers;
 
 namespace RealmServer.PacketReader
 {
     public sealed class CMSG_SUMMON_RESPONSE : Common.Network.PacketReader
     {
-        public UInt64 TargetUid;
         public bool Result;
+        public ulong TargetUid;
 
         public CMSG_SUMMON_RESPONSE(byte[] data) : base(data)
         {

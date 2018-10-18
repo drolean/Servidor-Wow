@@ -1,13 +1,12 @@
-﻿using System;
-using Common.Helpers;
+﻿using Common.Helpers;
 
 namespace RealmServer.PacketReader
 {
     public sealed class CMSG_LOOT_ROLL : Common.Network.PacketReader
     {
-        public UInt64 LootedUid;
-        public int Slot;
+        public ulong LootedUid;
         public byte RollType;
+        public int Slot;
 
         public CMSG_LOOT_ROLL(byte[] data) : base(data)
         {

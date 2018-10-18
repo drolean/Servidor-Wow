@@ -3,7 +3,7 @@
 namespace RealmServer.PacketReader
 {
     /// <summary>
-    /// CMSG_ITEM_QUERY_SINGLE represents a packet sent by the client when it wants to retrieve item information.
+    ///     CMSG_ITEM_QUERY_SINGLE represents a packet sent by the client when it wants to retrieve item information.
     /// </summary>
     public sealed class CMSG_ITEM_QUERY_SINGLE : Common.Network.PacketReader
     {

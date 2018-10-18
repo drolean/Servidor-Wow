@@ -1,12 +1,11 @@
-﻿using System;
-using Common.Helpers;
+﻿using Common.Helpers;
 
 namespace RealmServer.PacketReader
 {
     public sealed class MSG_QUEST_PUSH_RESULT : Common.Network.PacketReader
     {
-        public UInt64 Uid;
         public byte Result;
+        public ulong Uid;
 
         public MSG_QUEST_PUSH_RESULT(byte[] data) : base(data)
         {

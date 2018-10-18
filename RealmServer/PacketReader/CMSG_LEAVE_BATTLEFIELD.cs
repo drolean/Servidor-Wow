@@ -1,14 +1,13 @@
-﻿using System;
-using Common.Helpers;
+﻿using Common.Helpers;
 
 namespace RealmServer.PacketReader
 {
     public sealed class CMSG_LEAVE_BATTLEFIELD : Common.Network.PacketReader
     {
+        public ushort Id; // ????
+        public int MapType;
         public byte Unk1;
         public byte Unk2;
-        public int MapType;
-        public UInt16 Id; // ????
 
         public CMSG_LEAVE_BATTLEFIELD(byte[] data) : base(data)
         {

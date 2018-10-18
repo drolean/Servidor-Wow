@@ -1,14 +1,13 @@
-﻿using System;
-using Common.Helpers;
+﻿using Common.Helpers;
 
 namespace RealmServer.PacketReader
 {
     public sealed class CMSG_BATTLEMASTER_JOIN : Common.Network.PacketReader
     {
-        public UInt64 Uid;
         public uint InstaceId;
-        public uint MapId;
         public byte JoinAsGroup;
+        public uint MapId;
+        public ulong Uid;
 
         public CMSG_BATTLEMASTER_JOIN(byte[] data) : base(data)
         {
@@ -18,7 +17,8 @@ namespace RealmServer.PacketReader
             JoinAsGroup = ReadByte();
 
 #if DEBUG
-            Log.Print(LogType.Debug, $"[CMSG_BATTLEMASTER_JOIN] Uid: {Uid} InstaceId: {InstaceId} MapId: {MapId} JoinAsGroup: {JoinAsGroup}");
+            Log.Print(LogType.Debug,
+                $"[CMSG_BATTLEMASTER_JOIN] Uid: {Uid} InstaceId: {InstaceId} MapId: {MapId} JoinAsGroup: {JoinAsGroup}");
 #endif
         }
     }

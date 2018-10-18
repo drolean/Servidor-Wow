@@ -10,7 +10,7 @@ namespace RealmServer.PacketReader
         public byte Flag;
         */
         public uint SpellId;
-        
+
         public CMSG_CANCEL_CAST(byte[] data) : base(data)
         {
             SpellId = ReadUInt32();

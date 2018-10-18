@@ -4,8 +4,8 @@ namespace RealmServer.PacketReader
 {
     public sealed class CMSG_LEARN_TALENT : Common.Network.PacketReader
     {
-        public uint TalentId;
         public int Rank;
+        public uint TalentId;
 
         public CMSG_LEARN_TALENT(byte[] data) : base(data)
         {

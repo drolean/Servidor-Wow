@@ -1,11 +1,10 @@
-﻿using System;
-using Common.Helpers;
+﻿using Common.Helpers;
 
 namespace RealmServer.PacketReader
 {
     public sealed class CMSG_RECLAIM_CORPSE : Common.Network.PacketReader
     {
-        public UInt64 PlayerUid;
+        public ulong PlayerUid;
 
         public CMSG_RECLAIM_CORPSE(byte[] data) : base(data)
         {

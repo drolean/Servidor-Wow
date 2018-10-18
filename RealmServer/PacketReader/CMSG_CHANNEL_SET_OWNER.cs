@@ -13,7 +13,8 @@ namespace RealmServer.PacketReader
             ChannelNewOwner = ReadCString();
 
 #if DEBUG
-            Log.Print(LogType.Debug, $"[CMSG_CHANNEL_SET_OWNER] ChannelName: {ChannelName} ChannelNewOwner: {ChannelNewOwner}");
+            Log.Print(LogType.Debug,
+                $"[CMSG_CHANNEL_SET_OWNER] ChannelName: {ChannelName} ChannelNewOwner: {ChannelNewOwner}");
 #endif
         }
     }

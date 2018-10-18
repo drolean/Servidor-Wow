@@ -1,11 +1,10 @@
-﻿using System;
-using Common.Helpers;
+﻿using Common.Helpers;
 
 namespace RealmServer.PacketReader
 {
     public sealed class CMSG_MEETINGSTONE_JOIN : Common.Network.PacketReader
     {
-        public UInt64 ObjectUid;
+        public ulong ObjectUid;
 
         public CMSG_MEETINGSTONE_JOIN(byte[] data) : base(data)
         {

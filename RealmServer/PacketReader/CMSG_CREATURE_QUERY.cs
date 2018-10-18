@@ -3,7 +3,7 @@
 namespace RealmServer.PacketReader
 {
     /// <summary>
-    /// CMSG_CREATURE_QUERY represents a packet sent by the client when it wants to retrieve creature information.
+    ///     CMSG_CREATURE_QUERY represents a packet sent by the client when it wants to retrieve creature information.
     /// </summary>
     public sealed class CMSG_CREATURE_QUERY : Common.Network.PacketReader
     {

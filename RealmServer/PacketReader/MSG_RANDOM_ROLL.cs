@@ -4,8 +4,8 @@ namespace RealmServer.PacketReader
 {
     public sealed class MSG_RANDOM_ROLL : Common.Network.PacketReader
     {
-        public int Min;
         public int Max;
+        public int Min;
 
         public MSG_RANDOM_ROLL(byte[] data) : base(data)
         {

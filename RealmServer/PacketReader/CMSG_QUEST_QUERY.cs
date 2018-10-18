@@ -3,7 +3,7 @@
 namespace RealmServer.PacketReader
 {
     /// <summary>
-    /// CMSG_QUEST_QUERY represents a packet sent by the client when it wants to retrieve quest information.
+    ///     CMSG_QUEST_QUERY represents a packet sent by the client when it wants to retrieve quest information.
     /// </summary>
     public sealed class CMSG_QUEST_QUERY : Common.Network.PacketReader
     {

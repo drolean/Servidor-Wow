@@ -22,30 +22,30 @@ namespace RealmServer.PacketServer
 
             switch (type)
             {
-                case ChatMessageType.CHAT_MSG_CHANNEL:
+                case ChatMessageType.Channel:
                     Write(Encoding.UTF8.GetBytes(channelName + '\0')); // string => Channel
                     Write((uint) 0); //32
                     Write(id); //64 => SenderId
                     break;
-                case ChatMessageType.CHAT_MSG_YELL:
-                case ChatMessageType.CHAT_MSG_SAY:
-                case ChatMessageType.CHAT_MSG_PARTY:
+                case ChatMessageType.Yell:
+                case ChatMessageType.Say:
+                case ChatMessageType.Party:
                     Write(id); // SenderId
                     Write(id); // SenderId
                     break;
-                case ChatMessageType.CHAT_MSG_SYSTEM:
-                case ChatMessageType.CHAT_MSG_EMOTE:
-                case ChatMessageType.CHAT_MSG_IGNORED:
-                case ChatMessageType.CHAT_MSG_SKILL:
-                case ChatMessageType.CHAT_MSG_OFFICER:
-                case ChatMessageType.CHAT_MSG_RAID:
-                case ChatMessageType.CHAT_MSG_WHISPER_INFORM:
-                case ChatMessageType.CHAT_MSG_GUILD:
-                case ChatMessageType.CHAT_MSG_WHISPER:
-                case ChatMessageType.CHAT_MSG_AFK:
-                case ChatMessageType.CHAT_MSG_DND:
-                case ChatMessageType.CHAT_MSG_RAID_LEADER:
-                case ChatMessageType.CHAT_MSG_RAID_WARNING:
+                case ChatMessageType.System:
+                case ChatMessageType.Emote:
+                case ChatMessageType.Ignored:
+                case ChatMessageType.Skill:
+                case ChatMessageType.Officer:
+                case ChatMessageType.Raid:
+                case ChatMessageType.WhisperInform:
+                case ChatMessageType.Guild:
+                case ChatMessageType.Whisper:
+                case ChatMessageType.Afk:
+                case ChatMessageType.Dnd:
+                case ChatMessageType.RaidLeader:
+                case ChatMessageType.RaidWarning:
                     Write(id); // SenderId
                     break;
                 default:
@@ -63,8 +63,8 @@ namespace RealmServer.PacketServer
         {
             var writer = new BinaryWriter(new MemoryStream());
 
-            writer.Write((byte) ChatMessageType.CHAT_MSG_SYSTEM);
-            writer.Write((uint) ChatMessageLanguage.LANG_UNIVERSAL);
+            writer.Write((byte) ChatMessageType.System);
+            writer.Write((uint) ChatMessageLanguage.Universal);
             writer.Write(id);
             writer.Write((uint) message.Length + 1);
             writer.Write(Encoding.UTF8.GetBytes(message + '\0'));

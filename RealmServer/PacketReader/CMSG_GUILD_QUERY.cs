@@ -3,7 +3,7 @@
 namespace RealmServer.PacketReader
 {
     /// <summary>
-    /// CMSG_GUILD_QUERY represents a packet sent by the client when it wants to retrieve guild information.
+    ///     CMSG_GUILD_QUERY represents a packet sent by the client when it wants to retrieve guild information.
     /// </summary>
     public sealed class CMSG_GUILD_QUERY : Common.Network.PacketReader
     {

@@ -9,7 +9,7 @@ namespace RealmServer.PacketReader
         public CMSG_ADD_FRIEND(byte[] data) : base(data)
         {
             NamePlayer = ReadCString();
-            
+
 #if DEBUG
             Log.Print(LogType.Debug, $"[CMSG_ADD_FRIEND] NamePlayer: {NamePlayer}");
 #endif

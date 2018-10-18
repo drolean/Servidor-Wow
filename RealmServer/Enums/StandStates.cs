@@ -2,14 +2,14 @@
 {
     public enum StandStates
     {
-        STANDSTATE_STAND = 0,
-        STANDSTATE_SIT = 1,
-        STANDSTATE_SIT_CHAIR = 2,
-        STANDSTATE_SLEEP = 3,
-        STANDSTATE_SIT_LOW_CHAIR = 4,
-        STANDSTATE_SIT_MEDIUM_CHAIR = 5,
-        STANDSTATE_SIT_HIGH_CHAIR = 6,
-        STANDSTATE_DEAD = 7,
-        STANDSTATE_KNEEL = 8
+        Stand = 0,
+        Sit = 1,
+        SitChair = 2,
+        Sleep = 3,
+        SitLowChair = 4,
+        SitMediumChair = 5,
+        SitHighChair = 6,
+        Dead = 7,
+        Kneel = 8
     }
 }

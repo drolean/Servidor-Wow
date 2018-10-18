@@ -1,11 +1,10 @@
-﻿using System;
-using Common.Helpers;
+﻿using Common.Helpers;
 
 namespace RealmServer.PacketReader
 {
     public sealed class CMSG_RESURRECT_RESPONSE : Common.Network.PacketReader
     {
-        public UInt64 ObjectUid;
+        public ulong ObjectUid;
         public byte Status;
 
         public CMSG_RESURRECT_RESPONSE(byte[] data) : base(data)

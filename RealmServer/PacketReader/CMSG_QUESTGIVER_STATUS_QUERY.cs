@@ -1,11 +1,10 @@
-﻿using System;
-using Common.Helpers;
+﻿using Common.Helpers;
 
 namespace RealmServer.PacketReader
 {
     public sealed class CMSG_QUESTGIVER_STATUS_QUERY : Common.Network.PacketReader
     {
-        public UInt64 QuestUid;
+        public ulong QuestUid;
 
         public CMSG_QUESTGIVER_STATUS_QUERY(byte[] data) : base(data)
         {

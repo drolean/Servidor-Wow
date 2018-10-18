@@ -1,12 +1,11 @@
-﻿using System;
-using Common.Helpers;
+﻿using Common.Helpers;
 
 namespace RealmServer.PacketReader
 {
     public sealed class CMSG_LOOT_METHOD : Common.Network.PacketReader
     {
+        public ulong Master;
         public int Method;
-        public UInt64 Master;
         public int Threshold;
 
         public CMSG_LOOT_METHOD(byte[] data) : base(data)

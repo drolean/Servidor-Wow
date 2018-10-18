@@ -1,5 +1,4 @@
 ﻿using RealmServer.Database;
-using RealmServer.Enums;
 using RealmServer.PacketReader;
 using RealmServer.PacketServer;
 using RealmServer.World.Managers;
@@ -31,7 +30,7 @@ namespace RealmServer.Handlers
             }
 
             session.SendPacket(new SMSG_INITIAL_SPELLS(session.Character));
-            session.SendPacket(new SMSG_ACTION_BUTTONS(session.Character)); 
+            session.SendPacket(new SMSG_ACTION_BUTTONS(session.Character));
 
             session.SendPacket(new SMSG_INIT_WORLD_STATES(session.Character));
             session.SendPacket(SMSG_UPDATE_OBJECT.CreateOwnCharacterUpdate(session.Character, out session.Entity));
@@ -40,6 +39,4 @@ namespace RealmServer.Handlers
             WorldManager.DispatchOnPlayerSpawn(session.Entity);
         }
     }
-
- 
 }

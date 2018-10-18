@@ -1,12 +1,11 @@
-﻿using System;
-using Common.Helpers;
+﻿using Common.Helpers;
 
 namespace RealmServer.PacketReader
 {
     public sealed class CMSG_GOSSIP_SELECT_OPTION : Common.Network.PacketReader
     {
-        public UInt64 Uid;
         public int Option;
+        public ulong Uid;
 
         public CMSG_GOSSIP_SELECT_OPTION(byte[] data) : base(data)
         {

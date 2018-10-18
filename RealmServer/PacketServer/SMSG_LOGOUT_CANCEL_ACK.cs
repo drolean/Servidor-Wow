@@ -6,7 +6,7 @@ namespace RealmServer.PacketServer
     {
         public SMSG_LOGOUT_CANCEL_ACK() : base(RealmEnums.SMSG_LOGOUT_CANCEL_ACK)
         {
-            Write((byte)0);
+            Write((byte) 0);
         }
     }
 }

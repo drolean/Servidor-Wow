@@ -19,7 +19,8 @@ namespace RealmServer.PacketReader
             Unk1 = ReadUInt32();
 
 #if DEBUG
-            Log.Print(LogType.Debug, $"[CMSG_ITEM_TEXT_QUERY] ItemTextId: {ItemTextId} MailOrItemId: {MailOrItemId} Unk1: {Unk1}");
+            Log.Print(LogType.Debug,
+                $"[CMSG_ITEM_TEXT_QUERY] ItemTextId: {ItemTextId} MailOrItemId: {MailOrItemId} Unk1: {Unk1}");
 #endif
         }
     }

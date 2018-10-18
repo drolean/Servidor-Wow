@@ -13,7 +13,7 @@ namespace RealmServer.PacketServer
         public static int SecsToTimeBitFields(DateTime dateTime)
         {
             return ((dateTime.Year - 100) << 24) | (dateTime.Month << 20) | ((dateTime.Day - 1) << 14) |
-                   ((int)dateTime.DayOfWeek << 11) | (dateTime.Hour << 6) | dateTime.Minute;
+                   ((int) dateTime.DayOfWeek << 11) | (dateTime.Hour << 6) | dateTime.Minute;
         }
     }
 }

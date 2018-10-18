@@ -4,9 +4,9 @@ namespace RealmServer.PacketReader
 {
     public sealed class CMSG_GUILD_RANK : Common.Network.PacketReader
     {
-        public int RankId;
-        public uint Privileges;
         public string Name;
+        public uint Privileges;
+        public int RankId;
 
         public CMSG_GUILD_RANK(byte[] data) : base(data)
         {

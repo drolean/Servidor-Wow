@@ -1,11 +1,10 @@
-﻿using System;
-using Common.Helpers;
+﻿using Common.Helpers;
 
 namespace RealmServer.PacketReader
 {
     public sealed class CMSG_SET_TRADE_GOLD : Common.Network.PacketReader
     {
-        public UInt32 Gold;
+        public uint Gold;
 
         public CMSG_SET_TRADE_GOLD(byte[] data) : base(data)
         {

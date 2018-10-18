@@ -1,14 +1,13 @@
-﻿using System;
-using Common.Helpers;
+﻿using Common.Helpers;
 
 namespace RealmServer.PacketReader
 {
     public sealed class CMSG_PET_SET_ACTION : Common.Network.PacketReader
     {
-        public UInt64 Uid;
+        public short ActionState;
         public int Position;
         public ushort SpellId;
-        public short ActionState;
+        public ulong Uid;
 
         public CMSG_PET_SET_ACTION(byte[] data) : base(data)
         {
@@ -18,7 +17,8 @@ namespace RealmServer.PacketReader
             ActionState = ReadInt16();
 
 #if DEBUG
-            Log.Print(LogType.Debug, $"[CMSG_PET_SET_ACTION] Uid: {Uid} Position: {Position} SpellId: {SpellId} ActionState: {ActionState}");
+            Log.Print(LogType.Debug,
+                $"[CMSG_PET_SET_ACTION] Uid: {Uid} Position: {Position} SpellId: {SpellId} ActionState: {ActionState}");
 #endif
         }
     }

@@ -28,14 +28,14 @@ namespace RealmServer.PacketServer
 
             writer.Write((byte) TypeId.TypeidPlayer);
 
-            const ObjectUpdateFlag updateFlags = ObjectUpdateFlag.UpdateflagAll |
-                                                 ObjectUpdateFlag.UpdateflagHasPosition |
-                                                 ObjectUpdateFlag.UpdateflagLiving |
-                                                 ObjectUpdateFlag.UpdateflagSelf;
+            const ObjectUpdateFlag updateFlags = ObjectUpdateFlag.All |
+                                                 ObjectUpdateFlag.HasPosition |
+                                                 ObjectUpdateFlag.Living |
+                                                 ObjectUpdateFlag.Self;
 
             writer.Write((byte) updateFlags);
 
-            writer.Write((uint) MovementFlags.MoveflagNone);
+            writer.Write((uint) MovementFlags.None);
             writer.Write((uint) Environment.TickCount);
 
             writer.Write(character.SubMap.MapX);

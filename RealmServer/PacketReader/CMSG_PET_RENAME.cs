@@ -1,12 +1,11 @@
-﻿using System;
-using Common.Helpers;
+﻿using Common.Helpers;
 
 namespace RealmServer.PacketReader
 {
     public sealed class CMSG_PET_RENAME : Common.Network.PacketReader
     {
-        public UInt64 Uid;
         public string Name;
+        public ulong Uid;
 
         public CMSG_PET_RENAME(byte[] data) : base(data)
         {

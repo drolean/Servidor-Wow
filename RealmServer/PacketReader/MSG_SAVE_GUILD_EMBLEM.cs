@@ -4,13 +4,13 @@ namespace RealmServer.PacketReader
 {
     public sealed class MSG_SAVE_GUILD_EMBLEM : Common.Network.PacketReader
     {
+        public int BackgroundColor;
+        public int BorderColor;
+        public int BorderStyle;
+        public int EmblemColor;
+        public int EmblemStyle;
         public int Unk0;
         public int Unk1;
-        public int EmblemStyle;
-        public int EmblemColor;
-        public int BorderStyle;
-        public int BorderColor;
-        public int BackgroundColor;
 
         public MSG_SAVE_GUILD_EMBLEM(byte[] data) : base(data)
         {

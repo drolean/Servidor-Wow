@@ -108,6 +108,12 @@
     <Compile Include="Handlers\OnQueryNextMailTime.cs" />
     <Compile Include="Handlers\OnQueryTime.cs" />
     <Compile Include="Handlers\OnRequestRaidInfo.cs" />
+    <Compile Include="Handlers\OnCancelTrade.cs" />
+    <Compile Include="Handlers\OnFriendAdd.cs" />
+    <Compile Include="Handlers\OnFriendList.cs" />
+    <Compile Include="Handlers\OnMessageChat.cs" />
+    <Compile Include="Handlers\OnMoveTimeSkipped.cs" />
+    <Compile Include="Handlers\OnSetActionbarToggles.cs" />
     <Compile Include="PacketReader\CMSG_ACTIVATETAXI.cs" />
     <Compile Include="PacketReader\CMSG_ACTIVATETAXIEXPRESS.cs" />
     <Compile Include="PacketReader\CMSG_ADD_FRIEND.cs" />

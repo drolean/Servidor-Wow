@@ -13,7 +13,8 @@ namespace RealmServer.PacketReader
             ChannelUser = ReadCString();
 
 #if DEBUG
-            Log.Print(LogType.Debug, $"[CMSG_CHANNEL_UNMODERATOR] ChannelName: {ChannelName} ChannelUser: {ChannelUser}");
+            Log.Print(LogType.Debug,
+                $"[CMSG_CHANNEL_UNMODERATOR] ChannelName: {ChannelName} ChannelUser: {ChannelUser}");
 #endif
         }
     }

@@ -2,19 +2,19 @@
 {
     public enum ChatMessageLanguage : byte
     {
-        LANG_UNIVERSAL = 0,
-        LANG_ORCISH = 1,
-        LANG_DARNASSIAN = 2,
-        LANG_TAURAHE = 3,
-        LANG_DWARVISH = 6,
-        LANG_COMMON = 7,
-        LANG_DEMONIC = 8,
-        LANG_TITAN = 9,
-        LANG_THALASSIAN = 10,
-        LANG_DRACONIC = 11,
-        LANG_KALIMAG = 12,
-        LANG_GNOMISH = 13,
-        LANG_TROLL = 14,
-        LANG_GUTTERSPEAK = 33
+        Universal = 0,
+        Orcish = 1,
+        Darnassian = 2,
+        Taurahe = 3,
+        Dwarvish = 6,
+        Common = 7,
+        Demonic = 8,
+        Titan = 9,
+        Thalassian = 10,
+        Draconic = 11,
+        Kalimag = 12,
+        Gnomish = 13,
+        Troll = 14,
+        Gutterspeak = 33
     }
 }

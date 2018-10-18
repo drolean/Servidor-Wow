@@ -24,8 +24,9 @@ namespace RealmServer.PacketReader
             OutfitId = ReadByte();
 
 #if DEBUG
-            Log.Print(LogType.Debug, $"[CMSG_CHAR_CREATE] Name: {Name} Race: {Race} Classe: {Classe} Gender: {Gender} " +
-                                     $"Skin: {Skin} Face: {Face} HairStyle: {HairStyle} HairColor: {HairColor} OutfitId: {OutfitId}");
+            Log.Print(LogType.Debug,
+                $"[CMSG_CHAR_CREATE] Name: {Name} Race: {Race} Classe: {Classe} Gender: {Gender} " +
+                $"Skin: {Skin} Face: {Face} HairStyle: {HairStyle} HairColor: {HairColor} OutfitId: {OutfitId}");
 #endif
         }
 

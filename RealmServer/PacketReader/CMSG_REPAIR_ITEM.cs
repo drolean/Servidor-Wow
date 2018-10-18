@@ -1,12 +1,11 @@
-﻿using System;
-using Common.Helpers;
+﻿using Common.Helpers;
 
 namespace RealmServer.PacketReader
 {
     public sealed class CMSG_REPAIR_ITEM : Common.Network.PacketReader
     {
-        public UInt64 VendorUid;
-        public UInt64 ItemUid;
+        public ulong ItemUid;
+        public ulong VendorUid;
 
         public CMSG_REPAIR_ITEM(byte[] data) : base(data)
         {

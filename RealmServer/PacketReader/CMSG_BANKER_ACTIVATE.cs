@@ -1,11 +1,10 @@
-﻿using System;
-using Common.Helpers;
+﻿using Common.Helpers;
 
 namespace RealmServer.PacketReader
 {
     public sealed class CMSG_BANKER_ACTIVATE : Common.Network.PacketReader
     {
-        public UInt64 BankerUid;
+        public ulong BankerUid;
 
         public CMSG_BANKER_ACTIVATE(byte[] data) : base(data)
         {

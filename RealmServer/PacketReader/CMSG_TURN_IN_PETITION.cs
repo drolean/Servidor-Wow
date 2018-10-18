@@ -1,11 +1,10 @@
-﻿using System;
-using Common.Helpers;
+﻿using Common.Helpers;
 
 namespace RealmServer.PacketReader
 {
     public sealed class CMSG_TURN_IN_PETITION : Common.Network.PacketReader
     {
-        public UInt64 PetitionUid;
+        public ulong PetitionUid;
 
         public CMSG_TURN_IN_PETITION(byte[] data) : base(data)
         {

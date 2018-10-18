@@ -4,9 +4,9 @@ namespace RealmServer.PacketReader
 {
     public sealed class CMSG_DESTROYITEM : Common.Network.PacketReader
     {
+        public byte Count;
         public byte SrcBag;
         public byte SrcSlot;
-        public byte Count;
 
         public CMSG_DESTROYITEM(byte[] data) : base(data)
         {

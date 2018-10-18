@@ -1,17 +1,16 @@
-﻿using System;
-using Common.Helpers;
+﻿using Common.Helpers;
 
 namespace RealmServer.PacketReader
 {
     public sealed class CMSG_AUCTION_SELL_ITEM : Common.Network.PacketReader
     {
-        public UInt64 AuctioneerId;
-        public uint Unknown;
-        public UInt64 ItemId;
-        public uint StackSize;
+        public ulong AuctioneerId;
         public uint Bid;
         public uint Buyout;
+        public ulong ItemId;
+        public uint StackSize;
         public uint Time;
+        public uint Unknown;
 
         public CMSG_AUCTION_SELL_ITEM(byte[] data) : base(data)
         {
@@ -31,8 +30,9 @@ namespace RealmServer.PacketReader
             Time = ReadUInt32();
 
 #if DEBUG
-            Log.Print(LogType.Debug, $"[CMSG_AUCTION_SELL_ITEM] AuctioneerId: {AuctioneerId} Unknown: {Unknown} ItemId: {ItemId} " +
-                                     $"StackSize: {StackSize} Bid: {Bid} Buyout: {Buyout} Time: {Time}");
+            Log.Print(LogType.Debug,
+                $"[CMSG_AUCTION_SELL_ITEM] AuctioneerId: {AuctioneerId} Unknown: {Unknown} ItemId: {ItemId} " +
+                $"StackSize: {StackSize} Bid: {Bid} Buyout: {Buyout} Time: {Time}");
 #endif
         }
     }

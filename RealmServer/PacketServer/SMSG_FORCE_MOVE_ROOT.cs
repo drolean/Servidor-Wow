@@ -8,7 +8,7 @@ namespace RealmServer.PacketServer
         public SMSG_FORCE_MOVE_ROOT(ulong characterId) : base(RealmEnums.SMSG_FORCE_MOVE_ROOT)
         {
             this.WritePackedUInt64(characterId);
-            Write((uint)0);
+            Write((uint) 0);
         }
     }
 }

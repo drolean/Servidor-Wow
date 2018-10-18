@@ -1,4 +1,4 @@
-﻿using System;
+﻿using Common.Database.Tables;
 using Common.Globals;
 using Common.Helpers;
 
@@ -6,9 +6,9 @@ namespace RealmServer.PacketServer
 {
     public sealed class SMSG_ACTION_BUTTONS : Common.Network.PacketServer
     {
-        public SMSG_ACTION_BUTTONS(Common.Database.Tables.Characters character) : base(RealmEnums.SMSG_ACTION_BUTTONS)
+        public SMSG_ACTION_BUTTONS(Characters character) : base(RealmEnums.SMSG_ACTION_BUTTONS)
         {
-            for (int button = 0; button < 120; button++) //  119    'or 480 ?
+            for (var button = 0; button < 120; button++) //  119    'or 480 ?
             {
                 var subActionBar = character.SubActionBars.Find(x => x.Button == button);
 
@@ -18,12 +18,12 @@ namespace RealmServer.PacketServer
                         $"[{character.Name}] Button Number: {subActionBar.Button} - Type: {subActionBar.Type} " +
                         $"Action: {subActionBar.Action}");
 
-                    UInt32 packedData = (UInt32) subActionBar.Action | (UInt32) subActionBar.Type << 24;
+                    var packedData = (uint) subActionBar.Action | ((uint) subActionBar.Type << 24);
                     Write(packedData);
                 }
                 else
                 {
-                    Write((UInt32) 0);
+                    Write((uint) 0);
                 }
             }
         }

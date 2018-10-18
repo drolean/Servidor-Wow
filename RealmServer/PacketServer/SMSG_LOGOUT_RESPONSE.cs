@@ -6,7 +6,7 @@ namespace RealmServer.PacketServer
     {
         public SMSG_LOGOUT_RESPONSE(LogoutResponseCode result) : base(RealmEnums.SMSG_LOGOUT_RESPONSE)
         {
-            Write((byte)result);
+            Write((byte) result);
             Write(0);
         }
     }

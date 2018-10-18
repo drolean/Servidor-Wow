@@ -3,7 +3,7 @@
 namespace RealmServer.PacketReader
 {
     /// <summary>
-    /// CMSG_PET_NAME_QUERY represents a packet sent by the client when it wants to retrieve other pet information.
+    ///     CMSG_PET_NAME_QUERY represents a packet sent by the client when it wants to retrieve other pet information.
     /// </summary>
     public sealed class CMSG_PET_NAME_QUERY : Common.Network.PacketReader
     {

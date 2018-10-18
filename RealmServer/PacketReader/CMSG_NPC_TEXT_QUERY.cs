@@ -1,13 +1,12 @@
-﻿using System;
-using Common.Helpers;
+﻿using Common.Helpers;
 
 namespace RealmServer.PacketReader
 {
     public sealed class CMSG_NPC_TEXT_QUERY : Common.Network.PacketReader
     {
         public long TextId;
-        public UInt64 Uid;
-        
+        public ulong Uid;
+
         public CMSG_NPC_TEXT_QUERY(byte[] data) : base(data)
         {
             TextId = ReadInt32();

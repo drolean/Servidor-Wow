@@ -1,11 +1,10 @@
-﻿using System;
-using Common.Helpers;
+﻿using Common.Helpers;
 
 namespace RealmServer.PacketReader
 {
     public sealed class CMSG_GROUP_ASSISTANT_LEADER : Common.Network.PacketReader
     {
-        public UInt64 TargetUid;
+        public ulong TargetUid;
 
         public CMSG_GROUP_ASSISTANT_LEADER(byte[] data) : base(data)
         {

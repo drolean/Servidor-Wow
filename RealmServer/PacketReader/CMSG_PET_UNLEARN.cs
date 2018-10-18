@@ -1,11 +1,10 @@
-﻿using System;
-using Common.Helpers;
+﻿using Common.Helpers;
 
 namespace RealmServer.PacketReader
 {
     public sealed class CMSG_PET_UNLEARN : Common.Network.PacketReader
     {
-        public UInt64 Uid;
+        public ulong Uid;
 
         public CMSG_PET_UNLEARN(byte[] data) : base(data)
         {
