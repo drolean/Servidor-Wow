@@ -7,8 +7,10 @@ using System.Reflection;
 using System.Threading;
 using Common.Database;
 using Common.Database.Dbc;
+using Common.Database.Tables;
 using Common.Globals;
 using Common.Helpers;
+using MongoDB.Driver;
 using RealmServer.Handlers;
 using RealmServer.PacketReader;
 
@@ -195,6 +197,8 @@ namespace RealmServer
             RealmServerRouter.AddHandler(RealmEnums.CMSG_FRIEND_LIST, OnFriendList.Handler);
             RealmServerRouter.AddHandler<CMSG_ADD_FRIEND>(RealmEnums.CMSG_ADD_FRIEND, OnFriendAdd.Handler);
 
+            RealmServerRouter.AddHandler<CMSG_ITEM_QUERY_SINGLE>(RealmEnums.CMSG_ITEM_QUERY_SINGLE, OnItemQuerySingle);
+
             #region OPCODES
 
             /**
@@ -208,7 +212,7 @@ namespace RealmServer
             
             RealmServerRouter.AddHandler<CMSG_PET_NAME_QUERY>(RealmEnums.CMSG_PET_NAME_QUERY, Future);
             RealmServerRouter.AddHandler<CMSG_GUILD_QUERY>(RealmEnums.CMSG_GUILD_QUERY, Future);
-            RealmServerRouter.AddHandler<CMSG_ITEM_QUERY_SINGLE>(RealmEnums.CMSG_ITEM_QUERY_SINGLE, Future);
+            
             RealmServerRouter.AddHandler<CMSG_PAGE_TEXT_QUERY>(RealmEnums.CMSG_PAGE_TEXT_QUERY, Future);
             RealmServerRouter.AddHandler<CMSG_QUEST_QUERY>(RealmEnums.CMSG_QUEST_QUERY, Future);
             RealmServerRouter.AddHandler<CMSG_GAMEOBJECT_QUERY>(RealmEnums.CMSG_GAMEOBJECT_QUERY, Future);
@@ -468,6 +472,19 @@ namespace RealmServer
             #endregion
         }
 
+        private static void OnItemQuerySingle(RealmServerSession session, CMSG_ITEM_QUERY_SINGLE handler)
+        {
+            var item = DatabaseModel.ItemsCollection.Find(x => x.Entry == (int) handler.ItemId).FirstOrDefault();
+
+            Log.Print(LogType.Implement, $"ItemId: {handler.ItemId} ItemAdo: {handler.ItemIdo}");
+
+            if (item == null)
+                return;
+
+            
+            session.SendPacket(new SMSG_ITEM_QUERY_SINGLE_RESPONSE(item));
+        }
+
         private static void Future(RealmServerSession session, byte[] data)
         {
             Console.WriteLine(@"FUTURE");
@@ -516,6 +533,21 @@ Commands:
   /up       Show uptime.
   /q 900    Shutdown server in 900sec = 15min. *Debug exit now!
   /help     Show this help.");
+        }
+    }
+
+    internal sealed class SMSG_ITEM_QUERY_SINGLE_RESPONSE : Common.Network.PacketServer
+    {
+        public SMSG_ITEM_QUERY_SINGLE_RESPONSE(Items item) : base(RealmEnums.SMSG_ITEM_QUERY_SINGLE_RESPONSE)
+        {
+            Write((UInt32) item.Entry); // 32
+            Write((UInt32) item.Class); //32
+            Write((UInt32) item.SubClass); // 32
+
+            WriteCString(item.Name); // string
+            WriteCString(string.Empty);
+            WriteCString(string.Empty);
+            WriteCString(string.Empty);
         }
     }
 }

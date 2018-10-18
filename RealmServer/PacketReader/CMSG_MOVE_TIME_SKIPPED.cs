@@ -5,15 +5,15 @@ namespace RealmServer.PacketReader
     public sealed class CMSG_MOVE_TIME_SKIPPED : Common.Network.PacketReader
     {
         public uint Lag;
-        public ulong Uid;
+        public ulong PlayerUid;
 
         public CMSG_MOVE_TIME_SKIPPED(byte[] data) : base(data)
         {
-            Uid = ReadUInt64();
+            PlayerUid = ReadUInt64();
             Lag = ReadUInt32();
 
 #if DEBUG
-            Log.Print(LogType.Debug, $"[CMSG_MOVE_TIME_SKIPPED] Uid: {Uid} Lag: {Lag}");
+            Log.Print(LogType.Debug, $"[CMSG_MOVE_TIME_SKIPPED] PlayerUid: {PlayerUid} Lag: {Lag}");
 #endif
         }
     }

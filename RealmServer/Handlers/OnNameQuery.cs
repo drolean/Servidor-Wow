@@ -8,7 +8,7 @@ namespace RealmServer.Handlers
     {
         public static void Handler(RealmServerSession session, CMSG_NAME_QUERY handler)
         {
-            var target = Characters.FindCharacaterByUid(handler.Uid);
+            var target = Characters.FindCharacaterByUid(handler.PlayerUid);
 
             if (target != null)
                 session.SendPacket(new SMSG_NAME_QUERY_RESPONSE(target));

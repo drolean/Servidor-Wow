@@ -9,13 +9,13 @@ namespace RealmServer.PacketReader
     {
         public CMSG_NAME_QUERY(byte[] data) : base(data)
         {
-            Uid = ReadUInt64();
+            PlayerUid = ReadUInt64();
 
 #if DEBUG
-            Log.Print(LogType.Debug, $"[CMSG_NAME_QUERY] Uid: {Uid}");
+            Log.Print(LogType.Debug, $"[CMSG_NAME_QUERY] PlayerUid: {PlayerUid}");
 #endif
         }
 
-        public ulong Uid { get; }
+        public ulong PlayerUid { get; }
     }
 }

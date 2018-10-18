@@ -1,5 +1,6 @@
 ﻿using Common.Helpers;
 using RealmServer.Enums;
+using RealmServer.Helpers;
 using RealmServer.PacketReader;
 using RealmServer.PacketServer;
 
@@ -11,6 +12,9 @@ namespace RealmServer.Handlers
         {
             var msgType = (ChatMessageType) handler.Type;
             var msgLanguage = (ChatMessageLanguage) handler.ReadUInt32();
+
+
+            new CommandTest(session, handler.Message);
 
             switch (msgType)
             {

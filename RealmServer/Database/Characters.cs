@@ -342,7 +342,7 @@ namespace RealmServer.Database
         /// <returns></returns>
         public static Common.Database.Tables.Characters GetCharacter(CMSG_PLAYER_LOGIN handler)
         {
-            return DatabaseModel.CharacterCollection.Find(x => x.Uid == handler.Id && x.DeletedAt == null).First();
+            return DatabaseModel.CharacterCollection.Find(x => x.Uid == handler.PlayerUid && x.DeletedAt == null).First();
         }
     }
 }
