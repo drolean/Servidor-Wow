@@ -96,6 +96,8 @@ namespace RealmServer.Database
                 SubFactions = new List<SubFaction>(),
                 SubSkills = new List<SubSkill>(),
                 SubInventorie = new List<SubInventory>(),
+                SubFriends = new List<SubCharacterFriend>(),
+                SubIgnoreds = new List<SubCharacterIgnored>(),
 
                 //
                 CreatedAt = DateTime.Now,

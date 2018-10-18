@@ -263,8 +263,7 @@ namespace RealmServer
         /// <param name="msg">message</param>
         internal void SendMessageMotd(string msg)
         {
-            SendPacket(new SMSG_MESSAGECHAT(ChatMessageType.CHAT_MSG_SYSTEM, ChatMessageLanguage.LANG_UNIVERSAL,
-                Character.Uid, msg));
+            SendPacket(new SMSG_MESSAGECHAT(ChatMessageType.CHAT_MSG_SYSTEM, ChatMessageLanguage.LANG_UNIVERSAL, Character.Uid, msg));
         }
     }
 }

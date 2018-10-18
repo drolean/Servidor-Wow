@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Threading;
 using Common.Database;
 using Common.Database.Dbc;
+using Common.Database.Tables;
 using Common.Globals;
 using Common.Helpers;
 using RealmServer.Enums;
@@ -153,8 +154,10 @@ namespace RealmServer
             RealmServerRouter.AddHandler<CMSG_CHAR_DELETE>(RealmEnums.CMSG_CHAR_DELETE, OnCharDelete.Handler);
             RealmServerRouter.AddHandler<CMSG_PLAYER_LOGIN>(RealmEnums.CMSG_PLAYER_LOGIN, OnPlayerLogin.Handler);
 
-            RealmServerRouter.AddHandler<CMSG_UPDATE_ACCOUNT_DATA>(RealmEnums.CMSG_UPDATE_ACCOUNT_DATA, OnUpdateAccountData.Handler);
-            RealmServerRouter.AddHandler<CMSG_STANDSTATECHANGE>(RealmEnums.CMSG_STANDSTATECHANGE, OnStandStateChange.Handler);
+            RealmServerRouter.AddHandler<CMSG_UPDATE_ACCOUNT_DATA>(RealmEnums.CMSG_UPDATE_ACCOUNT_DATA,
+                OnUpdateAccountData.Handler);
+            RealmServerRouter.AddHandler<CMSG_STANDSTATECHANGE>(RealmEnums.CMSG_STANDSTATECHANGE,
+                OnStandStateChange.Handler);
             RealmServerRouter.AddHandler<CMSG_NAME_QUERY>(RealmEnums.CMSG_NAME_QUERY, OnNameQuery.Handler);
 
             RealmServerRouter.AddHandler(RealmEnums.CMSG_REQUEST_RAID_INFO, OnRequestRaidInfo.Handler);
@@ -166,7 +169,8 @@ namespace RealmServer
 
             RealmServerRouter.AddHandler<CMSG_ZONEUPDATE>(RealmEnums.CMSG_ZONEUPDATE, OnZoneUpdate.Handler);
             RealmServerRouter.AddHandler<CMSG_JOIN_CHANNEL>(RealmEnums.CMSG_JOIN_CHANNEL, OnJoinChannel.Handler);
-            RealmServerRouter.AddHandler<CMSG_SET_ACTIVE_MOVER>(RealmEnums.CMSG_SET_ACTIVE_MOVER, OnSetActiveMover.Handler);
+            RealmServerRouter.AddHandler<CMSG_SET_ACTIVE_MOVER>(RealmEnums.CMSG_SET_ACTIVE_MOVER,
+                OnSetActiveMover.Handler);
             RealmServerRouter.AddHandler<MSG_MOVE_FALL_LAND>(RealmEnums.MSG_MOVE_FALL_LAND, OnMoveFallLand.Handler);
 
             RealmServerRouter.AddHandler(RealmEnums.CMSG_COMPLETE_CINEMATIC, OnCompleteCinematic.Handler);
@@ -175,7 +179,8 @@ namespace RealmServer
             RealmServerRouter.AddHandler(RealmEnums.CMSG_TUTORIAL_CLEAR, OnTutorialClear.Handler);
             RealmServerRouter.AddHandler(RealmEnums.CMSG_TUTORIAL_RESET, OnTutorialReset.Handler);
 
-            RealmServerRouter.AddHandler<CMSG_SET_FACTION_ATWAR>(RealmEnums.CMSG_SET_FACTION_ATWAR, OnSetFactionAtWar.Handler);
+            RealmServerRouter.AddHandler<CMSG_SET_FACTION_ATWAR>(RealmEnums.CMSG_SET_FACTION_ATWAR,
+                OnSetFactionAtWar.Handler);
 
             MovementOpcodes.ForEach(code => RealmServerRouter.AddHandler(code, OnMovements.Handler(code)));
 
@@ -187,7 +192,12 @@ namespace RealmServer
             RealmServerRouter.AddHandler(RealmEnums.CMSG_LOGOUT_CANCEL, OnLogout.Cancel);
             RealmServerRouter.AddHandler(RealmEnums.CMSG_CANCEL_TRADE, OnCancelTrade);
 
+            RealmServerRouter.AddHandler<CMSG_MESSAGECHAT>(RealmEnums.CMSG_MESSAGECHAT, OnMessageChat);
+            RealmServerRouter.AddHandler(RealmEnums.CMSG_FRIEND_LIST, OnFriendList);
+            RealmServerRouter.AddHandler<CMSG_ADD_FRIEND>(RealmEnums.CMSG_ADD_FRIEND, OnFriendAdd);
+
             #region OPCODES
+
             /**
              * NOT FULL IMPLEMENTED
              *
@@ -206,8 +216,8 @@ namespace RealmServer
             RealmServerRouter.AddHandler<CMSG_CREATURE_QUERY>(RealmEnums.CMSG_CREATURE_QUERY, Future);
             RealmServerRouter.AddHandler<CMSG_WHO>(RealmEnums.CMSG_WHO, Future);
             RealmServerRouter.AddHandler<CMSG_WHOIS>(RealmEnums.CMSG_WHOIS, Future);
-            RealmServerRouter.AddHandler(RealmEnums.CMSG_FRIEND_LIST, Future);
-            RealmServerRouter.AddHandler<CMSG_ADD_FRIEND>(RealmEnums.CMSG_ADD_FRIEND, Future);
+            
+            
             RealmServerRouter.AddHandler<CMSG_DEL_FRIEND>(RealmEnums.CMSG_DEL_FRIEND, Future);
             RealmServerRouter.AddHandler<CMSG_ADD_IGNORE>(RealmEnums.CMSG_ADD_IGNORE, Future);
             RealmServerRouter.AddHandler<CMSG_DEL_IGNORE>(RealmEnums.CMSG_DEL_IGNORE, Future);
@@ -234,7 +244,7 @@ namespace RealmServer
             RealmServerRouter.AddHandler<CMSG_GUILD_LEADER>(RealmEnums.CMSG_GUILD_LEADER, Future);
             RealmServerRouter.AddHandler<CMSG_GUILD_MOTD>(RealmEnums.CMSG_GUILD_MOTD, Future);
 
-            RealmServerRouter.AddHandler<CMSG_MESSAGECHAT>(RealmEnums.CMSG_MESSAGECHAT, Future);
+            
 
             RealmServerRouter.AddHandler<CMSG_LEAVE_CHANNEL>(RealmEnums.CMSG_LEAVE_CHANNEL, Future);
             RealmServerRouter.AddHandler<CMSG_CHANNEL_LIST>(RealmEnums.CMSG_CHANNEL_LIST, Future);
@@ -455,7 +465,45 @@ namespace RealmServer
             RealmServerRouter.AddHandler<CMSG_SET_WATCHED_FACTION>(RealmEnums.CMSG_SET_WATCHED_FACTION, Future);
             RealmServerRouter.AddHandler(RealmEnums.CMSG_RESET_INSTANCES, Future); 
             */
+
             #endregion
+        }
+
+        private static void OnFriendAdd(RealmServerSession session, CMSG_ADD_FRIEND handler)
+        {
+            var Friend = Database.Characters.FindCharacaterByName(handler.NamePlayer);
+        }
+
+        private static void OnFriendList(RealmServerSession session, byte[] data)
+        {
+            // Send Friend List
+            session.SendPacket(new SMSG_FRIEND_LIST(session.Character));
+
+            // Send Friend Ignored List
+            session.SendPacket(new SMSG_IGNORE_LIST(session.Character));
+        }
+
+        private static void OnMessageChat(RealmServerSession session, CMSG_MESSAGECHAT handler)
+        {
+            ChatMessageType msgType = (ChatMessageType) handler.Type;
+            ChatMessageLanguage msgLanguage = (ChatMessageLanguage) handler.ReadUInt32();
+
+            switch (msgType)
+            {
+                case ChatMessageType.CHAT_MSG_SAY:
+                case ChatMessageType.CHAT_MSG_YELL:
+                case ChatMessageType.CHAT_MSG_EMOTE:
+                    session.SendPacket(new SMSG_MESSAGECHAT(msgType, msgLanguage, session.Character.Uid,
+                        handler.Message));
+                    break;
+                case ChatMessageType.CHAT_MSG_CHANNEL:
+                    session.SendPacket(new SMSG_MESSAGECHAT(msgType, msgLanguage, session.Character.Uid,
+                        handler.Message, handler.Channel));
+                    break;
+                default:
+                    Log.Print(LogType.Debug, $"Not Implemented {msgType}");
+                    break;
+            }
         }
 
         private static void OnCancelTrade(RealmServerSession session, byte[] data)

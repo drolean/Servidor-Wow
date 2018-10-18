@@ -48,44 +48,6 @@ namespace RealmServer.PacketServer
                 case ChatMessageType.CHAT_MSG_RAID_WARNING:
                     Write(id); // SenderId
                     break;
-                case ChatMessageType.CHAT_MSG_TEXT_EMOTE:
-                    break;
-                case ChatMessageType.CHAT_MSG_MONSTER_SAY:
-                    break;
-                case ChatMessageType.CHAT_MSG_MONSTER_YELL:
-                    break;
-                case ChatMessageType.CHAT_MSG_MONSTER_EMOTE:
-                    break;
-                case ChatMessageType.CHAT_MSG_CHANNEL_JOIN:
-                    break;
-                case ChatMessageType.CHAT_MSG_CHANNEL_LEAVE:
-                    break;
-                case ChatMessageType.CHAT_MSG_CHANNEL_LIST:
-                    break;
-                case ChatMessageType.CHAT_MSG_CHANNEL_NOTICE:
-                    break;
-                case ChatMessageType.CHAT_MSG_CHANNEL_NOTICE_USER:
-                    break;
-                case ChatMessageType.CHAT_MSG_LOOT:
-                    break;
-                case ChatMessageType.CHAT_MSG_BG_SYSTEM_NEUTRAL:
-                    break;
-                case ChatMessageType.CHAT_MSG_BG_SYSTEM_ALLIANCE:
-                    break;
-                case ChatMessageType.CHAT_MSG_BG_SYSTEM_HORDE:
-                    break;
-                case ChatMessageType.CHAT_MSG_BATTLEGROUND:
-                    break;
-                case ChatMessageType.CHAT_MSG_BATTLEGROUND_LEADER:
-                    break;
-                case ChatMessageType.CHAT_MSG_MONSTER_PARTY:
-                    break;
-                case ChatMessageType.CHAT_MSG_MONSTER_WHISPER:
-                    break;
-                case ChatMessageType.CHAT_MSG_RAID_BOSS_WHISPER:
-                    break;
-                case ChatMessageType.CHAT_MSG_RAID_BOSS_EMOTE:
-                    break;
                 default:
                     Log.Print(LogType.Debug, $"Unknown chat message type - {type}!");
                     break;

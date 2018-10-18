@@ -15,7 +15,7 @@ namespace RealmServer.PacketServer
                 if (subActionBar != null)
                 {
                     Log.Print(LogType.Debug,
-                        $"[{character.Name}] Type: {subActionBar.Type} Button: {subActionBar.Button} " +
+                        $"[{character.Name}] Button Number: {subActionBar.Button} - Type: {subActionBar.Type} " +
                         $"Action: {subActionBar.Action}");
 
                     UInt32 packedData = (UInt32) subActionBar.Action | (UInt32) subActionBar.Type << 24;
@@ -25,27 +25,6 @@ namespace RealmServer.PacketServer
                 {
                     Write((UInt32) 0);
                 }
-
-                /*
-                int index = character.SubActionBars.FindIndex(b => b.button == button);
-
-                CharactersActionBars currentButton = index != -1 ? savedButtons[index] : null;
-
-                if (currentButton != null)
-                {
-                    Log.Print(LogType.RealmServer, $"[{character.name}] Act Action .: {currentButton.action}");
-                    Log.Print(LogType.RealmServer, $"[{character.name}] Act Button .: {currentButton.button}");
-                    Log.Print(LogType.RealmServer, $"[{character.name}] Act Type ...: {currentButton.type}");
-
-                    UInt32 packedData = (UInt32)currentButton.action | (UInt32)currentButton.type << 24;
-                    Write(packedData);
-                    //Write((UInt16)currentButton.action);
-                    //Write((int)currentButton.type);
-                    //Write((int)currentButton.); ?? misc???
-                }
-                else
-                    Write((UInt32)0);
-                    */
             }
         }
     }

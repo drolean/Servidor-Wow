@@ -24,10 +24,8 @@ namespace Common.Database.Tables
         public uint Xp { get; set; }
 
         public int WatchFaction { get; set; }
-
         public bool Cinematic { get; set; }
         //Online
-        //Cinematic
         //TotalTime
         //LevelTime
 
@@ -46,8 +44,25 @@ namespace Common.Database.Tables
         public List<SubTalents> SubTalents { get; set; }
         public List<SubTutorial> SubTutorial { get; set; }
 
+        public List<SubCharacterFriend> SubFriends { get; set; }
+        public List<SubCharacterIgnored> SubIgnoreds { get; set; }
+
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
+        public DateTime? DeletedAt { get; set; }
+    }
+
+    public class SubCharacterFriend
+    {
+        public ulong Uid { get; set; }
+        public DateTime CreatedAt { get; set; }
+        public DateTime? DeletedAt { get; set; }
+    }
+
+    public class SubCharacterIgnored
+    {
+        public ulong Uid { get; set; }
+        public DateTime CreatedAt { get; set; }
         public DateTime? DeletedAt { get; set; }
     }
 

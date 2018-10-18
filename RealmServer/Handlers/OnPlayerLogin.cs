@@ -1,4 +1,5 @@
 ﻿using RealmServer.Database;
+using RealmServer.Enums;
 using RealmServer.PacketReader;
 using RealmServer.PacketServer;
 using RealmServer.World.Managers;
@@ -13,7 +14,8 @@ namespace RealmServer.Handlers
 
             session.SendPacket(new SMSG_LOGIN_VERIFY_WORLD(session.Character));
             session.SendPacket(new SMSG_ACCOUNT_DATA_TIMES());
-
+            session.SendMessageMotd("Welcome to World of Warcraft."); // DONE
+            session.SendMessageMotd("Server uptime:"); // DONE
             // SMSG_UPDATE_ACCOUNT_DATA
 
             session.SendPacket(new SMSG_SET_REST_START(1000));
