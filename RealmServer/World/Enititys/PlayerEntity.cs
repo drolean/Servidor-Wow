@@ -1,6 +1,8 @@
 ﻿using System;
+using Common.Database.Dbc;
 using Common.Database.Tables;
 using RealmServer.Enums;
+using RealmServer.Helpers;
 
 namespace RealmServer.World.Enititys
 {
@@ -9,20 +11,16 @@ namespace RealmServer.World.Enititys
         // [ ] Character Information
         public int ModelNative;
 
-        //
         public PlayerEntity(Characters character)
             : base(new ObjectGuid((uint) character.Uid, TypeId.TypeidPlayer, HighGuid.HighguidPlayer))
         {
-            /* Inicializadores */
             Character = character;
 
-            var chrRaces = MainProgram.ChrRacesReader.GetData(character.Race);
+            ChrRaces chrRaces = MainProgram.ChrRacesReader.GetData(character.Race);
 
-            /* Definindo Character */
-            Model = 50;
-            ModelNative = 50;
-            Scale = 1f;
-            /* FIM das definições */
+            Model = (int) CharacterHelper.GetRaceModel(character.Race, character.Gender); ;
+            ModelNative = (int) CharacterHelper.GetRaceModel(character.Race, character.Gender);
+            Scale = CharacterHelper.GetScale(character.Race, character.Gender);
 
             SetUpdateField((int) ObjectFields.OBJECT_FIELD_TYPE, (uint) 0x19); // 25
             SetUpdateField((int) ObjectFields.OBJECT_FIELD_SCALE_X, Size);
@@ -44,7 +42,7 @@ namespace RealmServer.World.Enititys
             SetUpdateField((int) UnitFields.UNIT_FIELD_MAXPOWER4, 10);
             SetUpdateField((int) UnitFields.UNIT_FIELD_MAXPOWER5, 20);
 
-            SetUpdateField((int) UnitFields.UNIT_FIELD_LEVEL, 50); //Level);
+            SetUpdateField((int) UnitFields.UNIT_FIELD_LEVEL, character.Level);
             SetUpdateField((int) UnitFields.UNIT_FIELD_FACTIONTEMPLATE, chrRaces.FactionId);
 
             SetUpdateField((int) UnitFields.UNIT_FIELD_BYTES_0, BitConverter.ToUInt32(new byte[]
@@ -106,7 +104,9 @@ namespace RealmServer.World.Enititys
             SetUpdateField((int) PlayerFields.PLAYER_XP, 0);
             SetUpdateField((int) PlayerFields.PLAYER_NEXT_LEVEL_XP, 400);
             SetUpdateField((int) PlayerFields.PLAYER_SKILL_INFO_1_1, 26);
-            //SetUpdateField((int)PlayerFields.PLAYER_FIELD_WATCHED_FACTION_INDEX, character.watched_faction);
+            SetUpdateField((int) PlayerFields.PLAYER_FIELD_WATCHED_FACTION_INDEX, character.WatchFaction);
+
+            SkillGenerate();
             /*
             SetUpdateField((int)UnitFields.UNIT_TRAINING_POINTS, 26);
             SetUpdateField((int)PlayerFields.PLAYER_FLAGS, 8);
@@ -165,9 +165,21 @@ namespace RealmServer.World.Enititys
             */
         }
 
+        private void SkillGenerate()
+        {
+            int a = 0;
+            foreach (var skill in Character.SubSkills)
+            {
+                SetUpdateField((int)PlayerFields.PLAYER_SKILL_INFO_1_1 + a * 3, skill.Skill);
+                SetUpdateField((int)PlayerFields.PLAYER_SKILL_INFO_1_1 + a * 3 + 1, skill.Value + (skill.Max << 16));
+                a++;
+            }
+        }
+
         public override int DataLength => (int) PlayerFields.PLAYER_END - 0x4;
 
         public Characters Character { get; }
         public override string Name => Character.Name;
+        public RealmServerSession Session { get; set; }
     }
 }

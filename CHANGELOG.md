@@ -4,6 +4,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.18] - 2018-10-18
+### Added
+- CharacterHelper.GetRaceModel
+- CharacterHelper.GetScale
+- SMSG_ACTION_BUTTONS
+- SMSG_INITIAL_SPELLS
+- WorldManager.OnPlayerSpawn
+- WorldManager.OnPlayerDespawn
+
+### Changed
+- Fixed Model and Scale on Login
+- Level now retrieve from Database
+- (Field) PLAYER_FIELD_WATCHED_FACTION_INDEX is now correct
+- Skills is available on Login World
+- Spells is available on Login World
+- Action Buttons partial available on Login World
+
 ## [0.0.17] - 2018-10-18
 ### Added
 - OnLogout.Request

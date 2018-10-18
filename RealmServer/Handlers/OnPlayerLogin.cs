@@ -1,6 +1,7 @@
 ﻿using RealmServer.Database;
 using RealmServer.PacketReader;
 using RealmServer.PacketServer;
+using RealmServer.World.Managers;
 
 namespace RealmServer.Handlers
 {
@@ -27,8 +28,16 @@ namespace RealmServer.Handlers
                 session.SendPacket(new SMSG_TRIGGER_CINEMATIC(chrRaces.CinematicId));
             }
 
+            session.SendPacket(new SMSG_INITIAL_SPELLS(session.Character));
+            session.SendPacket(new SMSG_ACTION_BUTTONS(session.Character)); 
+
             session.SendPacket(new SMSG_INIT_WORLD_STATES(session.Character));
             session.SendPacket(SMSG_UPDATE_OBJECT.CreateOwnCharacterUpdate(session.Character, out session.Entity));
+
+            session.Entity.Session = session;
+            WorldManager.DispatchOnPlayerSpawn(session.Entity);
         }
     }
+
+ 
 }

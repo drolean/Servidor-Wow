@@ -97,6 +97,7 @@
     <Compile Include="Handlers\OnTutorialReset.cs" />
     <Compile Include="Handlers\OnUpdateAccountData.cs" />
     <Compile Include="Handlers\OnZoneUpdate.cs" />
+    <Compile Include="Helpers\CharacterHelper.cs" />
     <Compile Include="mainProgram.cs" />
     <Compile Include="Database\Characters.cs" />
     <Compile Include="Handlers\OnBattleFieldStatus.cs" />
@@ -304,6 +305,7 @@
     <Compile Include="PacketReader\CMSG_QUESTGIVER_STATUS_QUERY.cs" />
     <Compile Include="PacketServer\MSG_MOVE_TIME_SKIPPED.cs" />
     <Compile Include="PacketServer\SMSG_ACCOUNT_DATA_TIMES.cs" />
+    <Compile Include="PacketServer\SMSG_ACTION_BUTTONS.cs" />
     <Compile Include="PacketServer\SMSG_ADDON_INFO.cs" />
     <Compile Include="PacketServer\SMSG_AUTH_CHALLENGE.cs" />
     <Compile Include="PacketServer\SMSG_AUTH_RESPONSE.cs" />
@@ -314,13 +316,16 @@
     <Compile Include="PacketServer\SMSG_CHAR_ENUM.cs" />
     <Compile Include="PacketServer\SMSG_CORPSE_RECLAIM_DELAY.cs" />
     <Compile Include="PacketServer\SMSG_FORCE_MOVE_ROOT.cs" />
+    <Compile Include="PacketServer\SMSG_FORCE_MOVE_UNROOT.cs" />
     <Compile Include="PacketServer\SMSG_GMTICKET_CREATE.cs" />
     <Compile Include="PacketServer\SMSG_GMTICKET_GETTICKET.cs" />
     <Compile Include="PacketServer\SMSG_GMTICKET_SYSTEMSTATUS.cs" />
+    <Compile Include="PacketServer\SMSG_INITIAL_SPELLS.cs" />
     <Compile Include="PacketServer\SMSG_INIT_WORLD_STATES.cs" />
     <Compile Include="PacketServer\SMSG_LOGIN_SETTIMESPEED.cs" />
     <Compile Include="PacketServer\SMSG_LOGIN_VERIFY_WORLD.cs" />
     <Compile Include="PacketServer\SMSG_LOGOUT_CANCEL_ACK.cs" />
+    <Compile Include="PacketServer\SMSG_LOGOUT_COMPLETE.cs" />
     <Compile Include="PacketServer\SMSG_LOGOUT_RESPONSE.cs" />
     <Compile Include="PacketServer\SMSG_MESSAGECHAT.cs" />
     <Compile Include="PacketServer\SMSG_NAME_QUERY_RESPONSE.cs" />
@@ -329,6 +334,7 @@
     <Compile Include="PacketServer\SMSG_SET_FACTION_STANDING.cs" />
     <Compile Include="PacketServer\SMSG_SET_REST_START.cs" />
     <Compile Include="PacketServer\SMSG_STANDSTATE_UPDATE.cs" />
+    <Compile Include="PacketServer\SMSG_TRADE_STATUS.cs" />
     <Compile Include="PacketServer\SMSG_TRIGGER_CINEMATIC.cs" />
     <Compile Include="PacketServer\SMSG_TUTORIAL_FLAGS.cs" />
     <Compile Include="PacketServer\SMSG_UPDATE_ACCOUNT_DATA.cs" />
@@ -342,6 +348,7 @@
     <Compile Include="World\Enititys\ObjectEntity.cs" />
     <Compile Include="World\Enititys\PlayerEntity.cs" />
     <Compile Include="World\Enititys\UnitEntity.cs" />
+    <Compile Include="World\Managers\WorldManager.cs" />
     <Compile Include="World\ObjectGuid.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
