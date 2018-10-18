@@ -60,13 +60,14 @@
     <Compile Include="Enums\ChatChannelNotify.cs" />
     <Compile Include="Enums\ChatMessageLanguage.cs" />
     <Compile Include="Enums\ChatMessageType.cs" />
-    <Compile Include="Enums\Class1.cs" />
+    <Compile Include="Enums\FriendResults.cs" />
     <Compile Include="Enums\GmTicketCreateResult.cs" />
     <Compile Include="Enums\GmTicketSystemStatus.cs" />
     <Compile Include="Enums\InventorySlots.cs" />
     <Compile Include="Enums\TicketInfoResponse.cs" />
     <Compile Include="Enums\TicketReportLagType.cs" />
     <Compile Include="Enums\TicketType.cs" />
+    <Compile Include="Enums\TradeStatus.cs" />
     <Compile Include="Enums\UnitFields.cs" />
     <Compile Include="Enums\ObjectFields.cs" />
     <Compile Include="Enums\HighGuid.cs" />
@@ -76,6 +77,7 @@
     <Compile Include="Enums\PlayerFields.cs" />
     <Compile Include="Enums\StandStates.cs" />
     <Compile Include="Enums\TypeId.cs" />
+    <Compile Include="Enums\UnitFlags.cs" />
     <Compile Include="Handlers\OnAuthSession.cs" />
     <Compile Include="Handlers\OnCharCreate.cs" />
     <Compile Include="Handlers\OnCharDelete.cs" />
