@@ -71,7 +71,8 @@ namespace RealmServer.PacketReader
                 case MovementFlags.MoveflagHover:
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    Console.WriteLine(MoveFlags);
+                    break;
             }
 
             Idk = ReadInt32();

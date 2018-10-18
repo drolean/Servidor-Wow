@@ -4,6 +4,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.17] - 2018-10-18
+### Added
+- OnLogout.Request
+- OnLogout.Cancel
+- CMSG_MOVE_TIME_SKIPPED
+- MSG_MOVE_TIME_SKIPPED
+- SMSG_FORCE_MOVE_ROOT
+- SMSG_FORCE_MOVE_UNROOT
+- SMSG_LOGOUT_CANCEL_ACK
+- SMSG_LOGOUT_COMPLETE
+- SMSG_LOGOUT_RESPONSE
+- SMSG_TRADE_STATUS
+
+### Changed
+- AuthServer disabled timer to check RealmStatus
+- MSG_MOVE_FALL_LAND default switch now write console Type
+
 ## [0.0.16] - 2018-10-18
 ### Added
 - CMSG_ACTIVATETAXIEXPRESS

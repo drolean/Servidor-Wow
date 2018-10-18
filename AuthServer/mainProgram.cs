@@ -41,7 +41,7 @@ namespace AuthServer
             Initalizing();
 
             // Timer to check realm Status
-            TimerRealm = new Timer(TimerRealmCallback, null, 0, 10000);
+            //TimerRealm = new Timer(TimerRealmCallback, null, 0, 10000);
 
             Log.Print(LogType.AuthServer, $"Running from: {AppDomain.CurrentDomain.BaseDirectory}");
             Log.Print(LogType.AuthServer,

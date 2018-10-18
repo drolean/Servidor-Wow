@@ -9,8 +9,10 @@ using Common.Database;
 using Common.Database.Dbc;
 using Common.Globals;
 using Common.Helpers;
+using RealmServer.Enums;
 using RealmServer.Handlers;
 using RealmServer.PacketReader;
+using RealmServer.PacketServer;
 
 namespace RealmServer
 {
@@ -177,6 +179,15 @@ namespace RealmServer
 
             MovementOpcodes.ForEach(code => RealmServerRouter.AddHandler(code, OnMovements.Handler(code)));
 
+            RealmServerRouter.AddHandler<CMSG_MOVE_TIME_SKIPPED>(RealmEnums.CMSG_MOVE_TIME_SKIPPED, Handler);
+
+            RealmServerRouter.AddHandler(RealmEnums.CMSG_NEXT_CINEMATIC_CAMERA, Future);
+            RealmServerRouter.AddHandler<CMSG_SET_ACTIONBAR_TOGGLES>(RealmEnums.CMSG_SET_ACTIONBAR_TOGGLES, Handler);
+            RealmServerRouter.AddHandler(RealmEnums.CMSG_LOGOUT_REQUEST, OnLogout.Request);
+            RealmServerRouter.AddHandler(RealmEnums.CMSG_LOGOUT_CANCEL, OnLogout.Cancel);
+            RealmServerRouter.AddHandler(RealmEnums.CMSG_CANCEL_TRADE, OnCancelTrade);
+
+            #region OPCODES
             /**
              * NOT FULL IMPLEMENTED
              *
@@ -184,8 +195,8 @@ namespace RealmServer
              *
             RealmServerRouter.AddHandler(RealmEnums.CMSG_GMTICKET_SYSTEMSTATUS, OnGmTicketSystemStatus.Handler);
             RealmServerRouter.AddHandler<CMSG_GMTICKET_CREATE>(RealmEnums.CMSG_GMTICKET_CREATE, OnGmTicketCreate.Handler);
-            RealmServerRouter.AddHandler(RealmEnums.CMSG_LOGOUT_REQUEST, Future);
-            RealmServerRouter.AddHandler(RealmEnums.CMSG_LOGOUT_CANCEL, Future);
+            
+            
             RealmServerRouter.AddHandler<CMSG_PET_NAME_QUERY>(RealmEnums.CMSG_PET_NAME_QUERY, Future);
             RealmServerRouter.AddHandler<CMSG_GUILD_QUERY>(RealmEnums.CMSG_GUILD_QUERY, Future);
             RealmServerRouter.AddHandler<CMSG_ITEM_QUERY_SINGLE>(RealmEnums.CMSG_ITEM_QUERY_SINGLE, Future);
@@ -266,7 +277,7 @@ namespace RealmServer
             RealmServerRouter.AddHandler(RealmEnums.CMSG_IGNORE_TRADE, Future);
             RealmServerRouter.AddHandler(RealmEnums.CMSG_ACCEPT_TRADE, Future);
             RealmServerRouter.AddHandler(RealmEnums.CMSG_UNACCEPT_TRADE, Future);
-            RealmServerRouter.AddHandler(RealmEnums.CMSG_CANCEL_TRADE, Future);
+            
             RealmServerRouter.AddHandler<CMSG_SET_TRADE_ITEM>(RealmEnums.CMSG_SET_TRADE_ITEM, Future);
             RealmServerRouter.AddHandler<CMSG_CLEAR_TRADE_ITEM>(RealmEnums.CMSG_CLEAR_TRADE_ITEM, Future);
             RealmServerRouter.AddHandler<CMSG_SET_TRADE_GOLD>(RealmEnums.CMSG_SET_TRADE_GOLD, Future);
@@ -410,7 +421,7 @@ namespace RealmServer
 
             RealmServerRouter.AddHandler(RealmEnums.CMSG_TOGGLE_HELM, Future);
             RealmServerRouter.AddHandler(RealmEnums.CMSG_TOGGLE_CLOAK, Future);
-            RealmServerRouter.AddHandler<CMSG_SET_ACTIONBAR_TOGGLES>(RealmEnums.CMSG_SET_ACTIONBAR_TOGGLES, Future);
+            
 
             RealmServerRouter.AddHandler(RealmEnums.CMSG_PLAYER_LOGOUT, Future);
 
@@ -444,11 +455,28 @@ namespace RealmServer
             RealmServerRouter.AddHandler<CMSG_SET_WATCHED_FACTION>(RealmEnums.CMSG_SET_WATCHED_FACTION, Future);
             RealmServerRouter.AddHandler(RealmEnums.CMSG_RESET_INSTANCES, Future); 
             */
+            #endregion
+        }
+
+        private static void OnCancelTrade(RealmServerSession session, byte[] data)
+        {
+            // Send to another player
+            //session.SendPacket(new SMSG_TRADE_STATUS(TradeStatus.TRADE_STATUS_CANCELED));
+        }
+
+        private static void Handler(RealmServerSession session, CMSG_SET_ACTIONBAR_TOGGLES handler)
+        {
+            session.Entity.SetUpdateField((int) PlayerFields.PLAYER_FIELD_BYTES, 2, handler.ActionBar);
+        }
+
+        private static void Handler(RealmServerSession session, CMSG_MOVE_TIME_SKIPPED handler)
+        {
+            session.SendPacket(new MSG_MOVE_TIME_SKIPPED(handler));
         }
 
         private static void Future(RealmServerSession session, byte[] data)
         {
-            throw new NotImplementedException();
+            Console.WriteLine("FUTURE");
         }
 
         private static async void DbcInit()
