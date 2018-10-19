@@ -19,6 +19,88 @@ namespace RealmServer.PacketServer
             blocks.ForEach(Write);
         }
 
+        internal static SMSG_UPDATE_OBJECT UpdateValues(PlayerEntity player)
+        {
+            BinaryWriter writer = new BinaryWriter(new MemoryStream());
+            writer.Write((byte)ObjectUpdateType.UPDATETYPE_VALUES);
+
+            byte[] guidBytes = GenerateGuidBytes(player.ObjectGuid.RawGuid);
+            WriteBytes(writer, guidBytes, guidBytes.Length);
+
+            player.WriteUpdateFields(writer);
+
+            return new SMSG_UPDATE_OBJECT(new List<byte[]> { (writer.BaseStream as MemoryStream)?.ToArray() });
+        }
+
+
+        internal static void WriteBytes(BinaryWriter writer, byte[] data, int count = 0)
+        {
+            if (count == 0)
+                writer.Write(data);
+            else
+                writer.Write(data, 0, count);
+        }
+
+        internal static byte[] GenerateGuidBytes(ulong id)
+        {
+            byte[] packedGuid = new byte[9];
+            byte length = 1;
+
+            for (byte i = 0; id != 0; i++)
+            {
+                if ((id & 0xFF) != 0)
+                {
+                    packedGuid[0] |= (byte)(1 << i);
+                    packedGuid[length] = (byte)(id & 0xFF);
+                    ++length;
+                }
+
+                id >>= 8;
+            }
+
+            byte[] clippedArray = new byte[length];
+            Array.Copy(packedGuid, clippedArray, length);
+
+            return clippedArray;
+        }
+
+        public static SMSG_UPDATE_OBJECT CreateItem(SubInventory inventory, Characters character)
+        {
+            Log.Print(LogType.RealmServer, $"[{character.Name}] Bag: {inventory.Bag} Item: {inventory.Item} " +
+                                           $"Stack: {inventory.StackCount} Flag: {inventory.Flags} Slot: {inventory.Slot}");
+
+            BinaryWriter writer = new BinaryWriter(new MemoryStream());
+            writer.Write((byte)ObjectUpdateType.UPDATETYPE_CREATE_OBJECT);
+
+            ItemEntity entity = new ItemEntity(inventory, character)
+            {
+                ObjectGuid = new ObjectGuid((UInt32)inventory.Item),
+                Guid = (UInt32)inventory.Item
+            };
+
+            writer.WritePackedUInt64(entity.ObjectGuid.RawGuid);
+            writer.Write((byte)TypeId.TypeidItem);
+
+            ObjectUpdateFlag updateFlags = ObjectUpdateFlag.Transport |
+                                           ObjectUpdateFlag.All |
+                                           ObjectUpdateFlag.HasPosition;
+
+            writer.Write((byte)updateFlags);
+
+            writer.Write(0f);
+            writer.Write(0f);
+            writer.Write(0f);
+
+            writer.Write((float)0);
+
+            writer.Write((uint)0x1);
+            writer.Write((uint)0);
+
+            entity.WriteUpdateFields(writer);
+
+            return new SMSG_UPDATE_OBJECT(new List<byte[]> { (writer.BaseStream as MemoryStream)?.ToArray() });
+        }
+
         public static SMSG_UPDATE_OBJECT CreateOwnCharacterUpdate(Characters character, out PlayerEntity entity)
         {
             var writer = new BinaryWriter(new MemoryStream());

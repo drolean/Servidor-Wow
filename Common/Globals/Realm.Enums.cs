@@ -67,6 +67,9 @@
         SMSG_NEW_WORLD = 0x03E,
         SMSG_TRANSFER_PENDING = 0x03F,
         SMSG_TRANSFER_ABORTED = 0x040,
+        /// <summary>
+        /// Kick client to character select screen and show "World server is down".
+        /// </summary>
         SMSG_CHARACTER_LOGIN_FAILED = 0x041,
         SMSG_LOGIN_SETTIMESPEED = 0x042,
         SMSG_GAMETIME_UPDATE = 0x043,

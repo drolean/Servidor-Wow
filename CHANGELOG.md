@@ -4,6 +4,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.21] - 2018-10-19
+### Added
+- Added Command Helper
+- Command [gps] show current cordinates
+- Command [emote Id] flag emote
+- ItemEntity
+- Command [level x] gain level
+- Command [inv1] generate inventory
+- Command [inv2] same
+- SMSG_UPDATE_OBJECT.UpdateValues
+- SMSG_UPDATE_OBJECT.CreateItem
+- PlayerManager
+
+### Changed
+- Rename some Uid to correct PlayerUid
+- SMSG_ITEM_QUERY_SINGLE_RESPONSE Partial
+
 ## [0.0.20] - 2018-10-18
 ### Changed
 - StyleCI

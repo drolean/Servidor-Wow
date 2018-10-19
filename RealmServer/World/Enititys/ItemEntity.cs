@@ -17,11 +17,13 @@ namespace RealmServer.World.Enititys
             SetUpdateField((int)ObjectFields.ScaleX, 1.0f);
 
             //
+            SetUpdateField((int)ItemFields.ITEM_FIELD_STACK_COUNT, inventory.StackCount);
+            SetUpdateField((int)ItemFields.ITEM_FIELD_DURABILITY, 25);
             SetUpdateField((int)ItemFields.ITEM_FIELD_OWNER, sessionCharacter.Uid); // ID do char
             SetUpdateField((int)ItemFields.ITEM_FIELD_CONTAINED, sessionCharacter.Uid); // ID do char
 
             //
-            SetUpdateField((int)ItemFields.ITEM_FIELD_STACK_COUNT, inventory.StackCount);
+            //SetUpdateField((int)ItemFields.ITEM_FIELD_STACK_COUNT, inventory.StackCount);
 
             Console.WriteLine($@"ItemEntity: {inventory.Item}");
         }

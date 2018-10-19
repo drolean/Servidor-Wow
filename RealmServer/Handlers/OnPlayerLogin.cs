@@ -21,17 +21,16 @@ namespace RealmServer.Handlers
             session.SendPacket(new SMSG_BINDPOINTUPDATE(session.Character));
             session.SendPacket(new SMSG_TUTORIAL_FLAGS());
             session.SendPacket(new SMSG_LOGIN_SETTIMESPEED());
-            session.SendPacket(new SMSG_CORPSE_RECLAIM_DELAY());
+            session.SendPacket(new SMSG_INITIAL_SPELLS(session.Character));
+            session.SendPacket(new SMSG_ACTION_BUTTONS(session.Character));
 
             if (session.Character.Cinematic == false)
             {
                 var chrRaces = MainProgram.ChrRacesReader.GetData(session.Character.Race);
                 session.SendPacket(new SMSG_TRIGGER_CINEMATIC(chrRaces.CinematicId));
             }
-
-            session.SendPacket(new SMSG_INITIAL_SPELLS(session.Character));
-            session.SendPacket(new SMSG_ACTION_BUTTONS(session.Character));
-
+            
+            session.SendPacket(new SMSG_CORPSE_RECLAIM_DELAY());
             session.SendPacket(new SMSG_INIT_WORLD_STATES(session.Character));
             session.SendPacket(SMSG_UPDATE_OBJECT.CreateOwnCharacterUpdate(session.Character, out session.Entity));
 

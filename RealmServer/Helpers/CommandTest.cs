@@ -1,7 +1,6 @@
 ﻿using System;
-using Common.Database;
-using MongoDB.Driver;
 using RealmServer.Enums;
+using RealmServer.PacketServer;
 using RealmServer.World;
 
 namespace RealmServer.Helpers
@@ -24,11 +23,24 @@ namespace RealmServer.Helpers
                 );
             }
 
+            // LEVEL
+            if (args[0] == "level")
+                session.Entity.SetUpdateField((int) UnitFields.UNIT_FIELD_LEVEL, int.Parse(args[1]));
+
             // EMOTE
             if (args[0] == "emote")
                 session.Entity.SetUpdateField((int) UnitFields.UNIT_NPC_EMOTESTATE, int.Parse(args[1]));
 
-            if (args[0] == "in")
+            if (args[0] == "inv1")
+            {
+                // Generate Inventory
+                foreach (var inventory in session.Character.SubInventorie)
+                {
+                    session.SendPacket(SMSG_UPDATE_OBJECT.CreateItem(inventory, session.Character));
+                }
+            }
+
+            if (args[0] == "inv2")
             {
                 for (int j = 0; j < 112; j++)
                 {
@@ -42,10 +54,6 @@ namespace RealmServer.Helpers
                         }
 
                         session.Entity.SetUpdateField((int)PlayerFields.PLAYER_FIELD_INV_SLOT_HEAD + j * 2, inventory.Item);
-                        session.SendPacket(UpdateObject.CreateItem(inventory, session.Character));
-
-                        var item = DatabaseModel.ItemsCollection.Find(x => x.Entry == inventory.Item).FirstOrDefault();
-                        //session.SendPacket(new SMSG_ITEM_QUERY_SINGLE_RESPONSE(item));
                     }
                     else
                     {

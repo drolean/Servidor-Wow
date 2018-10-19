@@ -26,21 +26,23 @@ namespace RealmServer.World.Enititys
 
             SetUpdateField((int) ObjectFields.Type, (uint) 0x19); // 25
             SetUpdateField((int) ObjectFields.ScaleX, Size);
+            SetUpdateField((int)ObjectFields.Padding, 0);
 
+            SetUpdateField((int)UnitFields.UNIT_FIELD_TARGET, (ulong)0);
 
             SetUpdateField((int) UnitFields.UNIT_FIELD_HEALTH, 1);
-            //SetUpdateField((int) UnitFields.UNIT_FIELD_POWER1, 2);
-            //SetUpdateField((int) UnitFields.UNIT_FIELD_POWER2, 3);
-            //SetUpdateField((int) UnitFields.UNIT_FIELD_POWER3, 4);
-            //SetUpdateField((int) UnitFields.UNIT_FIELD_POWER4, 5);
-            //SetUpdateField((int) UnitFields.UNIT_FIELD_POWER5, 11);
+            SetUpdateField((int) UnitFields.UNIT_FIELD_POWER1, 2);
+            SetUpdateField((int) UnitFields.UNIT_FIELD_POWER2, 3);
+            SetUpdateField((int) UnitFields.UNIT_FIELD_POWER3, 4);
+            SetUpdateField((int) UnitFields.UNIT_FIELD_POWER4, 5);
+            SetUpdateField((int) UnitFields.UNIT_FIELD_POWER5, 6);
 
-            SetUpdateField((int) UnitFields.UNIT_FIELD_MAXHEALTH, 6);
-            //SetUpdateField((int) UnitFields.UNIT_FIELD_MAXPOWER1, 7);
-            //SetUpdateField((int) UnitFields.UNIT_FIELD_MAXPOWER2, 8);
-            //SetUpdateField((int) UnitFields.UNIT_FIELD_MAXPOWER3, 9);
-            //SetUpdateField((int) UnitFields.UNIT_FIELD_MAXPOWER4, 10);
-            //SetUpdateField((int) UnitFields.UNIT_FIELD_MAXPOWER5, 20);
+            SetUpdateField((int) UnitFields.UNIT_FIELD_MAXHEALTH, 7);
+            SetUpdateField((int) UnitFields.UNIT_FIELD_MAXPOWER1, 8);
+            SetUpdateField((int) UnitFields.UNIT_FIELD_MAXPOWER2, 9);
+            SetUpdateField((int) UnitFields.UNIT_FIELD_MAXPOWER3, 10);
+            SetUpdateField((int) UnitFields.UNIT_FIELD_MAXPOWER4, 11);
+            SetUpdateField((int) UnitFields.UNIT_FIELD_MAXPOWER5, 12);
 
             SetUpdateField((int) UnitFields.UNIT_FIELD_LEVEL, character.Level);
             SetUpdateField((int) UnitFields.UNIT_FIELD_FACTIONTEMPLATE, chrRaces.FactionId);
@@ -53,19 +55,19 @@ namespace RealmServer.World.Enititys
                 1
             }, 0));
 
-            SetUpdateField((int) UnitFields.UNIT_FIELD_STAT0, 1); //character.SubStats.Strength);
-            SetUpdateField((int) UnitFields.UNIT_FIELD_STAT1, 1); //character.SubStats.Agility);
-            SetUpdateField((int) UnitFields.UNIT_FIELD_STAT2, 1); //character.SubStats.Stamina);
-            SetUpdateField((int) UnitFields.UNIT_FIELD_STAT3, 1); //character.SubStats.Intellect);
-            SetUpdateField((int) UnitFields.UNIT_FIELD_STAT4, 1); //character.SubStats.Spirit);
+            SetUpdateField((int) UnitFields.UNIT_FIELD_STAT0, 13); //character.SubStats.Strength);
+            SetUpdateField((int) UnitFields.UNIT_FIELD_STAT1, 14); //character.SubStats.Agility);
+            SetUpdateField((int) UnitFields.UNIT_FIELD_STAT2, 15); //character.SubStats.Stamina);
+            SetUpdateField((int) UnitFields.UNIT_FIELD_STAT3, 16); //character.SubStats.Intellect);
+            SetUpdateField((int) UnitFields.UNIT_FIELD_STAT4, 17); //character.SubStats.Spirit);
 
-            SetUpdateField((int) UnitFields.UNIT_FIELD_RESISTANCES, 15); //character.SubResistances.Armor
-            SetUpdateField((int) UnitFields.UNIT_FIELD_RESISTANCES_01, 16); //character.SubResistances.
-            SetUpdateField((int) UnitFields.UNIT_FIELD_RESISTANCES_02, 17); //character.SubResistances.Fire
-            SetUpdateField((int) UnitFields.UNIT_FIELD_RESISTANCES_03, 18); //character.SubResistances.Nature
-            SetUpdateField((int) UnitFields.UNIT_FIELD_RESISTANCES_04, 19); //character.SubResistances.Frost
-            SetUpdateField((int) UnitFields.UNIT_FIELD_RESISTANCES_05, 20); //character.SubResistances.Shadow
-            SetUpdateField((int) UnitFields.UNIT_FIELD_RESISTANCES_06, 21); //character.SubResistances.Arcane
+            SetUpdateField((int) UnitFields.UNIT_FIELD_RESISTANCES, 18); //character.SubResistances.Armor
+            SetUpdateField((int) UnitFields.UNIT_FIELD_RESISTANCES_01, 19); //character.SubResistances.
+            SetUpdateField((int) UnitFields.UNIT_FIELD_RESISTANCES_02, 20); //character.SubResistances.Fire
+            SetUpdateField((int) UnitFields.UNIT_FIELD_RESISTANCES_03, 21); //character.SubResistances.Nature
+            SetUpdateField((int) UnitFields.UNIT_FIELD_RESISTANCES_04, 22); //character.SubResistances.Frost
+            SetUpdateField((int) UnitFields.UNIT_FIELD_RESISTANCES_05, 23); //character.SubResistances.Shadow
+            SetUpdateField((int) UnitFields.UNIT_FIELD_RESISTANCES_06, 24); //character.SubResistances.Arcane
 
             SetUpdateField((int) UnitFields.UNIT_FIELD_FLAGS, 8);
             SetUpdateField((int) UnitFields.UNIT_FIELD_BASE_MANA, 60);
@@ -74,6 +76,16 @@ namespace RealmServer.World.Enititys
             SetUpdateField((int) UnitFields.UNIT_FIELD_DISPLAYID, Model);
             SetUpdateField((int) UnitFields.UNIT_FIELD_NATIVEDISPLAYID, Model);
             SetUpdateField((int) UnitFields.UNIT_FIELD_MOUNTDISPLAYID, 0);
+
+            SetUpdateField((int)UnitFields.UNIT_FIELD_BYTES_1, BitConverter.ToUInt32(new byte[]
+            {
+                (byte)StandStates.Stand,
+                0,
+                0,
+                0
+            }, 0));
+            SetUpdateField((int)UnitFields.UNIT_FIELD_BYTES_2, 0);
+
             SetUpdateField((int) PlayerFields.PLAYER_BYTES, BitConverter.ToUInt32(new[]
             {
                 character.SubSkin.Skin,

@@ -360,9 +360,9 @@
     <Compile Include="World\Enititys\ObjectEntity.cs" />
     <Compile Include="World\Enititys\PlayerEntity.cs" />
     <Compile Include="World\Enititys\UnitEntity.cs" />
+    <Compile Include="World\Managers\PlayerManager.cs" />
     <Compile Include="World\Managers\WorldManager.cs" />
     <Compile Include="World\ObjectGuid.cs" />
-    <Compile Include="World\UpdateObject.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
