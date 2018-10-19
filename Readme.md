@@ -1,5 +1,24 @@
 #World of Warcraft Vanilla Classic 1.12.1
 
+## Getting it working
+### Dependencies
+- MongoDb 4.0.3
+- .NET Framework 4.6.1
+
+### Starting your server
+- Extract ServerFiles.7z to workdir RealmServer.exe
+- Run AuthServer.exe and type /db to recreate database.
+- "set realmlist 127.0.0.1"
+- Only **NightElf Warrior** is correct.
+
+### Commands inside:
+- level X (grant a level*)
+- inv1 (generare inventory) *idk when the first or second
+- inv2 (generate inventory) *idk when the first or second
+- gps (show coordinates)
+
+## Links
+
 - https://github.com/mangos/mangos-svn/blob/master/tags/0.0.1/ChangeLog
 - https://github.com/mangos/mangos-svn/tree/master/tags/0.0.1
 - https://github.com/emulator-archive/WoWD

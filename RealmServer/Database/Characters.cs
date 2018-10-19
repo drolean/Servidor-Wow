@@ -270,7 +270,7 @@ namespace RealmServer.Database
                     Builders<Common.Database.Tables.Characters>.Update.Push("SubActionBars", new SubActionBar
                     {
                         Button = actionBase.button,
-                        Action = actionBase.action,
+                        Action = actionBase.spell,
                         Type = actionBase.type,
                         CreatedAt = DateTime.Now
                     })

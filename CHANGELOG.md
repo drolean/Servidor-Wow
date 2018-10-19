@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.22] - 2018-10-19
+### Added
+- Config Mongo ConnectionString to future.
+
+### Changed
+- Fixed all Config Project dependencies.
+- Fixed XML Races ActionButtons Spells name.
+- Moved some functions to correct file (WriteBytes and GenerateGuidBytes) to PacketServer.
+- Readme now container instructions to run server.
+
 ## [0.0.21] - 2018-10-19
 ### Added
 - Added Command Helper

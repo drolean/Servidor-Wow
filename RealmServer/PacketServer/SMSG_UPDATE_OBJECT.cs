@@ -31,39 +31,7 @@ namespace RealmServer.PacketServer
 
             return new SMSG_UPDATE_OBJECT(new List<byte[]> { (writer.BaseStream as MemoryStream)?.ToArray() });
         }
-
-
-        internal static void WriteBytes(BinaryWriter writer, byte[] data, int count = 0)
-        {
-            if (count == 0)
-                writer.Write(data);
-            else
-                writer.Write(data, 0, count);
-        }
-
-        internal static byte[] GenerateGuidBytes(ulong id)
-        {
-            byte[] packedGuid = new byte[9];
-            byte length = 1;
-
-            for (byte i = 0; id != 0; i++)
-            {
-                if ((id & 0xFF) != 0)
-                {
-                    packedGuid[0] |= (byte)(1 << i);
-                    packedGuid[length] = (byte)(id & 0xFF);
-                    ++length;
-                }
-
-                id >>= 8;
-            }
-
-            byte[] clippedArray = new byte[length];
-            Array.Copy(packedGuid, clippedArray, length);
-
-            return clippedArray;
-        }
-
+        
         public static SMSG_UPDATE_OBJECT CreateItem(SubInventory inventory, Characters character)
         {
             Log.Print(LogType.RealmServer, $"[{character.Name}] Bag: {inventory.Bag} Item: {inventory.Item} " +

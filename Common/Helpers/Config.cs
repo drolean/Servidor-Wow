@@ -5,8 +5,9 @@ namespace Common.Helpers
 {
     public class Config
     {
-        [XmlIgnore] public const string FileName = "config.xml";
+        [XmlIgnore] public const string FileName = "RealmServerConfig.xml";
 
+        public string MongoConnection;
         public int LimitCharacterRealm;
         public string[] ProfaneNames;
 
@@ -14,6 +15,7 @@ namespace Common.Helpers
 
         private void SetDefaultValues()
         {
+            MongoConnection = "mongodb://127.0.0.1:27017";
             LimitCharacterRealm = 10;
             ProfaneNames = new[] {"root", "Admin", "Administrator"};
         }
