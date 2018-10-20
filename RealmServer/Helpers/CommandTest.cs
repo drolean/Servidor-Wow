@@ -1,12 +1,26 @@
-﻿using System;
+﻿using System.Timers;
 using RealmServer.Enums;
 using RealmServer.PacketServer;
-using RealmServer.World;
+using Timer = System.Timers.Timer;
 
 namespace RealmServer.Helpers
 {
     public class CommandTest
     {
+        public static int Count;
+        public static Timer TimerPlugin;
+        public static RealmServerSession sessao;
+
+        private static void CheckEvents(object source, ElapsedEventArgs e)
+        {
+            var inventory = sessao.Character.SubInventorie.Find(x => x.Slot == 15);
+
+            sessao.Entity.SetUpdateField((int)PlayerFields.PLAYER_VISIBLE_ITEM_1_0 + Count, inventory.Item);
+            sessao.Entity.SetUpdateField((int)PlayerFields.PLAYER_VISIBLE_ITEM_1_PROPERTIES + Count, 0);
+            sessao.Entity.SetUpdateField((int)PlayerFields.PLAYER_VISIBLE_ITEM_1_CREATOR + Count, sessao.Character.Uid);
+            Count++;
+        }
+
         public CommandTest(RealmServerSession session, string message)
         {
             string[] args = message.ToLower().Split(' ');
@@ -36,7 +50,27 @@ namespace RealmServer.Helpers
                 // Generate Inventory
                 foreach (var inventory in session.Character.SubInventorie)
                 {
-                    session.SendPacket(SMSG_UPDATE_OBJECT.CreateItem(inventory, session.Character));
+                    session.SendPacket(SMSG_UPDATE_OBJECT.CreateItem(inventory, session.Entity));
+                }
+            }
+
+            if (args[0] == "inv4")
+            {
+                sessao = session;
+
+                TimerPlugin = new Timer();
+                TimerPlugin.Elapsed += CheckEvents;
+                TimerPlugin.Interval = 1500;
+                TimerPlugin.Enabled = true;
+            }
+
+            if (args[0] == "inv3")
+            {
+                foreach (var inventory in session.Character.SubInventorie)
+                {
+                    session.Entity.SetUpdateField((int)PlayerFields.PLAYER_VISIBLE_ITEM_1_0 + inventory.Slot * 12, inventory.Item);
+                    session.Entity.SetUpdateField((int)PlayerFields.PLAYER_VISIBLE_ITEM_1_PROPERTIES + inventory.Slot * 12, 0);
+                    session.Entity.SetUpdateField((int)PlayerFields.PLAYER_FIELD_INV_SLOT_HEAD + inventory.Slot * 2, inventory.Item);
                 }
             }
 

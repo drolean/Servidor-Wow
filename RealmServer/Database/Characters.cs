@@ -118,6 +118,9 @@ namespace RealmServer.Database
         /// <param name="character"></param>
         private static void CreateCharacterInventorie(Common.Database.Tables.Characters character)
         {
+            Random rnd = new Random();
+
+            int aba;
             try
             {
                 var startItems =
@@ -138,7 +141,7 @@ namespace RealmServer.Database
                         Builders<Common.Database.Tables.Characters>.Update.Push("SubInventorie", new SubInventory
                         {
                             Item = item.Entry,
-                            Slot = PrefInvSlot(item.InventoryType) == 23 ? 23 : PrefInvSlot(item.InventoryType),
+                            Slot = PrefInvSlot(item.InventoryType) == 23 ? rnd.Next(23, 27) : PrefInvSlot(item.InventoryType),
                             CreatedAt = DateTime.Now
                         })
                     );
@@ -270,7 +273,7 @@ namespace RealmServer.Database
                     Builders<Common.Database.Tables.Characters>.Update.Push("SubActionBars", new SubActionBar
                     {
                         Button = actionBase.button,
-                        Action = actionBase.spell,
+                        Action = actionBase.action,
                         Type = actionBase.type,
                         CreatedAt = DateTime.Now
                     })

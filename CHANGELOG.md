@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.23] - 2018-10-20
+### Added
+- Class Table Items added default value if not exist.
+- Inventory partial is showing. (:
+
+### Changed
+- Moved SMSG_ITEM_QUERY_SINGLE_RESPONSE to correct file.
+- Moved OnItemQuerySingle to correct file.
+- Fixed partial of SMSG_UPDATE_OBJECT.CreateItem
+- Fixed partial of ItemEntity.
+
 ## [0.0.22] - 2018-10-19
 ### Added
 - Config Mongo ConnectionString to future.

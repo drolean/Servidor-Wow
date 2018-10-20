@@ -354,7 +354,7 @@ namespace Common.Database.Xml
 
         /// <remarks />
         [XmlAttribute]
-        public ushort spell { get; set; }
+        public ushort action { get; set; }
 
         /// <remarks />
         [XmlAttribute]

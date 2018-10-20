@@ -31,19 +31,17 @@ namespace RealmServer.PacketServer
 
             return new SMSG_UPDATE_OBJECT(new List<byte[]> { (writer.BaseStream as MemoryStream)?.ToArray() });
         }
-        
-        public static SMSG_UPDATE_OBJECT CreateItem(SubInventory inventory, Characters character)
-        {
-            Log.Print(LogType.RealmServer, $"[{character.Name}] Bag: {inventory.Bag} Item: {inventory.Item} " +
-                                           $"Stack: {inventory.StackCount} Flag: {inventory.Flags} Slot: {inventory.Slot}");
 
+        public static SMSG_UPDATE_OBJECT CreateItem(SubInventory inventory, PlayerEntity session)
+
+        {
             BinaryWriter writer = new BinaryWriter(new MemoryStream());
             writer.Write((byte)ObjectUpdateType.UPDATETYPE_CREATE_OBJECT);
 
-            ItemEntity entity = new ItemEntity(inventory, character)
+            ItemEntity entity = new ItemEntity(inventory, session)
             {
-                ObjectGuid = new ObjectGuid((UInt32)inventory.Item),
-                Guid = (UInt32)inventory.Item
+                ObjectGuid = new ObjectGuid((ulong) inventory.Item),
+                Guid = (ulong) inventory.Item
             };
 
             writer.WritePackedUInt64(entity.ObjectGuid.RawGuid);
@@ -61,7 +59,7 @@ namespace RealmServer.PacketServer
 
             writer.Write((float)0);
 
-            writer.Write((uint)0x1);
+            writer.Write((uint)1);
             writer.Write((uint)0);
 
             entity.WriteUpdateFields(writer);

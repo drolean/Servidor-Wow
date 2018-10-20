@@ -84,6 +84,7 @@
     <Compile Include="Handlers\OnCharEnum.cs" />
     <Compile Include="Handlers\OnCompleteCinematic.cs" />
     <Compile Include="Handlers\OnGmTicketSystemStatus.cs" />
+    <Compile Include="Handlers\OnItemQuerySingle.cs" />
     <Compile Include="Handlers\OnJoinChannel.cs" />
     <Compile Include="Handlers\OnLogout.cs" />
     <Compile Include="Handlers\OnMoveFallLand.cs" />
@@ -333,6 +334,7 @@
     <Compile Include="PacketServer\SMSG_IGNORE_LIST.cs" />
     <Compile Include="PacketServer\SMSG_INITIAL_SPELLS.cs" />
     <Compile Include="PacketServer\SMSG_INIT_WORLD_STATES.cs" />
+    <Compile Include="PacketServer\SMSG_ITEM_QUERY_SINGLE_RESPONSE.cs" />
     <Compile Include="PacketServer\SMSG_LOGIN_SETTIMESPEED.cs" />
     <Compile Include="PacketServer\SMSG_LOGIN_VERIFY_WORLD.cs" />
     <Compile Include="PacketServer\SMSG_LOGOUT_CANCEL_ACK.cs" />

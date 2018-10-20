@@ -1,4 +1,5 @@
 ﻿using RealmServer.Database;
+using RealmServer.Enums;
 using RealmServer.PacketReader;
 using RealmServer.PacketServer;
 using RealmServer.World.Managers;
@@ -29,13 +30,48 @@ namespace RealmServer.Handlers
                 var chrRaces = MainProgram.ChrRacesReader.GetData(session.Character.Race);
                 session.SendPacket(new SMSG_TRIGGER_CINEMATIC(chrRaces.CinematicId));
             }
-            
+
             session.SendPacket(new SMSG_CORPSE_RECLAIM_DELAY());
             session.SendPacket(new SMSG_INIT_WORLD_STATES(session.Character));
             session.SendPacket(SMSG_UPDATE_OBJECT.CreateOwnCharacterUpdate(session.Character, out session.Entity));
 
+            foreach (var inventory in session.Character.SubInventorie)
+                session.SendPacket(SMSG_UPDATE_OBJECT.CreateItem(inventory, session.Entity));
+
+            Inventory(session);
+
             session.Entity.Session = session;
             WorldManager.DispatchOnPlayerSpawn(session.Entity);
+        }
+
+        private static void Inventory(RealmServerSession session)
+        {
+            for (int j = 0; j < 112; j++)
+            {
+                var inventory = session.Character.SubInventorie.Find(x => x.Slot == j);
+                if (inventory != null)
+                {
+                    if (j < 19)
+                    {
+                        session.Entity.SetUpdateField((int) PlayerFields.PLAYER_VISIBLE_ITEM_1_0 + inventory.Slot * 12,
+                            inventory.Item);
+                        session.Entity.SetUpdateField((int) PlayerFields.PLAYER_VISIBLE_ITEM_1_PROPERTIES + j * 12, 0);
+                    }
+
+                    session.Entity.SetUpdateField((int) PlayerFields.PLAYER_FIELD_INV_SLOT_HEAD + j * 2,
+                        inventory.Item);
+                }
+                else
+                {
+                    if (j < 19)
+                    {
+                        session.Entity.SetUpdateField((int) PlayerFields.PLAYER_VISIBLE_ITEM_1_0 + j * 12, 0);
+                        session.Entity.SetUpdateField((int) PlayerFields.PLAYER_VISIBLE_ITEM_1_PROPERTIES + j * 12, 0);
+                    }
+
+                    session.Entity.SetUpdateField((int) PlayerFields.PLAYER_FIELD_INV_SLOT_HEAD + j * 2, 0);
+                }
+            }
         }
     }
 }

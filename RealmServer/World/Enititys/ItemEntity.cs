@@ -1,33 +1,41 @@
-﻿using System;
-using Common.Database.Tables;
+﻿using Common.Database.Tables;
 using RealmServer.Enums;
 
 namespace RealmServer.World.Enititys
 {
     public class ItemEntity : ObjectEntity
     {
-        public TypeId TypeId => TypeId.TypeidItem;
         public override int DataLength => (int)ItemFields.ITEM_END;
 
-        public ItemEntity(SubInventory inventory, Characters sessionCharacter)
+        public ItemEntity(SubInventory inventory, PlayerEntity session)
             : base(new ObjectGuid((uint)inventory.Item, TypeId.TypeidItem, HighGuid.HighguidItem))
         {
-            SetUpdateField((int)ObjectFields.Type, 3); // 3 na BAG / 2 naosei / 7 e uma bag
-            SetUpdateField((int)ObjectFields.Entry, (byte)inventory.Item);
-            SetUpdateField((int)ObjectFields.ScaleX, 1.0f);
-
-            //
-            SetUpdateField((int)ItemFields.ITEM_FIELD_STACK_COUNT, inventory.StackCount);
-            SetUpdateField((int)ItemFields.ITEM_FIELD_DURABILITY, 25);
-            SetUpdateField((int)ItemFields.ITEM_FIELD_OWNER, sessionCharacter.Uid); // ID do char
-            SetUpdateField((int)ItemFields.ITEM_FIELD_CONTAINED, sessionCharacter.Uid); // ID do char
+            SetUpdateField((int)ObjectFields.Type, 2); // 3 na BAG / 2 naosei / 7 e uma bag
+            SetUpdateField((int)ObjectFields.Entry, (uint) inventory.Item);
+            SetUpdateField((int)ObjectFields.ScaleX, 1f);
+            SetUpdateField((int)ObjectFields.Padding, 0);
 
             //
             //SetUpdateField((int)ItemFields.ITEM_FIELD_STACK_COUNT, inventory.StackCount);
-
-            Console.WriteLine($@"ItemEntity: {inventory.Item}");
+            //SetUpdateField((int)ItemFields.ITEM_FIELD_DURABILITY, 25);
+            SetUpdateField((int)ItemFields.ITEM_FIELD_OWNER, session.ObjectGuid.RawGuid); // ID do char
+            //SetUpdateField((int)ItemFields.ITEM_FIELD_FLAGS, inventory.Flags);
         }
     }
+    public enum ObjectType
+    {
+        TYPE_OBJECT = 1,
+        TYPE_ITEM = 2,
+        TYPE_CONTAINER = 6,
+        TYPE_UNIT = 8,
+        TYPE_PLAYER = 16,
+        TYPE_GAMEOBJECT = 32,
+        TYPE_DYNAMICOBJECT = 64,
+        TYPE_CORPSE = 128,
+        TYPE_AIGROUP = 256,
+        TYPE_AREATRIGGER = 512
+    }
+
     public enum ItemFields
     {
         ITEM_FIELD_OWNER = ObjectFields.End + 0x00, // Size:2
