@@ -35,6 +35,7 @@ namespace RealmServer.Helpers
                     $"MapX: {session.Character.SubMap.MapX} = MapY: {session.Character.SubMap.MapY} = " +
                     $"MapZ: {session.Character.SubMap.MapZ} = MapO: {session.Character.SubMap.MapO}"
                 );
+                session.SendMessageMotd($@"Players: {session.Entity.KnownPlayers.Count}");
             }
 
             // LEVEL

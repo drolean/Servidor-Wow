@@ -3,6 +3,7 @@ using Common.Globals;
 using RealmServer.Database;
 using RealmServer.Enums;
 using RealmServer.PacketReader;
+using RealmServer.PacketServer.Global;
 
 namespace RealmServer.Handlers
 {
@@ -27,6 +28,8 @@ namespace RealmServer.Handlers
             await Characters.UpdateMovement(session.Character);
 
             session.Entity.SetUpdateField((int) UnitFields.UNIT_NPC_EMOTESTATE, 0);
+
+            session.Entity.KnownPlayers.ForEach(s => s.Session.SendPacket(new PsMovement(session, handler, code)));
         }
     }
 }

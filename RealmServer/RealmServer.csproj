@@ -313,6 +313,7 @@
     <Compile Include="PacketReader\MSG_SAVE_GUILD_EMBLEM.cs" />
     <Compile Include="PacketReader\MSG_TABARDVENDOR_ACTIVATE.cs" />
     <Compile Include="PacketReader\CMSG_QUESTGIVER_STATUS_QUERY.cs" />
+    <Compile Include="PacketServer\Global\PsMovement.cs" />
     <Compile Include="PacketServer\MSG_MOVE_TIME_SKIPPED.cs" />
     <Compile Include="PacketServer\SMSG_ACCOUNT_DATA_TIMES.cs" />
     <Compile Include="PacketServer\SMSG_ACTION_BUTTONS.cs" />

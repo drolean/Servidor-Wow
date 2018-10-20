@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using Common.Helpers;
 using RealmServer.PacketServer;
@@ -32,12 +33,27 @@ namespace RealmServer.World.Managers
             Players.Remove(playerEntity);
         }
 
+        private static void SpawnPlayer(PlayerEntity remote, PlayerEntity playerEntity)
+        {
+            remote.Session.SendPacket(SMSG_UPDATE_OBJECT.CreateCharacterUpdate(playerEntity.Character));
+            remote.KnownPlayers.Add(playerEntity);
+        }
+
         private static void Update()
         {
             while (true)
             {
                 foreach (PlayerEntity player in Players)
                 {
+                    foreach (PlayerEntity otherPlayer in Players)
+                    {
+                        // Ignore self
+                        if (player == otherPlayer) continue;
+
+                        if (!player.KnownPlayers.Contains(otherPlayer))
+                            SpawnPlayer(player, otherPlayer);
+                    }
+
                     if (player.UpdateCount > 0)
                     {
                         Common.Network.PacketServer packet = SMSG_UPDATE_OBJECT.UpdateValues(player);

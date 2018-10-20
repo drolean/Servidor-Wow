@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Common.Database.Tables;
 using RealmServer.Enums;
 using RealmServer.Helpers;
@@ -13,11 +14,13 @@ namespace RealmServer.World.Enititys
         public Characters Character { get; }
         public override string Name => Character.Name;
         public RealmServerSession Session { get; set; }
+        public List<PlayerEntity> KnownPlayers { get; set; }
 
         public PlayerEntity(Characters character)
             : base(new ObjectGuid((uint) character.Uid, TypeId.TypeidPlayer, HighGuid.HighguidPlayer))
         {
             Character = character;
+            KnownPlayers = new List<PlayerEntity>();
 
             var chrRaces = MainProgram.ChrRacesReader.GetData(character.Race);
 

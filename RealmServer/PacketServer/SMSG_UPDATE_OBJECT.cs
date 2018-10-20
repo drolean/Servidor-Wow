@@ -112,5 +112,49 @@ namespace RealmServer.PacketServer
 
             return new SMSG_UPDATE_OBJECT(new List<byte[]> {((MemoryStream) writer.BaseStream).ToArray()});
         }
+
+        internal static SMSG_UPDATE_OBJECT CreateCharacterUpdate(Characters character)
+        {
+            BinaryWriter writer = new BinaryWriter(new MemoryStream());
+            writer.Write((byte) ObjectUpdateType.UPDATETYPE_CREATE_OBJECT_SELF);
+
+            byte[] guidBytes = GenerateGuidBytes(character.Uid);
+            WriteBytes(writer, guidBytes, guidBytes.Length);
+
+            writer.Write((byte) TypeId.TypeidPlayer);
+
+            ObjectUpdateFlag updateFlags = ObjectUpdateFlag.All |
+                                           ObjectUpdateFlag.HasPosition |
+                                           ObjectUpdateFlag.Living;
+
+            writer.Write((byte) updateFlags);
+
+            writer.Write((uint) MovementFlags.None);
+            writer.Write((uint) Environment.TickCount); // Time?
+
+            // Position
+            writer.Write(character.SubMap.MapX);
+            writer.Write(character.SubMap.MapY);
+            writer.Write(character.SubMap.MapZ);
+            writer.Write(character.SubMap.MapO); // R
+
+            // Movement speeds
+            writer.Write((float) 0); // ????
+
+            writer.Write(2.5f); // MOVE_WALK
+            writer.Write(7f); // MOVE_RUN
+            writer.Write(4.5f); // MOVE_RUN_BACK
+            writer.Write(4.72f * 20); // MOVE_SWIM
+            writer.Write(2.5f); // MOVE_SWIM_BACK
+            writer.Write(3.14f); // MOVE_TURN_RATE
+
+            writer.Write(0x1); // Unkown...
+
+            PlayerEntity playerEntity = new PlayerEntity(character) {Guid = (uint) character.Uid};
+
+            playerEntity.WriteUpdateFields(writer);
+
+            return new SMSG_UPDATE_OBJECT(new List<byte[]> {(writer.BaseStream as MemoryStream)?.ToArray()});
+        }
     }
 }
