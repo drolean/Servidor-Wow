@@ -45,6 +45,5 @@ namespace RealmServer.Handlers
             session.Entity.Session = session;
             WorldManager.DispatchOnPlayerSpawn(session.Entity);
         }
-                    session.Entity.SetUpdateField((int) PlayerFields.PLAYER_FIELD_INV_SLOT_HEAD + j * 2,
     }
 }
