@@ -8,15 +8,13 @@ namespace RealmServer.PacketReader
     {
         public string Channel;
         public int Language;
-        public string Message;
-        public int Type;
+        public string Message = String.Empty;
+        public int Type = 0;
 
         public CMSG_MESSAGECHAT(byte[] data) : base(data)
         {
             Type = ReadInt32();
             Language = ReadInt32();
-
-            Console.WriteLine((ChatMessageType) Type);
 
             switch ((ChatMessageType) Type)
             {
@@ -26,6 +24,7 @@ namespace RealmServer.PacketReader
                     Message = ReadCString();
                     break;
                 case ChatMessageType.Channel:
+                case ChatMessageType.Whisper:
                     Channel = ReadCString();
                     Message = ReadCString();
                     break;

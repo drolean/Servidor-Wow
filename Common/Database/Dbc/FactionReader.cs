@@ -18,13 +18,14 @@ namespace Common.Database.Dbc
             for (var i = 0; i < 63; i++)
             {
                 var faction = GetFaction(i);
-                if (faction != null)
-                    for (var flags = 0; flags < 4; flags++)
-                        if (HaveFlag(faction.Flags[flags], race - 1))
-                            listReturn.Add(
-                                $"{faction.FactionId}, {faction.ReputationFlags[flags]}, {faction.ReputationStats[flags]}");
-                        else
-                            listReturn.Add("0, 0, 0");
+
+                if (faction == null) continue;
+
+                for (var flags = 0; flags < 4; flags++)
+                    if (HaveFlag(faction.Flags[flags], race - 1))
+                        listReturn.Add(
+                            $"{faction.FactionId}, {faction.ReputationFlags[flags]}, {faction.ReputationStats[flags]}");
+
             }
 
             return listReturn;

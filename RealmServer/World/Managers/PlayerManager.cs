@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading;
 using Common.Helpers;
 using RealmServer.PacketServer;
@@ -58,6 +57,7 @@ namespace RealmServer.World.Managers
                     {
                         Common.Network.PacketServer packet = SMSG_UPDATE_OBJECT.UpdateValues(player);
                         player.Session.SendPacket(packet);
+                        WorldManager.SessionsWhoKnow(player).ForEach(s => s.SendPacket(packet));
                     }
                 }
 

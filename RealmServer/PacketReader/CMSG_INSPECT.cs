@@ -4,14 +4,14 @@ namespace RealmServer.PacketReader
 {
     public sealed class CMSG_INSPECT : Common.Network.PacketReader
     {
-        public ulong Uid;
+        public ulong PlayerUid;
 
         public CMSG_INSPECT(byte[] data) : base(data)
         {
-            Uid = ReadUInt64();
+            PlayerUid = ReadUInt64();
 
 #if DEBUG
-            Log.Print(LogType.Debug, $"[CMSG_INSPECT] Uid: {Uid}");
+            Log.Print(LogType.Debug, $"[CMSG_INSPECT] PlayerUid: {PlayerUid}");
 #endif
         }
     }

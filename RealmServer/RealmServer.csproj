@@ -60,6 +60,8 @@
     <Compile Include="Enums\ChatChannelNotify.cs" />
     <Compile Include="Enums\ChatMessageLanguage.cs" />
     <Compile Include="Enums\ChatMessageType.cs" />
+    <Compile Include="Enums\SheatheType.cs" />
+    <Compile Include="Enums\Emote.cs" />
     <Compile Include="Enums\FriendResults.cs" />
     <Compile Include="Enums\GmTicketCreateResult.cs" />
     <Compile Include="Enums\GmTicketSystemStatus.cs" />
@@ -84,6 +86,7 @@
     <Compile Include="Handlers\OnCharEnum.cs" />
     <Compile Include="Handlers\OnCompleteCinematic.cs" />
     <Compile Include="Handlers\OnGmTicketSystemStatus.cs" />
+    <Compile Include="Handlers\OnInspect.cs" />
     <Compile Include="Handlers\OnItemQuerySingle.cs" />
     <Compile Include="Handlers\OnJoinChannel.cs" />
     <Compile Include="Handlers\OnLogout.cs" />
@@ -91,10 +94,15 @@
     <Compile Include="Handlers\OnMovements.cs" />
     <Compile Include="Handlers\OnNameQuery.cs" />
     <Compile Include="Handlers\OnPing.cs" />
+    <Compile Include="Handlers\OnPlayedTime.cs" />
     <Compile Include="Handlers\OnPlayerLogin.cs" />
     <Compile Include="Handlers\OnSetActiveMover.cs" />
     <Compile Include="Handlers\OnSetFactionAtWar.cs" />
+    <Compile Include="Handlers\OnSetSelection.cs" />
+    <Compile Include="Handlers\OnSetSheathed.cs" />
     <Compile Include="Handlers\OnStandStateChange.cs" />
+    <Compile Include="Handlers\OnTextEmote.cs" />
+    <Compile Include="Handlers\OnTogglePvp.cs" />
     <Compile Include="Handlers\OnTutorialClear.cs" />
     <Compile Include="Handlers\OnTutorialFlag.cs" />
     <Compile Include="Handlers\OnTutorialReset.cs" />
@@ -333,6 +341,7 @@
     <Compile Include="PacketServer\SMSG_GMTICKET_GETTICKET.cs" />
     <Compile Include="PacketServer\SMSG_GMTICKET_SYSTEMSTATUS.cs" />
     <Compile Include="PacketServer\SMSG_IGNORE_LIST.cs" />
+    <Compile Include="PacketServer\SMSG_INITIALIZE_FACTIONS.cs" />
     <Compile Include="PacketServer\SMSG_INITIAL_SPELLS.cs" />
     <Compile Include="PacketServer\SMSG_INIT_WORLD_STATES.cs" />
     <Compile Include="PacketServer\SMSG_ITEM_QUERY_SINGLE_RESPONSE.cs" />
@@ -358,6 +367,8 @@
     <Compile Include="RealmServerDatabase.cs" />
     <Compile Include="RealmServerRouter.cs" />
     <Compile Include="RealmServerSession.cs" />
+    <Compile Include="PacketServer\SMSG_INSPECT.cs" />
+    <Compile Include="PacketServer\SMSG_PLAYED_TIME.cs" />
     <Compile Include="World\Enititys\BaseEntity.cs" />
     <Compile Include="World\Enititys\ItemEntity.cs" />
     <Compile Include="World\Enititys\ObjectEntity.cs" />

@@ -14,7 +14,7 @@ namespace Common.Database
         private uint _stringDataSize;
         public List<T> RecordData = null;
 
-        public Dictionary<int, T> RecordDataIndexed;
+        public static Dictionary<int, T> RecordDataIndexed;
 
         public async Task Load(string path)
         {

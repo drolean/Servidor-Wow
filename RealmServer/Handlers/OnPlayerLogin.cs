@@ -24,6 +24,7 @@ namespace RealmServer.Handlers
             session.SendPacket(new SMSG_LOGIN_SETTIMESPEED());
             session.SendPacket(new SMSG_INITIAL_SPELLS(session.Character));
             session.SendPacket(new SMSG_ACTION_BUTTONS(session.Character));
+            session.SendPacket(new SMSG_INITIALIZE_FACTIONS(session.Character));
 
             if (session.Character.Cinematic == false)
             {

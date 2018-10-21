@@ -4,6 +4,33 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.25] - 2018-10-20
+### Added
+- Enums 'Emote'
+- Enums 'SheatheType'
+- OnInspect.Handler on CMSG_INSPECT
+- OnPlayedTime.Handler partial.
+- now send SMSG_INITIALIZE_FACTIONS on PlayerLogin.
+- OnSetSelection.Handler on CMSG_SET_SELECTION
+- OnSetSheathed.Handler on CMSG_SETSHEATHED.
+- OnTextEmote.Handler on CMSG_TEXT_EMOTE.
+- OnTogglePvp.Handler
+- SMSG_INITIALIZE_FACTIONS
+- SMSG_INSPECT
+- SMSG_PLAYED_TIME partial.
+- World Manager
+  - PlayersWhoKnow
+  - SessionsWhoKnow
+
+### Changed
+- OnMessageChat now send Whisper Me/Target.
+- OnMessageChat now send Say/Yell/Emote to Local/Near Players
+- OnMessageChat now send Chat message to All.
+- OnStandStateChange fixed
+- CMSG_INSPECT changed Uid to PlayerUid
+- CMSG_SET_SELECTION changed Uid to PlayedUid
+- CMSG_MESSAGECHAT set default value.
+
 ## [0.0.24] - 2018-10-20
 ### Added
 - PacketServer.Global.PsMovement transmit movement to all know players.

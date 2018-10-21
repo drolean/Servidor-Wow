@@ -7,6 +7,13 @@ namespace Common.Database.Tables
 {
     public class Characters
     {
+        // Extra
+        public byte StandState;
+        public bool IsPvP;
+        public int SheathType { get; set; }
+        public Characters Target { get; set; }
+
+        // Database
         public ObjectId Id { get; set; }
         public ulong Uid { get; set; }
 

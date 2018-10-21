@@ -198,7 +198,15 @@ namespace RealmServer
             RealmServerRouter.AddHandler(RealmEnums.CMSG_FRIEND_LIST, OnFriendList.Handler);
             RealmServerRouter.AddHandler<CMSG_ADD_FRIEND>(RealmEnums.CMSG_ADD_FRIEND, OnFriendAdd.Handler);
 
-            RealmServerRouter.AddHandler<CMSG_ITEM_QUERY_SINGLE>(RealmEnums.CMSG_ITEM_QUERY_SINGLE, OnItemQuerySingle.Handler);
+            RealmServerRouter.AddHandler<CMSG_ITEM_QUERY_SINGLE>(RealmEnums.CMSG_ITEM_QUERY_SINGLE,
+                OnItemQuerySingle.Handler);
+            RealmServerRouter.AddHandler<CMSG_SETSHEATHED>(RealmEnums.CMSG_SETSHEATHED, OnSetSheathed.Handler);
+            RealmServerRouter.AddHandler<CMSG_TEXT_EMOTE>(RealmEnums.CMSG_TEXT_EMOTE, OnTextEmote.Handler);
+            RealmServerRouter.AddHandler<CMSG_SET_SELECTION>(RealmEnums.CMSG_SET_SELECTION, OnSetSelection.Handler);
+            RealmServerRouter.AddHandler<CMSG_INSPECT>(RealmEnums.CMSG_INSPECT, OnInspect.Handler);
+            RealmServerRouter.AddHandler(RealmEnums.CMSG_TOGGLE_PVP, OnTogglePvp.Handler);
+            RealmServerRouter.AddHandler(RealmEnums.CMSG_PLAYED_TIME, OnPlayedTime.Handler);
+            RealmServerRouter.AddHandler<CMSG_INITIATE_TRADE>(RealmEnums.CMSG_INITIATE_TRADE, Future);
 
             #region OPCODES
 
@@ -210,7 +218,6 @@ namespace RealmServer
             RealmServerRouter.AddHandler(RealmEnums.CMSG_GMTICKET_SYSTEMSTATUS, OnGmTicketSystemStatus.Handler);
             RealmServerRouter.AddHandler<CMSG_GMTICKET_CREATE>(RealmEnums.CMSG_GMTICKET_CREATE, OnGmTicketCreate.Handler);
             
-            
             RealmServerRouter.AddHandler<CMSG_PET_NAME_QUERY>(RealmEnums.CMSG_PET_NAME_QUERY, Future);
             RealmServerRouter.AddHandler<CMSG_GUILD_QUERY>(RealmEnums.CMSG_GUILD_QUERY, Future);
             
@@ -220,7 +227,6 @@ namespace RealmServer
             RealmServerRouter.AddHandler<CMSG_CREATURE_QUERY>(RealmEnums.CMSG_CREATURE_QUERY, Future);
             RealmServerRouter.AddHandler<CMSG_WHO>(RealmEnums.CMSG_WHO, Future);
             RealmServerRouter.AddHandler<CMSG_WHOIS>(RealmEnums.CMSG_WHOIS, Future);
-            
             
             RealmServerRouter.AddHandler<CMSG_DEL_FRIEND>(RealmEnums.CMSG_DEL_FRIEND, Future);
             RealmServerRouter.AddHandler<CMSG_ADD_IGNORE>(RealmEnums.CMSG_ADD_IGNORE, Future);
@@ -247,9 +253,7 @@ namespace RealmServer
             RealmServerRouter.AddHandler(RealmEnums.CMSG_GUILD_DISBAND, Future);
             RealmServerRouter.AddHandler<CMSG_GUILD_LEADER>(RealmEnums.CMSG_GUILD_LEADER, Future);
             RealmServerRouter.AddHandler<CMSG_GUILD_MOTD>(RealmEnums.CMSG_GUILD_MOTD, Future);
-
             
-
             RealmServerRouter.AddHandler<CMSG_LEAVE_CHANNEL>(RealmEnums.CMSG_LEAVE_CHANNEL, Future);
             RealmServerRouter.AddHandler<CMSG_CHANNEL_LIST>(RealmEnums.CMSG_CHANNEL_LIST, Future);
             RealmServerRouter.AddHandler<CMSG_CHANNEL_PASSWORD>(RealmEnums.CMSG_CHANNEL_PASSWORD, Future);
@@ -273,8 +277,7 @@ namespace RealmServer
             RealmServerRouter.AddHandler<CMSG_AREATRIGGER>(RealmEnums.CMSG_AREATRIGGER, Future);
 
             RealmServerRouter.AddHandler<CMSG_EMOTE>(RealmEnums.CMSG_EMOTE, Future);
-            RealmServerRouter.AddHandler<CMSG_TEXT_EMOTE>(RealmEnums.CMSG_TEXT_EMOTE, Future);
-
+            
             RealmServerRouter.AddHandler<CMSG_AUTOSTORE_LOOT_ITEM>(RealmEnums.CMSG_AUTOSTORE_LOOT_ITEM, Future);
             RealmServerRouter.AddHandler<CMSG_AUTOEQUIP_ITEM>(RealmEnums.CMSG_AUTOEQUIP_ITEM, Future);
             RealmServerRouter.AddHandler<CMSG_AUTOSTORE_BAG_ITEM>(RealmEnums.CMSG_AUTOSTORE_BAG_ITEM, Future);
@@ -283,9 +286,6 @@ namespace RealmServer
             RealmServerRouter.AddHandler<CMSG_SPLIT_ITEM>(RealmEnums.CMSG_SPLIT_ITEM, Future);
             RealmServerRouter.AddHandler<CMSG_DESTROYITEM>(RealmEnums.CMSG_DESTROYITEM, Future);
 
-            RealmServerRouter.AddHandler<CMSG_INSPECT>(RealmEnums.CMSG_INSPECT, Future);
-
-            RealmServerRouter.AddHandler<CMSG_INITIATE_TRADE>(RealmEnums.CMSG_INITIATE_TRADE, Future);
             RealmServerRouter.AddHandler(RealmEnums.CMSG_BEGIN_TRADE, Future);
             RealmServerRouter.AddHandler(RealmEnums.CMSG_BUSY_TRADE, Future);
             RealmServerRouter.AddHandler(RealmEnums.CMSG_IGNORE_TRADE, Future);
@@ -303,7 +303,6 @@ namespace RealmServer
             RealmServerRouter.AddHandler<CMSG_CANCEL_AURA>(RealmEnums.CMSG_CANCEL_AURA, Future);
             RealmServerRouter.AddHandler<CMSG_CANCEL_CHANNELLING>(RealmEnums.CMSG_CANCEL_CHANNELLING, Future);
 
-            RealmServerRouter.AddHandler<CMSG_SET_SELECTION>(RealmEnums.CMSG_SET_SELECTION, Future);
             RealmServerRouter.AddHandler<CMSG_ATTACKSWING>(RealmEnums.CMSG_ATTACKSWING, Future);
             RealmServerRouter.AddHandler(RealmEnums.CMSG_ATTACKSTOP, Future);
             RealmServerRouter.AddHandler(RealmEnums.CMSG_REPOP_REQUEST, Future);
@@ -334,7 +333,6 @@ namespace RealmServer
             RealmServerRouter.AddHandler(RealmEnums.CMSG_QUEST_CONFIRM_ACCEPT, Future);
             RealmServerRouter.AddHandler<CMSG_PUSHQUESTTOPARTY>(RealmEnums.CMSG_PUSHQUESTTOPARTY, Future);
 
-
             RealmServerRouter.AddHandler<CMSG_LIST_INVENTORY>(RealmEnums.CMSG_LIST_INVENTORY, Future);
             RealmServerRouter.AddHandler<CMSG_SELL_ITEM>(RealmEnums.CMSG_SELL_ITEM, Future);
             RealmServerRouter.AddHandler<CMSG_BUY_ITEM>(RealmEnums.CMSG_BUY_ITEM, Future);
@@ -360,12 +358,11 @@ namespace RealmServer
             RealmServerRouter.AddHandler<CMSG_PETITION_QUERY>(RealmEnums.CMSG_PETITION_QUERY, Future);
 
             RealmServerRouter.AddHandler<CMSG_BUG>(RealmEnums.CMSG_BUG, Future);
-            RealmServerRouter.AddHandler(RealmEnums.CMSG_PLAYED_TIME, Future);
-
+            
             RealmServerRouter.AddHandler<CMSG_RECLAIM_CORPSE>(RealmEnums.CMSG_RECLAIM_CORPSE, Future);
             RealmServerRouter.AddHandler<CMSG_WRAP_ITEM>(RealmEnums.CMSG_WRAP_ITEM, Future);
             RealmServerRouter.AddHandler<MSG_MINIMAP_PING>(RealmEnums.MSG_MINIMAP_PING, Future);
-            RealmServerRouter.AddHandler<CMSG_SETSHEATHED>(RealmEnums.CMSG_SETSHEATHED, Future);
+            
             RealmServerRouter.AddHandler<CMSG_QUEST_POI_QUERY>(RealmEnums.CMSG_QUEST_POI_QUERY, Future);
             RealmServerRouter.AddHandler<CMSG_PET_CAST_SPELL>(RealmEnums.CMSG_PET_CAST_SPELL, Future);
             RealmServerRouter.AddHandler<MSG_SAVE_GUILD_EMBLEM>(RealmEnums.MSG_SAVE_GUILD_EMBLEM, Future);
@@ -386,7 +383,6 @@ namespace RealmServer
             RealmServerRouter.AddHandler<CMSG_GUILD_SET_PUBLIC_NOTE>(RealmEnums.CMSG_GUILD_SET_PUBLIC_NOTE, Future);
             RealmServerRouter.AddHandler<CMSG_GUILD_SET_OFFICER_NOTE>(RealmEnums.CMSG_GUILD_SET_OFFICER_NOTE, Future);
 
-
             RealmServerRouter.AddHandler<CMSG_SEND_MAIL>(RealmEnums.CMSG_SEND_MAIL, Future);
             RealmServerRouter.AddHandler<CMSG_GET_MAIL_LIST>(RealmEnums.CMSG_GET_MAIL_LIST, Future);
             RealmServerRouter.AddHandler<CMSG_BATTLEFIELD_LIST>(RealmEnums.CMSG_BATTLEFIELD_LIST, Future);
@@ -399,7 +395,7 @@ namespace RealmServer
             RealmServerRouter.AddHandler<CMSG_MAIL_CREATE_TEXT_ITEM>(RealmEnums.CMSG_MAIL_CREATE_TEXT_ITEM, Future);
 
             RealmServerRouter.AddHandler<CMSG_LEARN_TALENT>(RealmEnums.CMSG_LEARN_TALENT, Future);
-            RealmServerRouter.AddHandler(RealmEnums.CMSG_TOGGLE_PVP, Future);
+            
             RealmServerRouter.AddHandler<MSG_AUCTION_HELLO>(RealmEnums.MSG_AUCTION_HELLO, Future);
             RealmServerRouter.AddHandler<CMSG_AUCTION_SELL_ITEM>(RealmEnums.CMSG_AUCTION_SELL_ITEM, Future);
             RealmServerRouter.AddHandler<CMSG_AUCTION_REMOVE_ITEM>(RealmEnums.CMSG_AUCTION_REMOVE_ITEM, Future);
@@ -436,7 +432,6 @@ namespace RealmServer
             RealmServerRouter.AddHandler(RealmEnums.CMSG_TOGGLE_HELM, Future);
             RealmServerRouter.AddHandler(RealmEnums.CMSG_TOGGLE_CLOAK, Future);
             
-
             RealmServerRouter.AddHandler(RealmEnums.CMSG_PLAYER_LOGOUT, Future);
 
             RealmServerRouter.AddHandler<CMSG_GAMEOBJ_USE>(RealmEnums.CMSG_GAMEOBJ_USE, Future);
@@ -471,6 +466,11 @@ namespace RealmServer
             */
 
             #endregion
+        }
+
+        private static void Future(RealmServerSession session, CMSG_INITIATE_TRADE handler)
+        {
+            throw new NotImplementedException();
         }
 
         private static void Future(RealmServerSession session, byte[] data)

@@ -56,19 +56,28 @@ namespace Common.Helpers
 
         public static void WriteLog(string strLog)
         {
-            var logFilePath = $"logs/log-{DateTime.Now:yyyy-M-d}.txt";
-            var logFileInfo = new FileInfo(logFilePath);
-            var logDirInfo = new DirectoryInfo(logFileInfo.DirectoryName ?? throw new InvalidOperationException());
-
-            if (!logDirInfo.Exists)
-                logDirInfo.Create();
-
-            using (var fileStream = new FileStream(logFilePath, FileMode.Append))
+            try
             {
-                using (var log = new StreamWriter(fileStream))
+                var logFilePath = $"logs/log-{DateTime.Now:yyyy-M-d}.txt";
+                var logFileInfo = new FileInfo(logFilePath);
+                var logDirInfo = new DirectoryInfo(logFileInfo.DirectoryName ?? throw new InvalidOperationException());
+
+                if (!logDirInfo.Exists)
+                    logDirInfo.Create();
+
+                using (var fileStream = new FileStream(logFilePath, FileMode.Append))
                 {
-                    log.WriteLine(strLog);
+                    using (var log = new StreamWriter(fileStream))
+                    {
+                        log.WriteLine(strLog);
+                    }
                 }
+            }
+            catch (Exception e)
+            {
+                var trace = new StackTrace(e, true);
+                Print(LogType.Error,
+                    $"{e.Message}: {e.Source}\n{trace.GetFrame(trace.FrameCount - 1).GetFileName()}:{trace.GetFrame(trace.FrameCount - 1).GetFileLineNumber()}");
             }
         }
 

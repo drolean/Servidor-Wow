@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Net.Sockets;
 using Common.Crypt;
 using Common.Database.Tables;
@@ -265,6 +266,11 @@ namespace RealmServer
         {
             SendPacket(new SMSG_MESSAGECHAT(ChatMessageType.System, ChatMessageLanguage.Universal,
                 Character.Uid, msg));
+        }
+
+        internal static RealmServerSession GetSessionByPlayerName(string playerName)
+        {
+            return Sessions.First(user => user.Character.Name.ToLower() == playerName.ToLower());
         }
     }
 }

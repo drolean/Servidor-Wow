@@ -120,7 +120,6 @@ namespace RealmServer.Database
         {
             Random rnd = new Random();
 
-            int aba;
             try
             {
                 var startItems =

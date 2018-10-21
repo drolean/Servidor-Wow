@@ -1,4 +1,5 @@
-﻿using RealmServer.World.Enititys;
+﻿using System.Collections.Generic;
+using RealmServer.World.Enititys;
 
 namespace RealmServer.World.Managers
 {
@@ -17,6 +18,21 @@ namespace RealmServer.World.Managers
         internal static void DispatchOnPlayerDespawn(PlayerEntity playerEntity)
         {
             OnPlayerDespawn?.Invoke(playerEntity);
+        }
+
+
+        private static List<PlayerEntity> PlayersWhoKnow(PlayerEntity playerEntity)
+        {
+            return PlayerManager.Players.FindAll(p => p.KnownPlayers.Contains(playerEntity));
+        }
+
+        internal static List<RealmServerSession> SessionsWhoKnow(PlayerEntity playerEntity, bool includeSelf = false)
+        {
+            List<RealmServerSession> sessions = PlayersWhoKnow(playerEntity).ConvertAll(p => p.Session);
+
+            if (includeSelf) sessions.Add(playerEntity.Session);
+
+            return sessions;
         }
     }
 }
