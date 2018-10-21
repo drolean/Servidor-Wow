@@ -1,6 +1,5 @@
 ﻿namespace RealmServer.Enums
 {
-
     public enum SheatheType
     {
         None = 0,
@@ -11,6 +10,6 @@
         HipWeaponLeft = 5,
         HipWeaponRight = 6,
         Shield = 7,
-        NumTypes = 8,
+        NumTypes = 8
     }
 }

@@ -11,7 +11,7 @@ namespace RealmServer.PacketServer
 
             foreach (var fact in character.SubFactions)
             {
-                Write((byte)fact.Flags); // Flag
+                Write((byte) fact.Flags); // Flag
                 Write(fact.Standing); // Value
             }
         }

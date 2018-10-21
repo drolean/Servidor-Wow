@@ -140,8 +140,13 @@ namespace RealmServer.Database
                         Builders<Common.Database.Tables.Characters>.Update.Push("SubInventorie", new SubInventory
                         {
                             Item = item.Entry,
-                            Slot = PrefInvSlot(item.InventoryType) == 23 ? rnd.Next(23, 27) : PrefInvSlot(item.InventoryType),
-                            CreatedAt = DateTime.Now
+                            Slot = PrefInvSlot(item.InventoryType) == 23
+                                ? rnd.Next(23, 27)
+                                : PrefInvSlot(item.InventoryType),
+                            Durability = item.MaxDurability,
+                            StackCount = item.Stackable == 20 ? 5 : 1,
+                            CreatedAt = DateTime.Now,
+                            
                         })
                     );
                 }
@@ -344,7 +349,8 @@ namespace RealmServer.Database
         /// <returns></returns>
         public static Common.Database.Tables.Characters GetCharacter(CMSG_PLAYER_LOGIN handler)
         {
-            return DatabaseModel.CharacterCollection.Find(x => x.Uid == handler.PlayerUid && x.DeletedAt == null).First();
+            return DatabaseModel.CharacterCollection.Find(x => x.Uid == handler.PlayerUid && x.DeletedAt == null)
+                .First();
         }
     }
 }

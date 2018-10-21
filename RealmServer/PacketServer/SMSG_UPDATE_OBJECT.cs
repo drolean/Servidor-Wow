@@ -4,6 +4,7 @@ using System.IO;
 using Common.Database.Tables;
 using Common.Globals;
 using Common.Helpers;
+using Common.Network;
 using RealmServer.Enums;
 using RealmServer.World;
 using RealmServer.World.Enititys;
@@ -22,21 +23,20 @@ namespace RealmServer.PacketServer
         internal static SMSG_UPDATE_OBJECT UpdateValues(PlayerEntity player)
         {
             BinaryWriter writer = new BinaryWriter(new MemoryStream());
-            writer.Write((byte)ObjectUpdateType.UPDATETYPE_VALUES);
+            writer.Write((byte) ObjectUpdateType.UPDATETYPE_VALUES);
 
             byte[] guidBytes = GenerateGuidBytes(player.ObjectGuid.RawGuid);
             WriteBytes(writer, guidBytes, guidBytes.Length);
 
             player.WriteUpdateFields(writer);
 
-            return new SMSG_UPDATE_OBJECT(new List<byte[]> { (writer.BaseStream as MemoryStream)?.ToArray() });
+            return new SMSG_UPDATE_OBJECT(new List<byte[]> {(writer.BaseStream as MemoryStream)?.ToArray()});
         }
 
         public static SMSG_UPDATE_OBJECT CreateItem(SubInventory inventory, PlayerEntity session)
-
         {
             BinaryWriter writer = new BinaryWriter(new MemoryStream());
-            writer.Write((byte)ObjectUpdateType.UPDATETYPE_CREATE_OBJECT);
+            writer.Write((byte) ObjectUpdateType.UPDATETYPE_CREATE_OBJECT);
 
             ItemEntity entity = new ItemEntity(inventory, session)
             {
@@ -45,26 +45,40 @@ namespace RealmServer.PacketServer
             };
 
             writer.WritePackedUInt64(entity.ObjectGuid.RawGuid);
-            writer.Write((byte)TypeId.TypeidItem);
+            writer.Write((byte) TypeId.TypeidItem);
 
-            ObjectUpdateFlag updateFlags = ObjectUpdateFlag.Transport |
-                                           ObjectUpdateFlag.All |
-                                           ObjectUpdateFlag.HasPosition;
+            var updateFlags = ObjectUpdateFlag.Transport |
+                              ObjectUpdateFlag.All |
+                              ObjectUpdateFlag.HasPosition;
 
-            writer.Write((byte)updateFlags);
+            writer.Write((byte) updateFlags);
 
             writer.Write(0f);
             writer.Write(0f);
             writer.Write(0f);
 
-            writer.Write((float)0);
+            writer.Write((float) 0);
 
-            writer.Write((uint)1);
-            writer.Write((uint)0);
+            writer.Write((uint) 1);
+            writer.Write((uint) 0);
 
             entity.WriteUpdateFields(writer);
 
-            return new SMSG_UPDATE_OBJECT(new List<byte[]> { (writer.BaseStream as MemoryStream)?.ToArray() });
+            return new SMSG_UPDATE_OBJECT(new List<byte[]> {(writer.BaseStream as MemoryStream)?.ToArray()});
+        }
+
+        internal static SMSG_UPDATE_OBJECT CreateOutOfRangeUpdate(List<ObjectEntity> despawnPlayer)
+        {
+            BinaryWriter writer = new BinaryWriter(new MemoryStream());
+            writer.Write((byte)ObjectUpdateType.UPDATETYPE_OUT_OF_RANGE_OBJECTS);
+            writer.Write((uint)despawnPlayer.Count);
+
+            foreach (ObjectEntity entity in despawnPlayer)
+            {
+                writer.WritePackedUInt64(entity.ObjectGuid.RawGuid);
+            }
+
+            return new SMSG_UPDATE_OBJECT(new List<byte[]> { ((MemoryStream)writer.BaseStream).ToArray() });
         }
 
         public static SMSG_UPDATE_OBJECT CreateOwnCharacterUpdate(Characters character, out PlayerEntity entity)
@@ -124,8 +138,8 @@ namespace RealmServer.PacketServer
             writer.Write((byte) TypeId.TypeidPlayer);
 
             ObjectUpdateFlag updateFlags = ObjectUpdateFlag.All |
-                                           ObjectUpdateFlag.HasPosition |
-                                           ObjectUpdateFlag.Living;
+                              ObjectUpdateFlag.HasPosition |
+                              ObjectUpdateFlag.Living;
 
             writer.Write((byte) updateFlags);
 

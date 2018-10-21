@@ -1,5 +1,4 @@
-﻿using System;
-using Common.Helpers;
+﻿using Common.Helpers;
 using RealmServer.Enums;
 
 namespace RealmServer.PacketReader
@@ -8,8 +7,8 @@ namespace RealmServer.PacketReader
     {
         public string Channel;
         public int Language;
-        public string Message = String.Empty;
-        public int Type = 0;
+        public string Message = string.Empty;
+        public int Type;
 
         public CMSG_MESSAGECHAT(byte[] data) : base(data)
         {

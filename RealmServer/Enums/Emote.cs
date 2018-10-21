@@ -1,6 +1,6 @@
 ﻿namespace RealmServer.Enums
 {
-    enum Emote
+    internal enum Emote
     {
         EMOTE_ONESHOT_NONE = 0,
         EMOTE_ONESHOT_TALK = 1,

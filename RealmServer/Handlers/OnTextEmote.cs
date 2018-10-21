@@ -14,7 +14,7 @@ namespace RealmServer.Handlers
             Console.WriteLine(checkEmote.EmoteName);
 
             if (checkEmote != null)
-                session.Entity.SetUpdateField((int)UnitFields.UNIT_NPC_EMOTESTATE, checkEmote.EmoteId);
+                session.Entity.SetUpdateField((int) UnitFields.UNIT_NPC_EMOTESTATE, checkEmote.EmoteId);
         }
     }
 }

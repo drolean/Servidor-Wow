@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Linq;
 using Common.Database.Tables;
 using Common.Globals;
 using Common.Helpers;
@@ -12,113 +13,151 @@ namespace RealmServer.PacketServer
         {
             try
             {
-                // Item ID
                 Write(item.Entry);
-                // Item Class
                 Write(item.Class);
-                // Item SubCLass
                 Write(item.SubClass);
-                // Item Name
                 WriteCString(item.Name);
-                // Item Name
                 WriteCString(string.Empty);
-                // Item Name
                 WriteCString(string.Empty);
-                // Item Name
                 WriteCString(string.Empty);
-
-                // Model Id
                 Write(item.DisplayId);
-                // Quality Id
+                // Quality: [0] Poor [1] Common [2] Green [3] Rare [4] Epic [5] Legendary [6] Artifact/Heirloon
                 Write(item.Quality);
-
-                // Flags
                 Write(item.Flags);
-                // Buy Price
-                Write(item.BuyPrice);
-                // Sell Price
-                Write(item.SellPrice);
-                // Inventory Type
-                Write(item.InventoryType);
 
-                // Req Class
+                Write(MainProgram.Vai); // ? Faction or BuyPrice
+                Write(MainProgram.Vai); // ? BuyPrice or BuySell
+
+                Write(item.InventoryType);
                 Write(item.AllowableClass);
-                // Req Race
                 Write(item.AllowableRace);
 
-                // Level
-                Write(item.ItemLevel);
-                // Req Level
-                Write(0);
+                Write(MainProgram.Vai); // ? LEVEL
+                Write(item.SubRequired?.Level ?? 0);
+                Write(item.SubRequired?.Skill ?? 0);
+                Write(item.SubRequired?.SkillRank ?? 0);
+                Write(item.SubRequired?.Spell ?? 0);
+                Write(item.SubRequired?.HonorRank ?? 0);
+                Write(item.SubRequired?.CityRank ?? 0);
+                Write(item.SubRequired?.ReputationFaction ?? 0);
+                Write(item.SubRequired?.ReputationRank ?? 0);
 
-                // Skill Req
-                Write(0);
-                // Skill Level Req
-                Write(0);
-
-                // Item Unique
-                Write(0);
-                // Max Stack
                 Write(item.MaxCount);
-                // Container Slots
-                Write(0);
 
-                for (int a = 0; a < 10; a++)
+                Write(MainProgram.Vai); //  ? Stackable
+                Write(MainProgram.Vai); // ? ContainerSlots
+
+                // SubStats
+                for (int i = 0; i < 10; i++)
                 {
-                    Write(0); // Type
-                    Write(0); // Value
+                    if (item.SubStats != null && item.SubStats.Select((t, index) => index == i).First())
+                    {
+                        Write(item.SubStats[i].Value);
+                        Write(item.SubStats[i].Type);
+                    }
+                    else
+                    {
+                        Write(0);
+                        Write(0);
+                    }
                 }
 
-                for (int b = 0; b < 5; b++)
+                // SubDamage
+                for (int i = 0; i < 5; i++)
                 {
-                    Write(0); // Minimum Damage
-                    Write(0); // Maximum Damage
-                    Write(0); // Damage Type
+                    if (item.SubDamages != null && item.SubDamages.Select((t, index) => index == i).First())
+                    {
+                        Write((float) item.SubDamages[0].Min);
+                        Write((float) item.SubDamages[0].Max);
+                        Write((uint) item.SubDamages[0].Type);
+                    }
+                    else
+                    {
+                        Write((float) 0);
+                        Write((float) 0);
+                        Write((uint) 0);
+                    }
+                }
+                
+                // Resistences
+                Write((uint) (item.SubResistences?.Armor ?? 0));
+                Write((uint) MainProgram.Vai); // HOLY????
+                Write((uint) (item.SubResistences?.Fire ?? 0));
+                Write((uint) (item.SubResistences?.Nature ?? 0));
+                Write((uint) (item.SubResistences?.Frost ?? 0));
+                Write((uint) (item.SubResistences?.Shadow ?? 0));
+                Write((uint) (item.SubResistences?.Arcane ?? 0));
+
+                Write((uint) item.Delay);
+                Write((uint) item.AmmoType);
+                Write((float) MainProgram.Vai);  // rangedmod
+
+                for (int i = 0; i < 5; i++)
+                {
+                    if (item.SubSpells != null && item.SubSpells.Select((t, index) => index == i).First())
+                    {
+                        Write(item.SubSpells[i].Id);
+                        Write((uint) item.SubSpells[i].Trigger);
+                        Write(item.SubSpells[i].Charges);
+                        Write(item.SubSpells[i].CoolDown);
+                        Write((uint) item.SubSpells[i].Category);
+                        Write(item.SubSpells[i].CategoryCooldown);
+                    }
+                    else
+                    {
+                        Write(0);
+                        Write((uint) 0);
+                        Write(0);
+                        Write(-1);
+                        Write((uint) 0);
+                        Write(-1);
+                    }
                 }
 
-                Write(0); // Physical (Bonus) "Armor"
-                Write(0); // Holy (BONUS)
-                Write(0); // Fire (BONUS)
-                Write(0); // Nature (BONUS)
-                Write(0); // Frost (BONUS)
-                Write(0); // Shadow (BONUS)
+                Write((uint) item.Bonding);
+                WriteCString(item.Description);
+                Write((uint) item.PageText);
+                Write((uint) item.LanguageId);
+                Write((uint) item.PageMaterial);
 
-                Write(0); // Item Attack Speed.
-                Write(0); // Ammo Type
-                Write(0); // Max Durability ?? range modifier
+                Write((uint) item.StartQuest);
+                Write((uint) item.LockId);
+                Write(item.Material);
+                Write((uint) item.Sheath);
+                Write(item.RandomProperty);
+                Write((uint) item.Block);
 
-                for (int c = 0; c < 5; c++) // Spell Info
-                {
-                    Write(0); // Category);
-                    Write(0); // CategoryCoolDown);
-                    Write(0); // Charges);
-                    Write(-1); // Cooldown);
-                    Write(0); // ID);
-                    Write(-1); // Trigger);
-                }
+                //Write((uint) MainProgram.Vai + 120);
+                Write((uint) item.ItemSet);
+                Write((uint) item.MaxDurability);
 
-                Write(item.Bonding); // Bonding
+                Write((uint) item.Area);
+                Write(item.Map);
 
-                WriteCString(item.Description + ""); // Item Description
+                // TODO
+                Write(item.BagFamily);
 
-                Write(0); // PageText
-                Write(0); // Language ID
-                Write(0); // Page Material;
-                Write(0); // Start Quest
-                Write(0); // Lock
-                Write(0); // Material
-                Write(0); // SheAtTheType;
-                //Write(0); // Unknown
-                //Write(0); // Unknown 
+                Write(MainProgram.Vai); // IDK ????
+                Write(MainProgram.Vai); // IDK ??
+
+                Write(item.FoodType);
+
+                Write(item.MinMoneyLoot);
+                Write(item.MaxMoneyLoot);
+
+                Write(MainProgram.Vai);
+                Write(MainProgram.Vai);
+
+                MainProgram.Vai++;
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
                 var trace = new StackTrace(e, true);
                 Log.Print(LogType.Error,
-                    $"{e.Message}: {e.Source}\n{trace.GetFrame(trace.FrameCount - 1).GetFileName()}:{trace.GetFrame(trace.FrameCount - 1).GetFileLineNumber()}");
+                    $"{e.Message}: {e.Source}" +
+                    $"{trace.GetFrame(trace.FrameCount - 1).GetFileName()}:{trace.GetFrame(trace.FrameCount - 1).GetFileLineNumber()}");
             }
         }
     }
-
 }

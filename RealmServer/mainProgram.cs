@@ -9,6 +9,7 @@ using Common.Database;
 using Common.Database.Dbc;
 using Common.Globals;
 using Common.Helpers;
+using MongoDB.Driver;
 using RealmServer.Handlers;
 using RealmServer.PacketReader;
 using RealmServer.World.Managers;
@@ -17,6 +18,7 @@ namespace RealmServer
 {
     internal class MainProgram
     {
+        public static int Vai;
         private static bool _keepGoing = true;
         private static readonly uint Time = Common.Helpers.Time.GetMsTime();
         private static readonly IPEndPoint RealmPoint = new IPEndPoint(IPAddress.Any, 1001);
@@ -207,6 +209,8 @@ namespace RealmServer
             RealmServerRouter.AddHandler(RealmEnums.CMSG_TOGGLE_PVP, OnTogglePvp.Handler);
             RealmServerRouter.AddHandler(RealmEnums.CMSG_PLAYED_TIME, OnPlayedTime.Handler);
             RealmServerRouter.AddHandler<CMSG_INITIATE_TRADE>(RealmEnums.CMSG_INITIATE_TRADE, Future);
+            RealmServerRouter.AddHandler<CMSG_SWAP_INV_ITEM>(RealmEnums.CMSG_SWAP_INV_ITEM, Future);
+            RealmServerRouter.AddHandler<CMSG_AUTOEQUIP_ITEM>(RealmEnums.CMSG_AUTOEQUIP_ITEM, Future);
 
             #region OPCODES
 
@@ -279,10 +283,9 @@ namespace RealmServer
             RealmServerRouter.AddHandler<CMSG_EMOTE>(RealmEnums.CMSG_EMOTE, Future);
             
             RealmServerRouter.AddHandler<CMSG_AUTOSTORE_LOOT_ITEM>(RealmEnums.CMSG_AUTOSTORE_LOOT_ITEM, Future);
-            RealmServerRouter.AddHandler<CMSG_AUTOEQUIP_ITEM>(RealmEnums.CMSG_AUTOEQUIP_ITEM, Future);
+            
             RealmServerRouter.AddHandler<CMSG_AUTOSTORE_BAG_ITEM>(RealmEnums.CMSG_AUTOSTORE_BAG_ITEM, Future);
             RealmServerRouter.AddHandler<CMSG_SWAP_ITEM>(RealmEnums.CMSG_SWAP_ITEM, Future);
-            RealmServerRouter.AddHandler<CMSG_SWAP_INV_ITEM>(RealmEnums.CMSG_SWAP_INV_ITEM, Future);
             RealmServerRouter.AddHandler<CMSG_SPLIT_ITEM>(RealmEnums.CMSG_SPLIT_ITEM, Future);
             RealmServerRouter.AddHandler<CMSG_DESTROYITEM>(RealmEnums.CMSG_DESTROYITEM, Future);
 
@@ -466,6 +469,33 @@ namespace RealmServer
             */
 
             #endregion
+        }
+
+        private static void Future(RealmServerSession session, CMSG_AUTOEQUIP_ITEM handler)
+        {
+            
+        }
+
+        private static void Future(RealmServerSession session, CMSG_SWAP_INV_ITEM handler)
+        {
+            var subInventory = session.Character.SubInventorie.Find(x => x.Slot == handler.SrcSlot);
+
+            if (subInventory == null)
+                return;
+
+            subInventory.Slot = handler.DstSlot;
+
+            foreach (var variable in session.Character.SubInventorie)
+            {
+                Console.WriteLine($@"Item: {variable.Item}  Slot: {variable.Slot}");
+            }
+
+            DatabaseModel.CharacterCollection.UpdateOneAsync(
+                Builders<Common.Database.Tables.Characters>.Filter.Where(x => x.Uid == session.Character.Uid),
+                Builders<Common.Database.Tables.Characters>.Update.Set(x => x.SubInventorie, session.Character.SubInventorie)
+            );
+
+            session.SendInventory(session);
         }
 
         private static void Future(RealmServerSession session, CMSG_INITIATE_TRADE handler)

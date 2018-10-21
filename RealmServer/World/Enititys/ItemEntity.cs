@@ -1,27 +1,42 @@
-﻿using Common.Database.Tables;
+﻿
+using Common.Database;
+using Common.Database.Tables;
+using MongoDB.Driver;
 using RealmServer.Enums;
 
 namespace RealmServer.World.Enititys
 {
     public class ItemEntity : ObjectEntity
     {
-        public override int DataLength => (int)ItemFields.ITEM_END;
-
         public ItemEntity(SubInventory inventory, PlayerEntity session)
-            : base(new ObjectGuid((uint)inventory.Item, TypeId.TypeidItem, HighGuid.HighguidItem))
+            : base(new ObjectGuid((uint) inventory.Item, TypeId.TypeidItem, HighGuid.HighguidItem))
         {
-            SetUpdateField((int)ObjectFields.Type, 2); // 3 na BAG / 2 naosei / 7 e uma bag
-            SetUpdateField((int)ObjectFields.Entry, (uint) inventory.Item);
-            SetUpdateField((int)ObjectFields.ScaleX, 1f);
-            SetUpdateField((int)ObjectFields.Padding, 0);
+            var item = DatabaseModel.ItemsCollection.Find(x => x.Entry == inventory.Item).FirstOrDefault();
+            SetUpdateField((int) ObjectFields.Type,
+                ObjectType.TYPE_ITEM + (int) ObjectType.TYPE_OBJECT); // 3 na BAG / 2 naosei / 7 e uma bag
+            SetUpdateField((int) ObjectFields.Entry, (uint) inventory.Item);
+            SetUpdateField((int) ObjectFields.ScaleX, 1f);
+            SetUpdateField((int) ObjectFields.Padding, 0);
 
             //
-            //SetUpdateField((int)ItemFields.ITEM_FIELD_STACK_COUNT, inventory.StackCount);
-            //SetUpdateField((int)ItemFields.ITEM_FIELD_DURABILITY, 25);
-            SetUpdateField((int)ItemFields.ITEM_FIELD_OWNER, session.ObjectGuid.RawGuid); // ID do char
-            //SetUpdateField((int)ItemFields.ITEM_FIELD_FLAGS, inventory.Flags);
+            SetUpdateField((int) ItemFields.ITEM_FIELD_OWNER, session.ObjectGuid.RawGuid); // ID do char
+
+            SetUpdateField((int) ItemFields.ITEM_FIELD_MAXDURABILITY, item.MaxDurability);
+            SetUpdateField((int) ItemFields.ITEM_FIELD_DURABILITY, inventory.Durability);
+            SetUpdateField((int) ItemFields.ITEM_FIELD_FLAGS, inventory.Flags);
+            SetUpdateField((int) ItemFields.ITEM_FIELD_STACK_COUNT, inventory.StackCount);
+
+            SetUpdateField((int) ItemFields.ITEM_FIELD_ITEM_TEXT_ID, inventory.TextId);
+
+            for (int i = 0; i < 5; i++)
+            {
+                SetUpdateField((int) ItemFields.ITEM_FIELD_SPELL_CHARGES + i, -1);
+            }
         }
+
+        public override int DataLength => (int) ItemFields.ITEM_END;
     }
+
     public enum ObjectType
     {
         TYPE_OBJECT = 1,
@@ -56,6 +71,6 @@ namespace RealmServer.World.Enititys
         ITEM_FIELD_ITEM_TEXT_ID = ObjectFields.End + 0x27, // Size:1
         ITEM_FIELD_DURABILITY = ObjectFields.End + 0x28, // Size:1
         ITEM_FIELD_MAXDURABILITY = ObjectFields.End + 0x29, // Size:1
-        ITEM_END = ObjectFields.End + 0x2A,
-    };
+        ITEM_END = ObjectFields.End + 0x2A
+    }
 }

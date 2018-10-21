@@ -1,5 +1,4 @@
-﻿using System;
-using Common.Helpers;
+﻿using Common.Helpers;
 
 namespace RealmServer.PacketReader
 {
@@ -8,8 +7,8 @@ namespace RealmServer.PacketReader
     /// </summary>
     public sealed class CMSG_ITEM_QUERY_SINGLE : Common.Network.PacketReader
     {
-        public UInt64 ItemId;
-        public UInt32 ItemIdo;
+        public ulong ItemId;
+        public uint ItemIdo;
 
         public CMSG_ITEM_QUERY_SINGLE(byte[] data) : base(data)
         {

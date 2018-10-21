@@ -9,12 +9,25 @@ namespace RealmServer.Handlers
     {
         public static void Handler(RealmServerSession session, CMSG_ITEM_QUERY_SINGLE handler)
         {
-            var item = DatabaseModel.ItemsCollection.Find(x => x.Entry == (int)handler.ItemId).FirstOrDefault();
+            if (handler.ItemId == 0)
+            {
+                var item = DatabaseModel.ItemsCollection.Find(x => x.Entry == (int) handler.ItemIdo).FirstOrDefault();
 
-            if (item == null)
-                return;
+                if (item == null)
+                    return;
 
-            session.SendPacket(new SMSG_ITEM_QUERY_SINGLE_RESPONSE(item));
+                session.SendPacket(new SMSG_ITEM_QUERY_SINGLE_RESPONSE(item));
+            }
+            else
+            {
+
+                var item = DatabaseModel.ItemsCollection.Find(x => x.Entry == (int) handler.ItemId).FirstOrDefault();
+
+                if (item == null)
+                    return;
+
+                session.SendPacket(new SMSG_ITEM_QUERY_SINGLE_RESPONSE(item));
+            }
         }
     }
 }

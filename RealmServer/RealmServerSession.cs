@@ -272,5 +272,35 @@ namespace RealmServer
         {
             return Sessions.First(user => user.Character.Name.ToLower() == playerName.ToLower());
         }
+
+        public void SendInventory(RealmServerSession session)
+        {
+            for (var j = 0; j < 119; j++)
+            {
+                var inventory = session.Character.SubInventorie.Find(x => x.Slot == j);
+                if (inventory != null)
+                {
+                    if (j < 19)
+                    {
+                        session.Entity.SetUpdateField((int)PlayerFields.PLAYER_VISIBLE_ITEM_1_0 + inventory.Slot * 12,
+                            inventory.Item);
+                        session.Entity.SetUpdateField((int)PlayerFields.PLAYER_VISIBLE_ITEM_1_PROPERTIES + j * 12, 0);
+                    }
+
+                    session.Entity.SetUpdateField((int)PlayerFields.PLAYER_FIELD_INV_SLOT_HEAD + j * 2,
+                        inventory.Item);
+                }
+                else
+                {
+                    if (j < 19)
+                    {
+                        session.Entity.SetUpdateField((int)PlayerFields.PLAYER_VISIBLE_ITEM_1_0 + j * 12, 0);
+                        session.Entity.SetUpdateField((int)PlayerFields.PLAYER_VISIBLE_ITEM_1_PROPERTIES + j * 12, 0);
+                    }
+
+                    session.Entity.SetUpdateField((int)PlayerFields.PLAYER_FIELD_INV_SLOT_HEAD + j * 2, 0);
+                }
+            }
+        }
     }
 }

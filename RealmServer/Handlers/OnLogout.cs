@@ -5,21 +5,25 @@ using System.Threading;
 using Common.Globals;
 using RealmServer.Enums;
 using RealmServer.PacketServer;
+using RealmServer.World.Managers;
 
 namespace RealmServer.Handlers
 {
     public class OnLogout
     {
         private static Dictionary<RealmServerSession, DateTime> _logoutQueue;
+        private static readonly bool KeepGoing = true;
 
         private static void Update(int sec)
         {
-            while (true)
+            while (KeepGoing)
             {
                 foreach (var entry in _logoutQueue.ToArray())
                 {
                     if (DateTime.Now.Subtract(entry.Value).Seconds < sec) continue;
                     entry.Key.SendPacket(new SMSG_LOGOUT_COMPLETE(0));
+                    entry.Key.Entity.KnownPlayers.Clear();
+                    WorldManager.DispatchOnPlayerDespawn(entry.Key.Entity);
                     _logoutQueue.Remove(entry.Key);
                 }
 

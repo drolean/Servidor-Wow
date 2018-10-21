@@ -9,12 +9,6 @@ namespace RealmServer.World.Enititys
     public class PlayerEntity : UnitEntity
     {
         public new int Model;
-        public override int DataLength => (int) PlayerFields.PLAYER_END - 0x4;
-
-        public Characters Character { get; }
-        public override string Name => Character.Name;
-        public RealmServerSession Session { get; set; }
-        public List<PlayerEntity> KnownPlayers { get; set; }
 
         public PlayerEntity(Characters character)
             : base(new ObjectGuid((uint) character.Uid, TypeId.TypeidPlayer, HighGuid.HighguidPlayer))
@@ -29,9 +23,9 @@ namespace RealmServer.World.Enititys
 
             SetUpdateField((int) ObjectFields.Type, (uint) 0x19); // 25
             SetUpdateField((int) ObjectFields.ScaleX, Size);
-            SetUpdateField((int)ObjectFields.Padding, 0);
+            SetUpdateField((int) ObjectFields.Padding, 0);
 
-            SetUpdateField((int)UnitFields.UNIT_FIELD_TARGET, (ulong)0);
+            SetUpdateField((int) UnitFields.UNIT_FIELD_TARGET, (ulong) 0);
 
             SetUpdateField((int) UnitFields.UNIT_FIELD_HEALTH, 1);
             SetUpdateField((int) UnitFields.UNIT_FIELD_POWER1, 2);
@@ -80,14 +74,14 @@ namespace RealmServer.World.Enititys
             SetUpdateField((int) UnitFields.UNIT_FIELD_NATIVEDISPLAYID, Model);
             SetUpdateField((int) UnitFields.UNIT_FIELD_MOUNTDISPLAYID, 0);
 
-            SetUpdateField((int)UnitFields.UNIT_FIELD_BYTES_1, BitConverter.ToUInt32(new byte[]
+            SetUpdateField((int) UnitFields.UNIT_FIELD_BYTES_1, BitConverter.ToUInt32(new byte[]
             {
-                (byte)StandStates.Stand,
+                (byte) StandStates.Stand,
                 0,
                 0,
                 0
             }, 0));
-            SetUpdateField((int)UnitFields.UNIT_FIELD_BYTES_2, 0);
+            SetUpdateField((int) UnitFields.UNIT_FIELD_BYTES_2, 0);
 
             SetUpdateField((int) PlayerFields.PLAYER_BYTES, BitConverter.ToUInt32(new[]
             {
@@ -114,9 +108,16 @@ namespace RealmServer.World.Enititys
             SkillGenerate();
         }
 
+        public override int DataLength => (int) PlayerFields.PLAYER_END - 0x4;
+
+        public Characters Character { get; }
+        public override string Name => Character.Name;
+        public RealmServerSession Session { get; set; }
+        public List<PlayerEntity> KnownPlayers { get; set; }
+
         private void SkillGenerate()
         {
-            int a = 0;
+            var a = 0;
             foreach (var skill in Character.SubSkills)
             {
                 SetUpdateField((int) PlayerFields.PLAYER_SKILL_INFO_1_1 + a * 3, skill.Skill);

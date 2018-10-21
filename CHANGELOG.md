@@ -4,6 +4,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.26] - 2018-10-21
+### Added
+- on Database.Character.Create fixed inventory.
+- OnLogout dispatch despawn player and clear all knowPlayers.
+- SMSG_UPDATE_OBJECT.CreateOutOfRangeUpdate
+- PlayerManager.DespawnPlayer
+- PlayerManager now check range to spawn and despawn Players.
+
+### Changed
+- Items Table default values
+- Some Summary of files.
+- OnItemQueryResponse now check two Ids.
+- OnPlayerLogin.inventory now is RealmServerSession.SendInventory
+- Fixed some spaces.
+- SMSG_ITEM_QUERY_SINGLE_RESPONSE 90% done.
+
 ## [0.0.25] - 2018-10-20
 ### Added
 - Enums 'Emote'

@@ -30,8 +30,8 @@ namespace Common.Database.Tables
     public class SubDamage
     {
         public int Type { get; set; }
-        public float Min { get; set; }
-        public float Max { get; set; }
+        public float Min { get; set; } = 0;
+        public float Max { get; set; } = 0;
     }
 
     public class SubResistence
@@ -50,13 +50,13 @@ namespace Common.Database.Tables
     /// </summary>
     public class SubItemSpell
     {
-        public int Id { get; set; }
-        public int Trigger { get; set; }
-        public int Charges { get; set; }
-        public float PpmRate { get; set; }
-        public int CoolDown { get; set; }
-        public int Category { get; set; }
-        public int CategoryCooldown { get; set; }
+        public int Id { get; set; } = 0;
+        public int Trigger { get; set; } = 0;
+        public int Charges { get; set; } = 0;
+        public float PpmRate { get; set; } = 0;
+        public int CoolDown { get; set; } = -1;
+        public int Category { get; set; } = 0;
+        public int CategoryCooldown { get; set; } = -1;
     }
 
     public class Items
@@ -70,12 +70,12 @@ namespace Common.Database.Tables
         public int DisplayId { get; set; } = 0;
         public int Quality { get; set; } = 0;
         public int Flags { get; set; } = 0;
-        public int BuyCount { get; set; } = 0;
+        public int BuyCount { get; set; } = 1;
         public int BuyPrice { get; set; } = 0;
         public int SellPrice { get; set; } = 0;
         public int InventoryType { get; set; } = 0;
-        public int AllowableClass { get; set; } = 0;
-        public int AllowableRace { get; set; } = 0;
+        public int AllowableClass { get; set; } = -1;
+        public int AllowableRace { get; set; } = -1;
         public int ItemLevel { get; set; } = 0;
 
         public SubRequire SubRequired { get; set; }
@@ -85,7 +85,7 @@ namespace Common.Database.Tables
         public List<SubItemSpell> SubSpells { get; set; }
 
         public int MaxCount { get; set; } = 0;
-        public int Stackable { get; set; } = 0;
+        public int Stackable { get; set; } = 1;
         public int ContainerSlots { get; set; } = 0;
 
         public int Delay { get; set; } = 0;

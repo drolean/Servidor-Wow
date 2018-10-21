@@ -14,8 +14,8 @@ namespace RealmServer.PacketServer.Global
             WriteBytes(this, (handler.BaseStream as MemoryStream)?.ToArray());
 
             // We then overwrite the original moveTime (sent from the client) with ours
-            ((MemoryStream)BaseStream).Position = 4 + packedGuid.Length;
-            WriteBytes(this, BitConverter.GetBytes((uint)Environment.TickCount));
+            ((MemoryStream) BaseStream).Position = 4 + packedGuid.Length;
+            WriteBytes(this, BitConverter.GetBytes((uint) Environment.TickCount));
         }
     }
 }
