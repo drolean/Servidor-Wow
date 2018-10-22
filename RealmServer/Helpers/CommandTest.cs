@@ -1,4 +1,5 @@
-﻿using System.Timers;
+﻿using System;
+using System.Timers;
 using RealmServer.Enums;
 using RealmServer.PacketServer;
 
@@ -8,7 +9,7 @@ namespace RealmServer.Helpers
     {
         public static int Count;
         public static Timer TimerPlugin;
-        public static RealmServerSession sessao;
+        public static RealmServerSession Sessao;
 
         public CommandTest(RealmServerSession session, string message)
         {
@@ -16,6 +17,14 @@ namespace RealmServer.Helpers
 
             if (args.Length == 0)
                 return;
+
+            if (args[0] == "gm")
+            {
+                session.SendPacket(new SMSG_GMTICKET_GETTICKET(TicketInfoResponse.Pending, "Hello my friend"));
+                session.SendPacket(new SMSG_QUERY_TIME_RESPONSE());
+                Console.WriteLine(Count);
+                Count++;
+            }
 
             // SHOW GPS
             if (args[0] == "gps")
@@ -41,7 +50,7 @@ namespace RealmServer.Helpers
 
             if (args[0] == "inv4")
             {
-                sessao = session;
+                Sessao = session;
 
                 TimerPlugin = new Timer();
                 TimerPlugin.Elapsed += CheckEvents;
@@ -93,12 +102,12 @@ namespace RealmServer.Helpers
 
         private static void CheckEvents(object source, ElapsedEventArgs e)
         {
-            var inventory = sessao.Character.SubInventorie.Find(x => x.Slot == 15);
+            var inventory = Sessao.Character.SubInventorie.Find(x => x.Slot == 15);
 
-            sessao.Entity.SetUpdateField((int) PlayerFields.PLAYER_VISIBLE_ITEM_1_0 + Count, inventory.Item);
-            sessao.Entity.SetUpdateField((int) PlayerFields.PLAYER_VISIBLE_ITEM_1_PROPERTIES + Count, 0);
-            sessao.Entity.SetUpdateField((int) PlayerFields.PLAYER_VISIBLE_ITEM_1_CREATOR + Count,
-                sessao.Character.Uid);
+            Sessao.Entity.SetUpdateField((int) PlayerFields.PLAYER_VISIBLE_ITEM_1_0 + Count, inventory.Item);
+            Sessao.Entity.SetUpdateField((int) PlayerFields.PLAYER_VISIBLE_ITEM_1_PROPERTIES + Count, 0);
+            Sessao.Entity.SetUpdateField((int) PlayerFields.PLAYER_VISIBLE_ITEM_1_CREATOR + Count,
+                Sessao.Character.Uid);
             Count++;
         }
     }

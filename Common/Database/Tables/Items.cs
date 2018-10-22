@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using MongoDB.Bson;
 
 namespace Common.Database.Tables
@@ -63,6 +64,8 @@ namespace Common.Database.Tables
     {
         public ObjectId Id { get; set; }
 
+        public string Patch { get; set; } = string.Empty;
+
         public int Entry { get; set; } = 0;
         public int Class { get; set; } = 0;
         public int SubClass { get; set; } = 0;
@@ -115,5 +118,8 @@ namespace Common.Database.Tables
         public int MaxMoneyLoot { get; set; } = 0;
         public int Duration { get; set; } = 0;
         public int ExtraFlags { get; set; } = 0;
+
+        // Internal purpose
+        public DateTime? UsedAt { get; set; }
     }
 }

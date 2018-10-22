@@ -10,7 +10,11 @@ namespace RealmServer.PacketReader
             Type = ReadUInt32();
             Size = ReadUInt32();
 
-            if (Size <= 0) return;
+            if (Size <= 0)
+            {
+                Log.Print(LogType.Debug, $"[CMSG_UPDATE_ACCOUNT_DATA] Type: {Type} Size: {Size}");
+                return;
+            }
 
             var accountData = ReadBytes((int) BaseStream.Length - (int) BaseStream.Position);
             var decompressed = ZLib.Decompress(accountData);

@@ -1,6 +1,5 @@
 ﻿using Common.Database.Tables;
 using Common.Globals;
-using Common.Helpers;
 
 namespace RealmServer.PacketServer
 {
@@ -14,12 +13,7 @@ namespace RealmServer.PacketServer
 
                 if (subActionBar != null)
                 {
-                    Log.Print(LogType.Debug,
-                        $"[{character.Name}] Button Number: {subActionBar.Button} - Type: {subActionBar.Type} " +
-                        $"Action: {subActionBar.Action}");
-
-                    var packedData = (uint) subActionBar.Action | ((uint) subActionBar.Type << 24);
-                    Write(packedData);
+                    Write((uint)subActionBar.Action | ((uint)subActionBar.Type << 24));
                 }
                 else
                 {
