@@ -18,7 +18,7 @@ namespace RealmServer.Handlers
             switch (msgType)
             {
                 case ChatMessageType.Whisper:
-                    RealmServerSession remoteSession = RealmServerSession.GetSessionByPlayerName(handler.Channel);
+                    var remoteSession = RealmServerSession.GetSessionByPlayerName(handler.Channel);
                     // Send Local
                     session.SendPacket(new SMSG_MESSAGECHAT(ChatMessageType.WhisperInform, msgLanguage,
                         remoteSession.Character.Uid, handler.Message));

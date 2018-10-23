@@ -21,10 +21,10 @@ namespace RealmServer.PacketServer
 
         internal static SMSG_UPDATE_OBJECT UpdateValues(PlayerEntity player)
         {
-            BinaryWriter writer = new BinaryWriter(new MemoryStream());
+            var writer = new BinaryWriter(new MemoryStream());
             writer.Write((byte) ObjectUpdateType.UPDATETYPE_VALUES);
 
-            byte[] guidBytes = GenerateGuidBytes(player.ObjectGuid.RawGuid);
+            var guidBytes = GenerateGuidBytes(player.ObjectGuid.RawGuid);
             WriteBytes(writer, guidBytes, guidBytes.Length);
 
             player.WriteUpdateFields(writer);
@@ -34,10 +34,10 @@ namespace RealmServer.PacketServer
 
         internal static SMSG_UPDATE_OBJECT CreateItem(SubInventory inventory, PlayerEntity session)
         {
-            BinaryWriter writer = new BinaryWriter(new MemoryStream());
+            var writer = new BinaryWriter(new MemoryStream());
             writer.Write((byte) ObjectUpdateType.UPDATETYPE_CREATE_OBJECT);
 
-            ItemEntity entity = new ItemEntity(inventory, session)
+            var entity = new ItemEntity(inventory, session)
             {
                 ObjectGuid = new ObjectGuid((ulong) inventory.Item),
                 Guid = (ulong) inventory.Item
@@ -68,16 +68,13 @@ namespace RealmServer.PacketServer
 
         internal static SMSG_UPDATE_OBJECT CreateOutOfRangeUpdate(List<ObjectEntity> despawnPlayer)
         {
-            BinaryWriter writer = new BinaryWriter(new MemoryStream());
-            writer.Write((byte)ObjectUpdateType.UPDATETYPE_OUT_OF_RANGE_OBJECTS);
-            writer.Write((uint)despawnPlayer.Count);
+            var writer = new BinaryWriter(new MemoryStream());
+            writer.Write((byte) ObjectUpdateType.UPDATETYPE_OUT_OF_RANGE_OBJECTS);
+            writer.Write((uint) despawnPlayer.Count);
 
-            foreach (ObjectEntity entity in despawnPlayer)
-            {
-                writer.WritePackedUInt64(entity.ObjectGuid.RawGuid);
-            }
+            foreach (var entity in despawnPlayer) writer.WritePackedUInt64(entity.ObjectGuid.RawGuid);
 
-            return new SMSG_UPDATE_OBJECT(new List<byte[]> { ((MemoryStream)writer.BaseStream).ToArray() });
+            return new SMSG_UPDATE_OBJECT(new List<byte[]> {((MemoryStream) writer.BaseStream).ToArray()});
         }
 
         internal static SMSG_UPDATE_OBJECT CreateOwnCharacterUpdate(Characters character, out PlayerEntity entity)
@@ -128,15 +125,15 @@ namespace RealmServer.PacketServer
 
         internal static SMSG_UPDATE_OBJECT CreateCharacterUpdate(Characters character)
         {
-            BinaryWriter writer = new BinaryWriter(new MemoryStream());
+            var writer = new BinaryWriter(new MemoryStream());
             writer.Write((byte) ObjectUpdateType.UPDATETYPE_CREATE_OBJECT_SELF);
 
-            byte[] guidBytes = GenerateGuidBytes(character.Uid);
+            var guidBytes = GenerateGuidBytes(character.Uid);
             WriteBytes(writer, guidBytes, guidBytes.Length);
 
             writer.Write((byte) TypeId.TypeidPlayer);
 
-            ObjectUpdateFlag updateFlags = ObjectUpdateFlag.All |
+            var updateFlags = ObjectUpdateFlag.All |
                               ObjectUpdateFlag.HasPosition |
                               ObjectUpdateFlag.Living;
 
@@ -163,7 +160,7 @@ namespace RealmServer.PacketServer
 
             writer.Write(0x1); // Unkown...
 
-            PlayerEntity playerEntity = new PlayerEntity(character) {Guid = (uint) character.Uid};
+            var playerEntity = new PlayerEntity(character) {Guid = (uint) character.Uid};
 
             playerEntity.WriteUpdateFields(writer);
 
@@ -172,22 +169,22 @@ namespace RealmServer.PacketServer
 
         internal static SMSG_UPDATE_OBJECT CreateUnit(Characters character, int parse)
         {
-            BinaryWriter writer = new BinaryWriter(new MemoryStream());
+            var writer = new BinaryWriter(new MemoryStream());
             writer.Write((byte) ObjectUpdateType.UPDATETYPE_CREATE_OBJECT);
 
-            UnitEntity entity = new UnitEntity(MainProgram.Vai, parse);
+            var entity = new UnitEntity(MainProgram.Vai, parse);
 
             writer.WritePackedUInt64(entity.ObjectGuid.RawGuid);
 
             writer.Write((byte) TypeId.TypeidUnit);
 
-            ObjectUpdateFlag updateFlags = ObjectUpdateFlag.All |
-                                           ObjectUpdateFlag.Living |
-                                           ObjectUpdateFlag.HasPosition;
+            var updateFlags = ObjectUpdateFlag.All |
+                              ObjectUpdateFlag.Living |
+                              ObjectUpdateFlag.HasPosition;
 
             writer.Write((byte) updateFlags);
-            writer.Write((UInt32) MovementFlags.None); //MovementFlags
-            writer.Write((UInt32) Environment.TickCount); // Time
+            writer.Write((uint) MovementFlags.None); //MovementFlags
+            writer.Write((uint) Environment.TickCount); // Time
 
             // Position
             writer.Write(character.SubMap.MapX);

@@ -9,7 +9,7 @@ namespace RealmServer.PacketReader
     {
         public uint ItemEntry;
         public ulong ItemId;
-        
+
 
         public CMSG_ITEM_QUERY_SINGLE(byte[] data) : base(data)
         {

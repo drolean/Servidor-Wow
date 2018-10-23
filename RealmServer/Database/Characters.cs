@@ -118,7 +118,7 @@ namespace RealmServer.Database
         /// <param name="character"></param>
         private static void CreateCharacterInventorie(Common.Database.Tables.Characters character)
         {
-            Random rnd = new Random();
+            var rnd = new Random();
 
             try
             {
@@ -145,8 +145,7 @@ namespace RealmServer.Database
                                 : PrefInvSlot(item.InventoryType),
                             Durability = item.MaxDurability,
                             StackCount = item.Stackable == 20 ? 5 : 1,
-                            CreatedAt = DateTime.Now,
-                            
+                            CreatedAt = DateTime.Now
                         })
                     );
                 }

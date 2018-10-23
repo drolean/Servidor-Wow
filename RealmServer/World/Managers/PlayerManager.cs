@@ -35,7 +35,7 @@ namespace RealmServer.World.Managers
 
         private static void DespawnPlayer(PlayerEntity remote, PlayerEntity playerEntity)
         {
-            List<ObjectEntity> despawnPlayer = new List<ObjectEntity> { playerEntity };
+            var despawnPlayer = new List<ObjectEntity> {playerEntity};
             remote.Session.SendPacket(SMSG_UPDATE_OBJECT.CreateOutOfRangeUpdate(despawnPlayer));
             remote.KnownPlayers.Remove(playerEntity);
         }
@@ -84,7 +84,7 @@ namespace RealmServer.World.Managers
 
         private static bool InRangeCheck(PlayerEntity playerEntityA, PlayerEntity playerEntityB)
         {
-            double distance = GetDistance(playerEntityA.Character.SubMap.MapX, playerEntityA.Character.SubMap.MapY,
+            var distance = GetDistance(playerEntityA.Character.SubMap.MapX, playerEntityA.Character.SubMap.MapY,
                 playerEntityB.Character.SubMap.MapX, playerEntityB.Character.SubMap.MapY);
 
             return distance < 30; // DISTANCE

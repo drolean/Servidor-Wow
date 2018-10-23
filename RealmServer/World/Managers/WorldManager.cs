@@ -28,7 +28,7 @@ namespace RealmServer.World.Managers
 
         internal static List<RealmServerSession> SessionsWhoKnow(PlayerEntity playerEntity, bool includeSelf = false)
         {
-            List<RealmServerSession> sessions = PlayersWhoKnow(playerEntity).ConvertAll(p => p.Session);
+            var sessions = PlayersWhoKnow(playerEntity).ConvertAll(p => p.Session);
 
             if (includeSelf) sessions.Add(playerEntity.Session);
 

@@ -9,7 +9,7 @@ namespace RealmServer.PacketServer.Global
     {
         public PsMovement(RealmServerSession session, MSG_MOVE_FALL_LAND handler, RealmEnums opcode) : base(opcode)
         {
-            byte[] packedGuid = GenerateGuidBytes(session.Character.Uid);
+            var packedGuid = GenerateGuidBytes(session.Character.Uid);
             WriteBytes(this, packedGuid);
             WriteBytes(this, (handler.BaseStream as MemoryStream)?.ToArray());
 

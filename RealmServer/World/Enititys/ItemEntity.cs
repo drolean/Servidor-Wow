@@ -1,5 +1,4 @@
-﻿
-using Common.Database;
+﻿using Common.Database;
 using Common.Database.Tables;
 using MongoDB.Driver;
 using RealmServer.Enums;
@@ -28,10 +27,7 @@ namespace RealmServer.World.Enititys
 
             SetUpdateField((int) ItemFields.ITEM_FIELD_ITEM_TEXT_ID, inventory.TextId);
 
-            for (int i = 0; i < 5; i++)
-            {
-                SetUpdateField((int) ItemFields.ITEM_FIELD_SPELL_CHARGES + i, -1);
-            }
+            for (var i = 0; i < 5; i++) SetUpdateField((int) ItemFields.ITEM_FIELD_SPELL_CHARGES + i, -1);
         }
 
         public override int DataLength => (int) ItemFields.ITEM_END;

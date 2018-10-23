@@ -36,9 +36,7 @@ namespace RealmServer.Handlers
             session.SendPacket(SMSG_UPDATE_OBJECT.CreateOwnCharacterUpdate(session.Character, out session.Entity));
 
             foreach (var inventory in session.Character.SubInventorie)
-            {
                 session.SendPacket(SMSG_UPDATE_OBJECT.CreateItem(inventory, session.Entity));
-            }
 
             session.SendInventory(session);
 

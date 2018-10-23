@@ -15,8 +15,8 @@ namespace RealmServer.PacketServer
         /// <remarks>Usually, this speed is equivalent to real-life.</remarks>
         public SMSG_LOGIN_SETTIMESPEED() : base(RealmEnums.SMSG_LOGIN_SETTIMESPEED)
         {
-            DateTime baseDate = new DateTime(1970, 1, 1);
-            TimeSpan ts = DateTime.Now - baseDate;
+            var baseDate = new DateTime(1970, 1, 1);
+            var ts = DateTime.Now - baseDate;
 
             Write(Convert.ToUInt32(ts.TotalSeconds)); // Time
             Write(0.01666667f); // Speed

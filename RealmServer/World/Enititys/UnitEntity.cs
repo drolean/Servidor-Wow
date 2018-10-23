@@ -11,7 +11,8 @@ namespace RealmServer.World.Enititys
         {
         }
 
-        public UnitEntity(int vai, int parse) : base(new ObjectGuid((uint) vai, TypeId.TypeidUnit, HighGuid.HighguidUnit))
+        public UnitEntity(int vai, int parse) : base(new ObjectGuid((uint) vai, TypeId.TypeidUnit,
+            HighGuid.HighguidUnit))
         {
             var creature = DatabaseModel.CreaturesCollection.Find(x => x.Entry == parse).First();
 

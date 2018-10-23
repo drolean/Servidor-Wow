@@ -282,23 +282,23 @@ namespace RealmServer
                 {
                     if (j < 19)
                     {
-                        session.Entity.SetUpdateField((int)PlayerFields.PLAYER_VISIBLE_ITEM_1_0 + inventory.Slot * 12,
+                        session.Entity.SetUpdateField((int) PlayerFields.PLAYER_VISIBLE_ITEM_1_0 + inventory.Slot * 12,
                             inventory.Item);
-                        session.Entity.SetUpdateField((int)PlayerFields.PLAYER_VISIBLE_ITEM_1_PROPERTIES + j * 12, 0);
+                        session.Entity.SetUpdateField((int) PlayerFields.PLAYER_VISIBLE_ITEM_1_PROPERTIES + j * 12, 0);
                     }
 
-                    session.Entity.SetUpdateField((int)PlayerFields.PLAYER_FIELD_INV_SLOT_HEAD + j * 2,
+                    session.Entity.SetUpdateField((int) PlayerFields.PLAYER_FIELD_INV_SLOT_HEAD + j * 2,
                         inventory.Item);
                 }
                 else
                 {
                     if (j < 19)
                     {
-                        session.Entity.SetUpdateField((int)PlayerFields.PLAYER_VISIBLE_ITEM_1_0 + j * 12, 0);
-                        session.Entity.SetUpdateField((int)PlayerFields.PLAYER_VISIBLE_ITEM_1_PROPERTIES + j * 12, 0);
+                        session.Entity.SetUpdateField((int) PlayerFields.PLAYER_VISIBLE_ITEM_1_0 + j * 12, 0);
+                        session.Entity.SetUpdateField((int) PlayerFields.PLAYER_VISIBLE_ITEM_1_PROPERTIES + j * 12, 0);
                     }
 
-                    session.Entity.SetUpdateField((int)PlayerFields.PLAYER_FIELD_INV_SLOT_HEAD + j * 2, 0);
+                    session.Entity.SetUpdateField((int) PlayerFields.PLAYER_FIELD_INV_SLOT_HEAD + j * 2, 0);
                 }
             }
         }

@@ -3,7 +3,7 @@
     public enum TicketInfoResponse : uint
     {
         /// <summary>
-        /// Error retrieving GM ticket.
+        ///     Error retrieving GM ticket.
         /// </summary>
         DDS = 0,
         Fail = 1,
@@ -11,8 +11,8 @@
         A1 = 3,
         A2 = 4,
         A3 = 5,
+
         /// <summary>
-        /// 
         /// </summary>
         Pending = 6,
         ve3 = 7,

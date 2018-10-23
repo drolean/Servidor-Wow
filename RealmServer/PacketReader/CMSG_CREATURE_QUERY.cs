@@ -3,7 +3,7 @@
 namespace RealmServer.PacketReader
 {
     /// <summary>
-    /// CMSG_CREATURE_QUERY represents a packet sent by the client when it wants to retrieve creature information.
+    ///     CMSG_CREATURE_QUERY represents a packet sent by the client when it wants to retrieve creature information.
     /// </summary>
     public sealed class CMSG_CREATURE_QUERY : Common.Network.PacketReader
     {
@@ -16,7 +16,8 @@ namespace RealmServer.PacketReader
             CreatureUid = ReadUInt64();
 
 #if DEBUG
-            Log.Print(LogType.Debug, $"[CMSG_CREATURE_QUERY] CreatureEntry: {CreatureEntry} CreatureUid: {CreatureUid}");
+            Log.Print(LogType.Debug,
+                $"[CMSG_CREATURE_QUERY] CreatureEntry: {CreatureEntry} CreatureUid: {CreatureUid}");
 #endif
         }
     }

@@ -12,13 +12,9 @@ namespace RealmServer.PacketServer
                 var subActionBar = character.SubActionBars.Find(x => x.Button == button);
 
                 if (subActionBar != null)
-                {
-                    Write((uint)subActionBar.Action | ((uint)subActionBar.Type << 24));
-                }
+                    Write((uint) subActionBar.Action | ((uint) subActionBar.Type << 24));
                 else
-                {
                     Write((uint) 0);
-                }
             }
         }
     }

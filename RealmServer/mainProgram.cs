@@ -10,11 +10,9 @@ using Common.Database.Dbc;
 using Common.Database.Tables;
 using Common.Globals;
 using Common.Helpers;
-using Common.Network;
 using MongoDB.Driver;
 using RealmServer.Handlers;
 using RealmServer.PacketReader;
-using RealmServer.PacketServer;
 using RealmServer.World.Managers;
 
 namespace RealmServer
@@ -488,7 +486,6 @@ namespace RealmServer
 
         private static void Future(RealmServerSession session, CMSG_AUTOEQUIP_ITEM handler)
         {
-            
         }
 
         private static void Future(RealmServerSession session, CMSG_SWAP_INV_ITEM handler)
@@ -501,13 +498,11 @@ namespace RealmServer
             subInventory.Slot = handler.DstSlot;
 
             foreach (var variable in session.Character.SubInventorie)
-            {
                 Console.WriteLine($@"Item: {variable.Item}  Slot: {variable.Slot}");
-            }
 
             DatabaseModel.CharacterCollection.UpdateOneAsync(
-                Builders<Common.Database.Tables.Characters>.Filter.Where(x => x.Uid == session.Character.Uid),
-                Builders<Common.Database.Tables.Characters>.Update.Set(x => x.SubInventorie, session.Character.SubInventorie)
+                Builders<Characters>.Filter.Where(x => x.Uid == session.Character.Uid),
+                Builders<Characters>.Update.Set(x => x.SubInventorie, session.Character.SubInventorie)
             );
 
             session.SendInventory(session);
@@ -579,17 +574,17 @@ Commands:
             Write((byte) 0);
             Write((byte) 0);
             Write((byte) 0);
-            
+
             WriteCString(creature.Subname);
 
-            Write((UInt32) creature.TypeFlags);
-            Write((UInt32) creature.Type);
-            Write((UInt32) creature.Family);
-            Write((UInt32) creature.Rank);
-            Write((UInt32) 0);
+            Write((uint) creature.TypeFlags);
+            Write((uint) creature.Type);
+            Write((uint) creature.Family);
+            Write((uint) creature.Rank);
+            Write((uint) 0);
 
-            Write((UInt32) creature.PetSpellDataId);
-            Write((UInt32) creature.Modelid1);
+            Write((uint) creature.PetSpellDataId);
+            Write((uint) creature.Modelid1);
             Write((byte) creature.Civilian);
             Write((byte) creature.RacialLeader);
         }

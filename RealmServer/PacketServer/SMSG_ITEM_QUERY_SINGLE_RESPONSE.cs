@@ -48,8 +48,7 @@ namespace RealmServer.PacketServer
                 Write(MainProgram.Vai); // ? ContainerSlots
 
                 // SubStats
-                for (int i = 0; i < 10; i++)
-                {
+                for (var i = 0; i < 10; i++)
                     if (item.SubStats != null && item.SubStats.Select((t, index) => index == i).First())
                     {
                         Write(item.SubStats[i].Value);
@@ -60,15 +59,13 @@ namespace RealmServer.PacketServer
                         Write(0);
                         Write(0);
                     }
-                }
 
                 // SubDamage
-                for (int i = 0; i < 5; i++)
-                {
+                for (var i = 0; i < 5; i++)
                     if (item.SubDamages != null && item.SubDamages.Select((t, index) => index == i).First())
                     {
-                        Write((float) item.SubDamages[0].Min);
-                        Write((float) item.SubDamages[0].Max);
+                        Write(item.SubDamages[0].Min);
+                        Write(item.SubDamages[0].Max);
                         Write((uint) item.SubDamages[0].Type);
                     }
                     else
@@ -77,8 +74,7 @@ namespace RealmServer.PacketServer
                         Write((float) 0);
                         Write((uint) 0);
                     }
-                }
-                
+
                 // Resistences
                 Write((uint) (item.SubResistences?.Armor ?? 0));
                 Write((uint) MainProgram.Vai); // HOLY????
@@ -90,10 +86,9 @@ namespace RealmServer.PacketServer
 
                 Write((uint) item.Delay);
                 Write((uint) item.AmmoType);
-                Write((float) MainProgram.Vai);  // rangedmod
+                Write((float) MainProgram.Vai); // rangedmod
 
-                for (int i = 0; i < 5; i++)
-                {
+                for (var i = 0; i < 5; i++)
                     if (item.SubSpells != null && item.SubSpells.Select((t, index) => index == i).First())
                     {
                         Write(item.SubSpells[i].Id);
@@ -112,7 +107,6 @@ namespace RealmServer.PacketServer
                         Write((uint) 0);
                         Write(-1);
                     }
-                }
 
                 Write((uint) item.Bonding);
                 WriteCString(item.Description);
