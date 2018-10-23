@@ -1,0 +1,41 @@
+=================== MISSING ==================
+49	Lesser Succubus
+55	Mean Ed the Blacksmith
+62	Gug Fatcandle
+65	Peasant Woman
+67	Marlon Darnik <Grocer>
+70	[UNUSED] Lower Class Citizen
+71	Rankist
+72	Level 20 Unkillable Test Dummy
+73	Veraina the Apothecary <Questgiver>
+75	[UNUSED] Vashaum Nightwither
+81	Holiday - Halloween - Garrison - Spectral Alemental
+82	Crazy Leonetti
+87	Forest Troll Berserker
+90	Sea Giant
+102	Bronze Dragonspawn
+105	Tall Strider
+106	Kodo Beast
+107	Raptor
+108	Green Dragonspawn
+109	White Dragonspawn
+111	Priest
+112	Priestess
+120	Forest Stalker
+128	Angry Programmer Tweedle Dee <Testing>
+129	Angry Programmer Tweedle Dum
+130	Programmer Vendor
+149	[UNUSED] Small Black Dragon Whelp
+150	[UNUSED] Brother Milius <Bowyer>
+153	Bethina <Baby Murloc Redemption Merchant>
+161	[UNUSED] Ander the Monk
+163	[UNUSED] Destitute Farmer
+165	[UNUSED] Small Child
+192	Ice Troll
+200	Shambling Skeleton UNUSED
+201	Brittlebones Skeleton
+204	[UNUSED] Cackle Flamebone
+207	[UNUSED] Riverpaw Hideflayer
+208	[UNUSED] Riverpaw Pack Warder
+209	[UNUSED] Riverpaw Bone Chanter
+211	Ogre

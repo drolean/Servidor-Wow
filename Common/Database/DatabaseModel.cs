@@ -70,9 +70,8 @@ namespace Common.Database
 
             RealmCollection.InsertOne(realmTest);
 
-            // Seeds Items
-            //InsertItems();
-
+            // Seeds Items/Creatures
+            InsertItems();
             InsertCreatures();
         }
 

@@ -577,16 +577,31 @@ Commands:
 
             WriteCString(creature.Subname);
 
-            Write((uint) creature.TypeFlags);
+            Write((uint) creature.SubFlags.Type);
             Write((uint) creature.Type);
             Write((uint) creature.Family);
             Write((uint) creature.Rank);
             Write((uint) 0);
 
-            Write((uint) creature.PetSpellDataId);
-            Write((uint) creature.Modelid1);
+            Write((uint) 0); // PetSpellDataId
+            Write((uint) creature.SubModels.RandomElement().Model);
             Write((byte) creature.Civilian);
             Write((byte) creature.RacialLeader);
+        }
+    }
+
+    public static class CollectionExtension
+    {
+        private static readonly Random Rng = new Random();
+
+        public static T RandomElement<T>(this IList<T> list)
+        {
+            return list[Rng.Next(list.Count)];
+        }
+
+        public static T RandomElement<T>(this T[] array)
+        {
+            return array[Rng.Next(array.Length)];
         }
     }
 }

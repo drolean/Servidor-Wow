@@ -167,12 +167,12 @@ namespace RealmServer.PacketServer
             return new SMSG_UPDATE_OBJECT(new List<byte[]> {(writer.BaseStream as MemoryStream)?.ToArray()});
         }
 
-        internal static SMSG_UPDATE_OBJECT CreateUnit(Characters character, int parse)
+        internal static SMSG_UPDATE_OBJECT CreateUnit(Characters character, Creatures creature)
         {
             var writer = new BinaryWriter(new MemoryStream());
             writer.Write((byte) ObjectUpdateType.UPDATETYPE_CREATE_OBJECT);
 
-            var entity = new UnitEntity(MainProgram.Vai, parse);
+            var entity = new UnitEntity(MainProgram.Vai, creature.Entry);
 
             writer.WritePackedUInt64(entity.ObjectGuid.RawGuid);
 
@@ -194,9 +194,9 @@ namespace RealmServer.PacketServer
 
             // Movement speeds
             writer.Write((float) 0); // ????
-
-            writer.Write(2.5f); // MOVE_WALK
-            writer.Write(7f); // MOVE_RUN
+            
+            writer.Write(creature.SubStats.SpeedWalk); // MOVE_WALK
+            writer.Write(creature.SubStats.SpeedRun); // MOVE_RUN
             writer.Write(4.5f); // MOVE_RUN_BACK
             writer.Write(4.72f); // MOVE_SWIM
             writer.Write(2.5f); // MOVE_SWIM_BACK

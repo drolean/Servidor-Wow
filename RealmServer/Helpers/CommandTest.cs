@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Timers;
+using Common.Database;
+using MongoDB.Driver;
 using RealmServer.Enums;
 using RealmServer.PacketServer;
 
@@ -27,7 +29,14 @@ namespace RealmServer.Helpers
             }
 
             if (args[0] == "npc")
-                session.SendPacket(SMSG_UPDATE_OBJECT.CreateUnit(session.Character, int.Parse(args[1])));
+            {
+                var creature = DatabaseModel.CreaturesCollection.Find(x => x.Entry == int.Parse(args[1])).First();
+
+                if (creature == null)
+                    return;
+
+                session.SendPacket(SMSG_UPDATE_OBJECT.CreateUnit(session.Character, creature));
+            }
 
             // SHOW GPS
             if (args[0] == "gps")

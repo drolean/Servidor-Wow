@@ -15,24 +15,26 @@ namespace RealmServer.World.Enititys
             HighGuid.HighguidUnit))
         {
             var creature = DatabaseModel.CreaturesCollection.Find(x => x.Entry == parse).First();
+            var model = creature.SubModels.RandomElement().Model;
 
-            Type = (byte) (ObjectType.TYPE_OBJECT + (int) ObjectType.TYPE_UNIT);
-            Scale = 1f;
-            Entry = creature.Entry; // id of Database
+            Type = (byte) creature.Type; //(byte) (ObjectType.TYPE_OBJECT + (int) ObjectType.TYPE_UNIT);
+            Scale = creature.SubStats.Scale; // 1f
+            Entry = creature.Entry;
 
             //
-            SetUpdateField((int) UnitFields.UNIT_FIELD_DISPLAYID, creature.Modelid1);
-            SetUpdateField((int) UnitFields.UNIT_FIELD_NATIVEDISPLAYID, creature.Modelid1);
+            SetUpdateField((int) UnitFields.UNIT_FIELD_DISPLAYID, model);
+            SetUpdateField((int) UnitFields.UNIT_FIELD_NATIVEDISPLAYID, model);
 
-            SetUpdateField((int) UnitFields.UNIT_NPC_FLAGS, creature.NpcFlag);
-            SetUpdateField((int) UnitFields.UNIT_DYNAMIC_FLAGS, creature.DynamicFlags);
-            SetUpdateField((int) UnitFields.UNIT_FIELD_FLAGS, creature.UnitFlags);
+            SetUpdateField((int) UnitFields.UNIT_NPC_FLAGS, creature.SubFlags.Npc);
+            SetUpdateField((int) UnitFields.UNIT_DYNAMIC_FLAGS, creature.SubFlags.Dynamic);
+            SetUpdateField((int) UnitFields.UNIT_FIELD_FLAGS, creature.SubFlags.Unit);
 
-            SetUpdateField((int) UnitFields.UNIT_FIELD_FACTIONTEMPLATE, creature.FactionH);
+            SetUpdateField((int) UnitFields.UNIT_FIELD_FACTIONTEMPLATE, creature.FactionAlliance);
 
-            SetUpdateField((int) UnitFields.UNIT_FIELD_HEALTH, creature.MinHealth);
-            SetUpdateField((int) UnitFields.UNIT_FIELD_MAXHEALTH, creature.MaxHealth);
-            SetUpdateField((int) UnitFields.UNIT_FIELD_LEVEL, creature.MaxLevel);
+            // Health of NPC Current change to Manager
+            SetUpdateField((int) UnitFields.UNIT_FIELD_HEALTH, creature.SubStats.Health);
+            SetUpdateField((int) UnitFields.UNIT_FIELD_MAXHEALTH, creature.SubStats.Health);
+            SetUpdateField((int) UnitFields.UNIT_FIELD_LEVEL, creature.SubStats.Level);
 
             Console.WriteLine(MainProgram.Vai);
             MainProgram.Vai++;
