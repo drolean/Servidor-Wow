@@ -4,7 +4,6 @@ using System.IO;
 using Common.Database.Tables;
 using Common.Globals;
 using Common.Helpers;
-using Common.Network;
 using RealmServer.Enums;
 using RealmServer.World;
 using RealmServer.World.Enititys;
@@ -33,7 +32,7 @@ namespace RealmServer.PacketServer
             return new SMSG_UPDATE_OBJECT(new List<byte[]> {(writer.BaseStream as MemoryStream)?.ToArray()});
         }
 
-        public static SMSG_UPDATE_OBJECT CreateItem(SubInventory inventory, PlayerEntity session)
+        internal static SMSG_UPDATE_OBJECT CreateItem(SubInventory inventory, PlayerEntity session)
         {
             BinaryWriter writer = new BinaryWriter(new MemoryStream());
             writer.Write((byte) ObjectUpdateType.UPDATETYPE_CREATE_OBJECT);
@@ -81,7 +80,7 @@ namespace RealmServer.PacketServer
             return new SMSG_UPDATE_OBJECT(new List<byte[]> { ((MemoryStream)writer.BaseStream).ToArray() });
         }
 
-        public static SMSG_UPDATE_OBJECT CreateOwnCharacterUpdate(Characters character, out PlayerEntity entity)
+        internal static SMSG_UPDATE_OBJECT CreateOwnCharacterUpdate(Characters character, out PlayerEntity entity)
         {
             var writer = new BinaryWriter(new MemoryStream());
             writer.Write((byte) ObjectUpdateType.UPDATETYPE_CREATE_OBJECT_SELF);
@@ -171,46 +170,46 @@ namespace RealmServer.PacketServer
             return new SMSG_UPDATE_OBJECT(new List<byte[]> {(writer.BaseStream as MemoryStream)?.ToArray()});
         }
 
-        public static SMSG_UPDATE_OBJECT CreateUnit(Characters character, int parse)
+        internal static SMSG_UPDATE_OBJECT CreateUnit(Characters character, int parse)
         {
             BinaryWriter writer = new BinaryWriter(new MemoryStream());
-            writer.Write((byte)ObjectUpdateType.UPDATETYPE_CREATE_OBJECT);
+            writer.Write((byte) ObjectUpdateType.UPDATETYPE_CREATE_OBJECT);
 
-            UnitEntity entity = new UnitEntity(parse);
+            UnitEntity entity = new UnitEntity(MainProgram.Vai, parse);
 
             writer.WritePackedUInt64(entity.ObjectGuid.RawGuid);
 
-            writer.Write((byte)TypeId.TypeidUnit);
+            writer.Write((byte) TypeId.TypeidUnit);
 
             ObjectUpdateFlag updateFlags = ObjectUpdateFlag.All |
-                                           ObjectUpdateFlag.Living|
+                                           ObjectUpdateFlag.Living |
                                            ObjectUpdateFlag.HasPosition;
 
-            writer.Write((byte)updateFlags);
-            writer.Write((UInt32)0x00000000); //MovementFlags
-            writer.Write((UInt32)Environment.TickCount); // Time
+            writer.Write((byte) updateFlags);
+            writer.Write((UInt32) MovementFlags.None); //MovementFlags
+            writer.Write((UInt32) Environment.TickCount); // Time
 
             // Position
             writer.Write(character.SubMap.MapX);
             writer.Write(character.SubMap.MapY);
             writer.Write(character.SubMap.MapZ);
-            writer.Write(character.SubMap.MapO); // R
+            writer.Write(character.SubMap.MapO);
 
             // Movement speeds
-            writer.Write((float)0); // ????
+            writer.Write((float) 0); // ????
 
-            writer.Write(2.5f);  // MOVE_WALK
-            writer.Write(7f);    // MOVE_RUN
-            writer.Write(4.5f);  // MOVE_RUN_BACK
+            writer.Write(2.5f); // MOVE_WALK
+            writer.Write(7f); // MOVE_RUN
+            writer.Write(4.5f); // MOVE_RUN_BACK
             writer.Write(4.72f); // MOVE_SWIM
-            writer.Write(2.5f);  // MOVE_SWIM_BACK
+            writer.Write(2.5f); // MOVE_SWIM_BACK
             writer.Write(3.14f); // MOVE_TURN_RATE
 
-            writer.Write(0);   // Unkown...
+            writer.Write(0x1); // Unkown...
 
             entity.WriteUpdateFields(writer);
 
-            return new SMSG_UPDATE_OBJECT(new List<byte[]> { (writer.BaseStream as MemoryStream)?.ToArray() }, 1);
+            return new SMSG_UPDATE_OBJECT(new List<byte[]> {(writer.BaseStream as MemoryStream)?.ToArray()}, 1);
         }
     }
 }

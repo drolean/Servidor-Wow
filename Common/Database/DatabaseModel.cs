@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using Common.Database.Tables;
 using Common.Globals;
-using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
 
@@ -17,6 +15,7 @@ namespace Common.Database
         public static IMongoCollection<Users> UserCollection = Database.GetCollection<Users>("Users");
         public static IMongoCollection<Realms> RealmCollection = Database.GetCollection<Realms>("Realms");
         public static IMongoCollection<Items> ItemsCollection = Database.GetCollection<Items>("Items");
+        public static IMongoCollection<Creatures> CreaturesCollection = Database.GetCollection<Creatures>("Creatures");
 
         public static IMongoCollection<Characters> CharacterCollection =
             Database.GetCollection<Characters>("Characters");
@@ -72,7 +71,24 @@ namespace Common.Database
             RealmCollection.InsertOne(realmTest);
 
             // Seeds Items
-            InsertItems();
+            //InsertItems();
+
+            InsertCreatures();
+        }
+
+        public void InsertCreatures()
+        {
+            /**
+             * - 13460 empty and FR item.
+             * - Check name of items.
+             * - Many items not converted to JSON.
+             */
+            foreach (string file in Directory.EnumerateFiles("../Seeds/creatures/", "*"))
+            {
+                string contents = File.ReadAllText(file);
+                Creatures document = BsonSerializer.Deserialize<Creatures>(contents);
+                CreaturesCollection.InsertOne(document);
+            }
         }
 
         public void InsertItems()
