@@ -170,5 +170,47 @@ namespace RealmServer.PacketServer
 
             return new SMSG_UPDATE_OBJECT(new List<byte[]> {(writer.BaseStream as MemoryStream)?.ToArray()});
         }
+
+        public static SMSG_UPDATE_OBJECT CreateUnit(Characters character, int parse)
+        {
+            BinaryWriter writer = new BinaryWriter(new MemoryStream());
+            writer.Write((byte)ObjectUpdateType.UPDATETYPE_CREATE_OBJECT);
+
+            UnitEntity entity = new UnitEntity(parse);
+
+            writer.WritePackedUInt64(entity.ObjectGuid.RawGuid);
+
+            writer.Write((byte)TypeId.TypeidUnit);
+
+            ObjectUpdateFlag updateFlags = ObjectUpdateFlag.All |
+                                           ObjectUpdateFlag.Living|
+                                           ObjectUpdateFlag.HasPosition;
+
+            writer.Write((byte)updateFlags);
+            writer.Write((UInt32)0x00000000); //MovementFlags
+            writer.Write((UInt32)Environment.TickCount); // Time
+
+            // Position
+            writer.Write(character.SubMap.MapX);
+            writer.Write(character.SubMap.MapY);
+            writer.Write(character.SubMap.MapZ);
+            writer.Write(character.SubMap.MapO); // R
+
+            // Movement speeds
+            writer.Write((float)0); // ????
+
+            writer.Write(2.5f);  // MOVE_WALK
+            writer.Write(7f);    // MOVE_RUN
+            writer.Write(4.5f);  // MOVE_RUN_BACK
+            writer.Write(4.72f); // MOVE_SWIM
+            writer.Write(2.5f);  // MOVE_SWIM_BACK
+            writer.Write(3.14f); // MOVE_TURN_RATE
+
+            writer.Write(0);   // Unkown...
+
+            entity.WriteUpdateFields(writer);
+
+            return new SMSG_UPDATE_OBJECT(new List<byte[]> { (writer.BaseStream as MemoryStream)?.ToArray() }, 1);
+        }
     }
 }

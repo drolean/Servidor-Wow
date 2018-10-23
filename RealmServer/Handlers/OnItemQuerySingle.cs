@@ -1,4 +1,6 @@
-﻿using Common.Database;
+﻿using System;
+using Common.Database;
+using Common.Database.Tables;
 using MongoDB.Driver;
 using RealmServer.PacketReader;
 using RealmServer.PacketServer;
@@ -7,27 +9,24 @@ namespace RealmServer.Handlers
 {
     public class OnItemQuerySingle
     {
+        private static Items _item;
+
         public static void Handler(RealmServerSession session, CMSG_ITEM_QUERY_SINGLE handler)
         {
-            if (handler.ItemId == 0)
-            {
-                var item = DatabaseModel.ItemsCollection.Find(x => x.Entry == (int) handler.ItemIdo).FirstOrDefault();
+            _item = handler.ItemId == 0
+                ? DatabaseModel.ItemsCollection.Find(x => x.Entry == (int) handler.ItemIdo).FirstOrDefault()
+                : DatabaseModel.ItemsCollection.Find(x => x.Entry == (int) handler.ItemId).FirstOrDefault();
 
-                if (item == null)
-                    return;
+            if (_item == null)
+                return;
 
-                session.SendPacket(new SMSG_ITEM_QUERY_SINGLE_RESPONSE(item));
-            }
-            else
-            {
+            // Update UsedAt
+            DatabaseModel.ItemsCollection.UpdateOneAsync(
+                Builders<Common.Database.Tables.Items>.Filter.Where(x => x.Id == _item.Id),
+                Builders<Common.Database.Tables.Items>.Update.Set(x => x.UsedAt, DateTime.Now)
+            );
 
-                var item = DatabaseModel.ItemsCollection.Find(x => x.Entry == (int) handler.ItemId).FirstOrDefault();
-
-                if (item == null)
-                    return;
-
-                session.SendPacket(new SMSG_ITEM_QUERY_SINGLE_RESPONSE(item));
-            }
+            session.SendPacket(new SMSG_ITEM_QUERY_SINGLE_RESPONSE(_item));
         }
     }
 }

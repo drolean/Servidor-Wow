@@ -26,6 +26,9 @@ namespace RealmServer.Helpers
                 Count++;
             }
 
+            if (args[0] == "npc")
+                session.SendPacket(SMSG_UPDATE_OBJECT.CreateUnit(session.Character, int.Parse(args[1])));
+
             // SHOW GPS
             if (args[0] == "gps")
             {
