@@ -1,4 +1,7 @@
-﻿using RealmServer.Enums;
+﻿using System;
+using Common.Database;
+using MongoDB.Driver;
+using RealmServer.Enums;
 
 namespace RealmServer.World.Enititys
 {
@@ -8,25 +11,30 @@ namespace RealmServer.World.Enititys
         {
         }
 
-        public UnitEntity(int parse) : base(new ObjectGuid((uint) parse, TypeId.TypeidUnit, HighGuid.HighguidUnit))
+        public UnitEntity(int vai, int parse) : base(new ObjectGuid((uint) vai, TypeId.TypeidUnit, HighGuid.HighguidUnit))
         {
-            Type = 0x9;
-            //Scale = 0.42f;
-            Entry = (byte) parse; // 30=Forest Spider
+            var creature = DatabaseModel.CreaturesCollection.Find(x => x.Entry == parse).First();
+
+            Type = (byte) (ObjectType.TYPE_OBJECT + (int) ObjectType.TYPE_UNIT);
+            Scale = 1f;
+            Entry = creature.Entry; // id of Database
 
             //
-            SetUpdateField((int)UnitFields.UNIT_FIELD_DISPLAYID, parse);
-            SetUpdateField((int)UnitFields.UNIT_FIELD_NATIVEDISPLAYID, parse);
+            SetUpdateField((int) UnitFields.UNIT_FIELD_DISPLAYID, creature.Modelid1);
+            SetUpdateField((int) UnitFields.UNIT_FIELD_NATIVEDISPLAYID, creature.Modelid1);
 
-            SetUpdateField((int)UnitFields.UNIT_NPC_FLAGS, 0);
-            SetUpdateField((int)UnitFields.UNIT_DYNAMIC_FLAGS, 0);
-            SetUpdateField((int)UnitFields.UNIT_FIELD_FLAGS, 0);
+            SetUpdateField((int) UnitFields.UNIT_NPC_FLAGS, creature.NpcFlag);
+            SetUpdateField((int) UnitFields.UNIT_DYNAMIC_FLAGS, creature.DynamicFlags);
+            SetUpdateField((int) UnitFields.UNIT_FIELD_FLAGS, creature.UnitFlags);
 
-            SetUpdateField((int)UnitFields.UNIT_FIELD_FACTIONTEMPLATE, 25);
+            SetUpdateField((int) UnitFields.UNIT_FIELD_FACTIONTEMPLATE, creature.FactionH);
 
-            SetUpdateField((int)UnitFields.UNIT_FIELD_HEALTH, 60);
-            SetUpdateField((int)UnitFields.UNIT_FIELD_MAXHEALTH, 125);
-            SetUpdateField((int)UnitFields.UNIT_FIELD_LEVEL, 1);
+            SetUpdateField((int) UnitFields.UNIT_FIELD_HEALTH, creature.MinHealth);
+            SetUpdateField((int) UnitFields.UNIT_FIELD_MAXHEALTH, creature.MaxHealth);
+            SetUpdateField((int) UnitFields.UNIT_FIELD_LEVEL, creature.MaxLevel);
+
+            Console.WriteLine(MainProgram.Vai);
+            MainProgram.Vai++;
         }
 
         public TypeId TypeId => TypeId.TypeidUnit;

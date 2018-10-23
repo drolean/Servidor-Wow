@@ -14,7 +14,7 @@ namespace RealmServer.Handlers
         public static void Handler(RealmServerSession session, CMSG_ITEM_QUERY_SINGLE handler)
         {
             _item = handler.ItemId == 0
-                ? DatabaseModel.ItemsCollection.Find(x => x.Entry == (int) handler.ItemIdo).FirstOrDefault()
+                ? DatabaseModel.ItemsCollection.Find(x => x.Entry == (int) handler.ItemEntry).FirstOrDefault()
                 : DatabaseModel.ItemsCollection.Find(x => x.Entry == (int) handler.ItemId).FirstOrDefault();
 
             if (_item == null)

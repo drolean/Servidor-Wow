@@ -76,6 +76,7 @@
     <Compile Include="Database\Dbc\Map.cs" />
     <Compile Include="Database\Dbc\MapReader.cs" />
     <Compile Include="Database\Tables\Characters.cs" />
+    <Compile Include="Database\Tables\Creatures.cs" />
     <Compile Include="Database\Tables\Items.cs" />
     <Compile Include="Database\Tables\Realms.cs" />
     <Compile Include="Database\Tables\Users.cs" />

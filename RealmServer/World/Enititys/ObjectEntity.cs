@@ -26,9 +26,9 @@ namespace RealmServer.World.Enititys
             set => SetUpdateField((int) ObjectFields.Type, value);
         }
 
-        public byte Entry
+        public int Entry
         {
-            get => (byte) UpdateData[(int) ObjectFields.Entry];
+            get => (int) UpdateData[(int) ObjectFields.Entry];
             set => SetUpdateField((int) ObjectFields.Entry, value);
         }
 

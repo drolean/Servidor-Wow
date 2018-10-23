@@ -7,11 +7,14 @@ using System.Reflection;
 using System.Threading;
 using Common.Database;
 using Common.Database.Dbc;
+using Common.Database.Tables;
 using Common.Globals;
 using Common.Helpers;
+using Common.Network;
 using MongoDB.Driver;
 using RealmServer.Handlers;
 using RealmServer.PacketReader;
+using RealmServer.PacketServer;
 using RealmServer.World.Managers;
 
 namespace RealmServer
@@ -212,6 +215,8 @@ namespace RealmServer
             RealmServerRouter.AddHandler<CMSG_SWAP_INV_ITEM>(RealmEnums.CMSG_SWAP_INV_ITEM, Future);
             RealmServerRouter.AddHandler<CMSG_AUTOEQUIP_ITEM>(RealmEnums.CMSG_AUTOEQUIP_ITEM, Future);
 
+            RealmServerRouter.AddHandler<CMSG_CREATURE_QUERY>(RealmEnums.CMSG_CREATURE_QUERY, Future);
+
             #region OPCODES
 
             /**
@@ -228,7 +233,7 @@ namespace RealmServer
             RealmServerRouter.AddHandler<CMSG_PAGE_TEXT_QUERY>(RealmEnums.CMSG_PAGE_TEXT_QUERY, Future);
             RealmServerRouter.AddHandler<CMSG_QUEST_QUERY>(RealmEnums.CMSG_QUEST_QUERY, Future);
             RealmServerRouter.AddHandler<CMSG_GAMEOBJECT_QUERY>(RealmEnums.CMSG_GAMEOBJECT_QUERY, Future);
-            RealmServerRouter.AddHandler<CMSG_CREATURE_QUERY>(RealmEnums.CMSG_CREATURE_QUERY, Future);
+            
             RealmServerRouter.AddHandler<CMSG_WHO>(RealmEnums.CMSG_WHO, Future);
             RealmServerRouter.AddHandler<CMSG_WHOIS>(RealmEnums.CMSG_WHOIS, Future);
             
@@ -471,6 +476,16 @@ namespace RealmServer
             #endregion
         }
 
+        private static void Future(RealmServerSession session, CMSG_CREATURE_QUERY handler)
+        {
+            var creature = DatabaseModel.CreaturesCollection.Find(x => x.Entry == (int) handler.CreatureEntry).First();
+
+            if (creature == null)
+                return;
+
+            session.SendPacket(new SMSG_CREATURE_QUERY_RESPONSE(creature));
+        }
+
         private static void Future(RealmServerSession session, CMSG_AUTOEQUIP_ITEM handler)
         {
             
@@ -551,6 +566,32 @@ Commands:
   /up       Show uptime.
   /q 900    Shutdown server in 900sec = 15min. *Debug exit now!
   /help     Show this help.");
+        }
+    }
+
+    internal sealed class SMSG_CREATURE_QUERY_RESPONSE : Common.Network.PacketServer
+    {
+        public SMSG_CREATURE_QUERY_RESPONSE(Creatures creature) : base(RealmEnums.SMSG_CREATURE_QUERY_RESPONSE)
+        {
+            Write(creature.Entry);
+
+            WriteCString(creature.Name);
+            Write((byte) 0);
+            Write((byte) 0);
+            Write((byte) 0);
+            
+            WriteCString(creature.Subname);
+
+            Write((UInt32) creature.TypeFlags);
+            Write((UInt32) creature.Type);
+            Write((UInt32) creature.Family);
+            Write((UInt32) creature.Rank);
+            Write((UInt32) 0);
+
+            Write((UInt32) creature.PetSpellDataId);
+            Write((UInt32) creature.Modelid1);
+            Write((byte) creature.Civilian);
+            Write((byte) creature.RacialLeader);
         }
     }
 }

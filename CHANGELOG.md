@@ -4,6 +4,34 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.27] - 2018-10-23
+### Added
+- DatabaseModel.InsertItems seeds the database with items.
+- DatabaseModel.InsertCreatures seeds the database with Creatures/NPC.
+- Table.Items added Patch to identify patch added item.
+- Table.Items added UsedAt to internal purpose.
+- Table.Items added CountLoot to internal purpose.
+- Items.7z with all Vanilla items in JSON.
+- Tables.Creatures need improvement.
+- Added command "npc xx" to spawn npc.
+- SMSG_UPDATE_OBJECT.CreateUnit to spawn unit.
+- UnitEntity with basic information.
+- mongo.txt with helper commands.
+- CMSG_CREATURE_QUERY
+- SMSG_CREATURE_QUERY_RESPONSE
+
+### Changed
+- DatabaseModel removed Items Json.
+- SMSG_ACTION_BUTTONS changed.
+- SMSG_LOGIN_SETTIMESPEED try another function to send time speed.
+- SMSG_QUERY_TIME_RESPONSE try another method to sen time response.
+- OnItemQuerySingle fixed and added a update to UsedAt.
+- CMSG_CREATURE_QUERY.CreatureId to CreatureEntry.
+- CMSG_ITEM_QUERY_SINGLE.ItemIdo to ItemEntry.
+- SMSG_UPDATE_OBJECT changed all functions to internal.
+- ObjectEntity changed Entry cast type (byte) to (int).
+- Gitignore now ignore all json files in '/Seeds' folder.
+
 ## [0.0.26] - 2018-10-21
 ### Added
 - on Database.Character.Create fixed inventory.

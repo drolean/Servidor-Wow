@@ -120,6 +120,7 @@ namespace Common.Database.Tables
         public int ExtraFlags { get; set; } = 0;
 
         // Internal purpose
+        public int CountLoot{ get; set; }
         public DateTime? UsedAt { get; set; }
     }
 }
