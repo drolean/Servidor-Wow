@@ -7,15 +7,14 @@
 
 ### Starting your server
 - Extract ServerFiles.7z to workdir RealmServer.exe
+- Extract Seeds file into Seeds folder
 - Run AuthServer.exe and type /db to recreate database.
 - "set realmlist 127.0.0.1"
-- Only **NightElf Warrior** is correct.
 
 ### Commands inside:
 - level X (grant a level*)
-- inv1 (generare inventory) *idk when the first or second
-- inv2 (generate inventory) *idk when the first or second
 - gps (show coordinates)
+- npc XX (unit Entry)
 
 ## Links
 
