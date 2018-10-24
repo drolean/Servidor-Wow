@@ -60,17 +60,17 @@
     <Compile Include="Handlers\OnAuthLogonChallenge.cs" />
     <Compile Include="Handlers\OnAuthLogonProof.cs" />
     <Compile Include="Handlers\OnAuthRealmList.cs" />
-    <Compile Include="PacketReader\AuthLogonChallenge.cs" />
-    <Compile Include="PacketReader\AuthLogonProof.cs" />
+    <Compile Include="PacketReader\CMD_AUTH_LOGON_CHALLENGE.cs" />
+    <Compile Include="PacketReader\CMD_AUTH_LOGON_PROOF.cs" />
     <Compile Include="AuthServerClass.cs" />
     <Compile Include="AuthServerDatabase.cs" />
     <Compile Include="AuthServerRouter.cs" />
     <Compile Include="AuthServerSession.cs" />
     <Compile Include="mainProgram.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="PacketServer\PsAuthLogonChallange.cs" />
-    <Compile Include="PacketServer\PsAuthLogonProof.cs" />
-    <Compile Include="PacketServer\PsAuthRealmList.cs" />
+    <Compile Include="PacketServer\CMD_AUTH_LOGON_CHALLENGE.cs" />
+    <Compile Include="PacketServer\CMD_AUTH_LOGON_PROOF.cs" />
+    <Compile Include="PacketServer\CMD_AUTH_REALMLIST.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

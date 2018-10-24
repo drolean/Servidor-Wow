@@ -25,28 +25,37 @@
     public enum AuthCMD : byte
     {
         /// <summary>
-        ///     Initial authentication step, the client sent a challenge.
-        ///     - Authentication Logon Challenge
+        /// Initial authentication step, the client sent a challenge.
         /// </summary>
         CMD_AUTH_LOGON_CHALLENGE = 0x00,
 
         /// <summary>
-        ///     Second authentication step, the client is sending his proof.
-        ///     - Authentication Logon Proof
+        /// Second authentication step, the client is sending his proof.
         /// </summary>
         CMD_AUTH_LOGON_PROOF = 0x01,
-        CMD_AUTH_RECONNECT_CHALLENGE = 0x02,
-        CMD_AUTH_RECONNECT_PROOF = 0x03,
-        CMD_AUTH_AUTHENTIFICATOR = 0x04, // ???CMD_AUTH_UPDATESRV 
 
         /// <summary>
-        ///     Third authentication step, the client is requesting the realm list.
-        ///     - Realm List
+        /// 
+        /// </summary>
+        CMD_AUTH_RECONNECT_CHALLENGE = 0x02,
+
+        /// <summary>
+        /// 
+        /// </summary>
+        CMD_AUTH_RECONNECT_PROOF = 0x03,
+
+        /// <summary>
+        /// 
+        /// </summary>
+        CMD_AUTH_AUTHENTIFICATOR = 0x04, // ???CMD_AUTH_UPDATESRV
+
+        /// <summary>
+        /// Third authentication step, the client is requesting the realm list.
         /// </summary>
         CMD_AUTH_REALMLIST = 0x10,
 
         /// <summary>
-        ///     Transfer Initiate.
+        /// Transfer Initiate.
         /// </summary>
         CMD_XFER_INITIATE = 0x30,
 
@@ -56,19 +65,23 @@
         CMD_XFER_DATA = 0x31,
 
         /// <summary>
-        ///     Transfer Accept.
+        /// Transfer Accept.
         /// </summary>
         CMD_XFER_ACCEPT = 0x32,
 
         /// <summary>
-        ///     Transfer Resume.
+        /// Transfer Resume.
         /// </summary>
         CMD_XFER_RESUME = 0x33,
 
         /// <summary>
-        ///     Transfer Cancel.
+        /// Transfer Cancel.
         /// </summary>
         CMD_XFER_CANCEL = 0x34,
+
+        /// <summary>
+        /// 
+        /// </summary>
         UNKNOW = byte.MaxValue
     }
 
@@ -148,7 +161,7 @@
         CSTATUS_CONNECTING = 0x07, // Connecting to server
         CSTATUS_NEGOTIATING_SECURITY = 0x08, // Negotiating security
         CSTATUS_NEGOTIATION_COMPLETE = 0x09, // Negotiating security complete
-        CSTATUS_NEGOTIATION_FAILED = 0x0A, // Negotiating security failed	
+        CSTATUS_NEGOTIATION_FAILED = 0x0A, // Negotiating security failed
 
         AUTH_REJECT = 0x0B, // Login unavailable - Please contact Tech Support
 
@@ -165,7 +178,7 @@
         AUTH_FAILED = 0x0E,
 
         AUTH_BAD_SERVER_PROOF = 0x0F, // Server is not valid
-        AUTH_UNAVAILABLE = 0x10, // System unavailable 
+        AUTH_UNAVAILABLE = 0x10, // System unavailable
         AUTH_SYSTEM_ERROR = 0x11, // System error
         AUTH_BILLING_ERROR = 0x12, // Billing system error = 18
         AUTH_BILLING_EXPIRED = 0x13, // Account billing has expired
@@ -188,7 +201,7 @@
         AUTH_NO_TIME = 0x1E, // Your WoW subscription has expired
         AUTH_DB_BUSY = 0x1F, // This session has timed out
         AUTH_SUSPENDED = 0x20, // This account has been temporarily suspended
-        AUTH_PARENTAL_CONTROL = 0x21, // Access to this account blocked by parental controls 
+        AUTH_PARENTAL_CONTROL = 0x21, // Access to this account blocked by parental controls
 
         REALM_LIST_IN_PROGRESS = 0x22, // Retrieving realmlist
         REALM_LIST_SUCCESS = 0x23, // Realmlist retrieved
@@ -231,7 +244,7 @@
         CHAR_LOGIN_FAILED = 0x41, // login failed
         CHAR_LOGIN_DISABLED = 0x42, // login for that race, class or char is currently disabled.
         CHAR_LOGIN_NOCHAR = 0x43, // char not found
-        CHAR_LOGIN_CHAR_LOCKED = 0x44, // your char is current lock as part of the paid chart transfer process      
+        CHAR_LOGIN_CHAR_LOCKED = 0x44, // your char is current lock as part of the paid chart transfer process
 
         CHAR_NAME_ENTER = 0x45, // Enter a name for your character
         CHAR_NAME_TOO_SHORT = 0x46, // Names must be atleast 2 characters long

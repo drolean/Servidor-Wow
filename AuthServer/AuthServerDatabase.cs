@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Common.Database;
 using Common.Database.Tables;
 using Common.Globals;
@@ -13,9 +14,9 @@ namespace AuthServer
         /// </summary>
         /// <param name="username"></param>
         /// <returns></returns>
-        public Users GetAccount(string username)
+        public Task<Users> GetAccount(string username)
         {
-            return DatabaseModel.UserCollection.Find(x => x.Username == username).First();
+            return DatabaseModel.UserCollection.Find(x => x.Username == username).FirstOrDefaultAsync();
         }
 
         /// <summary>

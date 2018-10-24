@@ -14,6 +14,7 @@ namespace RealmServer.Handlers
 
             session.Character.Target = session.Entity.KnownPlayers
                 .FirstOrDefault(s => s.Character.Uid == handler.PlayerUid)?.Character;
+
             session.Entity.SetUpdateField((int) UnitFields.UNIT_FIELD_TARGET, handler.PlayerUid);
 
             session.SendPacket(new SMSG_INSPECT(handler.PlayerUid));

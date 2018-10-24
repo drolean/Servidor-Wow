@@ -10,5 +10,10 @@ namespace Common.Database.Tables
         public int Entry { get; set; } = 0;
 
         public SubMap SubMap { get; set; }
+
+        // Stats
+        //Health
+        //Mana
+        //DeathState
     }
 }

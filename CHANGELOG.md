@@ -4,11 +4,43 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.29] - 2018-10-24
+### Added
+- AuthServer.Session.User to Table.User on Challenge
+- Log SEND Packets
+- Table.Creatures added List<SubQuests>
+- Table.Users added Online BOOL
+- CollectionExtension to random element in lists.
+- OnCreatureQuery.Handler Send Creature Information
+- OnGossipHello.Handler
+- OnQuestgiverHello.Handler
+- OnQuestgiverStatusQuery.Handler
+- OnSwapInvItem.Handler
+- PlayerManager SpawnCreatures Objetos
+- Included some Files to help in the world repop.
+
+### Changed
+- AuthServer.Database.GetAccount to async method
+- OnAuthLogonChallenge.Handler StyleCi
+- OnAuthLogonProof.Handler StyleCi
+- AuthLogonChallenge renamed to CMD_AUTH_LOGON_CHALLENGE
+- AuthLogonProof renamed to CMD_AUTH_LOGON_PROOF
+- PsAuthLogonChallange renamed to CMD_AUTH_LOGON_CHALLENGE
+- PsAuthLogonProof renamed to CMD_AUTH_LOGON_PROOF
+- PsAuthRealmList renamed to CMD_AUTH_REALMLIST
+- OnSetSelection fixed PlayerUid to TargetUid.
+- CMSG_SET_SELECTION renamed PlayerUid to TargetUid.
+- SMSG_CREATURE_QUERY_RESPONSE
+- SMSG_NPC_WONT_TALK
+- SMSG_QUESTGIVER_QUEST_LIST
+- SMSG_QUESTGIVER_STATUS
+- SMSG_UPDATE_OBJECT.CreateUnit Fixed to send correct Uid to players.
+
 ## [0.0.28] - 2018-10-23
 ### Added
 - Database.SpawnCreatures initial.
 - QuestgiverStatusFlag enum
-- CMSG_GOSSIP_HELLO 
+- CMSG_GOSSIP_HELLO
 - CMSG_QUESTGIVER_STATUS_QUERY
 - CMSG_QUESTGIVER_HELLO
 - SMSG_QUESTGIVER_QUEST_LIST

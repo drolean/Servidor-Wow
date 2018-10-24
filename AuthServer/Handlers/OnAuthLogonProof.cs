@@ -1,5 +1,4 @@
 ﻿using AuthServer.PacketReader;
-using AuthServer.PacketServer;
 using Common.Crypt;
 using Common.Globals;
 
@@ -7,19 +6,19 @@ namespace AuthServer.Handlers
 {
     public class OnAuthLogonProof
     {
-        internal static void Handler(AuthServerSession session, AuthLogonProof handler)
+        internal static void Handler(AuthServerSession session, CMD_AUTH_LOGON_PROOF handler)
         {
             session.Srp.ClientEphemeral = handler.A.ToPositiveBigInteger();
             session.Srp.ClientProof = handler.M1.ToPositiveBigInteger();
 
             if (session.Srp.ClientProof == session.Srp.GenerateClientProof())
             {
-                MainProgram.Database.SetSessionKey(session.AccountName, session.Srp.SessionKey.ToProperByteArray());
-                session.SendData(new PsAuthLogonProof(session.Srp, AccountState.OK));
+                MainProgram.Database.SetSessionKey(session.User.Username, session.Srp.SessionKey.ToProperByteArray());
+                session.SendData(new PacketServer.CMD_AUTH_LOGON_PROOF(session.Srp, AccountState.OK));
                 return;
             }
 
-            session.SendData(new PsAuthLogonProof(AccountState.UNKNOWN_ACCOUNT));
+            session.SendData(new PacketServer.CMD_AUTH_LOGON_PROOF(AccountState.UNKNOWN_ACCOUNT));
         }
     }
 }

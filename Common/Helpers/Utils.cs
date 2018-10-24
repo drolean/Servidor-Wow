@@ -59,7 +59,6 @@ namespace Common.Helpers
             }
         }
 
-
         /// <summary>
         ///     Gets the hex representation of the byte array. The length is 2xdata.Length
         /// </summary>

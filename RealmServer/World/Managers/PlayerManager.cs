@@ -12,6 +12,9 @@ namespace RealmServer.World.Managers
 {
     public class PlayerManager
     {
+        private static readonly List<SpawnCreatures> Objetos =
+            DatabaseModel.SpawnCreaturesCollection.Find(_ => true).ToList();
+
         internal static List<PlayerEntity> Players { get; set; }
 
         internal static void Boot()
@@ -50,8 +53,6 @@ namespace RealmServer.World.Managers
             remote.KnownPlayers.Add(playerEntity);
         }
 
-        static List<SpawnCreatures> objetos = DatabaseModel.SpawnCreaturesCollection.Find(_ => true).ToList();
-
         private static void Update()
         {
             while (true)
@@ -75,11 +76,9 @@ namespace RealmServer.World.Managers
                         }
                     }
 
-                    foreach (var objeto in objetos)
-                    {
+                    foreach (var objeto in Objetos)
                         if (!player.KnownCreatures.Contains(objeto))
                             SpawnObjeto(player, objeto);
-                    }
 
                     if (player.UpdateCount > 0)
                     {

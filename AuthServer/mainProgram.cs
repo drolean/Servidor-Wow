@@ -13,6 +13,7 @@ namespace AuthServer
 {
     internal class MainProgram
     {
+        public static int Vai = 0;
         private static bool _keepGoing = true;
         private static readonly uint Time = Common.Helpers.Time.GetMsTime();
         private static readonly IPEndPoint AuthPoint = new IPEndPoint(IPAddress.Any, 3724);
@@ -92,9 +93,8 @@ namespace AuthServer
             Database = new AuthServerDatabase();
 
             //
-            AuthServerRouter.AddHandler<AuthLogonChallenge>(AuthCMD.CMD_AUTH_LOGON_CHALLENGE,
-                OnAuthLogonChallenge.Handler);
-            AuthServerRouter.AddHandler<AuthLogonProof>(AuthCMD.CMD_AUTH_LOGON_PROOF, OnAuthLogonProof.Handler);
+            AuthServerRouter.AddHandler<CMD_AUTH_LOGON_CHALLENGE>(AuthCMD.CMD_AUTH_LOGON_CHALLENGE, OnAuthLogonChallenge.Handler);
+            AuthServerRouter.AddHandler<CMD_AUTH_LOGON_PROOF>(AuthCMD.CMD_AUTH_LOGON_PROOF, OnAuthLogonProof.Handler);
             AuthServerRouter.AddHandler(AuthCMD.CMD_AUTH_REALMLIST, OnAuthRealmList.Handler);
         }
 

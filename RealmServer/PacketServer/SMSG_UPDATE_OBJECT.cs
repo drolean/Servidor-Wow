@@ -4,7 +4,6 @@ using System.IO;
 using Common.Database.Tables;
 using Common.Globals;
 using Common.Helpers;
-using Common.Network;
 using RealmServer.Enums;
 using RealmServer.World;
 using RealmServer.World.Enititys;
@@ -124,33 +123,37 @@ namespace RealmServer.PacketServer
             return new SMSG_UPDATE_OBJECT(new List<byte[]> {((MemoryStream) writer.BaseStream).ToArray()});
         }
 
-        internal static SMSG_UPDATE_OBJECT CreateUnit(SpawnCreatures objeto)
+        internal static SMSG_UPDATE_OBJECT CreateUnit(SpawnCreatures creature)
         {
             var writer = new BinaryWriter(new MemoryStream());
-            writer.Write((byte)ObjectUpdateType.UPDATETYPE_CREATE_OBJECT);
+            writer.Write((byte) ObjectUpdateType.UPDATETYPE_CREATE_OBJECT);
 
-            var entity = new UnitEntity(objeto.Uid, objeto.Entry);
+            var entity = new UnitEntity(creature)
+            {
+                ObjectGuid = new ObjectGuid(creature.Uid),
+                Guid = creature.Uid
+            };
 
             writer.WritePackedUInt64(entity.ObjectGuid.RawGuid);
 
-            writer.Write((byte)TypeId.TypeidUnit);
+            writer.Write((byte) TypeId.TypeidUnit);
 
             var updateFlags = ObjectUpdateFlag.All |
                               ObjectUpdateFlag.Living |
                               ObjectUpdateFlag.HasPosition;
 
-            writer.Write((byte)updateFlags);
-            writer.Write((uint)MovementFlags.None); //MovementFlags
-            writer.Write((uint)Environment.TickCount); // Time
+            writer.Write((byte) updateFlags);
+            writer.Write((uint) MovementFlags.None); //MovementFlags
+            writer.Write((uint) Environment.TickCount); // Time
 
             // Position
-            writer.Write(objeto.SubMap.MapX);
-            writer.Write(objeto.SubMap.MapY);
-            writer.Write(objeto.SubMap.MapZ);
-            writer.Write(objeto.SubMap.MapO);
+            writer.Write(creature.SubMap.MapX);
+            writer.Write(creature.SubMap.MapY);
+            writer.Write(creature.SubMap.MapZ);
+            writer.Write(creature.SubMap.MapO);
 
             // Movement speeds
-            writer.Write((float)0); // ????
+            writer.Write((float) 0); // ????
 
             writer.Write(2.5f); // WalkSpeed
             writer.Write(7f * 1); // RunSpeed
@@ -163,7 +166,7 @@ namespace RealmServer.PacketServer
 
             entity.WriteUpdateFields(writer);
 
-            return new SMSG_UPDATE_OBJECT(new List<byte[]> { (writer.BaseStream as MemoryStream)?.ToArray() }, 1);
+            return new SMSG_UPDATE_OBJECT(new List<byte[]> {(writer.BaseStream as MemoryStream)?.ToArray()}, 1);
         }
 
         internal static SMSG_UPDATE_OBJECT CreateCharacterUpdate(Characters character)
@@ -209,6 +212,5 @@ namespace RealmServer.PacketServer
 
             return new SMSG_UPDATE_OBJECT(new List<byte[]> {(writer.BaseStream as MemoryStream)?.ToArray()});
         }
-
     }
 }

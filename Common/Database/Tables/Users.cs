@@ -26,6 +26,9 @@ namespace Common.Database.Tables
         public string Username { get; set; }
         public string Password { get; set; }
         public byte[] SessionKey { get; set; }
+
+        public bool Online { get; set; }
+
         public DateTime? BannetAt { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }

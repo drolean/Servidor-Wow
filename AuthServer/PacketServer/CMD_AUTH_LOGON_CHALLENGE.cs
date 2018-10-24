@@ -4,9 +4,10 @@ using Common.Helpers;
 
 namespace AuthServer.PacketServer
 {
-    internal sealed class PsAuthLogonChallange : Common.Network.PacketServer
+    internal sealed class CMD_AUTH_LOGON_CHALLENGE : Common.Network.PacketServer
     {
         /// <summary>
+        ///     Initial authentication step, the client sent a challenge.
         ///     Opcode          : byte;            0x00
         ///     Error           : byte;            AccountState
         ///     Size            : byte;            unkown1 is set to 0 by all private servers.
@@ -21,24 +22,51 @@ namespace AuthServer.PacketServer
         ///     against attacks where pre-computations are performed
         ///     =====           : byte;            unknown2 is set to 16 random bytes by all servers.
         /// </summary>
-        /// <param name="srp"></param>
+        /// <param name="session"></param>
         /// <param name="result"></param>
         /// <returns></returns>
-        public PsAuthLogonChallange(Srp6 srp, AccountState result) : base(AuthCMD.CMD_AUTH_LOGON_CHALLENGE)
+        public CMD_AUTH_LOGON_CHALLENGE(AuthServerSession session, AccountState result) : base(
+            AuthCMD.CMD_AUTH_LOGON_CHALLENGE)
         {
             Write((byte) AuthCMD.CMD_AUTH_LOGON_CHALLENGE);
             Write((byte) result);
-            Write((byte) 0);
-            Write(srp.ServerEphemeral.ToProperByteArray());
+
+            if (session.User.BannetAt != null)
+            {
+                Write((byte) AccountState.BANNED);
+                return;
+            }
+
+            if (session.User.Online)
+            {
+                Write((byte) AccountState.ALREADYONLINE);
+                return;
+            }
+
+            Write((byte) AccountState.OK);
+            Write(session.Srp.ServerEphemeral.ToProperByteArray());
             Write((byte) 1);
-            Write(srp.Generator.ToByteArray());
+            Write(session.Srp.Generator.ToByteArray());
             Write((byte) 32);
-            Write(srp.Modulus.ToProperByteArray().Pad(32));
-            Write(srp.Salt.ToProperByteArray().Pad(32));
-            this.WriteNullByte(17);
+            Write(session.Srp.Modulus.ToProperByteArray().Pad(32));
+            Write(session.Srp.Salt.ToProperByteArray().Pad(32));
+            this.WriteNullByte(16);
+
+            // https://github.com/vmangos/core/blob/58e83ed56bd863c3ad433931a3a08b5f4fac5e76/src/realmd/AuthSocket.cpp#L561
+            //Write((byte) 1); // securityFlags, only '1' is available in classic (PIN input)
+            //Write((uint) 1234567);
+            //this.WriteNullByte(16); //16 Bytes Random
+
+            // Off 2FA 
+            Write((byte) 0);
         }
 
-        public PsAuthLogonChallange(AccountState result) : base(AuthCMD.CMD_AUTH_LOGON_CHALLENGE)
+        /// <summary>
+        ///     Initial authentication step, the client sent a challenge.
+        /// </summary>
+        /// <param name="result"></param>
+        /// <returns></returns>
+        public CMD_AUTH_LOGON_CHALLENGE(AccountState result) : base(AuthCMD.CMD_AUTH_LOGON_CHALLENGE)
         {
             Write((byte) LoginErrorCode.RESPONSE_FAILURE);
             Write((byte) result);

@@ -8,12 +8,12 @@ namespace RealmServer.Handlers
     {
         public static void Handler(RealmServerSession session, CMSG_SET_SELECTION handler)
         {
-            if (handler.PlayerUid == 0)
+            if (handler.TargetUid == 0)
                 return;
 
             session.Character.Target = session.Entity.KnownPlayers
-                .FirstOrDefault(s => s.Character.Uid == handler.PlayerUid)?.Character;
-            session.Entity.SetUpdateField((int) UnitFields.UNIT_FIELD_TARGET, handler.PlayerUid);
+                .FirstOrDefault(s => s.Character.Uid == handler.TargetUid)?.Character;
+            session.Entity.SetUpdateField((int) UnitFields.UNIT_FIELD_TARGET, handler.TargetUid);
         }
     }
 }

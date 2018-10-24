@@ -68,7 +68,7 @@ namespace AuthServer
         /// <returns>int</returns>
         private int GetFreeId()
         {
-            for (var i = 0; i < 150; i++)
+            for (var i = 0; i < 350; i++)
                 if (!ActiveConnections.ContainsKey(i))
                     return i;
 

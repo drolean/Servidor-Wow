@@ -7,11 +7,8 @@ using System.Reflection;
 using System.Threading;
 using Common.Database;
 using Common.Database.Dbc;
-using Common.Database.Tables;
 using Common.Globals;
 using Common.Helpers;
-using MongoDB.Driver;
-using RealmServer.Enums;
 using RealmServer.Handlers;
 using RealmServer.PacketReader;
 using RealmServer.World.Managers;
@@ -211,13 +208,15 @@ namespace RealmServer
             RealmServerRouter.AddHandler(RealmEnums.CMSG_TOGGLE_PVP, OnTogglePvp.Handler);
             RealmServerRouter.AddHandler(RealmEnums.CMSG_PLAYED_TIME, OnPlayedTime.Handler);
             RealmServerRouter.AddHandler<CMSG_INITIATE_TRADE>(RealmEnums.CMSG_INITIATE_TRADE, Future);
-            RealmServerRouter.AddHandler<CMSG_SWAP_INV_ITEM>(RealmEnums.CMSG_SWAP_INV_ITEM, Future);
+            RealmServerRouter.AddHandler<CMSG_SWAP_INV_ITEM>(RealmEnums.CMSG_SWAP_INV_ITEM, OnSwapInvItem.Handler);
             RealmServerRouter.AddHandler<CMSG_AUTOEQUIP_ITEM>(RealmEnums.CMSG_AUTOEQUIP_ITEM, Future);
 
-            RealmServerRouter.AddHandler<CMSG_CREATURE_QUERY>(RealmEnums.CMSG_CREATURE_QUERY, Future);
-            RealmServerRouter.AddHandler<CMSG_GOSSIP_HELLO>(RealmEnums.CMSG_GOSSIP_HELLO, Future);
-            RealmServerRouter.AddHandler<CMSG_QUESTGIVER_STATUS_QUERY>(RealmEnums.CMSG_QUESTGIVER_STATUS_QUERY, Future);
-            RealmServerRouter.AddHandler<CMSG_QUESTGIVER_HELLO>(RealmEnums.CMSG_QUESTGIVER_HELLO, Future);
+            RealmServerRouter.AddHandler<CMSG_CREATURE_QUERY>(RealmEnums.CMSG_CREATURE_QUERY, OnCreatureQuery.Handler);
+            RealmServerRouter.AddHandler<CMSG_GOSSIP_HELLO>(RealmEnums.CMSG_GOSSIP_HELLO, OnGossipHello.Handler);
+            RealmServerRouter.AddHandler<CMSG_QUESTGIVER_STATUS_QUERY>(RealmEnums.CMSG_QUESTGIVER_STATUS_QUERY,
+                OnQuestgiverStatusQuery.Handler);
+            RealmServerRouter.AddHandler<CMSG_QUESTGIVER_HELLO>(RealmEnums.CMSG_QUESTGIVER_HELLO,
+                OnQuestgiverHello.Handler);
 
             #region OPCODES
 
@@ -478,59 +477,12 @@ namespace RealmServer
             #endregion
         }
 
-        private static void Future(RealmServerSession session, CMSG_QUESTGIVER_HELLO handler)
-        {
-            session.SendPacket(new SMSG_QUESTGIVER_QUEST_LIST(handler));
-        }
-
-        private static void Future(RealmServerSession session, CMSG_QUESTGIVER_STATUS_QUERY handler)
-        {
-            var status = 1;
-            session.SendPacket(new SMSG_QUESTGIVER_STATUS(handler, (QuestgiverStatusFlag) status));
-        }
-
-        private static void Future(RealmServerSession session, CMSG_GOSSIP_HELLO handler)
-        {
-            session.SendPacket(new SMSG_NPC_WONT_TALK(handler));
-        }
-
-        private static void Future(RealmServerSession session, CMSG_CREATURE_QUERY handler)
-        {
-            var creature = DatabaseModel.CreaturesCollection.Find(x => x.Entry == (int) handler.CreatureEntry).First();
-
-            if (creature == null)
-                return;
-
-            session.SendPacket(new SMSG_CREATURE_QUERY_RESPONSE(creature));
-        }
-
         private static void Future(RealmServerSession session, CMSG_AUTOEQUIP_ITEM handler)
         {
         }
 
-        private static void Future(RealmServerSession session, CMSG_SWAP_INV_ITEM handler)
-        {
-            var subInventory = session.Character.SubInventorie.Find(x => x.Slot == handler.SrcSlot);
-
-            if (subInventory == null)
-                return;
-
-            subInventory.Slot = handler.DstSlot;
-
-            foreach (var variable in session.Character.SubInventorie)
-                Console.WriteLine($@"Item: {variable.Item}  Slot: {variable.Slot}");
-
-            DatabaseModel.CharacterCollection.UpdateOneAsync(
-                Builders<Characters>.Filter.Where(x => x.Uid == session.Character.Uid),
-                Builders<Characters>.Update.Set(x => x.SubInventorie, session.Character.SubInventorie)
-            );
-
-            session.SendInventory(session);
-        }
-
         private static void Future(RealmServerSession session, CMSG_INITIATE_TRADE handler)
         {
-//            throw new NotImplementedException();
         }
 
         private static void Future(RealmServerSession session, byte[] data)
@@ -581,84 +533,6 @@ Commands:
   /up       Show uptime.
   /q 900    Shutdown server in 900sec = 15min. *Debug exit now!
   /help     Show this help.");
-        }
-    }
-
-    internal sealed class SMSG_QUESTGIVER_QUEST_LIST : Common.Network.PacketServer
-    {
-        public SMSG_QUESTGIVER_QUEST_LIST(CMSG_QUESTGIVER_HELLO handler) : base(RealmEnums.SMSG_QUESTGIVER_QUEST_LIST)
-        {
-            Write((UInt64) handler.Uid);
-            WriteCString("Title Strng");
-            Write((int) 1); // delay
-            Write((int) 1); // emote
-
-            Write((byte)1); // count
-
-            //for
-            Write((int) 102); //id
-            Write((int)102); //icon
-            Write((int)1); //level
-            WriteCString("bem legal");
-        }
-    }
-
-    internal sealed class SMSG_QUESTGIVER_STATUS : Common.Network.PacketServer
-    {
-        public SMSG_QUESTGIVER_STATUS(CMSG_QUESTGIVER_STATUS_QUERY handler, QuestgiverStatusFlag status) : base(RealmEnums.SMSG_QUESTGIVER_STATUS)
-        {
-            Write(handler.QuestUid);
-            Write((UInt32) 5);
-        }
-    }
-
-    internal sealed class SMSG_NPC_WONT_TALK : Common.Network.PacketServer
-    {
-        public SMSG_NPC_WONT_TALK(CMSG_GOSSIP_HELLO handler) : base(RealmEnums.SMSG_NPC_WONT_TALK)
-        {
-            Write((UInt64) handler.Uid);
-            Write((byte)4);
-        }
-    }
-
-    internal sealed class SMSG_CREATURE_QUERY_RESPONSE : Common.Network.PacketServer
-    {
-        public SMSG_CREATURE_QUERY_RESPONSE(Creatures creature) : base(RealmEnums.SMSG_CREATURE_QUERY_RESPONSE)
-        {
-            Write(creature.Entry);
-
-            WriteCString(creature.Name);
-            Write((byte) 0);
-            Write((byte) 0);
-            Write((byte) 0);
-
-            WriteCString(creature.Subname);
-
-            Write((uint) creature.SubFlags.Type);
-            Write((uint) creature.Type);
-            Write((uint) creature.Family);
-            Write((uint) creature.Rank);
-            Write((uint) 0);
-
-            Write((uint) 0); // PetSpellDataId
-            Write((uint) creature.SubModels.RandomElement().Model);
-            Write((byte) creature.Civilian);
-            Write((byte) creature.RacialLeader);
-        }
-    }
-
-    public static class CollectionExtension
-    {
-        private static readonly Random Rng = new Random();
-
-        public static T RandomElement<T>(this IList<T> list)
-        {
-            return list[Rng.Next(list.Count)];
-        }
-
-        public static T RandomElement<T>(this T[] array)
-        {
-            return array[Rng.Next(array.Length)];
         }
     }
 }

@@ -13,6 +13,7 @@
 82	Crazy Leonetti
 87	Forest Troll Berserker
 90	Sea Giant
+93	Centaur
 102	Bronze Dragonspawn
 105	Tall Strider
 106	Kodo Beast

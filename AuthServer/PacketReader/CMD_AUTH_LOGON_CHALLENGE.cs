@@ -1,8 +1,9 @@
 ﻿using System.Net;
+using Common.Helpers;
 
 namespace AuthServer.PacketReader
 {
-    public sealed class AuthLogonChallenge : Common.Network.PacketReader
+    public sealed class CMD_AUTH_LOGON_CHALLENGE : Common.Network.PacketReader
     {
         public ushort Build;
         public string Country;
@@ -20,7 +21,7 @@ namespace AuthServer.PacketReader
         public string Username;
         public string Version;
 
-        public AuthLogonChallenge(byte[] data) : base(data)
+        public CMD_AUTH_LOGON_CHALLENGE(byte[] data) : base(data)
         {
             OptCode = ReadByte();
             Error = ReadByte();
@@ -36,7 +37,15 @@ namespace AuthServer.PacketReader
 
             TimeZone = ReadUInt32();
             Ip = ReadIpAddress();
-            Username = ReadPascalString(1);
+            // Length <<<<
+            Username = ReadString();
+
+#if DEBUG
+            Log.Print(LogType.Debug,
+                $"[CMD_AUTH_LOGON_CHALLENGE] OptCode: {OptCode} Error: {Error} GameName: {GameName} " +
+                $"Version: {Version} Build: {Build} Platform: {Platform} OS: {OS} " +
+                $"Country: {Country} TimeZone: {TimeZone} Ip: {Ip} Username: {Username}");
+#endif
         }
     }
 }

@@ -4,6 +4,7 @@ using System.IO;
 using System.Net.Sockets;
 using System.Text;
 using Common.Crypt;
+using Common.Database.Tables;
 using Common.Globals;
 using Common.Helpers;
 
@@ -34,11 +35,10 @@ namespace AuthServer
             }
         }
 
-        public string AccountName { get; set; }
-
         public int ConnectionId { get; }
         public Socket ConnectionSocket { get; }
         public byte[] DataBuffer { get; }
+        public Users User { get; set; }
 
         private void Disconnect()
         {
@@ -134,6 +134,9 @@ namespace AuthServer
 
             try
             {
+                Log.Print(LogType.AuthServer,
+                    $"[{ConnectionSocket.RemoteEndPoint}] [SEND =>] [{((AuthCMD) int.Parse(v)).ToString().PadRight(25, ' ')}] = {send.Length}");
+
                 ConnectionSocket.BeginSend(buffer, 0, buffer.Length, SocketFlags.None, delegate { }, null);
             }
             catch (SocketException e)

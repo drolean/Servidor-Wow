@@ -1,42 +1,35 @@
 ﻿using AuthServer.PacketReader;
-using AuthServer.PacketServer;
 using Common.Crypt;
 using Common.Globals;
-using Common.Helpers;
 
 namespace AuthServer.Handlers
 {
     public class OnAuthLogonChallenge
     {
-        internal static void Handler(AuthServerSession session, AuthLogonChallenge packet)
+        internal static void Handler(AuthServerSession session, CMD_AUTH_LOGON_CHALLENGE packet)
         {
-            Log.Print(LogType.AuthServer,
-                $"[{session.ConnectionSocket.RemoteEndPoint}] {packet.Username} => " +
-                $"WoW Version: {packet.Version} Build: {packet.Build} Lang: {packet.Country}");
-
             if (!packet.Version.Contains("1.12"))
             {
-                session.SendData(new PsAuthLogonChallange(AccountState.BADVERSION));
+                session.SendData(new PacketServer.CMD_AUTH_LOGON_CHALLENGE(AccountState.BADVERSION));
                 return;
             }
 
             if (packet.Username.Length <= 3)
             {
-                session.SendData(new PsAuthLogonChallange(AccountState.UNKNOWN_ACCOUNT));
+                session.SendData(new PacketServer.CMD_AUTH_LOGON_CHALLENGE(AccountState.UNKNOWN_ACCOUNT));
                 return;
             }
 
-            var user = MainProgram.Database.GetAccount(packet.Username);
+            session.User = MainProgram.Database.GetAccount(packet.Username).Result;
 
-            if (user != null)
+            if (session.User != null)
             {
-                session.AccountName = user.Username;
-                session.Srp = new Srp6(user.Username, user.Password.ToUpper());
-                session.SendData(new PsAuthLogonChallange(session.Srp, AccountState.OK));
+                session.Srp = new Srp6(session.User.Username, session.User.Password.ToUpper());
+                session.SendData(new PacketServer.CMD_AUTH_LOGON_CHALLENGE(session, AccountState.OK));
                 return;
             }
 
-            session.SendData(new PsAuthLogonChallange(AccountState.UNKNOWN_ACCOUNT));
+            session.SendData(new PacketServer.CMD_AUTH_LOGON_CHALLENGE(AccountState.UNKNOWN_ACCOUNT));
         }
     }
 }

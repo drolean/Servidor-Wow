@@ -49,7 +49,7 @@ namespace RealmServer.Helpers
                         MapY = session.Character.SubMap.MapY,
                         MapZ = session.Character.SubMap.MapZ,
                         MapO = session.Character.SubMap.MapO
-                    },
+                    }
                 };
 
                 DatabaseModel.SpawnCreaturesCollection.InsertOne(unitTest);

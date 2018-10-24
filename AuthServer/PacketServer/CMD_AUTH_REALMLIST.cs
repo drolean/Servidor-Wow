@@ -4,9 +4,10 @@ using Common.Globals;
 
 namespace AuthServer.PacketServer
 {
-    internal sealed class PsAuthRealmList : Common.Network.PacketServer
+    internal sealed class CMD_AUTH_REALMLIST : Common.Network.PacketServer
     {
         /// <summary>
+        ///     Third authentication step, the client is requesting the realm list.
         ///     @for
         ///     Type       : byte;
         ///     Flag       : byte;
@@ -21,7 +22,7 @@ namespace AuthServer.PacketServer
         /// <param name="accountName"></param>
         /// <returns></returns>
         /// <todo>/// Count Population of Realm/// </todo>
-        public PsAuthRealmList(IReadOnlyCollection<Realms> realms, string accountName) : base(
+        public CMD_AUTH_REALMLIST(IReadOnlyCollection<Realms> realms, string accountName) : base(
             AuthCMD.CMD_AUTH_REALMLIST)
         {
             Write((uint) 0x0000);

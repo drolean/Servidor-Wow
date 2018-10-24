@@ -4,6 +4,11 @@ using MongoDB.Bson;
 
 namespace Common.Database.Tables
 {
+    public class SubCreaturesQuests
+    {
+        public int Quest { get; set; }
+    }
+
     public class SubCreaturesModels
     {
         public int Model { get; set; }
@@ -49,6 +54,7 @@ namespace Common.Database.Tables
         public int Type { get; set; }
         public int Civilian { get; set; }
         public int RacialLeader { get; set; }
+        public List<SubCreaturesQuests> SubQuests { get; set; }
 
         // Internal purpose
         public int CountSpawn { get; set; }
