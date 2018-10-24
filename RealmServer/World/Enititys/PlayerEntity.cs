@@ -15,6 +15,7 @@ namespace RealmServer.World.Enititys
         {
             Character = character;
             KnownPlayers = new List<PlayerEntity>();
+            KnownCreatures = new List<SpawnCreatures>();
 
             var chrRaces = MainProgram.ChrRacesReader.GetData(character.Race);
 
@@ -114,6 +115,7 @@ namespace RealmServer.World.Enititys
         public override string Name => Character.Name;
         public RealmServerSession Session { get; set; }
         public List<PlayerEntity> KnownPlayers { get; set; }
+        public List<SpawnCreatures> KnownCreatures { get; set; }
 
         private void SkillGenerate()
         {

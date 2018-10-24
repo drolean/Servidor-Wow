@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading;
+using Common.Database;
+using Common.Database.Tables;
 using Common.Helpers;
+using MongoDB.Driver;
 using RealmServer.PacketServer;
 using RealmServer.World.Enititys;
 
@@ -42,9 +45,12 @@ namespace RealmServer.World.Managers
 
         private static void SpawnPlayer(PlayerEntity remote, PlayerEntity playerEntity)
         {
+            remote.Session.SendInventory(playerEntity.Session);
             remote.Session.SendPacket(SMSG_UPDATE_OBJECT.CreateCharacterUpdate(playerEntity.Character));
             remote.KnownPlayers.Add(playerEntity);
         }
+
+        static List<SpawnCreatures> objetos = DatabaseModel.SpawnCreaturesCollection.Find(_ => true).ToList();
 
         private static void Update()
         {
@@ -69,6 +75,12 @@ namespace RealmServer.World.Managers
                         }
                     }
 
+                    foreach (var objeto in objetos)
+                    {
+                        if (!player.KnownCreatures.Contains(objeto))
+                            SpawnObjeto(player, objeto);
+                    }
+
                     if (player.UpdateCount > 0)
                     {
                         Common.Network.PacketServer packet = SMSG_UPDATE_OBJECT.UpdateValues(player);
@@ -80,6 +92,13 @@ namespace RealmServer.World.Managers
                 // Fix????
                 Thread.Sleep(100);
             }
+        }
+
+        private static void SpawnObjeto(PlayerEntity player, SpawnCreatures objeto)
+        {
+            Console.WriteLine($"Fazendo Spawn do NPC: {objeto.Uid}");
+            player.Session.SendPacket(SMSG_UPDATE_OBJECT.CreateUnit(objeto));
+            player.KnownCreatures.Add(objeto);
         }
 
         private static bool InRangeCheck(PlayerEntity playerEntityA, PlayerEntity playerEntityB)

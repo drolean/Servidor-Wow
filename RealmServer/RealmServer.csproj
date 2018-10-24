@@ -60,6 +60,7 @@
     <Compile Include="Enums\ChatChannelNotify.cs" />
     <Compile Include="Enums\ChatMessageLanguage.cs" />
     <Compile Include="Enums\ChatMessageType.cs" />
+    <Compile Include="Enums\Class1.cs" />
     <Compile Include="Enums\SheatheType.cs" />
     <Compile Include="Enums\Emote.cs" />
     <Compile Include="Enums\FriendResults.cs" />

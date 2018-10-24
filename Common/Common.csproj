@@ -79,6 +79,7 @@
     <Compile Include="Database\Tables\Creatures.cs" />
     <Compile Include="Database\Tables\Items.cs" />
     <Compile Include="Database\Tables\Realms.cs" />
+    <Compile Include="Database\Tables\SpawnCreatures.cs" />
     <Compile Include="Database\Tables\Users.cs" />
     <Compile Include="Database\XmlReader.cs" />
     <Compile Include="Database\Xml\RacesXml.cs" />

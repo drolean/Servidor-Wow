@@ -11,14 +11,14 @@ namespace RealmServer.World.Enititys
         {
         }
 
-        public UnitEntity(int vai, int parse) : base(new ObjectGuid((uint) vai, TypeId.TypeidUnit,
+        public UnitEntity(ulong vai, int parse) : base(new ObjectGuid((uint) vai, TypeId.TypeidUnit,
             HighGuid.HighguidUnit))
         {
             var creature = DatabaseModel.CreaturesCollection.Find(x => x.Entry == parse).First();
             var model = creature.SubModels.RandomElement().Model;
 
-            Type = (byte) creature.Type; //(byte) (ObjectType.TYPE_OBJECT + (int) ObjectType.TYPE_UNIT);
-            Scale = creature.SubStats.Scale; // 1f
+            Type = (byte) (ObjectType.TYPE_OBJECT + (int) ObjectType.TYPE_UNIT);
+            Scale = 1f; //creature.SubStats.Scale; // 1f
             Entry = creature.Entry;
 
             //
@@ -35,9 +35,6 @@ namespace RealmServer.World.Enititys
             SetUpdateField((int) UnitFields.UNIT_FIELD_HEALTH, creature.SubStats.Health);
             SetUpdateField((int) UnitFields.UNIT_FIELD_MAXHEALTH, creature.SubStats.Health);
             SetUpdateField((int) UnitFields.UNIT_FIELD_LEVEL, creature.SubStats.Level);
-
-            Console.WriteLine(MainProgram.Vai);
-            MainProgram.Vai++;
         }
 
         public TypeId TypeId => TypeId.TypeidUnit;

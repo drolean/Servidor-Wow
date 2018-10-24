@@ -11,6 +11,7 @@ using Common.Database.Tables;
 using Common.Globals;
 using Common.Helpers;
 using MongoDB.Driver;
+using RealmServer.Enums;
 using RealmServer.Handlers;
 using RealmServer.PacketReader;
 using RealmServer.World.Managers;
@@ -214,6 +215,9 @@ namespace RealmServer
             RealmServerRouter.AddHandler<CMSG_AUTOEQUIP_ITEM>(RealmEnums.CMSG_AUTOEQUIP_ITEM, Future);
 
             RealmServerRouter.AddHandler<CMSG_CREATURE_QUERY>(RealmEnums.CMSG_CREATURE_QUERY, Future);
+            RealmServerRouter.AddHandler<CMSG_GOSSIP_HELLO>(RealmEnums.CMSG_GOSSIP_HELLO, Future);
+            RealmServerRouter.AddHandler<CMSG_QUESTGIVER_STATUS_QUERY>(RealmEnums.CMSG_QUESTGIVER_STATUS_QUERY, Future);
+            RealmServerRouter.AddHandler<CMSG_QUESTGIVER_HELLO>(RealmEnums.CMSG_QUESTGIVER_HELLO, Future);
 
             #region OPCODES
 
@@ -324,11 +328,11 @@ namespace RealmServer
             RealmServerRouter.AddHandler<CMSG_PET_ABANDON>(RealmEnums.CMSG_PET_ABANDON, Future);
             RealmServerRouter.AddHandler<CMSG_PET_RENAME>(RealmEnums.CMSG_PET_RENAME, Future);
 
-            RealmServerRouter.AddHandler<CMSG_GOSSIP_HELLO>(RealmEnums.CMSG_GOSSIP_HELLO, Future);
+            
             RealmServerRouter.AddHandler<CMSG_GOSSIP_SELECT_OPTION>(RealmEnums.CMSG_GOSSIP_SELECT_OPTION, Future);
             RealmServerRouter.AddHandler<CMSG_NPC_TEXT_QUERY>(RealmEnums.CMSG_NPC_TEXT_QUERY, Future);
 
-            RealmServerRouter.AddHandler<CMSG_QUESTGIVER_HELLO>(RealmEnums.CMSG_QUESTGIVER_HELLO, Future);
+            
             RealmServerRouter.AddHandler<CMSG_QUESTGIVER_QUERY_QUEST>(RealmEnums.CMSG_QUESTGIVER_QUERY_QUEST, Future);
             RealmServerRouter.AddHandler<CMSG_QUESTGIVER_ACCEPT_QUEST>(RealmEnums.CMSG_QUESTGIVER_ACCEPT_QUEST, Future);
             RealmServerRouter.AddHandler<CMSG_QUESTGIVER_COMPLETE_QUEST>(RealmEnums.CMSG_QUESTGIVER_COMPLETE_QUEST, Future);
@@ -444,7 +448,7 @@ namespace RealmServer
             RealmServerRouter.AddHandler<CMSG_AUTOEQUIP_ITEM_SLOT>(RealmEnums.CMSG_AUTOEQUIP_ITEM_SLOT, Future);
             RealmServerRouter.AddHandler<CMSG_RESURRECT_RESPONSE>(RealmEnums.CMSG_RESURRECT_RESPONSE, Future);
             RealmServerRouter.AddHandler<CMSG_DUEL_ACCEPTED>(RealmEnums.CMSG_DUEL_ACCEPTED, Future);
-            RealmServerRouter.AddHandler<CMSG_QUESTGIVER_STATUS_QUERY>(RealmEnums.CMSG_QUESTGIVER_STATUS_QUERY, Future);
+            
             RealmServerRouter.AddHandler<CMSG_QUESTLOG_SWAP_QUEST>(RealmEnums.CMSG_QUESTLOG_SWAP_QUEST, Future);
             RealmServerRouter.AddHandler<CMSG_BATTLEFIELD_JOIN>(RealmEnums.CMSG_BATTLEFIELD_JOIN, Future);
             RealmServerRouter.AddHandler<CMSG_FAR_SIGHT>(RealmEnums.CMSG_FAR_SIGHT, Future);
@@ -472,6 +476,22 @@ namespace RealmServer
             */
 
             #endregion
+        }
+
+        private static void Future(RealmServerSession session, CMSG_QUESTGIVER_HELLO handler)
+        {
+            session.SendPacket(new SMSG_QUESTGIVER_QUEST_LIST(handler));
+        }
+
+        private static void Future(RealmServerSession session, CMSG_QUESTGIVER_STATUS_QUERY handler)
+        {
+            var status = 1;
+            session.SendPacket(new SMSG_QUESTGIVER_STATUS(handler, (QuestgiverStatusFlag) status));
+        }
+
+        private static void Future(RealmServerSession session, CMSG_GOSSIP_HELLO handler)
+        {
+            session.SendPacket(new SMSG_NPC_WONT_TALK(handler));
         }
 
         private static void Future(RealmServerSession session, CMSG_CREATURE_QUERY handler)
@@ -510,7 +530,7 @@ namespace RealmServer
 
         private static void Future(RealmServerSession session, CMSG_INITIATE_TRADE handler)
         {
-            throw new NotImplementedException();
+//            throw new NotImplementedException();
         }
 
         private static void Future(RealmServerSession session, byte[] data)
@@ -561,6 +581,43 @@ Commands:
   /up       Show uptime.
   /q 900    Shutdown server in 900sec = 15min. *Debug exit now!
   /help     Show this help.");
+        }
+    }
+
+    internal sealed class SMSG_QUESTGIVER_QUEST_LIST : Common.Network.PacketServer
+    {
+        public SMSG_QUESTGIVER_QUEST_LIST(CMSG_QUESTGIVER_HELLO handler) : base(RealmEnums.SMSG_QUESTGIVER_QUEST_LIST)
+        {
+            Write((UInt64) handler.Uid);
+            WriteCString("Title Strng");
+            Write((int) 1); // delay
+            Write((int) 1); // emote
+
+            Write((byte)1); // count
+
+            //for
+            Write((int) 102); //id
+            Write((int)102); //icon
+            Write((int)1); //level
+            WriteCString("bem legal");
+        }
+    }
+
+    internal sealed class SMSG_QUESTGIVER_STATUS : Common.Network.PacketServer
+    {
+        public SMSG_QUESTGIVER_STATUS(CMSG_QUESTGIVER_STATUS_QUERY handler, QuestgiverStatusFlag status) : base(RealmEnums.SMSG_QUESTGIVER_STATUS)
+        {
+            Write(handler.QuestUid);
+            Write((UInt32) 5);
+        }
+    }
+
+    internal sealed class SMSG_NPC_WONT_TALK : Common.Network.PacketServer
+    {
+        public SMSG_NPC_WONT_TALK(CMSG_GOSSIP_HELLO handler) : base(RealmEnums.SMSG_NPC_WONT_TALK)
+        {
+            Write((UInt64) handler.Uid);
+            Write((byte)4);
         }
     }
 

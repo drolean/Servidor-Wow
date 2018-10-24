@@ -16,6 +16,7 @@ namespace Common.Database
         public static IMongoCollection<Realms> RealmCollection = Database.GetCollection<Realms>("Realms");
         public static IMongoCollection<Items> ItemsCollection = Database.GetCollection<Items>("Items");
         public static IMongoCollection<Creatures> CreaturesCollection = Database.GetCollection<Creatures>("Creatures");
+        public static IMongoCollection<SpawnCreatures> SpawnCreaturesCollection = Database.GetCollection<SpawnCreatures>("SpawnCreatures");
 
         public static IMongoCollection<Characters> CharacterCollection =
             Database.GetCollection<Characters>("Characters");
@@ -73,6 +74,13 @@ namespace Common.Database
             // Seeds Items/Creatures
             InsertItems();
             InsertCreatures();
+
+            InsetSpawnCreatures();
+        }
+
+        private void InsetSpawnCreatures()
+        {
+
         }
 
         public void InsertCreatures()

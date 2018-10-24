@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Timers;
 using Common.Database;
+using Common.Database.Tables;
+using Common.Helpers;
 using MongoDB.Driver;
 using RealmServer.Enums;
 using RealmServer.PacketServer;
@@ -35,7 +37,24 @@ namespace RealmServer.Helpers
                 if (creature == null)
                     return;
 
-                session.SendPacket(SMSG_UPDATE_OBJECT.CreateUnit(session.Character, creature));
+                var unitTest = new SpawnCreatures
+                {
+                    Uid = Utils.GenerateRandUlong(),
+                    Entry = creature.Entry,
+                    SubMap = new SubMap
+                    {
+                        MapId = session.Character.SubMap.MapId,
+                        MapZone = session.Character.SubMap.MapZone,
+                        MapX = session.Character.SubMap.MapX,
+                        MapY = session.Character.SubMap.MapY,
+                        MapZ = session.Character.SubMap.MapZ,
+                        MapO = session.Character.SubMap.MapO
+                    },
+                };
+
+                DatabaseModel.SpawnCreaturesCollection.InsertOne(unitTest);
+
+                //session.SendPacket(SMSG_UPDATE_OBJECT.CreateUnit(session.Character, creature));
             }
 
             // SHOW GPS
