@@ -14,6 +14,11 @@ namespace RealmServer.Database
 {
     public class Characters : RealmServerDatabase
     {
+        internal static Task<ReplaceOneResult> UpdateCharacter(Common.Database.Tables.Characters character)
+        {
+            return DatabaseModel.CharacterCollection.ReplaceOneAsync(doc => doc.Uid == character.Uid, character);
+        }
+
         /// <summary>
         ///     Find character by UID.
         /// </summary>
@@ -21,7 +26,7 @@ namespace RealmServer.Database
         /// <returns></returns>
         internal static Common.Database.Tables.Characters FindCharacaterByUid(ulong uid)
         {
-            return DatabaseModel.CharacterCollection.Find(x => x.Uid == uid).FirstOrDefault();
+            return DatabaseModel.CharacterCollection.Find(x => x.Uid == uid).First();
         }
 
         /// <summary>
@@ -32,7 +37,7 @@ namespace RealmServer.Database
         internal static Common.Database.Tables.Characters FindCharacaterByName(string character)
         {
             return DatabaseModel.CharacterCollection.Find(x => x.Name.ToLower() == character.ToLower())
-                .FirstOrDefault();
+                .First();
         }
 
         /// <summary>

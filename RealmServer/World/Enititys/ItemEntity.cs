@@ -18,7 +18,7 @@ namespace RealmServer.World.Enititys
             SetUpdateField((int) ObjectFields.Padding, 0);
 
             //
-            SetUpdateField((int) ItemFields.ITEM_FIELD_OWNER, session.Character.Uid); // ID do char
+            SetUpdateField((int) ItemFields.ITEM_FIELD_OWNER, session.ObjectGuid.RawGuid); // ID do char
 
             SetUpdateField((int) ItemFields.ITEM_FIELD_MAXDURABILITY, item.MaxDurability);
             SetUpdateField((int) ItemFields.ITEM_FIELD_DURABILITY, inventory.Durability);
