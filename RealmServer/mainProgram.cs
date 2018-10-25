@@ -89,7 +89,6 @@ namespace RealmServer
             Log.Print(LogType.RealmServer,
                 $"Successfully started in {Common.Helpers.Time.GetMsTimeDiff(Time, Common.Helpers.Time.GetMsTime()) / 100}ms");
 
-
             // Commands
             while (_keepGoing)
             {
@@ -217,6 +216,10 @@ namespace RealmServer
                 OnQuestgiverStatusQuery.Handler);
             RealmServerRouter.AddHandler<CMSG_QUESTGIVER_HELLO>(RealmEnums.CMSG_QUESTGIVER_HELLO,
                 OnQuestgiverHello.Handler);
+            RealmServerRouter.AddHandler<CMSG_QUESTGIVER_QUERY_QUEST>(RealmEnums.CMSG_QUESTGIVER_QUERY_QUEST, Future);
+            RealmServerRouter.AddHandler<CMSG_DEL_FRIEND>(RealmEnums.CMSG_DEL_FRIEND, OnDelFriend.Handler);
+            RealmServerRouter.AddHandler<CMSG_ADD_IGNORE>(RealmEnums.CMSG_ADD_IGNORE, OnAddIgnore.Handler);
+            RealmServerRouter.AddHandler<CMSG_DEL_IGNORE>(RealmEnums.CMSG_DEL_IGNORE, OnDelIgnore.Handler);
 
             #region OPCODES
 
@@ -238,9 +241,6 @@ namespace RealmServer
             RealmServerRouter.AddHandler<CMSG_WHO>(RealmEnums.CMSG_WHO, Future);
             RealmServerRouter.AddHandler<CMSG_WHOIS>(RealmEnums.CMSG_WHOIS, Future);
             
-            RealmServerRouter.AddHandler<CMSG_DEL_FRIEND>(RealmEnums.CMSG_DEL_FRIEND, Future);
-            RealmServerRouter.AddHandler<CMSG_ADD_IGNORE>(RealmEnums.CMSG_ADD_IGNORE, Future);
-            RealmServerRouter.AddHandler<CMSG_DEL_IGNORE>(RealmEnums.CMSG_DEL_IGNORE, Future);
             RealmServerRouter.AddHandler<CMSG_GROUP_INVITE>(RealmEnums.CMSG_GROUP_INVITE, Future);
             RealmServerRouter.AddHandler(RealmEnums.CMSG_GROUP_CANCEL, Future);
             RealmServerRouter.AddHandler(RealmEnums.CMSG_GROUP_ACCEPT, Future);
@@ -332,7 +332,7 @@ namespace RealmServer
             RealmServerRouter.AddHandler<CMSG_NPC_TEXT_QUERY>(RealmEnums.CMSG_NPC_TEXT_QUERY, Future);
 
             
-            RealmServerRouter.AddHandler<CMSG_QUESTGIVER_QUERY_QUEST>(RealmEnums.CMSG_QUESTGIVER_QUERY_QUEST, Future);
+            
             RealmServerRouter.AddHandler<CMSG_QUESTGIVER_ACCEPT_QUEST>(RealmEnums.CMSG_QUESTGIVER_ACCEPT_QUEST, Future);
             RealmServerRouter.AddHandler<CMSG_QUESTGIVER_COMPLETE_QUEST>(RealmEnums.CMSG_QUESTGIVER_COMPLETE_QUEST, Future);
             RealmServerRouter.AddHandler<CMSG_QUESTGIVER_REQUEST_REWARD>(RealmEnums.CMSG_QUESTGIVER_REQUEST_REWARD, Future);
@@ -475,6 +475,11 @@ namespace RealmServer
             */
 
             #endregion
+        }
+
+        private static void Future(RealmServerSession session, CMSG_QUESTGIVER_QUERY_QUEST handler)
+        {
+            
         }
 
         private static void Future(RealmServerSession session, CMSG_AUTOEQUIP_ITEM handler)

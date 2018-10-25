@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.30] - 2018-10-24
+### Added
+- Added Global Functions to Help (GetCharacterSide)
+- OnAddIgnore
+- OnDelFriend 
+- OnDelIgnore
+
+### Changed
+- RealmServer.Database some finds changed by First to FirstOrDefault.
+- OnFriendAdd rewrite.
+
 ## [0.0.29] - 2018-10-24
 ### Added
 - AuthServer.Session.User to Table.User on Challenge

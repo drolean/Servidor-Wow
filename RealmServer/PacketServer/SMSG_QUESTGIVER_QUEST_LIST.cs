@@ -9,16 +9,15 @@ namespace RealmServer.PacketServer
         public SMSG_QUESTGIVER_QUEST_LIST(SpawnCreatures npcEntry, CMSG_QUESTGIVER_HELLO handler) : base(RealmEnums
             .SMSG_QUESTGIVER_QUEST_LIST)
         {
-            Write(handler.Uid);
+            Write(npcEntry.Uid);
             WriteCString("Title Strng");
-            Write(1); // delay
-            Write(1); // emote
+            Write(1); // EmoteDelay
+            Write(1); // Emote
 
             Write((byte) 1); // count
-
             //for
-            Write(102); //id
-            Write(102); //icon
+            Write(1); //id
+            Write(1); //Status
             Write(1); //level
             WriteCString("Your Place In The World");
         }

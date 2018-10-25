@@ -1,5 +1,8 @@
-﻿using Common.Database.Tables;
+﻿using System;
+using System.Linq;
+using Common.Database.Tables;
 using Common.Globals;
+using RealmServer.World.Managers;
 
 namespace RealmServer.PacketServer
 {
@@ -12,19 +15,13 @@ namespace RealmServer.PacketServer
             foreach (var friend in character.SubFriends)
             {
                 var friendChar = Database.Characters.FindCharacaterByUid(friend.Uid);
-                Write(friend.Uid);
+                bool status = PlayerManager.Players.Any(p => p.Character.Uid == friend.Uid);
+                Write((UInt64) friend.Uid);
 
-                /*
-                FRIEND_STATUS_OFFLINE = 0,
-                FRIEND_STATUS_ONLINE = 1,
-                FRIEND_STATUS_AFK = 2,
-                FRIEND_STATUS_UNK3 = 3,
-                FRIEND_STATUS_DND = 4
-                 */
-                Write((byte) 0);
-                Write((uint) friendChar.SubMap.MapZone); // uint32   = area
-                Write((uint) friendChar.Level); // uint32   = level
-                Write((uint) friendChar.Classe); // uint32   = class
+                Write((byte) (status ? 1 : 0));
+                Write((int) friendChar.SubMap.MapZone); // uint32   = area
+                Write((int) friendChar.Level); // uint32   = level
+                Write((int) friendChar.Classe); // uint32   = class
             }
         }
     }

@@ -81,12 +81,15 @@
     <Compile Include="Enums\StandStates.cs" />
     <Compile Include="Enums\TypeId.cs" />
     <Compile Include="Enums\UnitFlags.cs" />
+    <Compile Include="Handlers\OnAddIgnore.cs" />
     <Compile Include="Handlers\OnAuthSession.cs" />
     <Compile Include="Handlers\OnCharCreate.cs" />
     <Compile Include="Handlers\OnCharDelete.cs" />
     <Compile Include="Handlers\OnCharEnum.cs" />
     <Compile Include="Handlers\OnCompleteCinematic.cs" />
     <Compile Include="Handlers\OnCreatureQuery.cs" />
+    <Compile Include="Handlers\OnDelFriend.cs" />
+    <Compile Include="Handlers\OnDelIgnore.cs" />
     <Compile Include="Handlers\OnGmTicketSystemStatus.cs" />
     <Compile Include="Handlers\OnGossipHello.cs" />
     <Compile Include="Handlers\OnInspect.cs" />
@@ -344,6 +347,7 @@
     <Compile Include="PacketServer\SMSG_FORCE_MOVE_ROOT.cs" />
     <Compile Include="PacketServer\SMSG_FORCE_MOVE_UNROOT.cs" />
     <Compile Include="PacketServer\SMSG_FRIEND_LIST.cs" />
+    <Compile Include="PacketServer\SMSG_FRIEND_STATUS.cs" />
     <Compile Include="PacketServer\SMSG_GMTICKET_CREATE.cs" />
     <Compile Include="PacketServer\SMSG_GMTICKET_GETTICKET.cs" />
     <Compile Include="PacketServer\SMSG_GMTICKET_SYSTEMSTATUS.cs" />

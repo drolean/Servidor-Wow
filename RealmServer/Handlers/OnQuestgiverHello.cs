@@ -10,7 +10,7 @@ namespace RealmServer.Handlers
         {
             var npcEntry = session.Entity.KnownCreatures.FirstOrDefault(s => s.Uid == handler.Uid);
 
-            if (npcEntry != null)
+            if (npcEntry == null)
                 return;
 
             // if have multiple quest send this 

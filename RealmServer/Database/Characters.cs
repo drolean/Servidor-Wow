@@ -21,7 +21,7 @@ namespace RealmServer.Database
         /// <returns></returns>
         internal static Common.Database.Tables.Characters FindCharacaterByUid(ulong uid)
         {
-            return DatabaseModel.CharacterCollection.Find(x => x.Uid == uid).First();
+            return DatabaseModel.CharacterCollection.Find(x => x.Uid == uid).FirstOrDefault();
         }
 
         /// <summary>
@@ -31,7 +31,8 @@ namespace RealmServer.Database
         /// <returns></returns>
         internal static Common.Database.Tables.Characters FindCharacaterByName(string character)
         {
-            return DatabaseModel.CharacterCollection.Find(x => x.Name == character).First();
+            return DatabaseModel.CharacterCollection.Find(x => x.Name.ToLower() == character.ToLower())
+                .FirstOrDefault();
         }
 
         /// <summary>

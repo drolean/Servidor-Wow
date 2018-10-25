@@ -86,6 +86,7 @@
     <Compile Include="Helpers\BinaryWriterExtension.cs" />
     <Compile Include="Helpers\CollectionExtension.cs" />
     <Compile Include="Helpers\Config.cs" />
+    <Compile Include="Helpers\Functions.cs" />
     <Compile Include="Helpers\Log.cs" />
     <Compile Include="Helpers\Time.cs" />
     <Compile Include="Helpers\Utils.cs" />
