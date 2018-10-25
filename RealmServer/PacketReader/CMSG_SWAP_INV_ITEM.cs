@@ -2,6 +2,9 @@
 
 namespace RealmServer.PacketReader
 {
+    /// <summary>
+    ///     Swap item within the backpack
+    /// </summary>
     public sealed class CMSG_SWAP_INV_ITEM : Common.Network.PacketReader
     {
         public byte DstSlot;

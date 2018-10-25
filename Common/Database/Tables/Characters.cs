@@ -49,7 +49,7 @@ namespace Common.Database.Tables
         public SubResistances SubResistances { get; set; }
         public SubAccountData SubAccountData { get; set; }
         public List<SubTalents> SubTalents { get; set; }
-        public List<SubTutorial> SubTutorial { get; set; }
+        public byte[] TutorialFlags { get; set; }
 
         public List<SubCharacterFriend> SubFriends { get; set; }
         public List<SubCharacterIgnored> SubIgnoreds { get; set; }
@@ -147,11 +147,6 @@ namespace Common.Database.Tables
         public byte HairStyle { get; set; }
         public byte HairColor { get; set; }
         public byte FacialHair { get; set; }
-    }
-
-    public class SubTutorial
-    {
-        public byte Tutorial { get; set; }
     }
 
     public class SubStats

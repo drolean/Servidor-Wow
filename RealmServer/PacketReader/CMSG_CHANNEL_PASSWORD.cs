@@ -2,6 +2,9 @@
 
 namespace RealmServer.PacketReader
 {
+    /// <summary>
+    ///     Handles an incoming channel password change request
+    /// </summary>
     public class CMSG_CHANNEL_PASSWORD : Common.Network.PacketReader
     {
         public string ChannelName;

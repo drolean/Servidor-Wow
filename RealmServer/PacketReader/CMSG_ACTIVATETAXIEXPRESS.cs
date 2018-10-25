@@ -2,6 +2,9 @@
 
 namespace RealmServer.PacketReader
 {
+    /// <summary>
+    ///     Fly far away. (For taxi paths that include more than one stop.)
+    /// </summary>
     public sealed class CMSG_ACTIVATETAXIEXPRESS : Common.Network.PacketReader
     {
         public uint NodeCount;

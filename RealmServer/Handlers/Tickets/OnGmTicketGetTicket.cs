@@ -1,7 +1,7 @@
 ﻿using RealmServer.Enums;
 using RealmServer.PacketServer;
 
-namespace RealmServer.Handlers
+namespace RealmServer.Handlers.Tickets
 {
     internal class OnGmTicketGetTicket
     {

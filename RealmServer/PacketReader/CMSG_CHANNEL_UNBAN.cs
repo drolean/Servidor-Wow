@@ -2,6 +2,9 @@
 
 namespace RealmServer.PacketReader
 {
+    /// <summary>
+    ///     Handles a request of unbanning a channel member
+    /// </summary>
     public class CMSG_CHANNEL_UNBAN : Common.Network.PacketReader
     {
         public string ChannelName;

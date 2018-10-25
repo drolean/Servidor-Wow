@@ -2,6 +2,9 @@
 
 namespace RealmServer.PacketReader
 {
+    /// <summary>
+    ///     Handles an incoming add friend request
+    /// </summary>
     public class CMSG_ADD_FRIEND : Common.Network.PacketReader
     {
         public string NamePlayer;

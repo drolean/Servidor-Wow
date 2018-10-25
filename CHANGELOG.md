@@ -4,11 +4,37 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.31] - 2018-10-25
+### Added
+- Config.RangeDistanceLimit = 30 default
+- OnSetFactionInactive
+- OnSetWatchedFaction
+- OnTutorialClear
+- OnTutorialFlag
+- OnTutorialReset
+- TutorialFlags (Class) to manager Tutorial of client.
+- SOME DOCUMENTATION ON VARIOUS FILES;
+
+### Changed
+- Table.Character change SubTutorial to TutorialFlags.
+- RacesXml fixed name 'action' to 'spell'
+- moved GetDistance to Common.Helpers.Utils
+- OnCompleteCinematic now set correct status of cinematic.
+- OnLogout now save character variables.
+- UNIT_FIELD_MAXHEALTH now get from Character
+- ItemFields.ITEM_FIELD_CONTAINED Uid of Player
+
+### Moved
+- Some Class to respective directories.
+
+### Removed
+- Some ENUMs nom used.
+
 ## [0.0.30] - 2018-10-24
 ### Added
 - Added Global Functions to Help (GetCharacterSide)
 - OnAddIgnore
-- OnDelFriend 
+- OnDelFriend
 - OnDelIgnore
 
 ### Changed

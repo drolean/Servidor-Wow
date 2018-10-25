@@ -1,12 +1,10 @@
-﻿using System;
-using System.Linq;
-using Common.Database;
-using MongoDB.Driver;
+﻿using System.Linq;
 using RealmServer.Database;
+using RealmServer.Enums;
 using RealmServer.PacketReader;
 using RealmServer.PacketServer;
 
-namespace RealmServer.Handlers
+namespace RealmServer.Handlers.Friends
 {
     public class OnDelFriend
     {
@@ -16,16 +14,10 @@ namespace RealmServer.Handlers
 
             try
             {
-                var pull = Builders<Common.Database.Tables.Characters>.Update.PullFilter(x => x.SubFriends,
-                    a => a.Uid == handler.PlayerUid);
-                var filter = Builders<Common.Database.Tables.Characters>.Filter.And(
-                    Builders<Common.Database.Tables.Characters>.Filter.Eq(a => a.Uid, session.Character.Uid),
-                    Builders<Common.Database.Tables.Characters>.Filter.ElemMatch(q => q.SubFriends,
-                        t => t.Uid == handler.PlayerUid));
-                DatabaseModel.CharacterCollection.UpdateOneAsync(filter, pull);
-
                 var item = session.Character.SubFriends.Single(r => r.Uid == friend.Uid);
                 session.Character.SubFriends.Remove(item);
+
+                Characters.UpdateCharacter(session.Character);
             }
             catch
             {

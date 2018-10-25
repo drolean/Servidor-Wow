@@ -2,6 +2,9 @@
 
 namespace RealmServer.PacketReader
 {
+    /// <summary>
+    ///     Client asks "Is this TaxiNode activated yet?"
+    /// </summary>
     public sealed class CMSG_TAXINODE_STATUS_QUERY : Common.Network.PacketReader
     {
         public ulong Uid;

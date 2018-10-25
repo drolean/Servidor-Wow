@@ -2,6 +2,9 @@
 
 namespace RealmServer.PacketReader
 {
+    /// <summary>
+    ///     Handles an incoming remove friend request
+    /// </summary>
     public sealed class CMSG_DEL_FRIEND : Common.Network.PacketReader
     {
         public ulong PlayerUid;

@@ -2,6 +2,9 @@
 
 namespace RealmServer.PacketReader
 {
+    /// <summary>
+    ///     Handles an incoming channel leave request
+    /// </summary>
     public class CMSG_LEAVE_CHANNEL : Common.Network.PacketReader
     {
         public string Channel;

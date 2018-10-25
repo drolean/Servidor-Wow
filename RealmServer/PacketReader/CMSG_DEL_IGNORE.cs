@@ -2,6 +2,9 @@
 
 namespace RealmServer.PacketReader
 {
+    /// <summary>
+    ///     Handles an incoming remove ignore request
+    /// </summary>
     public sealed class CMSG_DEL_IGNORE : Common.Network.PacketReader
     {
         public ulong PlayerUid;

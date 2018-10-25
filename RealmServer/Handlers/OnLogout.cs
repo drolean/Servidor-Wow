@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using Common.Globals;
+using RealmServer.Database;
 using RealmServer.Enums;
 using RealmServer.PacketServer;
 using RealmServer.World.Managers;
@@ -20,7 +21,13 @@ namespace RealmServer.Handlers
             {
                 foreach (var entry in _logoutQueue.ToArray())
                 {
-                    if (DateTime.Now.Subtract(entry.Value).Seconds < sec) continue;
+                    if (DateTime.Now.Subtract(entry.Value).Seconds < sec)
+                        continue;
+
+                    // Save Character
+                    Characters.UpdateCharacter(entry.Key.Character);
+
+                    // Send Packet
                     entry.Key.SendPacket(new SMSG_LOGOUT_COMPLETE(0));
                     entry.Key.Entity.KnownPlayers.Clear();
                     WorldManager.DispatchOnPlayerDespawn(entry.Key.Entity);
@@ -42,6 +49,8 @@ namespace RealmServer.Handlers
             session.Entity.SetUpdateField((int) UnitFields.UNIT_FIELD_BYTES_1, StandStates.Sit);
 
             session.SendPacket(new SMSG_FORCE_MOVE_ROOT(session.Character.Uid));
+
+            Characters.UpdateCharacter(session.Character);
 
             _logoutQueue.Add(session, DateTime.Now);
             var thread = new Thread(() => Update(20));

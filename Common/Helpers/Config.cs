@@ -10,11 +10,13 @@ namespace Common.Helpers
         public string MongoConnection;
         public int LimitCharacterRealm;
         public string[] ProfaneNames;
+        public int RangeDistanceLimit;
 
         [XmlIgnore] public static Config Instance { get; private set; }
 
         private void SetDefaultValues()
         {
+            RangeDistanceLimit = 30;
             MongoConnection = "mongodb://127.0.0.1:27017";
             LimitCharacterRealm = 10;
             ProfaneNames = new[] {"root", "Admin", "Administrator"};

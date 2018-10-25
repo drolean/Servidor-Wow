@@ -2,6 +2,9 @@
 
 namespace RealmServer.PacketReader
 {
+    /// <summary>
+    ///     Handles an incoming add ignore request
+    /// </summary>
     public class CMSG_ADD_IGNORE : Common.Network.PacketReader
     {
         public string NamePlayer;

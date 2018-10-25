@@ -2,6 +2,9 @@
 
 namespace RealmServer.PacketReader
 {
+    /// <summary>
+    ///     Handles an incoming channel join request
+    /// </summary>
     public class CMSG_JOIN_CHANNEL : Common.Network.PacketReader
     {
         public CMSG_JOIN_CHANNEL(byte[] data) : base(data)

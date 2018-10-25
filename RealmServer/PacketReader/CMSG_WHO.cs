@@ -3,7 +3,7 @@
 namespace RealmServer.PacketReader
 {
     /// <summary>
-    ///     CMSG_WHO represents a packet sent by the client when it wants to retrieve who information.
+    ///     CMSG_WHO represents a packet sent by the client when it wants to retrieve who
     /// </summary>
     public sealed class CMSG_WHO : Common.Network.PacketReader
     {

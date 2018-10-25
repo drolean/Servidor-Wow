@@ -19,7 +19,7 @@ namespace RealmServer.Handlers
 
             session.SendPacket(new SMSG_SET_REST_START(1000));
             session.SendPacket(new SMSG_BINDPOINTUPDATE(session.Character));
-            session.SendPacket(new SMSG_TUTORIAL_FLAGS());
+            session.SendPacket(new SMSG_TUTORIAL_FLAGS(session.Character));
             session.SendPacket(new SMSG_LOGIN_SETTIMESPEED());
             session.SendPacket(new SMSG_INITIAL_SPELLS(session.Character));
             session.SendPacket(new SMSG_ACTION_BUTTONS(session.Character));

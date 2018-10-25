@@ -9,6 +9,7 @@ namespace RealmServer.PacketServer
     public sealed class SMSG_AUTH_CHALLENGE : Common.Network.PacketServer
     {
         /// <summary>
+        ///     SMSG_AUTH_CHALLENGE happens whenever a client is connecting to a realm.
         /// </summary>
         public SMSG_AUTH_CHALLENGE() : base(RealmEnums.SMSG_AUTH_CHALLENGE)
         {

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
-using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Threading;
@@ -10,9 +9,9 @@ using Common.Database;
 using Common.Database.Dbc;
 using Common.Globals;
 using Common.Helpers;
-using RealmServer.Database;
-using RealmServer.Enums;
 using RealmServer.Handlers;
+using RealmServer.Handlers.Friends;
+using RealmServer.Handlers.Tickets;
 using RealmServer.PacketReader;
 using RealmServer.World.Managers;
 
@@ -224,8 +223,14 @@ namespace RealmServer
             RealmServerRouter.AddHandler<CMSG_ADD_IGNORE>(RealmEnums.CMSG_ADD_IGNORE, OnAddIgnore.Handler);
             RealmServerRouter.AddHandler<CMSG_DEL_IGNORE>(RealmEnums.CMSG_DEL_IGNORE, OnDelIgnore.Handler);
 
-            RealmServerRouter.AddHandler<CMSG_SET_FACTION_INACTIVE>(RealmEnums.CMSG_SET_FACTION_INACTIVE, Future);
-            RealmServerRouter.AddHandler<CMSG_SET_WATCHED_FACTION>(RealmEnums.CMSG_SET_WATCHED_FACTION, Future);
+            RealmServerRouter.AddHandler<CMSG_SET_FACTION_INACTIVE>(RealmEnums.CMSG_SET_FACTION_INACTIVE,
+                OnSetFactionInactive.Handler);
+            RealmServerRouter.AddHandler<CMSG_SET_WATCHED_FACTION>(RealmEnums.CMSG_SET_WATCHED_FACTION,
+                OnSetWatchedFaction.Handler);
+
+            RealmServerRouter.AddHandler<CMSG_SET_ACTION_BUTTON>(RealmEnums.CMSG_SET_ACTION_BUTTON, Future);
+            RealmServerRouter.AddHandler<CMSG_WHO>(RealmEnums.CMSG_WHO, Future);
+            RealmServerRouter.AddHandler<CMSG_USE_ITEM>(RealmEnums.CMSG_USE_ITEM, Future);
 
             #region OPCODES
 
@@ -244,7 +249,7 @@ namespace RealmServer
             RealmServerRouter.AddHandler<CMSG_QUEST_QUERY>(RealmEnums.CMSG_QUEST_QUERY, Future);
             RealmServerRouter.AddHandler<CMSG_GAMEOBJECT_QUERY>(RealmEnums.CMSG_GAMEOBJECT_QUERY, Future);
             
-            RealmServerRouter.AddHandler<CMSG_WHO>(RealmEnums.CMSG_WHO, Future);
+            
             RealmServerRouter.AddHandler<CMSG_WHOIS>(RealmEnums.CMSG_WHOIS, Future);
             
             RealmServerRouter.AddHandler<CMSG_GROUP_INVITE>(RealmEnums.CMSG_GROUP_INVITE, Future);
@@ -286,7 +291,7 @@ namespace RealmServer
             RealmServerRouter.AddHandler<CMSG_CHANNEL_ANNOUNCEMENTS>(RealmEnums.CMSG_CHANNEL_ANNOUNCEMENTS, Future);
             RealmServerRouter.AddHandler<CMSG_CHANNEL_MODERATE>(RealmEnums.CMSG_CHANNEL_MODERATE, Future);
 
-            RealmServerRouter.AddHandler<CMSG_USE_ITEM>(RealmEnums.CMSG_USE_ITEM, Future);
+            
             RealmServerRouter.AddHandler<CMSG_OPEN_ITEM>(RealmEnums.CMSG_OPEN_ITEM, Future);
             RealmServerRouter.AddHandler<CMSG_READ_ITEM>(RealmEnums.CMSG_READ_ITEM, Future);
 
@@ -310,8 +315,6 @@ namespace RealmServer
             RealmServerRouter.AddHandler<CMSG_SET_TRADE_ITEM>(RealmEnums.CMSG_SET_TRADE_ITEM, Future);
             RealmServerRouter.AddHandler<CMSG_CLEAR_TRADE_ITEM>(RealmEnums.CMSG_CLEAR_TRADE_ITEM, Future);
             RealmServerRouter.AddHandler<CMSG_SET_TRADE_GOLD>(RealmEnums.CMSG_SET_TRADE_GOLD, Future);
-
-            RealmServerRouter.AddHandler<CMSG_SET_ACTION_BUTTON>(RealmEnums.CMSG_SET_ACTION_BUTTON, Future);
 
             RealmServerRouter.AddHandler<CMSG_CAST_SPELL>(RealmEnums.CMSG_CAST_SPELL, Future);
             RealmServerRouter.AddHandler<CMSG_CANCEL_CAST>(RealmEnums.CMSG_CANCEL_CAST, Future);
@@ -478,44 +481,24 @@ namespace RealmServer
             #endregion
         }
 
-        private static void Future(RealmServerSession session, CMSG_SET_WATCHED_FACTION handler)
+        private static void Future(RealmServerSession session, CMSG_USE_ITEM handler)
         {
-            if (handler.FactionId == -1)
-                handler.FactionId = 0xff;
-
-            if (handler.FactionId < 0 || handler.FactionId > 255)
-                return;
-
-            session.Entity.SetUpdateField((int)PlayerFields.PLAYER_FIELD_WATCHED_FACTION_INDEX, handler.FactionId);
-            session.Character.WatchFaction = handler.FactionId;
-            Characters.UpdateCharacter(session.Character);
         }
 
-        private static void Future(RealmServerSession session, CMSG_SET_FACTION_INACTIVE handler)
+        private static void Future(RealmServerSession session, CMSG_WHO handler)
         {
-            if (handler.FactionId == -1)
-                handler.FactionId = 0xff;
-
-            if (handler.FactionId < 0 || handler.FactionId > 255)
+            // Limited to 10
+            if (handler.ZonesCount > 10)
                 return;
+        }
 
-            var factionSystem = FactionReader.GetFaction(handler.FactionId);
-
-            if (factionSystem == null)
-                return;
-
-            var faction = session.Character.SubFactions.FirstOrDefault(d => d.Faction == factionSystem.FactionId);
-
-
-            if (faction != null)
-                faction.Flags = (handler.Inactive == 1 ? 49 : 17);
-
-            Characters.UpdateCharacter(session.Character);
+        private static void Future(RealmServerSession session, CMSG_SET_ACTION_BUTTON handler)
+        {
+            throw new NotImplementedException();
         }
 
         private static void Future(RealmServerSession session, CMSG_QUESTGIVER_QUERY_QUEST handler)
         {
-            
         }
 
         private static void Future(RealmServerSession session, CMSG_AUTOEQUIP_ITEM handler)

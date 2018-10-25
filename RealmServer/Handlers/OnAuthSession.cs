@@ -27,19 +27,7 @@ namespace RealmServer.Handlers
 
             // Send AuthOK
             session.SendPacket(new SMSG_AUTH_RESPONSE(LoginErrorCode.AUTH_OK));
-
             session.SendPacket(new SMSG_ADDON_INFO(AddOnsNames));
-            // TODO Alternatice to handle errors
-            /*
-            RESPONSE_VERSION_MISMATCH
-            AUTH_FAILED
-            AUTH_UNAVAILABLE
-            AUTH_SYSTEM_ERROR
-            AUTH_ALREADY_LOGGING_IN
-            AUTH_SUSPENDED
-
-            session.SendPacket(new SMSG_CHAR_CREATE(LoginErrorCode.AUTH_FAILED));
-            */
         }
 
         private static void CheckAddons(BinaryReader handler)

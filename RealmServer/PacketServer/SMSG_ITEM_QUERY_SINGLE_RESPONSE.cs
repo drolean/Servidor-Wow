@@ -7,6 +7,10 @@ using Common.Helpers;
 
 namespace RealmServer.PacketServer
 {
+    /// <summary>
+    ///     SMSG_ITEM_QUERY_SINGLE_RESPONSE represents a message sent by the server as the result of a CMSG_ITEM_QUERY_SINGLE
+    ///     packet.
+    /// </summary>
     internal sealed class SMSG_ITEM_QUERY_SINGLE_RESPONSE : Common.Network.PacketServer
     {
         public SMSG_ITEM_QUERY_SINGLE_RESPONSE(Items item) : base(RealmEnums.SMSG_ITEM_QUERY_SINGLE_RESPONSE)

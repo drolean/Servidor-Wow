@@ -2,6 +2,9 @@
 
 namespace RealmServer.PacketReader
 {
+    /// <summary>
+    ///     Handles a request of muting a channel member
+    /// </summary>
     public class CMSG_CHANNEL_MUTE : Common.Network.PacketReader
     {
         public string ChannelName;

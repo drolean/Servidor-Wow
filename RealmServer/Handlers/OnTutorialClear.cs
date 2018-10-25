@@ -1,15 +1,14 @@
-﻿namespace RealmServer.Handlers
+﻿using RealmServer.Database;
+
+namespace RealmServer.Handlers
 {
     public class OnTutorialClear
     {
         public static void Handler(RealmServerSession session, byte[] data)
         {
-            /*
-            Dim i As Integer
-            For i = 0 To 31
-            Client.Character.TutorialFlags(i) = 255
-            Next
-            */
+            session.Entity.TutorialFlags.ClearFlags();
+            session.Character.TutorialFlags = session.Entity.TutorialFlags.FlagData;
+            Characters.UpdateCharacter(session.Character);
         }
     }
 }

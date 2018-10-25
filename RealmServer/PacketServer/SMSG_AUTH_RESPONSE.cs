@@ -8,7 +8,7 @@ namespace RealmServer.PacketServer
     internal sealed class SMSG_AUTH_RESPONSE : Common.Network.PacketServer
     {
         /// <summary>
-        ///     Send Auth Response to Client
+        ///     SMSG_AUTH_RESPONSE happens after a client requested to login.
         /// </summary>
         /// <param name="state">LoginErroCode</param>
         /// <param name="count">Count to queue position</param>

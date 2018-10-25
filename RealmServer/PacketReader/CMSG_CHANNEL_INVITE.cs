@@ -2,6 +2,9 @@
 
 namespace RealmServer.PacketReader
 {
+    /// <summary>
+    ///     Handles a invite to channel packet
+    /// </summary>
     public class CMSG_CHANNEL_INVITE : Common.Network.PacketReader
     {
         public string ChannelName;

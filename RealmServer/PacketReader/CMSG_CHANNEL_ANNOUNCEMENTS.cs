@@ -2,6 +2,9 @@
 
 namespace RealmServer.PacketReader
 {
+    /// <summary>
+    ///     Handles a request of toggling the announce mode of the channel
+    /// </summary>
     public class CMSG_CHANNEL_ANNOUNCEMENTS : Common.Network.PacketReader
     {
         public string ChannelName;

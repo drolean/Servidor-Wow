@@ -3,7 +3,7 @@
 namespace RealmServer.PacketServer
 {
     /// <summary>
-    ///     Response to ping.
+    ///     SMSG_PONG represents a message sent by the server to a client ping request.
     /// </summary>
     public sealed class SMSG_PONG : Common.Network.PacketServer
     {

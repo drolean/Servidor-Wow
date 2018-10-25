@@ -1,6 +1,4 @@
-﻿using Common.Database;
-using Common.Database.Tables;
-using MongoDB.Driver;
+﻿using RealmServer.Database;
 
 namespace RealmServer.Handlers
 {
@@ -8,11 +6,8 @@ namespace RealmServer.Handlers
     {
         public static void Handler(RealmServerSession session, byte[] data)
         {
-            // TODO: change to model
-            DatabaseModel.CharacterCollection.UpdateOne(
-                Builders<Characters>.Filter.Where(x => x.Uid == session.Character.Uid),
-                Builders<Characters>.Update.Set(x => x.Cinematic, true)
-            );
+            session.Character.Cinematic = true;
+            Characters.UpdateCharacter(session.Character);
         }
     }
 }

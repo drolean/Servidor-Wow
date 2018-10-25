@@ -2,6 +2,9 @@
 
 namespace RealmServer.PacketReader
 {
+    /// <summary>
+    ///     Handles a request of making channel member a moderator
+    /// </summary>
     public class CMSG_CHANNEL_MODERATOR : Common.Network.PacketReader
     {
         public string ChannelName;

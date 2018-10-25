@@ -4,43 +4,45 @@ using Common.Database;
 using Common.Database.Tables;
 using Common.Helpers;
 using MongoDB.Driver;
+using RealmServer.Enums;
 using RealmServer.PacketReader;
 using RealmServer.PacketServer;
+using RealmServer.World.Managers;
 using Characters = RealmServer.Database.Characters;
 
-namespace RealmServer.Handlers
+namespace RealmServer.Handlers.Friends
 {
-    public class OnAddIgnore
+    public class OnFriendAdd
     {
-        public static void Handler(RealmServerSession session, CMSG_ADD_IGNORE handler)
+        public static void Handler(RealmServerSession session, CMSG_ADD_FRIEND handler)
         {
             var friend = Characters.FindCharacaterByName(handler.NamePlayer);
 
             // Not Found
             if (friend == null)
             {
-                session.SendPacket(new SMSG_FRIEND_STATUS(FriendResults.IGNORE_NOT_FOUND, null));
+                session.SendPacket(new SMSG_FRIEND_STATUS(FriendResults.NOT_FOUND, null));
                 return;
             }
 
             // Self
             if (friend.Name == session.Character.Name)
             {
-                session.SendPacket(new SMSG_FRIEND_STATUS(FriendResults.IGNORE_SELF, friend));
+                session.SendPacket(new SMSG_FRIEND_STATUS(FriendResults.SELF, friend));
                 return;
             }
 
             // Already
-            if (session.Character.SubIgnoreds.Any(x => x.Uid == friend.Uid))
+            if (session.Character.SubFriends.Any(x => x.Uid == friend.Uid))
             {
-                session.SendPacket(new SMSG_FRIEND_STATUS(FriendResults.IGNORE_ALREADY, friend));
+                session.SendPacket(new SMSG_FRIEND_STATUS(FriendResults.ALREADY, friend));
                 return;
             }
 
             // Count
-            if (session.Character.SubIgnoreds.Count >= 100)
+            if (session.Character.SubFriends.Count >= 100)
             {
-                session.SendPacket(new SMSG_FRIEND_STATUS(FriendResults.IGNORE_FULL, friend));
+                session.SendPacket(new SMSG_FRIEND_STATUS(FriendResults.LIST_FULL, friend));
                 return;
             }
 
@@ -55,14 +57,14 @@ namespace RealmServer.Handlers
             {
                 DatabaseModel.CharacterCollection.UpdateOneAsync(
                     Builders<Common.Database.Tables.Characters>.Filter.Where(x => x.Uid == session.Character.Uid),
-                    Builders<Common.Database.Tables.Characters>.Update.Push("SubIgnoreds", new SubCharacterIgnored
+                    Builders<Common.Database.Tables.Characters>.Update.Push("SubFriends", new SubCharacterFriend
                     {
                         Uid = friend.Uid,
                         CreatedAt = DateTime.Now
                     })
                 );
 
-                session.Character.SubIgnoreds.Add(new SubCharacterIgnored
+                session.Character.SubFriends.Add(new SubCharacterFriend
                 {
                     Uid = friend.Uid,
                     CreatedAt = DateTime.Now
@@ -74,9 +76,12 @@ namespace RealmServer.Handlers
             }
             finally
             {
-                session.SendPacket(new SMSG_FRIEND_STATUS(FriendResults.IGNORE_ADDED, friend));
+                var status = PlayerManager.Players.Any(p => p.Character.Uid == friend.Uid);
+
+                session.SendPacket(status
+                    ? new SMSG_FRIEND_STATUS(FriendResults.ADDED_ONLINE, friend)
+                    : new SMSG_FRIEND_STATUS(FriendResults.ADDED_OFFLINE, friend));
             }
         }
-
     }
 }

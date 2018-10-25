@@ -17,6 +17,8 @@ namespace RealmServer.World.Enititys
             KnownPlayers = new List<PlayerEntity>();
             KnownCreatures = new List<SpawnCreatures>();
 
+            TutorialFlags = new TutorialFlags(character.TutorialFlags);
+
             var chrRaces = MainProgram.ChrRacesReader.GetData(character.Race);
 
             Model = (int) CharacterHelper.GetRaceModel(character.Race, character.Gender);
@@ -35,7 +37,7 @@ namespace RealmServer.World.Enititys
             SetUpdateField((int) UnitFields.UNIT_FIELD_POWER4, 5);
             SetUpdateField((int) UnitFields.UNIT_FIELD_POWER5, 6);
 
-            SetUpdateField((int) UnitFields.UNIT_FIELD_MAXHEALTH, 7);
+            SetUpdateField((int) UnitFields.UNIT_FIELD_MAXHEALTH, character.SubStats.Life);
             SetUpdateField((int) UnitFields.UNIT_FIELD_MAXPOWER1, 8);
             SetUpdateField((int) UnitFields.UNIT_FIELD_MAXPOWER2, 9);
             SetUpdateField((int) UnitFields.UNIT_FIELD_MAXPOWER3, 10);
@@ -116,6 +118,7 @@ namespace RealmServer.World.Enititys
         public RealmServerSession Session { get; set; }
         public List<PlayerEntity> KnownPlayers { get; set; }
         public List<SpawnCreatures> KnownCreatures { get; set; }
+        public TutorialFlags TutorialFlags { get; set; }
 
         private void SkillGenerate()
         {

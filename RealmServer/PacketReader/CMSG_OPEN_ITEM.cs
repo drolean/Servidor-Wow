@@ -2,6 +2,9 @@
 
 namespace RealmServer.PacketReader
 {
+    /// <summary>
+    ///     Open an Item
+    /// </summary>
     public sealed class CMSG_OPEN_ITEM : Common.Network.PacketReader
     {
         public byte Bag;

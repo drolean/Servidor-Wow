@@ -17,6 +17,8 @@ namespace RealmServer.World.Managers
 
         internal static List<PlayerEntity> Players { get; set; }
 
+        /// <summary>
+        /// </summary>
         internal static void Boot()
         {
             Players = new List<PlayerEntity>();
@@ -29,16 +31,26 @@ namespace RealmServer.World.Managers
             Log.Print(LogType.RealmServer, "Loading PlayerManager ".PadRight(40, '.') + " [OK] ");
         }
 
+        /// <summary>
+        /// </summary>
+        /// <param name="playerEntity"></param>
         private static void OnPlayerSpawn(PlayerEntity playerEntity)
         {
             Players.Add(playerEntity);
         }
 
+        /// <summary>
+        /// </summary>
+        /// <param name="playerEntity"></param>
         private static void OnPlayerDespawn(PlayerEntity playerEntity)
         {
             Players.Remove(playerEntity);
         }
 
+        /// <summary>
+        /// </summary>
+        /// <param name="remote"></param>
+        /// <param name="playerEntity"></param>
         private static void DespawnPlayer(PlayerEntity remote, PlayerEntity playerEntity)
         {
             var despawnPlayer = new List<ObjectEntity> {playerEntity};
@@ -46,6 +58,10 @@ namespace RealmServer.World.Managers
             remote.KnownPlayers.Remove(playerEntity);
         }
 
+        /// <summary>
+        /// </summary>
+        /// <param name="remote"></param>
+        /// <param name="playerEntity"></param>
         private static void SpawnPlayer(PlayerEntity remote, PlayerEntity playerEntity)
         {
             remote.Session.SendInventory(playerEntity.Session);
@@ -53,6 +69,8 @@ namespace RealmServer.World.Managers
             remote.KnownPlayers.Add(playerEntity);
         }
 
+        /// <summary>
+        /// </summary>
         private static void Update()
         {
             while (true)
@@ -93,27 +111,28 @@ namespace RealmServer.World.Managers
             }
         }
 
+        /// <summary>
+        /// </summary>
+        /// <param name="player"></param>
+        /// <param name="objeto"></param>
         private static void SpawnObjeto(PlayerEntity player, SpawnCreatures objeto)
         {
-            Console.WriteLine($"Fazendo Spawn do NPC: {objeto.Uid}");
+            Console.WriteLine($@"Npc Spawn: {objeto.Uid}");
             player.Session.SendPacket(SMSG_UPDATE_OBJECT.CreateUnit(objeto));
             player.KnownCreatures.Add(objeto);
         }
 
+        /// <summary>
+        /// </summary>
+        /// <param name="playerEntityA"></param>
+        /// <param name="playerEntityB"></param>
+        /// <returns></returns>
         private static bool InRangeCheck(PlayerEntity playerEntityA, PlayerEntity playerEntityB)
         {
-            var distance = GetDistance(playerEntityA.Character.SubMap.MapX, playerEntityA.Character.SubMap.MapY,
+            var distance = Utils.GetDistance(playerEntityA.Character.SubMap.MapX, playerEntityA.Character.SubMap.MapY,
                 playerEntityB.Character.SubMap.MapX, playerEntityB.Character.SubMap.MapY);
 
-            return distance < 30; // DISTANCE
-        }
-
-        private static double GetDistance(float aX, float aY, float bX, float bY)
-        {
-            double a = aX - bX;
-            double b = bY - aY;
-
-            return Math.Sqrt(a * a + b * b);
+            return distance < Config.Instance.RangeDistanceLimit;
         }
     }
 }

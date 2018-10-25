@@ -65,6 +65,7 @@ namespace RealmServer.Database
                 WatchFaction = -1, // 255??
                 Cinematic = false,
                 Flag = CharacterFlag.None,
+                TutorialFlags = new byte[32],
                 //
                 SubMap = new SubMap
                 {
@@ -282,7 +283,7 @@ namespace RealmServer.Database
                     Builders<Common.Database.Tables.Characters>.Update.Push("SubActionBars", new SubActionBar
                     {
                         Button = actionBase.button,
-                        Action = actionBase.action,
+                        Action = actionBase.spell,
                         Type = actionBase.type,
                         CreatedAt = DateTime.Now
                     })

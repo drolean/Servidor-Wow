@@ -56,9 +56,9 @@ namespace RealmServer.PacketServer
             writer.Write(0f);
             writer.Write(0f);
 
-            writer.Write((float) 0);
+            writer.Write(0f);
 
-            writer.Write((uint) 1);
+            writer.Write((uint) 0);
             writer.Write((uint) 0);
 
             entity.WriteUpdateFields(writer);

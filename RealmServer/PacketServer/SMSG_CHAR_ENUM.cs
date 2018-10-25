@@ -8,7 +8,7 @@ using MongoDB.Driver;
 namespace RealmServer.PacketServer
 {
     /// <summary>
-    ///     SMSG_CHAR_ENUM represents list response of characters.
+    ///     SMSG_CHAR_ENUM represents a message sent by the server a client is authenticated for this realm.
     /// </summary>
     internal sealed class SMSG_CHAR_ENUM : Common.Network.PacketServer
     {
@@ -35,19 +35,19 @@ namespace RealmServer.PacketServer
                 Write(character.SubSkin.HairColor);
                 Write(character.SubSkin.FacialHair);
 
-                Write(character.Level); // int8	
-                Write(character.SubMap.MapZone); // int32	
-                Write(character.SubMap.MapId); // int32	
+                Write(character.Level); // int8
+                Write(character.SubMap.MapZone); // int32
+                Write(character.SubMap.MapId); // int32
                 Write(character.SubMap.MapX);
                 Write(character.SubMap.MapY);
                 Write(character.SubMap.MapZ);
 
-                Write(0); // Guild ID	
+                Write(0); // Guild ID
                 Write((int) character.Flag);
                 Write((byte) 0); // First Login or RestedState
 
-                Write(0); // PetModel	
-                Write(0); // PetLevel	
+                Write(0); // PetModel
+                Write(0); // PetLevel
                 Write(0); // PetFamily = SELECT family FROM creature_template WHERE entry
 
                 // TODO: create a lookup

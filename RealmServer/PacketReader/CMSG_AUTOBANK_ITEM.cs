@@ -2,6 +2,9 @@
 
 namespace RealmServer.PacketReader
 {
+    /// <summary>
+    ///     Auto-move item from Inventory to Bank
+    /// </summary>
     public sealed class CMSG_AUTOBANK_ITEM : Common.Network.PacketReader
     {
         public byte BagSlot;

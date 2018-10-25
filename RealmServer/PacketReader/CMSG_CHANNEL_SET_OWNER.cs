@@ -2,6 +2,9 @@
 
 namespace RealmServer.PacketReader
 {
+    /// <summary>
+    ///     Handles an incoming owner set request
+    /// </summary>
     public class CMSG_CHANNEL_SET_OWNER : Common.Network.PacketReader
     {
         public string ChannelName;

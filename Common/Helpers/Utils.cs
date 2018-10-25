@@ -10,6 +10,14 @@ namespace Common.Helpers
     {
         private static readonly Random Rand = new Random();
 
+        public static double GetDistance(float aX, float aY, float bX, float bY)
+        {
+            double a = aX - bX;
+            double b = bY - aY;
+
+            return Math.Sqrt(a * a + b * b);
+        }
+
         public static ulong GenerateRandUlong()
         {
             var thirtyBits = (uint) Rand.Next(1 << 30);

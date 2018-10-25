@@ -1,6 +1,6 @@
 ﻿using RealmServer.PacketServer;
 
-namespace RealmServer.Handlers
+namespace RealmServer.Handlers.Friends
 {
     public class OnFriendList
     {
