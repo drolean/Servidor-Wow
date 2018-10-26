@@ -2,13 +2,17 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
+using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Threading;
+using System.Threading.Tasks;
 using Common.Database;
 using Common.Database.Dbc;
+using Common.Database.Tables;
 using Common.Globals;
 using Common.Helpers;
+using MongoDB.Driver;
 using RealmServer.Handlers;
 using RealmServer.Handlers.Friends;
 using RealmServer.Handlers.Tickets;
@@ -20,6 +24,8 @@ namespace RealmServer
     internal class MainProgram
     {
         public static int Vai;
+        public static int Count;
+
         private static bool _keepGoing = true;
         private static readonly uint Time = Common.Helpers.Time.GetMsTime();
         private static readonly IPEndPoint RealmPoint = new IPEndPoint(IPAddress.Any, 1001);
@@ -483,6 +489,17 @@ namespace RealmServer
 
         private static void Future(RealmServerSession session, CMSG_USE_ITEM handler)
         {
+            var bagItem = session.Character.SubInventorie.FirstOrDefault(x => x.Slot == handler.Slot);
+
+            if (bagItem == null)
+                return;
+
+            //var dbItem = DatabaseModel.ItemsCollection.Find(a => a.Entry == bagItem.Item).FirstOrDefault();
+
+            //if (dbItem == null)
+                //return;
+
+            session.SendPacket(new SMSG_CAST_FAILED());
         }
 
         private static void Future(RealmServerSession session, CMSG_WHO handler)
@@ -494,7 +511,7 @@ namespace RealmServer
 
         private static void Future(RealmServerSession session, CMSG_SET_ACTION_BUTTON handler)
         {
-            throw new NotImplementedException();
+            
         }
 
         private static void Future(RealmServerSession session, CMSG_QUESTGIVER_QUERY_QUEST handler)
@@ -557,6 +574,20 @@ Commands:
   /up       Show uptime.
   /q 900    Shutdown server in 900sec = 15min. *Debug exit now!
   /help     Show this help.");
+        }
+    }
+
+    internal sealed class SMSG_CAST_FAILED : Common.Network.PacketServer
+    {
+        public SMSG_CAST_FAILED(Items dbItem = null) : base(RealmEnums.SMSG_CAST_FAILED)
+        {
+            Console.WriteLine($"Vai: {MainProgram.Vai} Count: {MainProgram.Count}");
+
+            Write((int) 8690); // SpellID
+            Write((byte) 2); // IDK
+            Write((byte) MainProgram.Vai); // RESULT
+
+            MainProgram.Vai++;
         }
     }
 }

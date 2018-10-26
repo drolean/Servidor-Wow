@@ -79,7 +79,7 @@ namespace RealmServer.Helpers
                 foreach (var inventory in session.Character.SubInventorie)
                     session.SendPacket(SMSG_UPDATE_OBJECT.CreateItem(inventory, session.Entity));
 
-            if (args[0] == "inv4")
+            if (args[0] == "timer")
             {
                 Sessao = session;
 
@@ -133,13 +133,7 @@ namespace RealmServer.Helpers
 
         private static void CheckEvents(object source, ElapsedEventArgs e)
         {
-            var inventory = Sessao.Character.SubInventorie.Find(x => x.Slot == 15);
-
-            Sessao.Entity.SetUpdateField((int) PlayerFields.PLAYER_VISIBLE_ITEM_1_0 + Count, inventory.Item);
-            Sessao.Entity.SetUpdateField((int) PlayerFields.PLAYER_VISIBLE_ITEM_1_PROPERTIES + Count, 0);
-            Sessao.Entity.SetUpdateField((int) PlayerFields.PLAYER_VISIBLE_ITEM_1_CREATOR + Count,
-                Sessao.Character.Uid);
-            Count++;
+            Sessao.SendPacket(new SMSG_CAST_FAILED());
         }
     }
 }
