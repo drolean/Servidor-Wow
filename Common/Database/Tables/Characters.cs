@@ -156,7 +156,7 @@ namespace Common.Database.Tables
         public uint Energy { get; set; }
         public uint Rage { get; set; }
         public uint Life { get; set; }
-        public uint ManaType { get; set; }
+        public int ManaType { get; set; }
         public uint Strength { get; set; }
         public uint Agility { get; set; }
         public uint Stamina { get; set; }

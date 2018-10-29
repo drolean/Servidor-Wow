@@ -162,7 +162,7 @@ namespace RealmServer.PacketServer
             writer.Write(2.5f); // MOVE_SWIM_BACK
             writer.Write(3.14f); // MOVE_TURN_RATE
 
-            writer.Write(0x1); // Unkown...
+            writer.Write(0); // Unkown...
 
             entity.WriteUpdateFields(writer);
 

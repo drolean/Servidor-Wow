@@ -19,7 +19,7 @@ namespace RealmServer.World.Enititys
             var model = npc.SubModels.RandomElement().Model;
 
             Type = (byte) (ObjectType.TYPE_OBJECT + (int) ObjectType.TYPE_UNIT);
-            Scale = 1f; //creature.SubStats.Scale; // 1f
+            Scale = 1f; //creature.SubStats.Scale;
             Entry = creature.Entry;
 
             //
@@ -37,7 +37,21 @@ namespace RealmServer.World.Enititys
             SetUpdateField((int) UnitFields.UNIT_FIELD_MAXHEALTH, npc.SubStats.Health);
             SetUpdateField((int) UnitFields.UNIT_FIELD_LEVEL, npc.SubStats.Level);
 
-            MainProgram.Vai++;
+            //
+            SetUpdateField((int) UnitFields.UNIT_FIELD_COMBATREACH, 10f);
+            SetUpdateField((int) UnitFields.UNIT_FIELD_ATTACK_POWER, 0);
+            SetUpdateField((int) UnitFields.UNIT_FIELD_BYTES_2, 1);
+            SetUpdateField((int) UnitFields.UNIT_FIELD_MINDAMAGE, 10f);
+            SetUpdateField((int) UnitFields.UNIT_FIELD_MAXDAMAGE, 10f);
+            SetUpdateField((int) UnitFields.UNIT_FIELD_BASEATTACKTIME, 1000);
+            SetUpdateField((int) UnitFields.UNIT_FIELD_BASEATTACKTIME + 1, 1000);
+            SetUpdateField((int) UnitFields.UNIT_FIELD_BOUNDINGRADIUS, 1f);
+            uint flags = (uint)0 + (1 << 8) + 0 + ((uint)0 << 24);
+            SetUpdateField((int) UnitFields.UNIT_FIELD_BYTES_0, flags);
+            SetUpdateField((int) UnitFields.UNIT_FIELD_BYTES_1, 0);
+            SetUpdateField((int) UnitFields.UNIT_FIELD_BOUNDINGRADIUS, 30f);
+            SetUpdateField((int) UnitFields.UNIT_CREATED_BY_SPELL, 1);
+
         }
 
         public TypeId TypeId => TypeId.TypeidUnit;

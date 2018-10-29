@@ -82,13 +82,7 @@ namespace RealmServer.World.Enititys
             // FLAG <GM>
             SetUpdateField((int) PlayerFields.PLAYER_FLAGS, 0x00000008);
 
-            SetUpdateField((int) UnitFields.UNIT_FIELD_BYTES_1, BitConverter.ToUInt32(new byte[]
-            {
-                character.StandState,
-                0,
-                0,
-                0
-            }, 0));
+            SetUpdateField((int) UnitFields.UNIT_FIELD_BYTES_1, character.StandState);
             SetUpdateField((int) UnitFields.UNIT_FIELD_BYTES_2, 0);
 
             SetUpdateField((int) PlayerFields.PLAYER_BYTES, BitConverter.ToUInt32(new[]

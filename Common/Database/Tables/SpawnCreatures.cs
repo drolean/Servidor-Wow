@@ -10,11 +10,11 @@ namespace Common.Database.Tables
 
     public class SubCreaturesTrainer
     {
-        public BsonNull Spell { get; set; }
-        public BsonNull Cost { get; set; }
-        public BsonNull ReqLevel { get; set; }
-        public BsonNull ReqSkill { get; set; }
-        public BsonNull ReqSkillValue { get; set; }
+        public int Spell { get; set; }
+        public int Cost { get; set; }
+        public int ReqLevel { get; set; }
+        public int ReqSkill { get; set; }
+        public int ReqSkillValue { get; set; }
     }
 
     public class SpawnCreatures

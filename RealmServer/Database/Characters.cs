@@ -94,7 +94,7 @@ namespace RealmServer.Database
 
                     Energy = initClas.power.energy,
                     Mana = initClas.power.mana,
-                    ManaType = 0, // TODO
+                    ManaType = (int) Functions.GetClassManaType((Classes) handler.Classe), // TODO
                     Life = (uint) (initRace.health + initClas.health),
                     Rage = initClas.power.rage
                 },
@@ -125,41 +125,32 @@ namespace RealmServer.Database
         /// <param name="character"></param>
         private static void CreateCharacterInventorie(Common.Database.Tables.Characters character)
         {
-            var rnd = new Random();
+            var startItems = MainProgram.CharacterOutfitReader.Get(character.Classe, character.Race, character.Gender);
+            int bagSlot = 0;
 
-            try
+            for (var i = 0; i < 12; i++)
             {
-                var startItems =
-                    MainProgram.CharacterOutfitReader.Get(character.Classe, character.Race, character.Gender);
+                if (startItems.Items[i] <= 0)
+                    continue;
 
-                for (var i = 0; i < 12; i++)
-                {
-                    if (startItems.Items[i] <= 0)
-                        continue;
+                var item = DatabaseModel.ItemsCollection.Find(x => x.Entry == startItems.Items[i]).First();
 
-                    var item = DatabaseModel.ItemsCollection.Find(x => x.Entry == startItems.Items[i]).First();
+                if (item == null)
+                    continue;
 
-                    if (item == null)
-                        continue;
-
-                    DatabaseModel.CharacterCollection.UpdateOneAsync(
-                        Builders<Common.Database.Tables.Characters>.Filter.Where(x => x.Uid == character.Uid),
-                        Builders<Common.Database.Tables.Characters>.Update.Push("SubInventorie", new SubInventory
-                        {
-                            Item = item.Entry,
-                            Slot = PrefInvSlot(item.InventoryType) == 23
-                                ? rnd.Next(23, 27)
-                                : PrefInvSlot(item.InventoryType),
-                            Durability = item.MaxDurability,
-                            StackCount = item.Stackable == 20 ? 5 : 1,
-                            CreatedAt = DateTime.Now
-                        })
-                    );
-                }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
+                DatabaseModel.CharacterCollection.UpdateOneAsync(
+                    Builders<Common.Database.Tables.Characters>.Filter.Where(x => x.Uid == character.Uid),
+                    Builders<Common.Database.Tables.Characters>.Update.Push("SubInventorie", new SubInventory
+                    {
+                        Item = item.Entry,
+                        Slot = PrefInvSlot(item.InventoryType) == 23
+                            ? (23 + bagSlot++)
+                            : PrefInvSlot(item.InventoryType),
+                        Durability = item.MaxDurability,
+                        StackCount = item.Stackable == 20 ? 5 : 1,
+                        CreatedAt = DateTime.Now
+                    })
+                );
             }
         }
 
