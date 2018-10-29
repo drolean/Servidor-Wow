@@ -39,6 +39,7 @@ namespace Common.Database.Tables
         public SubMap SubMap { get; set; }
         public SubSkin SubSkin { get; set; }
         public SubStats SubStats { get; set; }
+        public SubStats SubCurrentStats { get; set; }
 
         public List<SubSpell> SubSpells { get; set; }
         public List<SubActionBar> SubActionBars { get; set; }

@@ -212,5 +212,16 @@ namespace RealmServer.PacketServer
 
             return new SMSG_UPDATE_OBJECT(new List<byte[]> {(writer.BaseStream as MemoryStream)?.ToArray()});
         }
+
+        public static Common.Network.PacketServer CreateOutOfRangeUpdate(List<SpawnCreatures> despawnCreature)
+        {
+            var writer = new BinaryWriter(new MemoryStream());
+            writer.Write((byte) ObjectUpdateType.UPDATETYPE_OUT_OF_RANGE_OBJECTS);
+            writer.Write((uint) despawnCreature.Count);
+
+            foreach (var entity in despawnCreature) writer.WritePackedUInt64(entity.Uid);
+
+            return new SMSG_UPDATE_OBJECT(new List<byte[]> { ((MemoryStream)writer.BaseStream).ToArray() });
+        }
     }
 }

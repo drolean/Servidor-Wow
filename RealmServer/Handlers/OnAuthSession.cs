@@ -32,6 +32,8 @@ namespace RealmServer.Handlers
 
         private static void CheckAddons(BinaryReader handler)
         {
+            AddOnsNames.Clear();
+
             var addonData = handler.ReadBytes((int) handler.BaseStream.Length - (int) handler.BaseStream.Position);
             var decompressed = ZLib.Decompress(addonData);
 

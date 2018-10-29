@@ -9,8 +9,8 @@ namespace RealmServer.PacketServer
         public SMSG_QUESTGIVER_STATUS(CMSG_QUESTGIVER_STATUS_QUERY handler, QuestgiverStatusFlag status) : base(
             RealmEnums.SMSG_QUESTGIVER_STATUS)
         {
-            Write(handler.QuestUid);
-            Write((uint) 5);
+            Write(handler.CreatureUid);
+            Write((uint) status);
         }
     }
 }

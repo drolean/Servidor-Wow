@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Common.Database.Tables;
+using Common.Helpers;
 using RealmServer.Enums;
 using RealmServer.Helpers;
 
@@ -30,19 +31,20 @@ namespace RealmServer.World.Enititys
 
             SetUpdateField((int) UnitFields.UNIT_FIELD_TARGET, (ulong) 0);
 
-            SetUpdateField((int) UnitFields.UNIT_FIELD_HEALTH, 1);
-            SetUpdateField((int) UnitFields.UNIT_FIELD_POWER1, 2);
-            SetUpdateField((int) UnitFields.UNIT_FIELD_POWER2, 3);
-            SetUpdateField((int) UnitFields.UNIT_FIELD_POWER3, 4);
-            SetUpdateField((int) UnitFields.UNIT_FIELD_POWER4, 5);
-            SetUpdateField((int) UnitFields.UNIT_FIELD_POWER5, 6);
+            SetUpdateField((int) UnitFields.UNIT_FIELD_HEALTH, character.SubCurrentStats?.Life ?? character.SubStats.Life);
+            SetUpdateField((int) UnitFields.UNIT_FIELD_POWER1, character.SubCurrentStats?.Mana ?? character.SubStats.Mana);
+            SetUpdateField((int) UnitFields.UNIT_FIELD_POWER2, character.SubCurrentStats?.Rage ?? 0);
+            SetUpdateField((int) UnitFields.UNIT_FIELD_POWER3, 0);
+            SetUpdateField((int) UnitFields.UNIT_FIELD_POWER4, character.SubCurrentStats?.Energy ?? 0);
+            SetUpdateField((int) UnitFields.UNIT_FIELD_POWER5, 0);
 
             SetUpdateField((int) UnitFields.UNIT_FIELD_MAXHEALTH, character.SubStats.Life);
-            SetUpdateField((int) UnitFields.UNIT_FIELD_MAXPOWER1, 8);
-            SetUpdateField((int) UnitFields.UNIT_FIELD_MAXPOWER2, 9);
-            SetUpdateField((int) UnitFields.UNIT_FIELD_MAXPOWER3, 10);
-            SetUpdateField((int) UnitFields.UNIT_FIELD_MAXPOWER4, 11);
-            SetUpdateField((int) UnitFields.UNIT_FIELD_MAXPOWER5, 12);
+            SetUpdateField((int) UnitFields.UNIT_FIELD_MAXPOWER1, character.SubStats.Mana);
+            SetUpdateField((int) UnitFields.UNIT_FIELD_MAXPOWER2, character.SubStats.Rage);
+            SetUpdateField((int) UnitFields.UNIT_FIELD_MAXPOWER3, 0); // Focus
+            SetUpdateField((int) UnitFields.UNIT_FIELD_MAXPOWER4, character.SubStats.Energy);
+            SetUpdateField((int) UnitFields.UNIT_FIELD_MAXPOWER5, 0);
+
 
             SetUpdateField((int) UnitFields.UNIT_FIELD_LEVEL, character.Level);
             SetUpdateField((int) UnitFields.UNIT_FIELD_FACTIONTEMPLATE, chrRaces.FactionId);
@@ -52,7 +54,7 @@ namespace RealmServer.World.Enititys
                 (byte) character.Race,
                 (byte) character.Classe,
                 (byte) character.Gender,
-                1
+                (byte) Functions.GetClassManaType(character.Classe)
             }, 0));
 
             SetUpdateField((int) UnitFields.UNIT_FIELD_STAT0, 13); //character.SubStats.Strength);
@@ -69,17 +71,20 @@ namespace RealmServer.World.Enititys
             SetUpdateField((int) UnitFields.UNIT_FIELD_RESISTANCES_05, 23); //character.SubResistances.Shadow
             SetUpdateField((int) UnitFields.UNIT_FIELD_RESISTANCES_06, 24); //character.SubResistances.Arcane
 
-            SetUpdateField((int) UnitFields.UNIT_FIELD_FLAGS, 8);
-            SetUpdateField((int) UnitFields.UNIT_FIELD_BASE_MANA, 60);
-            SetUpdateField((int) UnitFields.UNIT_FIELD_BASE_HEALTH, 70);
+            SetUpdateField((int) UnitFields.UNIT_FIELD_FLAGS, character.Flag);
+            SetUpdateField((int) UnitFields.UNIT_FIELD_BASE_MANA, character.SubStats.Mana);
+            SetUpdateField((int) UnitFields.UNIT_FIELD_BASE_HEALTH, character.SubStats.Life);
 
             SetUpdateField((int) UnitFields.UNIT_FIELD_DISPLAYID, Model);
             SetUpdateField((int) UnitFields.UNIT_FIELD_NATIVEDISPLAYID, Model);
             SetUpdateField((int) UnitFields.UNIT_FIELD_MOUNTDISPLAYID, 0);
 
+            // FLAG <GM>
+            SetUpdateField((int) PlayerFields.PLAYER_FLAGS, 0x00000008);
+
             SetUpdateField((int) UnitFields.UNIT_FIELD_BYTES_1, BitConverter.ToUInt32(new byte[]
             {
-                (byte) StandStates.Stand,
+                character.StandState,
                 0,
                 0,
                 0

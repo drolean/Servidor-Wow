@@ -82,7 +82,9 @@
         /// <summary>
         /// 
         /// </summary>
-        UNKNOW = byte.MaxValue
+        UNKNOW = byte.MaxValue,
+
+        CLASSIC_LOGON = 22
     }
 
     public enum AccountState : byte

@@ -53,7 +53,7 @@ namespace RealmServer.Handlers
             Characters.UpdateCharacter(session.Character);
 
             _logoutQueue.Add(session, DateTime.Now);
-            var thread = new Thread(() => Update(20));
+            var thread = new Thread(() => Update(1));
             thread.Start();
         }
 

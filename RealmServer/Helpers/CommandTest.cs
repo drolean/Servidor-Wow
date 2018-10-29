@@ -67,6 +67,10 @@ namespace RealmServer.Helpers
                 session.SendMessageMotd($@"Players: {session.Entity.KnownPlayers.Count}");
             }
 
+            // test
+            if (args[0] == "tes")
+                session.Entity.SetUpdateField((int)PlayerFields.PLAYER_FLAGS, int.Parse(args[1]));
+
             // LEVEL
             if (args[0] == "level")
                 session.Entity.SetUpdateField((int) UnitFields.UNIT_FIELD_LEVEL, int.Parse(args[1]));

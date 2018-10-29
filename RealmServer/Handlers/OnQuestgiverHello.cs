@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using RealmServer.PacketReader;
-using RealmServer.PacketServer;
 
 namespace RealmServer.Handlers
 {
@@ -14,7 +13,7 @@ namespace RealmServer.Handlers
                 return;
 
             // if have multiple quest send this 
-            session.SendPacket(new SMSG_QUESTGIVER_QUEST_LIST(npcEntry, handler));
+            //session.SendPacket(new SMSG_QUESTGIVER_QUEST_LIST(npcEntry, handler));
         }
     }
 }

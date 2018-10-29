@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading;
 using Common.Database;
 using Common.Database.Tables;
@@ -82,7 +81,7 @@ namespace RealmServer.World.Managers
                         // Ignore self
                         if (player == otherPlayer) continue;
 
-                        if (InRangeCheck(player, otherPlayer))
+                        if (InRangeCheck(player.Character.SubMap, otherPlayer.Character.SubMap))
                         {
                             if (!player.KnownPlayers.Contains(otherPlayer))
                                 SpawnPlayer(player, otherPlayer);
@@ -94,9 +93,19 @@ namespace RealmServer.World.Managers
                         }
                     }
 
-                    foreach (var objeto in Objetos)
-                        if (!player.KnownCreatures.Contains(objeto))
-                            SpawnObjeto(player, objeto);
+                    foreach (var creature in Objetos)
+                    {
+                        if (InRangeCheck(player.Character.SubMap, creature.SubMap))
+                        {
+                            if (!player.KnownCreatures.Contains(creature))
+                                SpawnCreatures(player, creature);
+                        }
+                        else
+                        {
+                            if (player.KnownCreatures.Contains(creature))
+                                DespawnCreature(player, creature);
+                        }
+                    }
 
                     if (player.UpdateCount > 0)
                     {
@@ -111,15 +120,29 @@ namespace RealmServer.World.Managers
             }
         }
 
+        private static void DespawnCreature(PlayerEntity player, SpawnCreatures creature)
+        {
+            var despawnCreature = new List<SpawnCreatures> { creature };
+            player.Session.SendPacket(SMSG_UPDATE_OBJECT.CreateOutOfRangeUpdate(despawnCreature));
+            player.KnownCreatures.Remove(creature);
+        }
+
+        private static bool InRangeCheck(SubMap character, SubMap entity)
+        {
+            var distance = Utils.GetDistance(character.MapX, character.MapY,
+                entity.MapX, entity.MapY);
+
+            return distance <= 30; // Config.Instance.RangeDistanceLimit;
+        }
+
         /// <summary>
         /// </summary>
         /// <param name="player"></param>
-        /// <param name="objeto"></param>
-        private static void SpawnObjeto(PlayerEntity player, SpawnCreatures objeto)
+        /// <param name="creature"></param>
+        private static void SpawnCreatures(PlayerEntity player, SpawnCreatures creature)
         {
-            Console.WriteLine($@"Npc Spawn: {objeto.Uid}");
-            player.Session.SendPacket(SMSG_UPDATE_OBJECT.CreateUnit(objeto));
-            player.KnownCreatures.Add(objeto);
+            player.Session.SendPacket(SMSG_UPDATE_OBJECT.CreateUnit(creature));
+            player.KnownCreatures.Add(creature);
         }
 
         /// <summary>

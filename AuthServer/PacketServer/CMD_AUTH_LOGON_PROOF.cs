@@ -9,15 +9,18 @@ namespace AuthServer.PacketServer
         /// <summary>
         ///     Second authentication step, the client is sending his proof.
         /// </summary>
-        /// <param name="srp"></param>
+        /// <param name="session"></param>
         /// <param name="result"></param>
         /// <returns></returns>
-        public CMD_AUTH_LOGON_PROOF(Srp6 srp, AccountState result) : base(AuthCMD.CMD_AUTH_LOGON_PROOF)
+        public CMD_AUTH_LOGON_PROOF(AuthServerSession session, AccountState result) : base(AuthCMD.CMD_AUTH_LOGON_PROOF)
         {
             Write((byte) AuthCMD.CMD_AUTH_LOGON_PROOF);
             Write((byte) result);
-            Write(srp.ServerProof.ToByteArray().Pad(20));
+            Write(session.Srp.ServerProof.ToByteArray().Pad(20));
             this.WriteNullByte(4);
+
+            if (session.Packet.Version.Contains("2.4"))
+                this.WriteNullByte(6);
         }
 
         /// <summary>

@@ -13,13 +13,13 @@ namespace AuthServer
 {
     internal class MainProgram
     {
-        public static int Vai = 0;
         private static bool _keepGoing = true;
         private static readonly uint Time = Common.Helpers.Time.GetMsTime();
         private static readonly IPEndPoint AuthPoint = new IPEndPoint(IPAddress.Any, 3724);
         public static AuthServerDatabase Database { get; set; }
         public static AuthServerClass AuthServerClass { get; set; }
         public static Timer TimerRealm { get; private set; }
+        public static int Count { get; set; }
 
         private static void Main()
         {
@@ -96,8 +96,9 @@ namespace AuthServer
             AuthServerRouter.AddHandler<CMD_AUTH_LOGON_CHALLENGE>(AuthCMD.CMD_AUTH_LOGON_CHALLENGE, OnAuthLogonChallenge.Handler);
             AuthServerRouter.AddHandler<CMD_AUTH_LOGON_PROOF>(AuthCMD.CMD_AUTH_LOGON_PROOF, OnAuthLogonProof.Handler);
             AuthServerRouter.AddHandler(AuthCMD.CMD_AUTH_REALMLIST, OnAuthRealmList.Handler);
+            //AuthServerRouter.AddHandler<Absbs>(AuthCMD.CLASSIC_LOGON, Handler);
         }
-
+        
         private static void TimerRealmCallback(object o)
         {
             Log.Print(LogType.AuthServer, "Checking Realm Status ".PadRight(40, '.'));

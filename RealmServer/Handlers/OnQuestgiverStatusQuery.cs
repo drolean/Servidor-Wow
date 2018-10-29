@@ -8,8 +8,8 @@ namespace RealmServer.Handlers
     {
         public static void Handler(RealmServerSession session, CMSG_QUESTGIVER_STATUS_QUERY handler)
         {
-            var status = 1;
-            session.SendPacket(new SMSG_QUESTGIVER_STATUS(handler, (QuestgiverStatusFlag) status));
+            //5var status = 1;
+            session.SendPacket(new SMSG_QUESTGIVER_STATUS(handler, QuestgiverStatusFlag.DIALOG_STATUS_NONE));
         }
     }
 }

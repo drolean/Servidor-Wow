@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Net.Sockets;
 using System.Text;
+using AuthServer.PacketReader;
 using Common.Crypt;
 using Common.Database.Tables;
 using Common.Globals;
@@ -39,6 +40,7 @@ namespace AuthServer
         public Socket ConnectionSocket { get; }
         public byte[] DataBuffer { get; }
         public Users User { get; set; }
+        public CMD_AUTH_LOGON_CHALLENGE Packet { get; set; }
 
         private void Disconnect()
         {

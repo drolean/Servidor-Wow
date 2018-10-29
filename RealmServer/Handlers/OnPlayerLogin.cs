@@ -40,7 +40,9 @@ namespace RealmServer.Handlers
 
             session.SendInventory(session);
 
+            // ???
             session.Entity.Session = session;
+
             WorldManager.DispatchOnPlayerSpawn(session.Entity);
         }
     }

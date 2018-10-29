@@ -19,10 +19,10 @@ namespace AuthServer.PacketServer
         ///     ?????      : byte;
         /// </summary>
         /// <param name="realms"></param>
-        /// <param name="accountName"></param>
+        /// <param name="session"></param>
         /// <returns></returns>
         /// <todo>/// Count Population of Realm/// </todo>
-        public CMD_AUTH_REALMLIST(IReadOnlyCollection<Realms> realms, string accountName) : base(
+        public CMD_AUTH_REALMLIST(IReadOnlyCollection<Realms> realms, AuthServerSession session) : base(
             AuthCMD.CMD_AUTH_REALMLIST)
         {
             Write((uint) 0x0000);
@@ -30,19 +30,20 @@ namespace AuthServer.PacketServer
 
             foreach (var realm in realms)
             {
-                var count = MainProgram.Database.GetCharactersByUser(realm, accountName);
+                var count = MainProgram.Database.GetCharactersByUser(realm, session.User.Username);
 
                 Write((uint) realm.Type);
                 Write((byte) realm.Flag);
                 WriteCString(realm.Name);
                 WriteCString(realm.Address);
                 Write(1.6f);
-                Write((byte) count);
+                Write((byte) count.Count);
                 Write((byte) realm.Timezone);
                 Write((byte) 0x01);
             }
 
             Write((ushort) 0x0002);
+    
         }
     }
 }

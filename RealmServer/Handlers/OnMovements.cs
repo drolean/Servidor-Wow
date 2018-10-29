@@ -28,7 +28,6 @@ namespace RealmServer.Handlers
             await Characters.UpdateMovement(session.Character);
 
             session.Entity.SetUpdateField((int) UnitFields.UNIT_NPC_EMOTESTATE, 0);
-
             session.Entity.KnownPlayers.ForEach(s => s.Session.SendPacket(new PsMovement(session, handler, code)));
         }
     }

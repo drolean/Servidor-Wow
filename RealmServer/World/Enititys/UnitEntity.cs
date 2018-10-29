@@ -36,6 +36,8 @@ namespace RealmServer.World.Enititys
             SetUpdateField((int) UnitFields.UNIT_FIELD_HEALTH, npc.SubStats.Health);
             SetUpdateField((int) UnitFields.UNIT_FIELD_MAXHEALTH, npc.SubStats.Health);
             SetUpdateField((int) UnitFields.UNIT_FIELD_LEVEL, npc.SubStats.Level);
+
+            MainProgram.Vai++;
         }
 
         public TypeId TypeId => TypeId.TypeidUnit;

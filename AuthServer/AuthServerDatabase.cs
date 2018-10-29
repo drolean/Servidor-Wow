@@ -60,9 +60,9 @@ namespace AuthServer
         /// <param name="realm"></param>
         /// <param name="username"></param>
         /// <returns></returns>
-        public long GetCharactersByUser(Realms realm, string username)
+        public List<Characters> GetCharactersByUser(Realms realm, string username)
         {
-            return DatabaseModel.CharacterCollection.Find(a => a.Realm.Id == realm.Id && a.Name == username).Count();
+            return DatabaseModel.CharacterCollection.Find(a => a.Realm.Id == realm.Id && a.Name == username).ToList();
         }
     }
 }

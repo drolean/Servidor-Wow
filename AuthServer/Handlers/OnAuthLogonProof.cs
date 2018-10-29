@@ -14,7 +14,7 @@ namespace AuthServer.Handlers
             if (session.Srp.ClientProof == session.Srp.GenerateClientProof())
             {
                 MainProgram.Database.SetSessionKey(session.User.Username, session.Srp.SessionKey.ToProperByteArray());
-                session.SendData(new PacketServer.CMD_AUTH_LOGON_PROOF(session.Srp, AccountState.OK));
+                session.SendData(new PacketServer.CMD_AUTH_LOGON_PROOF(session, AccountState.OK));
                 return;
             }
 

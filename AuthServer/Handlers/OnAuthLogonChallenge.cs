@@ -8,7 +8,7 @@ namespace AuthServer.Handlers
     {
         internal static void Handler(AuthServerSession session, CMD_AUTH_LOGON_CHALLENGE packet)
         {
-            if (!packet.Version.Contains("1.12"))
+            if (!packet.Version.Contains("1.12") && !packet.Version.Contains("2.4"))
             {
                 session.SendData(new PacketServer.CMD_AUTH_LOGON_CHALLENGE(AccountState.BADVERSION));
                 return;
@@ -24,6 +24,7 @@ namespace AuthServer.Handlers
 
             if (session.User != null)
             {
+                session.Packet = packet;
                 session.Srp = new Srp6(session.User.Username, session.User.Password.ToUpper());
                 session.SendData(new PacketServer.CMD_AUTH_LOGON_CHALLENGE(session, AccountState.OK));
                 return;

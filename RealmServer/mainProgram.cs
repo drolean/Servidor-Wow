@@ -2,17 +2,17 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Threading;
-using System.Threading.Tasks;
 using Common.Database;
 using Common.Database.Dbc;
 using Common.Database.Tables;
 using Common.Globals;
 using Common.Helpers;
-using MongoDB.Driver;
+using MongoDB.Bson.Serialization;
 using RealmServer.Handlers;
 using RealmServer.Handlers.Friends;
 using RealmServer.Handlers.Tickets;
@@ -91,6 +91,8 @@ namespace RealmServer
             //
             PlayerManager.Boot();
             //
+            TimerManager.Boot();
+            //
             Initalizing();
 
             Log.Print(LogType.RealmServer, $"Running from: {AppDomain.CurrentDomain.BaseDirectory}");
@@ -103,12 +105,24 @@ namespace RealmServer
                 var command = Console.ReadLine();
                 switch (command)
                 {
+                    case "/db":
+                    case "db":
+                        foreach (string file in Directory.EnumerateFiles("../Seeds/Spawns/", "*", SearchOption.AllDirectories))
+                        {
+                            string contents = File.ReadAllText(file);
+                            SpawnCreatures document = BsonSerializer.Deserialize<SpawnCreatures>(contents);
+                            DatabaseModel.SpawnCreaturesCollection.InsertOne(document);
+                        }
+                        break;
+
                     case "/config":
                     case "config":
                         ConfigFile(true);
                         break;
+
                     case "/up":
                     case "up":
+                        Console.WriteLine(0x4000);
                         Log.Print(LogType.Console,
                             $"Uptime {DateTime.UtcNow - Process.GetCurrentProcess().StartTime.ToUniversalTime()}");
                         break;

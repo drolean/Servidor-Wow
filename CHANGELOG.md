@@ -4,6 +4,34 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.32] - 2018-10-28
+### Added
+- OnAuthLogonChallenge.Handler verify TBC Expansaion.
+- CMD_AUTH_LOGON_PROOF support TBC.
+- Table.Characters.SubCurrentStats to handle current status health/mana.
+- SpawnCreatures added some Subs.
+- Common.Utils.Functions.GetClassManaType return type of mana of char based on class.
+- RealmServer.Console added '/db' to seed Spawns
+- RealmServer.SMSG_UPDATE_OBJECT added CreateOutOfRangeUpdate to Creatures.
+- RealmServer.PlayerManager now spawn creatures
+- RealmServer.PlayerManager DespawnCreature 
+- RealmServer.PlayerManager InRangeCheck
+- RealmServer.PlayerManager SpawnCreatures
+- RealmServer.TimerManager to manage regen only health.
+- .editorconfig
+
+### Changed
+- AuthServerDatabase.GetCharactersByUser now return List.
+- AuthServer.CMD_AUTH_LOGON_PROOF change session.Srp to session.
+- AuthServer.OnAuthRealmList send a session.
+- AuthServer.CMD_AUTH_REALMLIST minimal changes.
+- RealmServer.OnAuthSession on CheckAddons now reset list on start.
+- RealmServer.OnGossipHello implantation.
+- RealmServer.OnLogout now tick to 1s.
+- RealmServer.CMSG_QUESTGIVER_STATUS_QUERY nomenclature.
+- RealmServer.PlayerEntity now send correct stats based on database.
+- RealmServer.PlayerEntity added flag GM.
+
 ## [0.0.31] - 2018-10-25
 ### Added
 - Config.RangeDistanceLimit = 30 default

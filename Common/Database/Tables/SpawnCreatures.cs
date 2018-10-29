@@ -1,7 +1,22 @@
-﻿using MongoDB.Bson;
+﻿using System.Collections.Generic;
+using MongoDB.Bson;
 
 namespace Common.Database.Tables
 {
+    public class SubCreaturesVendor
+    {
+        public int Item { get; set; }
+    }
+
+    public class SubCreaturesTrainer
+    {
+        public BsonNull Spell { get; set; }
+        public BsonNull Cost { get; set; }
+        public BsonNull ReqLevel { get; set; }
+        public BsonNull ReqSkill { get; set; }
+        public BsonNull ReqSkillValue { get; set; }
+    }
+
     public class SpawnCreatures
     {
         // Database
@@ -10,6 +25,11 @@ namespace Common.Database.Tables
         public int Entry { get; set; } = 0;
 
         public SubMap SubMap { get; set; }
+        public List<SubCreaturesQuests> SubQuests { get; set; }
+        public List<SubCreaturesQuests> SubInvolvedQuests { get; set; }
+        public List<SubCreaturesTrainer> SubTrainer { get; set; }
+        public List<SubCreaturesVendor> SubVendor { get; set; }
+        
         public SubStats SubStats { get; set; }
        
         public int CountDeath { get; set; }

@@ -20,7 +20,6 @@ namespace RealmServer.World.Managers
             OnPlayerDespawn?.Invoke(playerEntity);
         }
 
-
         private static List<PlayerEntity> PlayersWhoKnow(PlayerEntity playerEntity)
         {
             return PlayerManager.Players.FindAll(p => p.KnownPlayers.Contains(playerEntity));
