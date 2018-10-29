@@ -31,8 +31,10 @@ namespace RealmServer.World.Enititys
 
             SetUpdateField((int) UnitFields.UNIT_FIELD_TARGET, (ulong) 0);
 
-            SetUpdateField((int) UnitFields.UNIT_FIELD_HEALTH, character.SubCurrentStats?.Life ?? character.SubStats.Life);
-            SetUpdateField((int) UnitFields.UNIT_FIELD_POWER1, character.SubCurrentStats?.Mana ?? character.SubStats.Mana);
+            SetUpdateField((int) UnitFields.UNIT_FIELD_HEALTH,
+                character.SubCurrentStats?.Life ?? character.SubStats.Life);
+            SetUpdateField((int) UnitFields.UNIT_FIELD_POWER1,
+                character.SubCurrentStats?.Mana ?? character.SubStats.Mana);
             SetUpdateField((int) UnitFields.UNIT_FIELD_POWER2, character.SubCurrentStats?.Rage ?? 0);
             SetUpdateField((int) UnitFields.UNIT_FIELD_POWER3, 0);
             SetUpdateField((int) UnitFields.UNIT_FIELD_POWER4, character.SubCurrentStats?.Energy ?? 0);
@@ -49,7 +51,7 @@ namespace RealmServer.World.Enititys
             SetUpdateField((int) UnitFields.UNIT_FIELD_LEVEL, character.Level);
             SetUpdateField((int) UnitFields.UNIT_FIELD_FACTIONTEMPLATE, chrRaces.FactionId);
 
-            SetUpdateField((int) UnitFields.UNIT_FIELD_BYTES_0, BitConverter.ToUInt32(new byte[]
+            SetUpdateField((int) UnitFields.UNIT_FIELD_BYTES_0, BitConverter.ToUInt32(new[]
             {
                 (byte) character.Race,
                 (byte) character.Classe,

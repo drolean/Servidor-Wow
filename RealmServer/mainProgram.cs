@@ -107,12 +107,14 @@ namespace RealmServer
                 {
                     case "/db":
                     case "db":
-                        foreach (string file in Directory.EnumerateFiles("../Seeds/Spawns/", "*", SearchOption.AllDirectories))
+                        foreach (var file in Directory.EnumerateFiles("../Seeds/Spawns/", "*",
+                            SearchOption.AllDirectories))
                         {
-                            string contents = File.ReadAllText(file);
-                            SpawnCreatures document = BsonSerializer.Deserialize<SpawnCreatures>(contents);
+                            var contents = File.ReadAllText(file);
+                            var document = BsonSerializer.Deserialize<SpawnCreatures>(contents);
                             DatabaseModel.SpawnCreaturesCollection.InsertOne(document);
                         }
+
                         break;
 
                     case "/config":
@@ -511,7 +513,7 @@ namespace RealmServer
             //var dbItem = DatabaseModel.ItemsCollection.Find(a => a.Entry == bagItem.Item).FirstOrDefault();
 
             //if (dbItem == null)
-                //return;
+            //return;
 
             session.SendPacket(new SMSG_CAST_FAILED());
         }
@@ -525,7 +527,6 @@ namespace RealmServer
 
         private static void Future(RealmServerSession session, CMSG_SET_ACTION_BUTTON handler)
         {
-            
         }
 
         private static void Future(RealmServerSession session, CMSG_QUESTGIVER_QUERY_QUEST handler)
@@ -588,20 +589,6 @@ Commands:
   /up       Show uptime.
   /q 900    Shutdown server in 900sec = 15min. *Debug exit now!
   /help     Show this help.");
-        }
-    }
-
-    internal sealed class SMSG_CAST_FAILED : Common.Network.PacketServer
-    {
-        public SMSG_CAST_FAILED(Items dbItem = null) : base(RealmEnums.SMSG_CAST_FAILED)
-        {
-            Console.WriteLine($"Vai: {MainProgram.Vai} Count: {MainProgram.Count}");
-
-            Write((int) 8690); // SpellID
-            Write((byte) 2); // IDK
-            Write((byte) MainProgram.Vai); // RESULT
-
-            MainProgram.Vai++;
         }
     }
 }

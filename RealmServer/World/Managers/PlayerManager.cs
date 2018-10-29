@@ -94,7 +94,6 @@ namespace RealmServer.World.Managers
                     }
 
                     foreach (var creature in Objetos)
-                    {
                         if (InRangeCheck(player.Character.SubMap, creature.SubMap))
                         {
                             if (!player.KnownCreatures.Contains(creature))
@@ -105,7 +104,6 @@ namespace RealmServer.World.Managers
                             if (player.KnownCreatures.Contains(creature))
                                 DespawnCreature(player, creature);
                         }
-                    }
 
                     if (player.UpdateCount > 0)
                     {
@@ -122,7 +120,7 @@ namespace RealmServer.World.Managers
 
         private static void DespawnCreature(PlayerEntity player, SpawnCreatures creature)
         {
-            var despawnCreature = new List<SpawnCreatures> { creature };
+            var despawnCreature = new List<SpawnCreatures> {creature};
             player.Session.SendPacket(SMSG_UPDATE_OBJECT.CreateOutOfRangeUpdate(despawnCreature));
             player.KnownCreatures.Remove(creature);
         }

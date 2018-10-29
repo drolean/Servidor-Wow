@@ -88,6 +88,8 @@
     <Compile Include="Handlers\OnCreatureQuery.cs" />
     <Compile Include="Handlers\Friends\OnDelFriend.cs" />
     <Compile Include="Handlers\Friends\OnDelIgnore.cs" />
+    <Compile Include="PacketServer\SMSG_GOSSIP_MESSAGE.cs" />
+    <Compile Include="PacketServer\SMSG_NPC_TEXT_UPDATE.cs" />
     <Compile Include="Handlers\Tickets\OnGmTicketSystemStatus.cs" />
     <Compile Include="Handlers\OnGossipHello.cs" />
     <Compile Include="Handlers\OnInspect.cs" />
@@ -384,11 +386,12 @@
     <Compile Include="RealmServerSession.cs" />
     <Compile Include="PacketServer\SMSG_INSPECT.cs" />
     <Compile Include="PacketServer\SMSG_PLAYED_TIME.cs" />
-    <Compile Include="World\Enititys\BaseEntity.cs" />
-    <Compile Include="World\Enititys\ItemEntity.cs" />
-    <Compile Include="World\Enititys\ObjectEntity.cs" />
-    <Compile Include="World\Enititys\PlayerEntity.cs" />
-    <Compile Include="World\Enititys\UnitEntity.cs" />
+    <Compile Include="SMSG_CAST_FAILED.cs" />
+    <Compile Include="World\Entitys\BaseEntity.cs" />
+    <Compile Include="World\Entitys\ItemEntity.cs" />
+    <Compile Include="World\Entitys\ObjectEntity.cs" />
+    <Compile Include="World\Entitys\PlayerEntity.cs" />
+    <Compile Include="World\Entitys\UnitEntity.cs" />
     <Compile Include="World\Managers\PlayerManager.cs" />
     <Compile Include="World\Managers\TimerManager.cs" />
     <Compile Include="World\Managers\WorldManager.cs" />

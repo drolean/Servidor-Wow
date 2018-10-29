@@ -69,7 +69,7 @@ namespace RealmServer.Helpers
 
             // test
             if (args[0] == "tes")
-                session.Entity.SetUpdateField((int)PlayerFields.PLAYER_FLAGS, int.Parse(args[1]));
+                session.Entity.SetUpdateField((int) PlayerFields.PLAYER_FLAGS, int.Parse(args[1]));
 
             // LEVEL
             if (args[0] == "level")

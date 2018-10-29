@@ -46,12 +46,11 @@ namespace RealmServer.World.Enititys
             SetUpdateField((int) UnitFields.UNIT_FIELD_BASEATTACKTIME, 1000);
             SetUpdateField((int) UnitFields.UNIT_FIELD_BASEATTACKTIME + 1, 1000);
             SetUpdateField((int) UnitFields.UNIT_FIELD_BOUNDINGRADIUS, 1f);
-            uint flags = (uint)0 + (1 << 8) + 0 + ((uint)0 << 24);
+            var flags = (uint) 0 + (1 << 8) + 0 + ((uint) 0 << 24);
             SetUpdateField((int) UnitFields.UNIT_FIELD_BYTES_0, flags);
             SetUpdateField((int) UnitFields.UNIT_FIELD_BYTES_1, 0);
             SetUpdateField((int) UnitFields.UNIT_FIELD_BOUNDINGRADIUS, 30f);
             SetUpdateField((int) UnitFields.UNIT_CREATED_BY_SPELL, 1);
-
         }
 
         public TypeId TypeId => TypeId.TypeidUnit;

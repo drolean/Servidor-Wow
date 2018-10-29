@@ -221,7 +221,7 @@ namespace RealmServer.PacketServer
 
             foreach (var entity in despawnCreature) writer.WritePackedUInt64(entity.Uid);
 
-            return new SMSG_UPDATE_OBJECT(new List<byte[]> { ((MemoryStream)writer.BaseStream).ToArray() });
+            return new SMSG_UPDATE_OBJECT(new List<byte[]> {((MemoryStream) writer.BaseStream).ToArray()});
         }
     }
 }

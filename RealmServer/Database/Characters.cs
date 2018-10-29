@@ -126,7 +126,7 @@ namespace RealmServer.Database
         private static void CreateCharacterInventorie(Common.Database.Tables.Characters character)
         {
             var startItems = MainProgram.CharacterOutfitReader.Get(character.Classe, character.Race, character.Gender);
-            int bagSlot = 0;
+            var bagSlot = 0;
 
             for (var i = 0; i < 12; i++)
             {
@@ -144,7 +144,7 @@ namespace RealmServer.Database
                     {
                         Item = item.Entry,
                         Slot = PrefInvSlot(item.InventoryType) == 23
-                            ? (23 + bagSlot++)
+                            ? 23 + bagSlot++
                             : PrefInvSlot(item.InventoryType),
                         Durability = item.MaxDurability,
                         StackCount = item.Stackable == 20 ? 5 : 1,
