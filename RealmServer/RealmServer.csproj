@@ -387,6 +387,7 @@
     <Compile Include="PacketServer\SMSG_INSPECT.cs" />
     <Compile Include="PacketServer\SMSG_PLAYED_TIME.cs" />
     <Compile Include="SMSG_CAST_FAILED.cs" />
+    <Compile Include="World\AIBrain.cs" />
     <Compile Include="World\Entitys\BaseEntity.cs" />
     <Compile Include="World\Entitys\ItemEntity.cs" />
     <Compile Include="World\Entitys\ObjectEntity.cs" />

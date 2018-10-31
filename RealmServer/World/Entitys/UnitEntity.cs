@@ -1,4 +1,5 @@
-﻿using Common.Database;
+﻿using System;
+using Common.Database;
 using Common.Database.Tables;
 using Common.Helpers;
 using MongoDB.Driver;
@@ -18,6 +19,8 @@ namespace RealmServer.World.Enititys
             var npc = DatabaseModel.CreaturesCollection.Find(x => x.Entry == creature.Entry).First();
             var model = npc.SubModels.RandomElement().Model;
 
+            AiBrain = new AiBrain(this);
+
             Type = (byte) (ObjectType.TYPE_OBJECT + (int) ObjectType.TYPE_UNIT);
             Scale = 1f; //creature.SubStats.Scale;
             Entry = creature.Entry;
@@ -28,7 +31,8 @@ namespace RealmServer.World.Enititys
 
             SetUpdateField((int) UnitFields.UNIT_NPC_FLAGS, npc.SubFlags.Npc);
             SetUpdateField((int) UnitFields.UNIT_DYNAMIC_FLAGS, npc.SubFlags.Dynamic);
-            SetUpdateField((int) UnitFields.UNIT_FIELD_FLAGS, npc.SubFlags.Unit);
+            SetUpdateField((int) UnitFields.UNIT_FIELD_FLAGS, 0x8); //npc.SubFlags.Unit);
+            Console.WriteLine(npc.SubFlags.Unit);
 
             SetUpdateField((int) UnitFields.UNIT_FIELD_FACTIONTEMPLATE, npc.FactionAlliance);
 
@@ -46,8 +50,8 @@ namespace RealmServer.World.Enititys
             SetUpdateField((int) UnitFields.UNIT_FIELD_BASEATTACKTIME, 1000);
             SetUpdateField((int) UnitFields.UNIT_FIELD_BASEATTACKTIME + 1, 1000);
             SetUpdateField((int) UnitFields.UNIT_FIELD_BOUNDINGRADIUS, 1f);
-            var flags = (uint) 0 + (1 << 8) + 0 + ((uint) 0 << 24);
-            SetUpdateField((int) UnitFields.UNIT_FIELD_BYTES_0, flags);
+
+            SetUpdateField((int) UnitFields.UNIT_FIELD_BYTES_0, 1); // TODO: unit_Class
             SetUpdateField((int) UnitFields.UNIT_FIELD_BYTES_1, 0);
             SetUpdateField((int) UnitFields.UNIT_FIELD_BOUNDINGRADIUS, 30f);
             SetUpdateField((int) UnitFields.UNIT_CREATED_BY_SPELL, 1);
@@ -55,5 +59,7 @@ namespace RealmServer.World.Enititys
 
         public TypeId TypeId => TypeId.TypeidUnit;
         public override int DataLength => (int) UnitFields.UNIT_END - 0x4;
+
+        public AiBrain AiBrain { get; }
     }
 }

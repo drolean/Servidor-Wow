@@ -13,10 +13,12 @@ using Common.Database.Tables;
 using Common.Globals;
 using Common.Helpers;
 using MongoDB.Bson.Serialization;
+using MongoDB.Driver;
 using RealmServer.Handlers;
 using RealmServer.Handlers.Friends;
 using RealmServer.Handlers.Tickets;
 using RealmServer.PacketReader;
+using RealmServer.World;
 using RealmServer.World.Managers;
 
 namespace RealmServer
@@ -254,6 +256,9 @@ namespace RealmServer
             RealmServerRouter.AddHandler<CMSG_WHO>(RealmEnums.CMSG_WHO, Future);
             RealmServerRouter.AddHandler<CMSG_USE_ITEM>(RealmEnums.CMSG_USE_ITEM, Future);
 
+            RealmServerRouter.AddHandler<CMSG_ATTACKSWING>(RealmEnums.CMSG_ATTACKSWING, Future);
+            RealmServerRouter.AddHandler(RealmEnums.CMSG_ATTACKSTOP, Future);
+
             #region OPCODES
 
             /**
@@ -270,8 +275,7 @@ namespace RealmServer
             RealmServerRouter.AddHandler<CMSG_PAGE_TEXT_QUERY>(RealmEnums.CMSG_PAGE_TEXT_QUERY, Future);
             RealmServerRouter.AddHandler<CMSG_QUEST_QUERY>(RealmEnums.CMSG_QUEST_QUERY, Future);
             RealmServerRouter.AddHandler<CMSG_GAMEOBJECT_QUERY>(RealmEnums.CMSG_GAMEOBJECT_QUERY, Future);
-            
-            
+                        
             RealmServerRouter.AddHandler<CMSG_WHOIS>(RealmEnums.CMSG_WHOIS, Future);
             
             RealmServerRouter.AddHandler<CMSG_GROUP_INVITE>(RealmEnums.CMSG_GROUP_INVITE, Future);
@@ -343,8 +347,6 @@ namespace RealmServer
             RealmServerRouter.AddHandler<CMSG_CANCEL_AURA>(RealmEnums.CMSG_CANCEL_AURA, Future);
             RealmServerRouter.AddHandler<CMSG_CANCEL_CHANNELLING>(RealmEnums.CMSG_CANCEL_CHANNELLING, Future);
 
-            RealmServerRouter.AddHandler<CMSG_ATTACKSWING>(RealmEnums.CMSG_ATTACKSWING, Future);
-            RealmServerRouter.AddHandler(RealmEnums.CMSG_ATTACKSTOP, Future);
             RealmServerRouter.AddHandler(RealmEnums.CMSG_REPOP_REQUEST, Future);
 
             RealmServerRouter.AddHandler<CMSG_LOOT>(RealmEnums.CMSG_LOOT, Future);
@@ -503,6 +505,15 @@ namespace RealmServer
             #endregion
         }
 
+        private static void Future(RealmServerSession session, CMSG_ATTACKSWING handler)
+        {
+            session.Entity.KnownCreatures.Find(x => x.Uid == handler.TargetUid).IABrain.OnAttack(session);
+
+            //session.SendPacket(new SMSG_ATTACKSWING_CANT_ATTACK());
+            // 
+            //CType(WORLD_CREATUREs(GUID), CreatureObject).aiScript.OnAttack(CType(Client.Character, BaseUnit))
+        }
+
         private static void Future(RealmServerSession session, CMSG_USE_ITEM handler)
         {
             var bagItem = session.Character.SubInventorie.FirstOrDefault(x => x.Slot == handler.Slot);
@@ -589,6 +600,14 @@ Commands:
   /up       Show uptime.
   /q 900    Shutdown server in 900sec = 15min. *Debug exit now!
   /help     Show this help.");
+        }
+    }
+
+    internal class SMSG_ATTACKSWING_CANT_ATTACK : Common.Network.PacketServer
+    {
+        public SMSG_ATTACKSWING_CANT_ATTACK() : base(RealmEnums.SMSG_ATTACKSWING_CANT_ATTACK)
+        {
+            // null???
         }
     }
 }

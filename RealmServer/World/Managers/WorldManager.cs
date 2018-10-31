@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Common.Database.Tables;
 using RealmServer.World.Enititys;
 
 namespace RealmServer.World.Managers
@@ -9,6 +10,8 @@ namespace RealmServer.World.Managers
 
         public static event PlayerEvent OnPlayerSpawn;
         public static event PlayerEvent OnPlayerDespawn;
+
+        internal static List<SpawnCreatures> Creatures { get; set; }
 
         internal static void DispatchOnPlayerSpawn(PlayerEntity entity)
         {

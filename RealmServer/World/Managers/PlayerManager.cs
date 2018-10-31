@@ -94,6 +94,12 @@ namespace RealmServer.World.Managers
                     }
 
                     foreach (var creature in Objetos)
+                    {
+                        if (!WorldManager.Creatures.Contains(creature))
+                        {
+                            WorldManager.Creatures.Add(creature);
+                        }
+
                         if (InRangeCheck(player.Character.SubMap, creature.SubMap))
                         {
                             if (!player.KnownCreatures.Contains(creature))
@@ -104,6 +110,7 @@ namespace RealmServer.World.Managers
                             if (player.KnownCreatures.Contains(creature))
                                 DespawnCreature(player, creature);
                         }
+                    }
 
                     if (player.UpdateCount > 0)
                     {
