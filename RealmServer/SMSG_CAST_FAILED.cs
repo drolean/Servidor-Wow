@@ -8,7 +8,7 @@ namespace RealmServer
     {
         public SMSG_CAST_FAILED(Items dbItem = null) : base(RealmEnums.SMSG_CAST_FAILED)
         {
-            Console.WriteLine($"Vai: {MainProgram.Vai} Count: {MainProgram.Count}");
+            Console.WriteLine($"Vai: {MainProgram.Vai} Vai: {MainProgram.Vai}");
 
             Write(8690); // SpellID
             Write((byte) 2); // IDK

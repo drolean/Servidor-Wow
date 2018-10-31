@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>RealmServer</RootNamespace>
     <AssemblyName>RealmServer</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <TargetFrameworkProfile />
@@ -393,6 +393,7 @@
     <Compile Include="World\Entitys\ObjectEntity.cs" />
     <Compile Include="World\Entitys\PlayerEntity.cs" />
     <Compile Include="World\Entitys\UnitEntity.cs" />
+    <Compile Include="World\Managers\ChannelManager.cs" />
     <Compile Include="World\Managers\PlayerManager.cs" />
     <Compile Include="World\Managers\TimerManager.cs" />
     <Compile Include="World\Managers\WorldManager.cs" />

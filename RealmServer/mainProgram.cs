@@ -13,12 +13,10 @@ using Common.Database.Tables;
 using Common.Globals;
 using Common.Helpers;
 using MongoDB.Bson.Serialization;
-using MongoDB.Driver;
 using RealmServer.Handlers;
 using RealmServer.Handlers.Friends;
 using RealmServer.Handlers.Tickets;
 using RealmServer.PacketReader;
-using RealmServer.World;
 using RealmServer.World.Managers;
 
 namespace RealmServer
@@ -26,7 +24,6 @@ namespace RealmServer
     internal class MainProgram
     {
         public static int Vai;
-        public static int Count;
 
         private static bool _keepGoing = true;
         private static readonly uint Time = Common.Helpers.Time.GetMsTime();
@@ -507,7 +504,7 @@ namespace RealmServer
 
         private static void Future(RealmServerSession session, CMSG_ATTACKSWING handler)
         {
-            session.Entity.KnownCreatures.Find(x => x.Uid == handler.TargetUid).IABrain.OnAttack(session);
+            //session.Entity.KnownCreatures.Find(x => x.Uid == handler.TargetUid).IABrain.OnAttack(session);
 
             //session.SendPacket(new SMSG_ATTACKSWING_CANT_ATTACK());
             // 

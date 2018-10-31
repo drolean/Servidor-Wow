@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using RealmServer.World.Enititys;
@@ -40,10 +39,10 @@ namespace RealmServer.World
         private void Update()
         {
             RealmServerSession session = RealmServerSession.Sessions.First();
-            _unitEntity.Move(session);
-            _unitEntity.MapX = session.Character.SubMap.MapX;
-            _unitEntity.MapY = session.Character.SubMap.MapY;
-            _unitEntity.MapZ = session.Character.SubMap.MapZ;
+            //_unitEntity.Move(session);
+            //_unitEntity.MapX = session.Character.SubMap.MapX;
+            //_unitEntity.MapY = session.Character.SubMap.MapY;
+            //_unitEntity.MapZ = session.Character.SubMap.MapZ;
         }
     }
 
