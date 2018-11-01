@@ -50,7 +50,7 @@ namespace RealmServer.World.Managers
         /// </summary>
         /// <param name="remote"></param>
         /// <param name="playerEntity"></param>
-        private static void DespawnPlayer(PlayerEntity remote, PlayerEntity playerEntity)
+        public static void DespawnPlayer(PlayerEntity remote, PlayerEntity playerEntity)
         {
             var despawnPlayer = new List<ObjectEntity> {playerEntity};
             remote.Session.SendPacket(SMSG_UPDATE_OBJECT.CreateOutOfRangeUpdate(despawnPlayer));
@@ -61,7 +61,7 @@ namespace RealmServer.World.Managers
         /// </summary>
         /// <param name="remote"></param>
         /// <param name="playerEntity"></param>
-        private static void SpawnPlayer(PlayerEntity remote, PlayerEntity playerEntity)
+        public static void SpawnPlayer(PlayerEntity remote, PlayerEntity playerEntity)
         {
             remote.Session.SendInventory(playerEntity.Session);
             remote.Session.SendPacket(SMSG_UPDATE_OBJECT.CreateCharacterUpdate(playerEntity.Character));
@@ -72,6 +72,7 @@ namespace RealmServer.World.Managers
         /// </summary>
         private static void Update()
         {
+            /*
             while (true)
             {
                 foreach (var player in Players)
@@ -123,6 +124,7 @@ namespace RealmServer.World.Managers
                 // Fix????
                 Thread.Sleep(100);
             }
+            */
         }
 
         private static void DespawnCreature(PlayerEntity player, SpawnCreatures creature)

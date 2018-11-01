@@ -24,11 +24,13 @@ namespace RealmServer.World
 
         private static void UpdateThread()
         {
+            /*
             while (true)
             {
                 UpdateVerify();
                 Thread.Sleep(500);
             }
+            */
         }
 
         private static void UpdateVerify()

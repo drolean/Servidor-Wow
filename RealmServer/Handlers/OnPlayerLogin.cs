@@ -11,6 +11,8 @@ namespace RealmServer.Handlers
         {
             session.Character = Characters.GetCharacter(handler);
 
+            // SET Player Online Flag
+
             session.SendPacket(new SMSG_LOGIN_VERIFY_WORLD(session.Character));
             session.SendPacket(new SMSG_ACCOUNT_DATA_TIMES());
             session.SendMessageMotd("Welcome to World of Warcraft."); // DONE

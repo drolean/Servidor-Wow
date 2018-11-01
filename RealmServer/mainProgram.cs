@@ -5,6 +5,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Mime;
 using System.Reflection;
 using System.Threading;
 using Common.Database;
@@ -70,6 +71,8 @@ namespace RealmServer
             Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
             Thread.CurrentThread.CurrentUICulture = CultureInfo.InvariantCulture;
 
+            Console.CancelKeyPress += (o, e) => Environment.Exit(-1);
+
             Console.SetWindowSize(
                 Math.Min(110, Console.LargestWindowWidth),
                 Math.Min(20, Console.LargestWindowHeight)
@@ -97,6 +100,7 @@ namespace RealmServer
             Log.Print(LogType.RealmServer, $"Running from: {AppDomain.CurrentDomain.BaseDirectory}");
             Log.Print(LogType.RealmServer,
                 $"Successfully started in {Common.Helpers.Time.GetMsTimeDiff(Time, Common.Helpers.Time.GetMsTime()) / 100}ms");
+            Console.Beep();
 
             // Commands
             while (_keepGoing)
